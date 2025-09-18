@@ -1,6 +1,7 @@
 import random
 import time
 from enum import IntEnum
+from typing import Optional, Tuple
 
 import pygame
 from gymnasium import spaces
@@ -20,11 +21,11 @@ class Simple2DNavigationEnv(MiniGridEnv):
 
     def __init__(
         self,
-        size=10,
-        agent_start_dir: int | None = None,
-        agent_start_pos: tuple[int, int] | None = None,
-        goal_pos: tuple[int, int] | None = None,
-        max_steps: int | None = None,
+        size: int = 10,
+        agent_start_dir: Optional[int] = None,
+        agent_start_pos: Optional[Tuple[int, int]] = None,
+        goal_pos: Optional[Tuple[int, int]] = None,
+        max_steps: Optional[int] = None,
         **kwargs,
     ):
         if agent_start_pos is None:
