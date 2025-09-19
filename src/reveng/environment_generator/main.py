@@ -1,5 +1,6 @@
 import argparse
-from custom_minigrid import run_random_episodes, manual_control
+
+from custom_minigrid import manual_control, run_random_episodes
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

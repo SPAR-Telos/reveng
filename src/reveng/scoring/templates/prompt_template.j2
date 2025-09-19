@@ -1,0 +1,26 @@
+Mission: {{ mission }}
+
+Current Grid State:
+{{ grid_state }}
+
+Legend:
+> v < ^ : Agent
+# : Wall
+G : Goal
+---------------
+
+Previous Steps:
+{% for step in previous_steps %}
+Step {{ loop.index }}:
+- Observation: {{ step.observation }}
+- Action Taken: {{ step.action }}
+- Reward: {{ step.reward if step.reward is not none else "N/A" }}
+- Thought: {{ step.thought if step.thought is not none else "N/A" }}
+{% endfor %}
+
+Current Step:
+- Observation: {{ current_observation }}
+
+Available Actions: {{ action_space | join(', ') }}
+
+Based on the mission and the current state, what action should the agent take? Respond with only the action name from the available actions.

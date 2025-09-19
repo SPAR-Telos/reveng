@@ -1,0 +1,91 @@
+You are an expert evaluator tasked with comparing multiple trajectories and determining which one performs best. Please evaluate the trajectories according to the following comparison criteria:
+
+## Comparison Criteria
+
+### 1. Mission Success
+- Which trajectory best achieves the stated mission?
+- Consider both completion and quality of completion
+
+### 2. Efficiency
+- Which trajectory accomplishes the goal in the most efficient manner?
+- Consider step count, path optimality, and resource usage
+
+### 3. Decision Quality
+- Which trajectory shows the most consistent and intelligent decision-making?
+- Consider adaptability, strategic thinking, and error handling
+
+### 4. Exploration Strategy
+- Which trajectory demonstrates the best exploration and information gathering?
+- Consider systematic approach and coverage of the environment
+
+### 5. Robustness
+- Which trajectory shows the most reliable and consistent performance?
+- Consider handling of edge cases and recovery from mistakes
+
+## Trajectories to Compare
+
+{% for trajectory, name in trajectories|zip(trajectory_names) %}
+### {{ name }}
+
+**Mission**: {{ trajectory.steps[0].observation.split('Mission:')[1].split('\n')[0].strip() if 'Mission:' in trajectory.steps[0].observation else 'Not specified' }}
+
+**Length**: {{ trajectory.steps|length }} steps
+
+**Final Reward**: {{ trajectory.final_reward if trajectory.final_reward is not none else 'N/A' }}
+
+**Key Actions**:
+{% for step in trajectory.steps[:10] %}
+- Step {{ loop.index }}: {{ step.action }}{% if step.reward is not none %} (reward: {{ step.reward }}){% endif %}
+{% endfor %}
+{% if trajectory.steps|length > 10 %}
+... and {{ trajectory.steps|length - 10 }} more steps
+{% endif %}
+
+**Summary**: [Brief description of the trajectory's approach and outcome]
+
+---
+
+{% endfor %}
+
+## Comparative Analysis
+
+Please provide your comparison in the following format:
+
+**Ranking** (from best to worst):
+1. [Trajectory Name] - [Brief justification]
+2. [Trajectory Name] - [Brief justification]
+{% if trajectories|length > 2 %}
+3. [Trajectory Name] - [Brief justification]
+{% endif %}
+{% if trajectories|length > 3 %}
+[Continue for all trajectories...]
+{% endif %}
+
+**Detailed Comparison**:
+
+**Mission Success Analysis**:
+- [Compare how well each trajectory achieved the mission]
+
+**Efficiency Analysis**:
+- [Compare the efficiency of each trajectory's approach]
+
+**Decision Quality Analysis**:
+- [Compare the quality of decision-making across trajectories]
+
+**Exploration Strategy Analysis**:
+- [Compare exploration approaches and effectiveness]
+
+**Robustness Analysis**:
+- [Compare reliability and consistency of performance]
+
+**Key Differentiators**:
+- [Highlight the main factors that distinguish the trajectories]
+
+**Winner Justification**:
+[Provide a comprehensive explanation for why the top-ranked trajectory is superior, considering all evaluation criteria.]
+
+**Recommendations**:
+- [Suggest improvements for each trajectory based on the comparison]
+
+**Overall Assessment**:
+[Provide a summary of the comparative analysis and key insights about trajectory quality.]
