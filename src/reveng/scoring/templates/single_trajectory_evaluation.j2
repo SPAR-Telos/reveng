@@ -1,0 +1,17 @@
+Mission: {{ mission }}
+
+Trajectory to Evaluate:
+{{ trajectory_summary }}
+
+Step-by-step breakdown:
+{% for step in steps %}
+Step {{ loop.index }}:
+- Observation: {{ step.observation }}
+- Action Taken: {{ step.action }}
+- Reward: {{ step.reward if step.reward is not none else "N/A" }}
+- Thought: {{ step.thought if step.thought is not none else "N/A" }}
+{% endfor %}
+
+Final Reward: {{ final_reward if final_reward is not none else "N/A" }}
+
+Please provide your assessment of this trajectory. Consider any aspects you find relevant and explain your reasoning. What do you think about the quality of this trajectory?

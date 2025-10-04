@@ -30,6 +30,41 @@ def load_trajectory_from_file(file_path: str | Path) -> Trajectory:
     return Trajectory(steps=steps, action_space=action_space, final_reward=final_reward)
 
 
+@dataclass
+class PreferenceResult:
+    """Result of preference elicitation for a single trajectory."""
+
+    trajectory_id: str
+    model: str
+    assessment: str
+    reasoning: str
+    timestamp: str
+
+
+@dataclass
+class ComparisonResult:
+    """Result of pairwise trajectory comparison."""
+
+    trajectory_a_id: str
+    trajectory_b_id: str
+    model: str
+    preferred_trajectory: str  # "A", "B", or "tie"
+    preference_strength: str  # "weak", "moderate", "strong"
+    reasoning: str
+    timestamp: str
+
+
+@dataclass
+class PreferenceAnalysis:
+    """Aggregated analysis of multiple preference results."""
+
+    model: str
+    total_evaluations: int
+    preference_patterns: Dict[str, object]
+    common_themes: list[str]
+    timestamp: str
+
+
 def trajectory_to_json(result: Dict[str, object]) -> str:
     """Serialise a trajectory scoring result."""
     return json.dumps(result, indent=2)

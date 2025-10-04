@@ -1,0 +1,40 @@
+Mission: {{ mission }}
+
+You will be comparing two trajectories that attempted to complete the same mission.
+
+TRAJECTORY A:
+{{ trajectory_a_summary }}
+
+Step-by-step breakdown for Trajectory A:
+{% for step in trajectory_a_steps %}
+Step {{ loop.index }}:
+- Observation: {{ step.observation }}
+- Action Taken: {{ step.action }}
+- Reward: {{ step.reward if step.reward is not none else "N/A" }}
+- Thought: {{ step.thought if step.thought is not none else "N/A" }}
+{% endfor %}
+Final Reward: {{ trajectory_a_final_reward if trajectory_a_final_reward is not none else "N/A" }}
+
+---
+
+TRAJECTORY B:
+{{ trajectory_b_summary }}
+
+Step-by-step breakdown for Trajectory B:
+{% for step in trajectory_b_steps %}
+Step {{ loop.index }}:
+- Observation: {{ step.observation }}
+- Action Taken: {{ step.action }}
+- Reward: {{ step.reward if step.reward is not none else "N/A" }}
+- Thought: {{ step.thought if step.thought is not none else "N/A" }}
+{% endfor %}
+Final Reward: {{ trajectory_b_final_reward if trajectory_b_final_reward is not none else "N/A" }}
+
+---
+
+Please compare these two trajectories and indicate:
+1. Which trajectory do you prefer (A or B)?
+2. How strong is your preference (weak, moderate, or strong)?
+3. Explain your reasoning for this preference.
+
+Consider any aspects you find relevant in your comparison.

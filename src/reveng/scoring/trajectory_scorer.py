@@ -4,21 +4,18 @@ import math
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence
 
-from jinja2 import Environment, FileSystemLoader, Template
-from litellm import completion
-from tenacity import retry, stop_after_attempt, wait_random_exponential
-
 from reveng.datatypes import (
     Step,
     Trajectory,
     load_trajectory_from_file,
     trajectory_to_json,
 )
+from reveng.scoring.llm_interface import BaseLLMInterface
 
 logger = logging.getLogger(__name__)
 
 
-class TrajectoryScorer:
+class TrajectoryScorer(BaseLLMInterface):
     """Score trajectories by querying an LLM for action log probabilities."""
 
     def __init__(
@@ -26,7 +23,7 @@ class TrajectoryScorer:
         model_name: str,
         template_path: Optional[Path | str] = None,
         top_logprobs: Optional[int] = None,
-        temperature: float = 1.0,
+        temperature: float = 0.0,  # Keep at 0.0 for scoring
     ) -> None:
         """
         Args:
@@ -36,23 +33,8 @@ class TrajectoryScorer:
                 the model. Defaults to the action-space size.
             temperature: Forwarded to the model; keep at ``0.0`` for scoring.
         """
-        self.model_name = model_name
-        self.temperature = temperature
+        super().__init__(model_name, template_path, temperature)
         self.top_logprobs = top_logprobs
-
-        resolved_template = (
-            Path(template_path)
-            if template_path is not None
-            else Path(__file__).parent / "templates" / "prompt_template.j2"
-        )
-        self._template = self._load_template(resolved_template)
-
-    @staticmethod
-    def _load_template(template_path: Path) -> Template:
-        env = Environment(
-            loader=FileSystemLoader(template_path.parent),
-        )
-        return env.get_template(template_path.name)
 
     def score_trajectory_with_probs(self, trajectory: Trajectory) -> Dict[str, object]:
         """Return aggregated log probability metrics for a trajectory."""
@@ -84,21 +66,6 @@ class TrajectoryScorer:
         results["step_scores"] = step_scores
         results["total_logprob"] = total_logprob
         return results
-
-    @retry(
-        stop=stop_after_attempt(3),
-        # 5-120 seconds between attempts, to help avoid rate limiting
-        wait=wait_random_exponential(multiplier=1, min=5, max=120),
-        reraise=True,
-    )
-    def _completion_with_retry(
-        self,
-        **kwargs,
-    ):
-        response = completion(
-            **kwargs,
-        )
-        return response
 
     def _score_step(
         self,
@@ -173,7 +140,7 @@ class TrajectoryScorer:
 
         grid_state = "\n".join(line for line in grid_lines if line)
 
-        return self._template.render(
+        return self.render_template(
             mission=mission or "",
             grid_state=grid_state or current_step.observation,
             previous_steps=previous_steps,
