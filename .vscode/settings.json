@@ -7,6 +7,8 @@
         "**/.git": true,
         "**/.DS_Store": true,
         "**/.ruff_cache": true,
+        "**/.venv": true,
+        "**/*.egg-info": true,
     },
     "search.exclude": {
         "**/__pycache__": true,
@@ -15,6 +17,8 @@
         "**/node_modules": true,
         "**/.git": true,
         "**/.ruff_cache": true,
+        "**/.venv": true,
+        "**/*.egg-info": true,
     },
     "[python]": {
         "editor.formatOnSave": true,

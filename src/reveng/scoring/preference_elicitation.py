@@ -11,7 +11,7 @@ from reveng.datatypes import (
     load_trajectory_from_file,
     trajectory_to_json,
 )
-from reveng.scoring.llm_interface import BaseLLMInterface
+from reveng.llm_interface import BaseLLMInterface
 
 logger = logging.getLogger(__name__)
 
