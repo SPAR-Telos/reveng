@@ -128,10 +128,10 @@ def generate_trajectories(
     observation, info = env.reset()
 
     for traj_idx in range(num_trajectories):
-         # Reset environment if requested
+        # Reset environment if requested
         if reset_between_trajectories:
             observation, info = env.reset()
-        
+
         traj_obj = generate_one_trajectory(
             env=env,
             observation=observation,
@@ -149,6 +149,7 @@ def generate_trajectories(
 
     return trajectories
 
+
 def generate_one_trajectory(
     env,
     observation,
@@ -156,7 +157,6 @@ def generate_one_trajectory(
     agent: Agent,
     max_steps_per_trajectory: Optional[int] = None,
 ):
-
     steps: List[Step] = []
     total_reward = 0.0
     step_count = 0
@@ -196,6 +196,7 @@ def generate_one_trajectory(
 
     traj_obj = Trajectory(steps=steps, action_space=[], final_reward=total_reward)
     return traj_obj
+
 
 def visualize_trajectory(
     trajectory: Trajectory,
