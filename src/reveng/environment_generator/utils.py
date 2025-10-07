@@ -1,16 +1,22 @@
 import os
 import time
+from copy import deepcopy
 
 import matplotlib.pyplot as plt
 import pygame
-from custom_minigrid import Simple2DNavigationEnv
 from minigrid.minigrid_env import MiniGridEnv
 from minigrid.wrappers import RGBImgObsWrapper
-from wrappers.rgb_obs_wrappers import OmnidirectionalFogOfWarRGBImgObsWrapper
-from wrappers.text_obs_wrapper import FogOfWarTextWrapper, FullObservabilityTextWrapper
+
 import reveng.agents as agents
+from reveng.environment_generator.custom_minigrid import Simple2DNavigationEnv
+from reveng.environment_generator.wrappers.rgb_obs_wrappers import (
+    OmnidirectionalFogOfWarRGBImgObsWrapper,
+)
+from reveng.environment_generator.wrappers.text_obs_wrapper import (
+    FogOfWarTextWrapper,
+    FullObservabilityTextWrapper,
+)
 from reveng.trajectory_generator.trajectory_generator import generate_one_trajectory
-from copy import deepcopy
 
 
 class ObsWrapperRegistry:
