@@ -1,7 +1,7 @@
 {
   "experiment_name": "baseline_trajectories",
-  "timestamp": "2025-10-06T20:51:45.848475",
-  "num_environments": 100,
+  "timestamp": "2025-10-06T21:44:03.641548",
+  "num_environments": 10,
   "num_agents": 2,
   "num_perturbations": 1,
   "num_trajectories_per_config": 1,

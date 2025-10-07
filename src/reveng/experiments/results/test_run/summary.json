@@ -1,26 +1,26 @@
 {
-  "total_trajectories": 200,
+  "total_trajectories": 20,
   "total_errors": 0,
   "by_agent": {
     "AStar": {
-      "num_trajectories": 100,
-      "avg_steps": 4.79,
-      "avg_reward": 0.9866944444444445,
+      "num_trajectories": 10,
+      "avg_steps": 3.9,
+      "avg_reward": 0.9891666666666667,
       "success_rate": 1.0
     },
     "Random": {
-      "num_trajectories": 100,
-      "avg_steps": 174.22,
-      "avg_reward": 0.4920555555555556,
-      "success_rate": 0.76
+      "num_trajectories": 10,
+      "avg_steps": 121.4,
+      "avg_reward": 0.6427777777777778,
+      "success_rate": 0.8
     }
   },
   "by_perturbation": {
     "base": {
-      "num_trajectories": 200,
-      "avg_steps": 89.505,
-      "avg_reward": 0.739375,
-      "success_rate": 0.88
+      "num_trajectories": 20,
+      "avg_steps": 62.65,
+      "avg_reward": 0.8159722222222221,
+      "success_rate": 0.9
     }
   }
 }

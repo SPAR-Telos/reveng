@@ -69,8 +69,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--num-grids",
         type=int,
-        default=100,
-        help="Number of grids to generate (default: 100)",
+        default=10,
+        help="Number of grids to generate (default: 10)",
     )
     parser.add_argument(
         "--grid-size", type=int, default=9, help="Size of each grid (default: 9)"
