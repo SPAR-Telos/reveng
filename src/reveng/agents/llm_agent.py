@@ -69,7 +69,8 @@ class LLMAgent(Agent, BaseLLMInterface):
             return action, {
                 "agents_name": self.name,
                 "llm_response": action,
-                "explanation": response.explanation,
+                "confidence": response.confidence,
+                # "explanation": response.explanation,
             }
 
         except Exception as e:
