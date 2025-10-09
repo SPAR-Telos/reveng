@@ -10,10 +10,10 @@ import json
 import time
 from dataclasses import asdict
 from pathlib import Path
-from typing import List, Optional
+from typing import Dict, List, Optional
 
-from reveng.datatypes import Step, Trajectory
 from reveng.agents.agent_abc import Agent
+from reveng.datatypes import Step, Trajectory
 
 
 def _save_trajectory_to_json(
@@ -37,6 +37,7 @@ def generate_trajectories(
     save_dir: Optional[str] = None,
     save_prefix: str = "trajectory",
     save_indent: int = 2,
+    metadata: Optional[Dict] = None,
 ) -> List[Trajectory]:
     """
     Define the interface to generate Trajectory objects by running an agent in an environment.
@@ -138,6 +139,7 @@ def generate_trajectories(
             info=info,
             agent=agent,
             max_steps_per_trajectory=max_steps_per_trajectory,
+            metadata=metadata,
         )
 
         trajectories.append(traj_obj)
@@ -156,6 +158,7 @@ def generate_one_trajectory(
     info,
     agent: Agent,
     max_steps_per_trajectory: Optional[int] = None,
+    metadata: Optional[Dict] = None,
 ):
     steps: List[Step] = []
     total_reward = 0.0
@@ -194,7 +197,12 @@ def generate_one_trajectory(
         info = next_info
         step_count += 1
 
-    traj_obj = Trajectory(steps=steps, action_space=[], final_reward=total_reward)
+    traj_obj = Trajectory(
+        steps=steps,
+        action_space=[],
+        final_reward=total_reward,
+        metadata=metadata,
+    )
     return traj_obj
 
 

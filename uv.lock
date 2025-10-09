@@ -1599,6 +1599,7 @@ dependencies = [
     { name = "pytest" },
     { name = "python-dotenv" },
     { name = "tenacity" },
+    { name = "tqdm" },
 ]
 
 [package.metadata]
@@ -1617,6 +1618,7 @@ requires-dist = [
     { name = "pytest", specifier = ">=8.4.2" },
     { name = "python-dotenv", specifier = ">=1.0.0" },
     { name = "tenacity", specifier = ">=9.1.2" },
+    { name = "tqdm", specifier = ">=4.67.1" },
 ]
 
 [[package]]

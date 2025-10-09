@@ -13,6 +13,8 @@ class ActionResponse(BaseModel):
     )
 
     confidence: float = Field(
-        description="Confidence level of your ability to reach the goal square"
+        ge=0.0,
+        le=1.0,
+        description="Confidence level of your ability to reach the goal square",
     )
     # explanation: str = Field(description="Brief explanation of the action choice")

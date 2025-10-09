@@ -19,6 +19,7 @@ class Trajectory:
     steps: list[Step]
     action_space: t.List[str]
     final_reward: t.Optional[float]
+    metadata: t.Optional[Dict]
 
 
 class Action(Enum):
@@ -35,7 +36,13 @@ def load_trajectory_from_file(file_path: str | Path) -> Trajectory:
     steps = [Step(**step_dict) for step_dict in data.get("steps", [])]
     action_space = data.get("action_space") or []
     final_reward = data.get("final_reward")
-    return Trajectory(steps=steps, action_space=action_space, final_reward=final_reward)
+    metadata = data.get("metadata")
+    return Trajectory(
+        steps=steps,
+        action_space=action_space,
+        final_reward=final_reward,
+        metadata=metadata,
+    )
 
 
 @dataclass

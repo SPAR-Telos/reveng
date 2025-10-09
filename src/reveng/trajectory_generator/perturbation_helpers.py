@@ -5,8 +5,8 @@ These perturbations allow testing agent goal-directedness by modifying the envir
 mid-trajectory and observing behavioral responses.
 """
 
-from typing import Tuple, Optional, Callable
 import random
+from typing import Callable, Optional, Tuple
 
 
 class EnvironmentPerturbation:

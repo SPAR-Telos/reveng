@@ -2,6 +2,8 @@ import pickle
 from pathlib import Path
 from typing import Dict
 
+from tqdm import tqdm
+
 from reveng.environment_generator.custom_minigrid import Simple2DNavigationEnv
 
 
@@ -29,7 +31,7 @@ def generate_baseline(
         f"Generating {num_grids} grids with size {grid_size}x{grid_size} and complexity {complexity}..."
     )
 
-    for i in range(num_grids):
+    for i in tqdm(range(num_grids), desc="Generating grids"):
         # Create environment with specified parameters
         env = Simple2DNavigationEnv(
             size=grid_size,
@@ -45,9 +47,6 @@ def generate_baseline(
 
         # Store the environment directly
         dataset[grid_id] = env
-
-        if (i + 1) % 10 == 0:
-            print(f"  Generated {i + 1}/{num_grids} grids...")
 
     # Save to pickle file
     output_path = Path(output_file)
