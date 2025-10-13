@@ -115,6 +115,9 @@ class BaseLLMInterface:
 
             # Parse response
             content = response.choices[0].message.content
+            content, response = inject_thinking_for_qwen(
+                model_name=self.model_name, content=content, response=response
+            )
             if not content:
                 choice = response.choices[0]
                 # Log the entire choice object to see the finish_reason
@@ -138,3 +141,18 @@ class BaseLLMInterface:
         except Exception as exc:
             logger.error(f"Model request failed: {exc}")
             raise
+
+
+def inject_thinking_for_qwen(
+    model_name: str, content: str, response: dict
+) -> Tuple[str, dict]:
+    """Inject thinking for Qwen models. There is a bug for qwen3 30b a3b in fireworks where the response is not properly formatted."""
+    if "</think>" in content and "qwen3-30b-a3b" in model_name:
+        reasoning_content = content.split("</think>")[0]
+        content = content.split("</think>")[1]
+        response.choices[0].message.content = content.strip()
+        response["choices"][0]["message"]["reasoning_content"] = (
+            reasoning_content.strip()
+        )
+        return content, response
+    return content, response

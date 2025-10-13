@@ -1,9 +1,10 @@
 import json
-import numpy as np
 import pprint
-from typing import List, Dict, Any, Optional
-from reveng.environment_generator.custom_minigrid import Simple2DNavigationEnv
+from typing import Any, Dict, List, Optional
 
+import numpy as np
+
+from reveng.environment_generator.custom_minigrid import Simple2DNavigationEnv
 
 # Define a constant for the action mapping for clarity and easy modification.
 ACTION_MAP = {"0": "LEFT", "1": "RIGHT", "2": "UP", "3": "DOWN"}
@@ -61,19 +62,28 @@ def calculate_normalized_distribution(
             log_probs[token] = item["logprob"]
     # --- END SECTION ---
 
-    # Convert log probabilities to standard probabilities (p = e^log_p).
-    raw_probs = {token: np.exp(log_p) for token, log_p in log_probs.items()}
+    # Normalize using the log-sum-exp trick for numerical stability.
+    # Find the maximum log-probability across actions.
+    max_log_prob = max(log_probs.values())
 
-    # Normalize the distribution so that the probabilities of our actions sum to 1.
-    total_prob = sum(raw_probs.values())
-
-    if total_prob > 0:
-        normalized_distribution = {
-            ACTION_MAP[token]: prob / total_prob for token, prob in raw_probs.items()
-        }
-    else:
-        # If no action tokens were in top_logprobs, return a zero distribution.
+    if max_log_prob == -np.inf:
+        # If all actions have -inf log-probability, return a zero distribution.
         normalized_distribution = {action: 0.0 for action in ACTION_MAP.values()}
+    else:
+        # Compute stabilized exponentials: exp(log_p - max_log_prob)
+        stabilized_exps = {
+            token: (np.exp(log_p - max_log_prob) if log_p > -np.inf else 0.0)
+            for token, log_p in log_probs.items()
+        }
+
+        denom = sum(stabilized_exps.values())
+        if denom > 0:
+            normalized_distribution = {
+                ACTION_MAP[token]: value / denom
+                for token, value in stabilized_exps.items()
+            }
+        else:
+            normalized_distribution = {action: 0.0 for action in ACTION_MAP.values()}
 
     return normalized_distribution
 

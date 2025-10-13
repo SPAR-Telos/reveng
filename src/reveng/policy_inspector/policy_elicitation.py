@@ -1,4 +1,4 @@
-from typing import Any, List, Tuple, Dict
+from typing import Any, Dict, List, Tuple
 
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
@@ -35,6 +35,9 @@ def elicit_policy(
         for i in range(width):
             for j in range(height):
                 cell = env.grid.get(i, j)
+                # skip walls
+                if cell is not None and cell.type == "wall":
+                    continue
                 # Only query policy for empty cells or cells that can be overlapped (like goal)
                 if cell is None or (
                     hasattr(cell, "can_overlap") and cell.can_overlap()
@@ -90,6 +93,7 @@ def visualize_policy(
     WALL_COLOR = "#808080"  # Grey for walls
     GOAL_COLOR = "#90EE90"  # Light green for goal
     VALID_COLOR = "#FFFFFF"  # White for valid positions
+    INVALID_COLOR = "#FF0000"  # Red for invalid positions
     ARROW_COLOR = "#000000"  # Black for arrows
 
     # Draw grid cells and arrows
@@ -100,10 +104,16 @@ def visualize_policy(
             # Determine cell color
             if (i, j) == goal_pos:
                 color = GOAL_COLOR
-            elif action == -1:
+            elif (
+                action == -1
+                and env.grid.get(i, j) is not None
+                and env.grid.get(i, j).type == "wall"
+            ):
                 color = WALL_COLOR
-            else:
+            elif action != -1:
                 color = VALID_COLOR
+            else:
+                color = INVALID_COLOR
 
             # Draw cell background
             rect = patches.Rectangle(
