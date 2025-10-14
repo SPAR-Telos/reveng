@@ -35,9 +35,6 @@ def elicit_policy(
         for i in range(width):
             for j in range(height):
                 cell = env.grid.get(i, j)
-                # skip walls
-                if cell is not None and cell.type == "wall":
-                    continue
                 # Only query policy for empty cells or cells that can be overlapped (like goal)
                 if cell is None or (
                     hasattr(cell, "can_overlap") and cell.can_overlap()

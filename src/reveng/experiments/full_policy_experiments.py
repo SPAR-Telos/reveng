@@ -35,9 +35,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--model-name",
         type=str,
-        default="gpt-oss-20b",
-        # default="qwen3-30b-a3b-thinking-2507",
-        help="Model name to use (will be prefixed with fireworks_ai/accounts/fireworks/models/)",
+        default="together_ai/openai/gpt-oss-20b",
+        help="Model name to use",
     )
 
     args = parser.parse_args()
@@ -50,7 +49,7 @@ if __name__ == "__main__":
     print(f"Dataset loaded: {len(dataset)} environments")
 
     # Create agent
-    model = f"fireworks_ai/accounts/fireworks/models/{args.model_name}"
+    model = args.model_name
     llm_agent = LLMAgent(model_name=model, name="LLM agent")
 
     # Create output directory structure: results/{model_name}/

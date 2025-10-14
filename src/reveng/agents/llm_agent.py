@@ -1,4 +1,5 @@
 import logging
+import traceback
 from pathlib import Path
 from typing import Any, Optional, Tuple
 
@@ -155,7 +156,6 @@ class LLMAgent(Agent, BaseLLMInterface):
             return action_response.action.value, {
                 "agents_name": self.name,
                 "llm_response": action_response.action.value,
-                # "confidence": action_response.confidence,
                 "call_cost": cost,
                 "total_cost": self.total_cost,
                 "call_count": self.call_count,
@@ -163,7 +163,9 @@ class LLMAgent(Agent, BaseLLMInterface):
             }
 
         except Exception as e:
-            logger.error(f"Error getting action from LLM: {e}")
+            logger.error(
+                f"Error getting action from LLM: {e}\n{traceback.format_exc()}"
+            )
             raise
 
     def _get_text_observation(self, env: MiniGridEnv) -> str:

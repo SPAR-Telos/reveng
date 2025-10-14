@@ -1,4 +1,5 @@
 import logging
+import traceback
 from pathlib import Path
 from typing import Optional, Tuple
 
@@ -78,11 +79,14 @@ class BaseLLMInterface:
         Returns:
             Tuple of (response_object, cost_in_usd)
         """
-        response = completion(
-            **kwargs,
-            response_format=response_format,
-            max_tokens=4999,
-        )
+        try:
+            response = completion(
+                **kwargs,
+                response_format=response_format,
+            )
+        except Exception as e:
+            logger.error(f"Model request failed: {e}\n{traceback.format_exc()}")
+            raise
 
         # Calculate cost using litellm's completion_cost function
         try:
@@ -115,9 +119,6 @@ class BaseLLMInterface:
 
             # Parse response
             content = response.choices[0].message.content
-            content, response = inject_thinking_for_qwen(
-                model_name=self.model_name, content=content, response=response
-            )
             if not content:
                 choice = response.choices[0]
                 # Log the entire choice object to see the finish_reason
@@ -127,6 +128,10 @@ class BaseLLMInterface:
                 raise ValueError(
                     f"Empty response from model. Finish reason: '{finish_reason}'"
                 )
+
+            content, response = inject_thinking_for_qwen(
+                model_name=self.model_name, content=content, response=response
+            )
 
             if response_format:
                 try:
@@ -139,7 +144,7 @@ class BaseLLMInterface:
 
             return content, cost, response
         except Exception as exc:
-            logger.error(f"Model request failed: {exc}")
+            logger.error(f"Model request failed: {exc}\n{traceback.format_exc()}")
             raise
 
 
