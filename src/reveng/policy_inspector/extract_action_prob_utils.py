@@ -3,6 +3,7 @@ import pprint
 from typing import Any, Dict, List, Optional
 
 import numpy as np
+from scipy.special import softmax
 
 from reveng.environment_generator.custom_minigrid import Simple2DNavigationEnv
 
@@ -49,7 +50,6 @@ def calculate_normalized_distribution(
 
     top_logprobs = action_logprob_info["top_logprobs"]
 
-    # --- THIS SECTION HANDLES YOUR REQUEST ---
     # Initialize log probabilities for all possible actions to negative infinity.
     # This ensures that any action token NOT in the top_logprobs list will
     # have a logprob of -inf, which becomes a probability of 0 after np.exp().
@@ -60,32 +60,13 @@ def calculate_normalized_distribution(
         token = item["token"]
         if token in ACTION_MAP:
             log_probs[token] = item["logprob"]
-    # --- END SECTION ---
 
-    # Normalize using the log-sum-exp trick for numerical stability.
-    # Find the maximum log-probability across actions.
-    max_log_prob = max(log_probs.values())
-
-    if max_log_prob == -np.inf:
-        # If all actions have -inf log-probability, return a zero distribution.
-        normalized_distribution = {action: 0.0 for action in ACTION_MAP.values()}
-    else:
-        # Compute stabilized exponentials: exp(log_p - max_log_prob)
-        stabilized_exps = {
-            token: (np.exp(log_p - max_log_prob) if log_p > -np.inf else 0.0)
-            for token, log_p in log_probs.items()
-        }
-
-        denom = sum(stabilized_exps.values())
-        if denom > 0:
-            normalized_distribution = {
-                ACTION_MAP[token]: value / denom
-                for token, value in stabilized_exps.items()
-            }
-        else:
-            normalized_distribution = {action: 0.0 for action in ACTION_MAP.values()}
-
-    return normalized_distribution
+    normalized_distribution = softmax(np.array(list(log_probs.values())))
+    mapped_distribution = {
+        ACTION_MAP[token]: value
+        for token, value in zip(log_probs.keys(), normalized_distribution)
+    }
+    return mapped_distribution
 
 
 def get_action_probs(data: List[List[Any]]) -> List[List[Dict[str, float]]]:

@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
     # Iterate through environments
     environments = list(dataset.items())[::10][
-        11:12
+        0:1
     ]  # TODO: fix hardcoded 1 grid per config
     pbar = tqdm(environments, desc="Processing environments")
     for grid_id, env in pbar:
