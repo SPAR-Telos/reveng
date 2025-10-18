@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 
 def elicit_policy(
-    env: MiniGridEnv, agent: Any
+    env: MiniGridEnv, agent: Any, top_logprobs: int = 5
 ) -> Tuple[List[List[int]], List[List[dict]]]:
     """
     Elicit the policy of an agent by querying its action preference at each valid position.
@@ -18,6 +18,7 @@ def elicit_policy(
     Args:
         env: The MiniGrid environment in which the agent will operate.
         agent: The agent whose policy is to be elicited. Must have a `select_action` method.
+        top_logprobs: Number of top logprobs to return for LLMAgent (default: 5).
 
     Returns:
         A 2D list representing the policy, where policy[j][i] is the preferred action
@@ -46,7 +47,7 @@ def elicit_policy(
                     # Query agent for preferred action at this position
                     if agent.__class__.__name__ == "LLMAgent":
                         action, metadata = agent.select_action(
-                            env, return_logprobs=True
+                            env, return_logprobs=True, top_logprobs=top_logprobs
                         )
                     else:
                         action, metadata = agent.select_action(env)

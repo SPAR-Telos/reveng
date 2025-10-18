@@ -89,13 +89,17 @@ class LLMAgent(Agent, BaseLLMInterface):
             return logprobs_obj  # type: ignore[return-value]
 
     def select_action(
-        self, env: MiniGridEnv, return_logprobs: bool = False, **kwargs: Any
+        self,
+        env: MiniGridEnv,
+        return_logprobs: bool = False,
+        top_logprobs: int = 5,
+        **kwargs: Any,
     ) -> Tuple[int, dict]:
         """
         Select an action using the LLM based on the current environment state.
         """
         try:
-            return self._select_action(env, return_logprobs, **kwargs)
+            return self._select_action(env, return_logprobs, top_logprobs, **kwargs)
         except Exception as e:
             logger.error(
                 f"Error getting action for position {env.agent_pos} from LLM after retrying: {e}"
@@ -110,13 +114,19 @@ class LLMAgent(Agent, BaseLLMInterface):
         reraise=True,
     )
     def _select_action(
-        self, env: MiniGridEnv, return_logprobs: bool = False, **kwargs: Any
+        self,
+        env: MiniGridEnv,
+        return_logprobs: bool = False,
+        top_logprobs: int = 5,
+        **kwargs: Any,
     ) -> Tuple[int, dict]:
         """
         Select an action using the LLM based on the current environment state.
 
         Args:
             env: The environment to interact with
+            return_logprobs: Whether to return logprobs
+            top_logprobs: Number of top logprobs to return (default: 5)
             **kwargs: Additional arguments (ignored by this agent)
 
         Returns:
@@ -138,7 +148,7 @@ class LLMAgent(Agent, BaseLLMInterface):
             logprobs_raw = None
             if return_logprobs:
                 extra_kwargs["logprobs"] = True
-                extra_kwargs["top_logprobs"] = 5
+                extra_kwargs["top_logprobs"] = top_logprobs
                 extra_kwargs["allowed_openai_params"] = ["logprobs", "top_logprobs"]
                 response_format = None
 

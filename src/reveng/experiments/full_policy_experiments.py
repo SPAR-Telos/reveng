@@ -20,7 +20,9 @@ from reveng.policy_inspector.policy_elicitation import (
 )
 
 
-def _process_single_environment(model_name: str, output_base: Path, grid_id: str, env):
+def _process_single_environment(
+    model_name: str, output_base: Path, grid_id: str, env, top_logprobs: int = 5
+):
     """Run policy elicitation and visualizations for a single environment.
 
     Returns a tuple of (grid_id, cost_summary_dict).
@@ -28,7 +30,9 @@ def _process_single_environment(model_name: str, output_base: Path, grid_id: str
     # Create a dedicated agent per environment to avoid shared mutable state across threads
     llm_agent = LLMAgent(model_name=model_name, name="LLM agent")
 
-    llm_policy, llm_policy_metadata = elicit_policy(env, llm_agent)
+    llm_policy, llm_policy_metadata = elicit_policy(
+        env, llm_agent, top_logprobs=top_logprobs
+    )
 
     # Save metadata
     metadata_path = output_base / f"{grid_id}_metadata.json"
@@ -65,7 +69,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--output-dir",
         type=str,
-        default="prob_policy_results",
+        default="prob_policy_results_threads",
         help="Base output directory (default: prob_policy_results)",
     )
     parser.add_argument(
@@ -77,8 +81,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "--num-workers",
         type=int,
-        default=4,
-        help="Number of parallel workers to use (default: 4)",
+        default=2,
+        help="Number of parallel workers to use (default: 2)",
+    )
+    parser.add_argument(
+        "--top-logprobs",
+        type=int,
+        default=20,
+        help="Number of top logprobs to return (default: 20)",
     )
 
     args = parser.parse_args()
@@ -94,20 +104,27 @@ if __name__ == "__main__":
     model = args.model_name
 
     # Create output directory structure: results/{model_name}/
-    output_base = Path(args.output_dir) / args.model_name
+    # Sanitize model name to avoid creating nested directories
+    safe_model_name = args.model_name.replace("/", "_")
+    output_base = Path(args.output_dir) / safe_model_name
     output_base.mkdir(parents=True, exist_ok=True)
     print(f"Saving results to: {output_base}")
 
     # Iterate through environments
     environments = list(dataset.items())[::10][
-        0:4
+        0:2
     ]  # TODO: fix hardcoded 1 grid per config
     # Parallel processing of environments
     cost_summaries = []
     with ThreadPoolExecutor(max_workers=args.num_workers) as executor:
         futures = {
             executor.submit(
-                _process_single_environment, model, output_base, grid_id, env
+                _process_single_environment,
+                model,
+                output_base,
+                grid_id,
+                env,
+                args.top_logprobs,
             ): grid_id
             for grid_id, env in environments
         }
