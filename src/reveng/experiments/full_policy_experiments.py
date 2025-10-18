@@ -111,9 +111,7 @@ if __name__ == "__main__":
     print(f"Saving results to: {output_base}")
 
     # Iterate through environments
-    environments = list(dataset.items())[::10][
-        0:2
-    ]  # TODO: fix hardcoded 1 grid per config
+    environments = list(dataset.items())[::10]  # TODO: fix hardcoded 1 grid per config
     # Parallel processing of environments
     cost_summaries = []
     with ThreadPoolExecutor(max_workers=args.num_workers) as executor:
