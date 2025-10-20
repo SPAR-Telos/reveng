@@ -149,7 +149,12 @@ class LLMAgent(Agent, BaseLLMInterface):
             if return_logprobs:
                 extra_kwargs["logprobs"] = True
                 extra_kwargs["top_logprobs"] = top_logprobs
-                extra_kwargs["allowed_openai_params"] = ["logprobs", "top_logprobs"]
+                extra_kwargs["reasoning_effort"] = "low"
+                extra_kwargs["allowed_openai_params"] = [
+                    "logprobs",
+                    "top_logprobs",
+                    "reasoning_effort",
+                ]
                 response_format = None
 
             response, cost, raw_response = self._make_completion_request(
