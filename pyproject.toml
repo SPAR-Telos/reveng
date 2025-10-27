@@ -28,6 +28,8 @@ dependencies = [
     "ipykernel>=7.0.1",
     "jupyter>=1.1.1",
     "seaborn>=0.13.2",
+    "stable-baselines3>=2.7.0",
+    "sb3-contrib>=2.7.0",
 ]
 
 [tool.setuptools]
