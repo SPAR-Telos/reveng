@@ -1,0 +1,26 @@
+{
+  "total_trajectories": 60,
+  "total_errors": 0,
+  "by_agent": {
+    "AStar": {
+      "num_trajectories": 30,
+      "avg_steps": 7.966666666666667,
+      "avg_reward": 0.9845888096474511,
+      "success_rate": 1.0
+    },
+    "Random": {
+      "num_trajectories": 30,
+      "avg_steps": 260.43333333333334,
+      "avg_reward": 0.5408231633649215,
+      "success_rate": 0.7
+    }
+  },
+  "by_perturbation": {
+    "base": {
+      "num_trajectories": 60,
+      "avg_steps": 134.2,
+      "avg_reward": 0.7627059865061863,
+      "success_rate": 0.85
+    }
+  }
+}

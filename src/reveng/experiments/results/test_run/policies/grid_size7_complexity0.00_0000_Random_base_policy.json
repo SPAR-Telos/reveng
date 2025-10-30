@@ -1,0 +1,185 @@
+{
+  "grid_id": "grid_size7_complexity0.00_0000",
+  "agent_name": "Random",
+  "perturbation": "base",
+  "policy": [
+    [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+    ],
+    [
+      -1,
+      "0",
+      "1",
+      "0",
+      "1",
+      "2",
+      -1
+    ],
+    [
+      -1,
+      "2",
+      "2",
+      "2",
+      "3",
+      "2",
+      -1
+    ],
+    [
+      -1,
+      "0",
+      "3",
+      "2",
+      "0",
+      "1",
+      -1
+    ],
+    [
+      -1,
+      "2",
+      "2",
+      "1",
+      "2",
+      "2",
+      -1
+    ],
+    [
+      -1,
+      "2",
+      "0",
+      "2",
+      "3",
+      "1",
+      -1
+    ],
+    [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+    ]
+  ],
+  "metadata": [
+    [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+    ],
+    [
+      -1,
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      -1
+    ],
+    [
+      -1,
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      -1
+    ],
+    [
+      -1,
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      -1
+    ],
+    [
+      -1,
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      -1
+    ],
+    [
+      -1,
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      -1
+    ],
+    [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+    ]
+  ]
+}

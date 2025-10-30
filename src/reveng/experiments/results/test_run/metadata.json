@@ -1,0 +1,12 @@
+{
+  "experiment_name": "baseline",
+  "timestamp": "2025-10-10T01:30:15.063653",
+  "num_environments": 30,
+  "num_agents": 2,
+  "num_perturbations": 1,
+  "num_trajectories_per_config": 1,
+  "agents": [
+    "AStar",
+    "Random"
+  ]
+}

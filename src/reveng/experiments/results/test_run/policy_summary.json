@@ -1,0 +1,30 @@
+{
+  "total_policies": 60,
+  "total_errors": 0,
+  "average_evaluated_cells": 70.7,
+  "average_coverage": 0.5205213353922422,
+  "by_agent": {
+    "AStar": {
+      "num_policies": 30,
+      "num_errors": 0,
+      "average_evaluated_cells": 70.7,
+      "average_coverage": 0.5205213353922422,
+      "avg_diff_from_astar": 0.0
+    },
+    "Random": {
+      "num_policies": 30,
+      "num_errors": 0,
+      "average_evaluated_cells": 70.7,
+      "average_coverage": 0.5205213353922422,
+      "avg_diff_from_astar": 0.9918400582920666
+    }
+  },
+  "by_perturbation": {
+    "base": {
+      "num_policies": 60,
+      "num_errors": 0,
+      "average_evaluated_cells": 70.7,
+      "average_coverage": 0.5205213353922422
+    }
+  }
+}

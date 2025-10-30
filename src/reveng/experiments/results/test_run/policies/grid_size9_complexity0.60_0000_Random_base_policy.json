@@ -1,0 +1,283 @@
+{
+  "grid_id": "grid_size9_complexity0.60_0000",
+  "agent_name": "Random",
+  "perturbation": "base",
+  "policy": [
+    [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+    ],
+    [
+      -1,
+      "0",
+      "1",
+      "2",
+      "1",
+      "1",
+      "1",
+      "3",
+      -1
+    ],
+    [
+      -1,
+      "1",
+      "1",
+      "2",
+      "1",
+      "0",
+      -1,
+      "2",
+      -1
+    ],
+    [
+      -1,
+      "2",
+      "2",
+      "2",
+      "2",
+      "1",
+      "1",
+      "3",
+      -1
+    ],
+    [
+      -1,
+      "1",
+      -1,
+      -1,
+      "0",
+      -1,
+      -1,
+      -1,
+      -1
+    ],
+    [
+      -1,
+      "2",
+      -1,
+      "1",
+      "0",
+      "0",
+      "3",
+      "0",
+      -1
+    ],
+    [
+      -1,
+      "1",
+      "3",
+      "2",
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+    ],
+    [
+      -1,
+      "0",
+      "3",
+      "2",
+      "3",
+      "1",
+      "3",
+      "1",
+      -1
+    ],
+    [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+    ]
+  ],
+  "metadata": [
+    [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+    ],
+    [
+      -1,
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      -1
+    ],
+    [
+      -1,
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      -1,
+      {
+        "agents_name": "Random"
+      },
+      -1
+    ],
+    [
+      -1,
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      -1
+    ],
+    [
+      -1,
+      {
+        "agents_name": "Random"
+      },
+      -1,
+      -1,
+      {
+        "agents_name": "Random"
+      },
+      -1,
+      -1,
+      -1,
+      -1
+    ],
+    [
+      -1,
+      {
+        "agents_name": "Random"
+      },
+      -1,
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      -1
+    ],
+    [
+      -1,
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+    ],
+    [
+      -1,
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      {
+        "agents_name": "Random"
+      },
+      -1
+    ],
+    [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+    ]
+  ]
+}
