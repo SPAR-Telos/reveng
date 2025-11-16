@@ -199,7 +199,6 @@ def generate_one_trajectory(
 
     traj_obj = Trajectory(
         steps=steps,
-        action_space=[],
         final_reward=total_reward,
         traj_metadata=traj_metadata,
     )

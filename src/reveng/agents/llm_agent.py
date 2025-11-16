@@ -9,7 +9,7 @@ from pydantic import BaseModel
 from tenacity import retry, stop_after_attempt, wait_random_exponential
 
 from reveng.agents.agent_abc import Agent
-from reveng.agents.llm_templates import ActionResponse, ActionWithNoteResponse
+from reveng.agents.llm_templates import ActionResponse, ActionSequenceResponse, ActionWithNoteResponse
 from reveng.datatypes import Action
 from reveng.environment_generator.wrappers.text_obs_wrapper import (
     FogOfWarTextWrapper,
@@ -233,6 +233,77 @@ class LLMAgent(Agent, BaseLLMInterface):
             "call_count": self.call_count,
             "avg_cost_per_call": avg_cost,
         }
+
+    def generate_full_action_sequence(
+        self,
+        grid_observation: str,
+        max_sequence_length: int = 100,
+    ) -> Tuple[list[int], dict]:
+        """Generate a complete action sequence from start to goal in one LLM call.
+
+        This method is designed for decoder probe training where we want the full
+        action sequence generated at once, rather than step-by-step.
+
+        Args:
+            grid_observation: The full grid observation text
+            max_sequence_length: Maximum length of action sequence to generate
+
+        Returns:
+            Tuple of (action_sequence, metadata) where action_sequence is a list of integers
+        """
+        # Use the sequence template
+        sequence_template_path = (
+            Path(__file__).parent.parent
+            / "templates"
+            / "grid_full_observability_sequence.j2"
+        )
+        
+        # Create a temporary interface with the sequence template
+        from reveng.llm_interface import BaseLLMInterface
+        temp_interface = BaseLLMInterface(
+            model_name=self.model_name,
+            temperature=self.temperature,
+            template_path=sequence_template_path,
+        )
+        
+        prompt = temp_interface.render_template(grid_state=grid_observation)
+        
+        try:
+            response, cost, raw_response = self._make_completion_request(
+                prompt,
+                response_format=ActionSequenceResponse,
+            )
+            
+            # Track costs
+            self.total_cost += cost
+            self.call_count += 1
+            
+            action_sequence = response.action_sequence
+            
+            # Validate sequence length
+            if len(action_sequence) > max_sequence_length:
+                action_sequence = action_sequence[:max_sequence_length]
+                logger.warning(
+                    f"Action sequence truncated from {len(response.action_sequence)} to {max_sequence_length}"
+                )
+            
+            logger.info(
+                f"LLM generated action sequence of length {len(action_sequence)}, cost: ${cost:.6f}, total: ${self.total_cost:.6f}"
+            )
+            
+            return action_sequence, {
+                "agents_name": self.name,
+                "call_cost": cost,
+                "total_cost": self.total_cost,
+                "call_count": self.call_count,
+                "sequence_length": len(action_sequence),
+            }
+            
+        except Exception as e:
+            logger.error(
+                f"Error generating full action sequence from LLM: {e}\n{traceback.format_exc()}"
+            )
+            raise
 
 
 class PartiallyObservableLLMAgent(LLMAgent):

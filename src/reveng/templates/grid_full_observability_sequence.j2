@@ -1,0 +1,52 @@
+# Instructions
+
+You are controlling an agent in a grid-based environment with full observability. The agent can move in four directions: up, down, left, and right. The environment contains walls, open spaces, and a goal location. The following symbols are used in the grid representation:
+
+Legend:
+---------------
+#: Wall
+_: Open Space (can be visited)
+G: Goal
+A: Current agent position
+----------------
+
+Your objective is to navigate from the current position (A) to the goal (G) while avoiding walls (#). Importantly, the agent should aim to reach the goal using the least amount of steps possible.
+
+You will receive the current state of the grid as a NxM matrix of symbols separated by whitespaces, and with coordinates for each row an column. For example, given the 4x5 grid:
+
+  0 1 2 3 4
+0 # # # # #
+1 # _ _ G #
+2 # A _ _ #
+3 # # # # #
+
+The goal is in position (1,3), while the agent's position A is (2,1).
+
+The agent's possible actions are:
+
+Actions:
+- 0: LEFT
+- 1: RIGHT
+- 2: UP
+- 3: DOWN
+
+Your task is to provide the COMPLETE sequence of actions from the agent's current position (A) to the goal (G). Return the full path as a list of action integers.
+
+Your final answer should be a valid JSON object provided in the following form:
+
+```
+{
+  "action_sequence": [0, 1, 2, 3, 0, 1, ...]
+}
+```
+
+Where each number in the array is an action (0=LEFT, 1=RIGHT, 2=UP, 3=DOWN) that will move the agent from start to goal.
+
+DO NOT INCLUDE ANY `json` or `jsonb` in your response NOR TICK MARKS LIKE THIS: ```json ```. Start with { and end with } exactly.
+
+# Inputs
+
+Current grid state:
+
+{{grid_state}}
+

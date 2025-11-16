@@ -329,8 +329,8 @@ def apply_additional_cycle(
 
     new_traj = Trajectory(
         steps=new_steps,
-        action_space=list(trajectory.action_space),
         final_reward=trajectory.final_reward,
+        traj_metadata=trajectory.traj_metadata,
     )
 
     plan = PerturbationPlan(

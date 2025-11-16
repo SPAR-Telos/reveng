@@ -1,3 +1,4 @@
+import json
 import logging
 import traceback
 from pathlib import Path
@@ -7,6 +8,7 @@ import litellm
 from dotenv import load_dotenv
 from jinja2 import Environment, FileSystemLoader, Template
 from litellm import completion, completion_cost
+from litellm.exceptions import JSONSchemaValidationError
 from pydantic import BaseModel
 from tenacity import retry, stop_after_attempt, wait_random_exponential
 
@@ -80,10 +82,19 @@ class BaseLLMInterface:
             Tuple of (response_object, cost_in_usd)
         """
         try:
+            # For action sequences, we don't need 10000 tokens. Use 5000 to avoid streaming requirement.
+            # Fireworks requires stream=True when max_tokens > 5000, so we cap at 5000 for Fireworks
+            is_fireworks = "fireworks" in self.model_name.lower()
+            if is_fireworks:
+                max_tokens = 5000  # Avoid streaming requirement for Fireworks
+            else:
+                max_tokens = 10000 if "cohere" not in self.model_name else 8192
+            
+            # Use non-streaming completion (streaming disabled since we cap at 5000 for Fireworks)
             response = completion(
                 **kwargs,
                 response_format=response_format,
-                max_tokens=10000 if "cohere" not in self.model_name else 8192,
+                max_tokens=max_tokens,
             )
         except Exception as e:
             logger.error(f"Model request failed: {e}\n{traceback.format_exc()}")
@@ -110,13 +121,103 @@ class BaseLLMInterface:
             Tuple of (parsed_response, cost_in_usd)
         """
         try:
-            response, cost = self._completion_with_retry(
-                model=self.model_name,
-                messages=[{"role": "user", "content": prompt}],
-                temperature=self.temperature,
-                response_format=response_format,
-                **kwargs,
-            )
+            try:
+                response, cost = self._completion_with_retry(
+                    model=self.model_name,
+                    messages=[{"role": "user", "content": prompt}],
+                    temperature=self.temperature,
+                    response_format=response_format,
+                    **kwargs,
+                )
+            except JSONSchemaValidationError as e:
+                # Handle case where model returns string action names instead of integers
+                if response_format:
+                    try:
+                        # Extract JSON from error message (format: "returned an invalid response={...}")
+                        import re
+                        error_str = str(e)
+                        # Look for JSON object in error message - handle both single action and action_sequence
+                        json_match = re.search(r'response=(\{[^}]+\})', error_str)
+                        if json_match:
+                            parsed = json.loads(json_match.group(1))
+                            
+                            # Handle single action case
+                            if isinstance(parsed, dict) and "action" in parsed and "action_sequence" not in parsed:
+                                action = parsed["action"]
+                                # Convert string action names to integers
+                                action_map = {"LEFT": 0, "RIGHT": 1, "UP": 2, "DOWN": 3}
+                                if isinstance(action, str) and action.upper() in action_map:
+                                    parsed["action"] = action_map[action.upper()]
+                                    # Create a mock response object with corrected content
+                                    corrected_content = json.dumps(parsed)
+                                    from types import SimpleNamespace
+                                    mock_response = SimpleNamespace()
+                                    mock_response.choices = [SimpleNamespace()]
+                                    mock_response.choices[0].message = SimpleNamespace()
+                                    mock_response.choices[0].message.content = corrected_content
+                                    response = mock_response
+                                    # Try to get cost from error's raw_response if available
+                                    try:
+                                        raw_resp = getattr(e, 'raw_response', None)
+                                        if raw_resp:
+                                            cost = completion_cost(completion_response=raw_resp)
+                                        else:
+                                            cost = 0.0
+                                    except Exception:
+                                        cost = 0.0
+                                    logger.warning(f"Converted string action '{action}' to integer {parsed['action']}")
+                                else:
+                                    raise
+                            # Handle action_sequence case
+                            elif isinstance(parsed, dict) and "action_sequence" in parsed:
+                                action_seq = parsed["action_sequence"]
+                                if isinstance(action_seq, list):
+                                    # Convert string action names in sequence to integers
+                                    action_map = {"LEFT": 0, "RIGHT": 1, "UP": 2, "DOWN": 3}
+                                    converted_seq = []
+                                    for action in action_seq:
+                                        if isinstance(action, int) and 0 <= action <= 3:
+                                            converted_seq.append(action)
+                                        elif isinstance(action, str):
+                                            if action.isdigit():
+                                                action_int = int(action)
+                                                if 0 <= action_int <= 3:
+                                                    converted_seq.append(action_int)
+                                            elif action.upper() in action_map:
+                                                converted_seq.append(action_map[action.upper()])
+                                    if len(converted_seq) > 0:
+                                        parsed["action_sequence"] = converted_seq
+                                        # Create a mock response object with corrected content
+                                        corrected_content = json.dumps(parsed)
+                                        from types import SimpleNamespace
+                                        mock_response = SimpleNamespace()
+                                        mock_response.choices = [SimpleNamespace()]
+                                        mock_response.choices[0].message = SimpleNamespace()
+                                        mock_response.choices[0].message.content = corrected_content
+                                        response = mock_response
+                                        # Try to get cost from error's raw_response if available
+                                        try:
+                                            raw_resp = getattr(e, 'raw_response', None)
+                                            if raw_resp:
+                                                cost = completion_cost(completion_response=raw_resp)
+                                            else:
+                                                cost = 0.0
+                                        except Exception:
+                                            cost = 0.0
+                                        logger.warning(f"Converted action sequence with string actions to integers")
+                                    else:
+                                        raise
+                                else:
+                                    raise
+                            else:
+                                raise
+                        else:
+                            raise
+                    except Exception as conv_exc:
+                        logger.error(f"Failed to convert action string to integer: {conv_exc}")
+                        raise e
+                else:
+                    raise
 
             # Parse response
             content = response.choices[0].message.content

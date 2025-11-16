@@ -1,6 +1,6 @@
 import json
 import typing as t
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 from typing import Dict
@@ -11,8 +11,8 @@ class Step:
     observation: str
     action: t.Optional[int]
     reward: t.Optional[float]
-    note: t.Optional[str]
-    metadata: Dict
+    note: t.Optional[str] = None
+    metadata: Dict = field(default_factory=dict)
 
     def __dict__(self) -> dict:
         return {
@@ -73,12 +73,11 @@ def load_trajectory_from_file(file_path: str | Path) -> Trajectory:
     data = json.loads(Path(file_path).read_text())
 
     steps = [Step(**step_dict) for step_dict in data.get("steps", [])]
-    action_space = data.get("action_space") or []
+    # action_space is deprecated, ignore it if present in old files
     final_reward = data.get("final_reward")
     traj_metadata = data.get("traj_metadata")
     return Trajectory(
         steps=steps,
-        action_space=action_space,
         final_reward=final_reward,
         traj_metadata=traj_metadata,
     )

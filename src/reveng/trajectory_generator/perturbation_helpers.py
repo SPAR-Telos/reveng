@@ -302,7 +302,7 @@ def generate_trajectory_with_perturbations(
         info = next_info
         step_count += 1
 
-    traj = Trajectory(steps=steps, action_space=[], final_reward=total_reward)
+    traj = Trajectory(steps=steps, final_reward=total_reward, traj_metadata={})
     # Store perturbation log in trajectory metadata
     if not hasattr(traj, "metadata"):
         traj.metadata = {}
