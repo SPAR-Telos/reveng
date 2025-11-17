@@ -70,7 +70,21 @@ if __name__ == "__main__":
 
     print(f"Generating {args.num_envs} environments of size {args.size}")
 
+    # Initialize CSV file path and create directory
+    os.makedirs(args.results_dir, exist_ok=True)
+    results_path = os.path.join(args.results_dir, args.file_name)
+    print(f"CSV file path: {results_path}")
+    print(f"CSV file absolute path: {os.path.abspath(results_path)}")
+    
+    # Track statistics
+    successful_grids = 0
+    failed_grids = 0
+    failed_grid_indices = []
+
     for env_idx in range(args.num_envs):
+        print(f"\n{'='*60}")
+        print(f"Processing grid {env_idx + 1}/{args.num_envs} (env_idx: {env_idx})")
+        print(f"{'='*60}")
         env = Simple2DNavigationEnv(size=args.size, complexity=complexities[env_idx])
 
         partially_observable_env = text_wrappers.LoggingFogOfWarTextWrapper(env)
@@ -121,13 +135,27 @@ if __name__ == "__main__":
             )
             # Generate full action sequence in one call (for decoder probe training)
             # Use the full prompt (instructions + grid) for activation extraction later
-            action_sequence, metadata = agent.generate_full_action_sequence(
-                grid_observation=fo_observation_str,
-                max_sequence_length=args.size**2,
-            )
-            trajectory_length = len(action_sequence)
-            print(f"LLM generated action sequence length: {trajectory_length}")
-            action_sequence_json = json.dumps(action_sequence)
+            try:
+                action_sequence, metadata = agent.generate_full_action_sequence(
+                    grid_observation=fo_observation_str,
+                    max_sequence_length=args.size**2,
+                )
+                trajectory_length = len(action_sequence)
+                print(f"LLM generated action sequence length: {trajectory_length}")
+                action_sequence_json = json.dumps(action_sequence)
+            except Exception as e:
+                print(f"\n{'!'*60}")
+                print(f"ERROR: Failed to generate action sequence for grid {env_idx}")
+                print(f"Error type: {type(e).__name__}")
+                print(f"Error message: {str(e)}")
+                import traceback
+                print("Traceback:")
+                traceback.print_exc()
+                print(f"{'!'*60}\n")
+                failed_grids += 1
+                failed_grid_indices.append(env_idx)
+                # Skip this grid and continue to next one
+                continue
         else:
             raise ValueError(f"Unknown agent type: {args.agent_type}")
 
@@ -146,12 +174,82 @@ if __name__ == "__main__":
             action_sequence = [int(step.action) for step in trajectory.steps]
             action_sequence_json = json.dumps(action_sequence)
 
+        # Prepare result row
         if args.trajectory_steps == 0:
             print("Only saving the initial observation")
             if args.decoder_training_only:
                 # Save all columns except partial observability fields
-                results.append(
-                    {
+                result_row = {
+                    "env_idx": env_idx,
+                    "fo_observation": fo_observation_str,
+                    "fo_prompt": fo_prompt,
+                    "fo_cell_types": fo_cell_types,
+                    "classes_map": repr(partially_observable_env.grid_cells),
+                    "optimal_trajectory_length": trajectory_length,
+                    "trajectory_step": 0,
+                    "action_sequence": action_sequence_json,
+                    "start_pos": str(start_pos),
+                    "goal_pos": str(goal_pos),
+                    "agent_type": args.agent_type,
+                }
+            else:
+                # Save all columns (original behavior)
+                result_row = {
+                    "env_idx": env_idx,
+                    "fo_observation": fo_observation_str,
+                    "fo_prompt": fo_prompt,
+                    "po_observation": po_observation_str,
+                    "po_prompt": po_prompt,
+                    "fo_cell_types": fo_cell_types,
+                    "po_cell_types": po_cell_types,
+                    "classes_map": repr(partially_observable_env.grid_cells),
+                    "optimal_trajectory_length": trajectory_length,
+                    "trajectory_step": 0,
+                    "action_sequence": action_sequence_json,
+                    "start_pos": str(start_pos),
+                    "goal_pos": str(goal_pos),
+                    "agent_type": args.agent_type,
+                }
+            
+            # Save incrementally to CSV
+            try:
+                df_row = pd.DataFrame([result_row])
+                # Check if file exists and has content (more reliable check)
+                file_exists = False
+                if os.path.exists(results_path):
+                    try:
+                        file_exists = os.path.getsize(results_path) > 0
+                    except OSError:
+                        file_exists = False
+                
+                df_row.to_csv(
+                    results_path,
+                    mode='a',
+                    header=not file_exists,
+                    index=False,
+                    lineterminator='\n'  # Ensure proper line endings
+                )
+                # Verify the write succeeded
+                if not os.path.exists(results_path) or os.path.getsize(results_path) == 0:
+                    raise IOError(f"CSV file was not written properly for grid {env_idx}")
+                
+                successful_grids += 1
+                print(f"✓ Saved grid {env_idx} to CSV (Success: {successful_grids}, Failed: {failed_grids})")
+            except Exception as save_error:
+                print(f"ERROR: Failed to save grid {env_idx} to CSV: {save_error}")
+                failed_grids += 1
+                failed_grid_indices.append(env_idx)
+                import traceback
+                traceback.print_exc()
+                # Continue processing other grids even if save fails
+        elif args.trajectory_steps > 0:
+            if args.agent_type == "llm":
+                # For LLM with full sequence generation, we don't have intermediate steps
+                # Just save the initial observation with the full sequence
+                print("Warning: trajectory_steps > 0 not supported for LLM full sequence generation. Using initial observation only.")
+                if args.decoder_training_only:
+                    # Save all columns except partial observability fields
+                    result_row = {
                         "env_idx": env_idx,
                         "fo_observation": fo_observation_str,
                         "fo_prompt": fo_prompt,
@@ -164,11 +262,8 @@ if __name__ == "__main__":
                         "goal_pos": str(goal_pos),
                         "agent_type": args.agent_type,
                     }
-                )
-            else:
-                # Save all columns (original behavior)
-                results.append(
-                    {
+                else:
+                    result_row = {
                         "env_idx": env_idx,
                         "fo_observation": fo_observation_str,
                         "fo_prompt": fo_prompt,
@@ -184,48 +279,38 @@ if __name__ == "__main__":
                         "goal_pos": str(goal_pos),
                         "agent_type": args.agent_type,
                     }
-                )
-        elif args.trajectory_steps > 0:
-            if args.agent_type == "llm":
-                # For LLM with full sequence generation, we don't have intermediate steps
-                # Just save the initial observation with the full sequence
-                print("Warning: trajectory_steps > 0 not supported for LLM full sequence generation. Using initial observation only.")
-                if args.decoder_training_only:
-                    # Save all columns except partial observability fields
-                    results.append(
-                        {
-                            "env_idx": env_idx,
-                            "fo_observation": fo_observation_str,
-                            "fo_prompt": fo_prompt,
-                            "fo_cell_types": fo_cell_types,
-                            "classes_map": repr(partially_observable_env.grid_cells),
-                            "optimal_trajectory_length": trajectory_length,
-                            "trajectory_step": 0,
-                            "action_sequence": action_sequence_json,
-                            "start_pos": str(start_pos),
-                            "goal_pos": str(goal_pos),
-                            "agent_type": args.agent_type,
-                        }
+                
+                # Save incrementally to CSV
+                try:
+                    df_row = pd.DataFrame([result_row])
+                    # Check if file exists and has content (more reliable check)
+                    file_exists = False
+                    if os.path.exists(results_path):
+                        try:
+                            file_exists = os.path.getsize(results_path) > 0
+                        except OSError:
+                            file_exists = False
+                    
+                    df_row.to_csv(
+                        results_path,
+                        mode='a',
+                        header=not file_exists,
+                        index=False,
+                        lineterminator='\n'  # Ensure proper line endings
                     )
-                else:
-                    results.append(
-                        {
-                            "env_idx": env_idx,
-                            "fo_observation": fo_observation_str,
-                            "fo_prompt": fo_prompt,
-                            "po_observation": po_observation_str,
-                            "po_prompt": po_prompt,
-                            "fo_cell_types": fo_cell_types,
-                            "po_cell_types": po_cell_types,
-                            "classes_map": repr(partially_observable_env.grid_cells),
-                            "optimal_trajectory_length": trajectory_length,
-                            "trajectory_step": 0,
-                            "action_sequence": action_sequence_json,
-                            "start_pos": str(start_pos),
-                            "goal_pos": str(goal_pos),
-                            "agent_type": args.agent_type,
-                        }
-                    )
+                    # Verify the write succeeded
+                    if not os.path.exists(results_path) or os.path.getsize(results_path) == 0:
+                        raise IOError(f"CSV file was not written properly for grid {env_idx}")
+                    
+                    successful_grids += 1
+                    print(f"✓ Saved grid {env_idx} to CSV (Success: {successful_grids}, Failed: {failed_grids})")
+                except Exception as save_error:
+                    print(f"ERROR: Failed to save grid {env_idx} to CSV: {save_error}")
+                    failed_grids += 1
+                    failed_grid_indices.append(env_idx)
+                    import traceback
+                    traceback.print_exc()
+                    # Continue processing other grids even if save fails
             else:
                 # For A* agent, use trajectory steps
                 stepsize = len(trajectory.steps) // args.trajectory_steps
@@ -272,48 +357,81 @@ if __name__ == "__main__":
                 
                 if args.decoder_training_only:
                     # Save all columns except partial observability fields
-                    results.append(
-                        {
-                            "env_idx": env_idx,
-                            "fo_observation": fo_observation,
-                            "fo_prompt": fo_prompt,
-                            "fo_cell_types": fo_cell_types,
-                            "classes_map": repr(partially_observable_env.grid_cells),
-                            "optimal_trajectory_length": trajectory_length - step_idx,
-                            "trajectory_step": step_idx,
-                            "action_sequence": remaining_actions_json,
-                            "start_pos": str(start_pos),
-                            "goal_pos": str(goal_pos),
-                            "agent_type": args.agent_type,
-                        }
-                    )
+                    result_row = {
+                        "env_idx": env_idx,
+                        "fo_observation": fo_observation,
+                        "fo_prompt": fo_prompt,
+                        "fo_cell_types": fo_cell_types,
+                        "classes_map": repr(partially_observable_env.grid_cells),
+                        "optimal_trajectory_length": trajectory_length - step_idx,
+                        "trajectory_step": step_idx,
+                        "action_sequence": remaining_actions_json,
+                        "start_pos": str(start_pos),
+                        "goal_pos": str(goal_pos),
+                        "agent_type": args.agent_type,
+                    }
                 else:
                     # Save all columns (original behavior)
-                    results.append(
-                        {
-                            "env_idx": env_idx,
-                            "fo_observation": fo_observation,
-                            "fo_prompt": fo_prompt,
-                            "po_observation": po_observation,
-                            "po_prompt": po_prompt,
-                            "fo_cell_types": fo_cell_types,
-                            "po_cell_types": po_cell_types,
-                            "classes_map": repr(partially_observable_env.grid_cells),
-                            "optimal_trajectory_length": trajectory_length
-                            - step_idx,
-                            "trajectory_step": step_idx,
-                            "action_sequence": remaining_actions_json,
-                            "start_pos": str(start_pos),
-                            "goal_pos": str(goal_pos),
-                            "agent_type": args.agent_type,
-                        }
+                    result_row = {
+                        "env_idx": env_idx,
+                        "fo_observation": fo_observation,
+                        "fo_prompt": fo_prompt,
+                        "po_observation": po_observation,
+                        "po_prompt": po_prompt,
+                        "fo_cell_types": fo_cell_types,
+                        "po_cell_types": po_cell_types,
+                        "classes_map": repr(partially_observable_env.grid_cells),
+                        "optimal_trajectory_length": trajectory_length
+                        - step_idx,
+                        "trajectory_step": step_idx,
+                        "action_sequence": remaining_actions_json,
+                        "start_pos": str(start_pos),
+                        "goal_pos": str(goal_pos),
+                        "agent_type": args.agent_type,
+                    }
+                
+                # Save incrementally to CSV
+                try:
+                    df_row = pd.DataFrame([result_row])
+                    # Check if file exists and has content (more reliable check)
+                    file_exists = False
+                    if os.path.exists(results_path):
+                        try:
+                            file_exists = os.path.getsize(results_path) > 0
+                        except OSError:
+                            file_exists = False
+                    
+                    df_row.to_csv(
+                        results_path,
+                        mode='a',
+                        header=not file_exists,
+                        index=False,
+                        lineterminator='\n'  # Ensure proper line endings
                     )
+                    # Verify the write succeeded
+                    if not os.path.exists(results_path) or os.path.getsize(results_path) == 0:
+                        raise IOError(f"CSV file was not written properly for grid {env_idx} step {step_idx}")
+                    
+                    successful_grids += 1
+                    print(f"✓ Saved grid {env_idx} step {step_idx} to CSV (Success: {successful_grids}, Failed: {failed_grids})")
+                except Exception as save_error:
+                    print(f"ERROR: Failed to save grid {env_idx} step {step_idx} to CSV: {save_error}")
+                    failed_grids += 1
+                    failed_grid_indices.append(env_idx)
+                    import traceback
+                    traceback.print_exc()
+                    # Continue processing other grids even if save fails
         else:
             raise ValueError(f"Invalid trajectory steps: {args.trajectory_steps}")
 
-    df = pd.DataFrame(results)
-
-    os.makedirs(args.results_dir, exist_ok=True)
-    results_path = os.path.join(args.results_dir, args.file_name)
-    df.to_csv(results_path, index=False)
-    print(f"Results saved to {results_path}")
+    # Print final summary
+    print(f"\n{'='*60}")
+    print("GENERATION COMPLETE")
+    print(f"{'='*60}")
+    print(f"Total grids processed: {args.num_envs}")
+    print(f"Successful grids: {successful_grids}")
+    print(f"Failed grids: {failed_grids}")
+    if failed_grid_indices:
+        print(f"Failed grid indices: {failed_grid_indices[:10]}{'...' if len(failed_grid_indices) > 10 else ''}")
+    print(f"Results saved to: {results_path}")
+    print(f"{'='*60}")

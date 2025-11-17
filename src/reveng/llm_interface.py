@@ -82,20 +82,93 @@ class BaseLLMInterface:
             Tuple of (response_object, cost_in_usd)
         """
         try:
-            # For action sequences, we don't need 10000 tokens. Use 5000 to avoid streaming requirement.
-            # Fireworks requires stream=True when max_tokens > 5000, so we cap at 5000 for Fireworks
+            # Enable higher token limits for action sequences
+            # Fireworks requires stream=True when max_tokens > 5000
+            # However, streaming with response_format is problematic, so we use 5000 when response_format is used
             is_fireworks = "fireworks" in self.model_name.lower()
             if is_fireworks:
-                max_tokens = 5000  # Avoid streaming requirement for Fireworks
+                if response_format:
+                    # Use 5000 to avoid streaming requirement when using structured output
+                    max_tokens = 5000
+                    stream = False
+                else:
+                    max_tokens = 10000  # Increased from 5000 to allow longer reasoning
+                    stream = True  # Required by Fireworks when max_tokens > 5000
             else:
                 max_tokens = 10000 if "cohere" not in self.model_name else 8192
+                stream = False
             
-            # Use non-streaming completion (streaming disabled since we cap at 5000 for Fireworks)
-            response = completion(
-                **kwargs,
-                response_format=response_format,
-                max_tokens=max_tokens,
-            )
+            # Handle streaming responses
+            if stream:
+                # For streaming with response_format, litellm should handle it automatically
+                # but we need to collect the stream and reconstruct properly
+                stream_response = completion(
+                    **kwargs,
+                    response_format=response_format,
+                    max_tokens=max_tokens,
+                    stream=True,
+                )
+                
+                # When using response_format with streaming, litellm may return the final
+                # structured response in a special way. Let's collect all chunks first.
+                chunks = []
+                try:
+                    for chunk in stream_response:
+                        chunks.append(chunk)
+                except Exception as stream_error:
+                    logger.error(f"Error reading stream: {stream_error}")
+                    raise
+                
+                if not chunks:
+                    raise ValueError("No response chunks received from streaming")
+                
+                # When using response_format, litellm typically provides the complete
+                # structured response. Check if the last chunk has the full response
+                response = chunks[-1]
+                
+                # Verify the response has the expected structure
+                if not hasattr(response, 'choices') or not response.choices:
+                    raise ValueError("Streaming response missing choices")
+                
+                # For response_format, the content should be in the message
+                # If it's missing, try to reconstruct from chunks
+                if not hasattr(response.choices[0], 'message') or \
+                   not hasattr(response.choices[0].message, 'content') or \
+                   not response.choices[0].message.content:
+                    # Reconstruct from all chunks - collect content from deltas
+                    from types import SimpleNamespace
+                    full_content = ""
+                    finish_reason = None
+                    
+                    for chunk in chunks:
+                        if hasattr(chunk, 'choices') and chunk.choices:
+                            choice = chunk.choices[0]
+                            # Handle delta format (streaming chunks)
+                            if hasattr(choice, 'delta') and choice.delta:
+                                if hasattr(choice.delta, 'content') and choice.delta.content:
+                                    full_content += choice.delta.content
+                            # Handle message format (final chunk)
+                            elif hasattr(choice, 'message') and choice.message:
+                                if hasattr(choice.message, 'content') and choice.message.content:
+                                    full_content = choice.message.content
+                            # Get finish_reason
+                            if hasattr(choice, 'finish_reason') and choice.finish_reason:
+                                finish_reason = choice.finish_reason
+                    
+                    # Ensure response structure exists
+                    if not hasattr(response.choices[0], 'message'):
+                        response.choices[0].message = SimpleNamespace()
+                    response.choices[0].message.content = full_content
+                    
+                    if finish_reason and not hasattr(response.choices[0], 'finish_reason'):
+                        response.choices[0].finish_reason = finish_reason
+            else:
+                # Non-streaming completion
+                response = completion(
+                    **kwargs,
+                    response_format=response_format,
+                    max_tokens=max_tokens,
+                )
         except Exception as e:
             logger.error(f"Model request failed: {e}\n{traceback.format_exc()}")
             raise
@@ -226,7 +299,11 @@ class BaseLLMInterface:
                 # Log the entire choice object to see the finish_reason
                 logger.error(f"Empty response from model. Full choice object: {choice}")
                 # Raise a more informative error
-                finish_reason = choice.get("finish_reason", "N/A")
+                # Handle both dict-like and SimpleNamespace objects
+                if hasattr(choice, 'get'):
+                    finish_reason = choice.get("finish_reason", "N/A")
+                else:
+                    finish_reason = getattr(choice, "finish_reason", "N/A")
                 raise ValueError(
                     f"Empty response from model. Finish reason: '{finish_reason}'"
                 )
