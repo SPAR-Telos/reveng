@@ -28,7 +28,12 @@ dependencies = [
     "ipykernel>=7.0.1",
     "jupyter>=1.1.1",
     "seaborn>=0.13.2",
+    "tyro>=0.10.0a6",
+    "transformers>=4.57.3",
 ]
 
 [tool.setuptools]
 packages = { find = { where = ["src"] } }
+
+[project.scripts]
+"reveng-cli" = "reveng.commands.cli:main"
