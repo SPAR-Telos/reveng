@@ -31,6 +31,7 @@ dependencies = [
     "together>=1.5.31",
     "tyro>=0.10.0a6",
     "transformers>=4.57.3",
+    "huggingface_hub>=0.25.0",
 ]
 
 [tool.setuptools]

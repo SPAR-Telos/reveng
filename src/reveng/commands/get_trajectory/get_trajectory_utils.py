@@ -1,21 +1,29 @@
 """Utility functions for trajectory generation, token processing, and LLM completion handling."""
 
-import re
 import json
-import traceback
 import logging
-from typing import Any
+import math
+import os
+import re
+import traceback
 from copy import deepcopy
-from tenacity import retry, stop_after_attempt, wait_random_exponential
+from pathlib import Path
+from typing import Any
+
+from huggingface_hub import CommitOperationAdd, HfApi, login
 from litellm import completion, completion_cost
+from tenacity import retry, stop_after_attempt, wait_random_exponential
 
 from reveng.agents.alpha_start_agent import AlphaStarAgent
 from reveng.agents.llm_agent import LLMAgent
 from reveng.datatypes import Step, Trajectory
+from reveng.environment_generator.wrappers.text_obs_wrapper import (
+    FullObservabilityTextWrapper,
+)
 from reveng.trajectory_generator.trajectory_generator import generate_one_trajectory
-from reveng.environment_generator.wrappers.text_obs_wrapper import FullObservabilityTextWrapper
 
 logger = logging.getLogger(__file__)
+
 
 @retry(
     stop=stop_after_attempt(5),
@@ -77,7 +85,7 @@ def parse_action(model_output: str) -> tuple[int, str]:
             return 3, action
         else:
             return -1, "N/A"
-    except:
+    except Exception:
         return -1, "N/A"
 
 
@@ -106,7 +114,23 @@ def get_astar_distance(env, observation):
     return len(trajectory.steps)
 
 
-def to_dic_list(txt, tokenizer, groups = ["prompt"], start_idx = 0):
+def get_dynamic_max_steps(astar_distance: int) -> int:
+    """Calculate dynamic max steps based on A* optimal path length.
+
+    Computes a reasonable upper bound for trajectory length as 1.5 times
+    the optimal A* path length. This allows some slack for suboptimal
+    actions while preventing excessively long trajectories.
+
+    Args:
+        astar_distance: The optimal A* path length to the goal.
+
+    Returns:
+        int: The dynamic max steps (ceil of 1.5 * astar_distance).
+    """
+    return math.ceil(1.5 * astar_distance)
+
+
+def to_dic_list(txt, tokenizer, groups=["prompt"], start_idx=0):
     """Convert text to a list of token dictionaries with metadata.
 
     Tokenizes the input text and creates a structured representation where each token
@@ -130,12 +154,9 @@ def to_dic_list(txt, tokenizer, groups = ["prompt"], start_idx = 0):
 
     out = []
     for i, (t, id) in enumerate(zip(tokens, ids), start=start_idx):
-        out.append({
-            "id": i,
-            "token": t,
-            "token_id": id,
-            "token_groups": deepcopy(groups)
-        })
+        out.append(
+            {"id": i, "token": t, "token_id": id, "token_groups": deepcopy(groups)}
+        )
     return out
 
 
@@ -159,45 +180,53 @@ def annotate_output_tokens(model_name: str, output_tokens):
         NotImplementedError: If the model is not supported for annotation.
     """
     if "openai/gpt-oss-20b" in model_name:
-        template_special_tokens = {'<|channel|>', '<|message|>', '<|end|>', '<|start|>', '<|return|>'}
-    
+        template_special_tokens = {
+            "<|channel|>",
+            "<|message|>",
+            "<|end|>",
+            "<|start|>",
+            "<|return|>",
+        }
+
         in_template_mode = True
         current_section = None
-        
+
         for token in output_tokens:
-            token_str = token['token']
-            
+            token_str = token["token"]
+
             if token_str in template_special_tokens:
-                token['token_groups'].append('template')
-                
-                if token_str == '<|end|>':
+                token["token_groups"].append("template")
+
+                if token_str == "<|end|>":
                     in_template_mode = True
-                elif token_str == '<|message|>':
+                elif token_str == "<|message|>":
                     in_template_mode = False
-                elif token_str == '<|return|>':
+                elif token_str == "<|return|>":
                     current_section = None
-            
+
             elif in_template_mode:
                 # Template mode: tokens like 'analysis', 'final', 'assistant'
-                token['token_groups'].append('template')
-                
+                token["token_groups"].append("template")
+
                 # Track which section we're about to enter
-                if token_str in ['analysis', 'final']:
+                if token_str in ["analysis", "final"]:
                     current_section = token_str
-            
+
             else:
                 # Content mode
                 if current_section:
-                    token['token_groups'].append(current_section)
-                
+                    token["token_groups"].append(current_section)
+
                 # Check for action words (case-insensitive, ignoring Ġ and Ċ)
-                clean_token = token_str.replace('Ġ', '').replace('Ċ', '')
-                if re.match(r'^(up|down|left|right)$', clean_token, re.IGNORECASE):
-                    token['token_groups'].append('action')
-        
+                clean_token = token_str.replace("Ġ", "").replace("Ċ", "")
+                if re.match(r"^(up|down|left|right)$", clean_token, re.IGNORECASE):
+                    token["token_groups"].append("action")
+
         return output_tokens
     else:
-        raise NotImplementedError(f"The selected model {model_name} is not supported for output annotation.")
+        raise NotImplementedError(
+            f"The selected model {model_name} is not supported for output annotation."
+        )
 
 
 def generate_trajectory(
@@ -206,7 +235,8 @@ def generate_trajectory(
     max_steps_per_trajectory: int,
     generation_kwargs: dict = {},
     metadata: dict = {},
-    verbose: bool = False
+    verbose: bool = False,
+    enable_dynamic_max_steps: bool = False,
 ):
     """Generate a complete agent trajectory in the environment.
 
@@ -222,6 +252,8 @@ def generate_trajectory(
             (e.g., temperature, top_p, max_tokens, top_logprobs).
         metadata: Additional metadata to include (currently unused).
         verbose: If True, log detailed information during generation.
+        enable_dynamic_max_steps: If True, override max_steps_per_trajectory with
+            a dynamic value based on 1.5x the A* optimal path length.
 
     Returns:
         Trajectory: A Trajectory object containing:
@@ -246,13 +278,18 @@ def generate_trajectory(
     traj_metadata["goal_coordinates"] = goal_pos[1], goal_pos[0]
     traj_metadata["astar_distance"] = get_astar_distance(env, observation)
 
+    if enable_dynamic_max_steps:
+        max_steps_per_trajectory = get_dynamic_max_steps(
+            traj_metadata["astar_distance"]
+        )
+
     while not (terminated or truncated):
         if (
             max_steps_per_trajectory is not None
             and step_count >= max_steps_per_trajectory
         ):
             break
-        
+
         unwrapped_env = getattr(env, "unwrapped", env)
         prompt = agent._generate_action_query_prompt(unwrapped_env)
         if verbose:
@@ -262,11 +299,13 @@ def generate_trajectory(
             model=agent.model_name,
             messages=[{"role": "user", "content": prompt}],
             logprobs=True,
-            **generation_kwargs
+            **generation_kwargs,
         )
         final_output = full_output.choices[0].message.content
         action, action_name = parse_action(final_output)
-        logprobs_serialized = agent._finalize_cost_and_logprobs(cost, full_output, generation_kwargs.get("top_logprobs") is not None)
+        logprobs_serialized = agent._finalize_cost_and_logprobs(
+            cost, full_output, generation_kwargs.get("top_logprobs") is not None
+        )
 
         if verbose:
             print("Output text:", final_output)
@@ -295,3 +334,161 @@ def generate_trajectory(
         traj_metadata=traj_metadata,
     )
     return traj_obj
+
+
+def upload_to_huggingface(
+    file_path: str | Path,
+    repo_id: str,
+    path_in_repo: str | None = None,
+    hf_token: str | None = None,
+    repo_type: str = "dataset",
+    commit_message: str | None = None,
+) -> str:
+    """Upload a file to a Hugging Face repository.
+
+    Uploads a single file to the specified Hugging Face Hub repository. Handles
+    authentication via token parameter or environment variable.
+
+    Args:
+        file_path: Local path to the file to upload.
+        repo_id: The Hugging Face repository ID (e.g., "username/repo-name").
+        path_in_repo: Path where the file will be stored in the repo.
+            If None, uses the original filename.
+        hf_token: Hugging Face API token. If None, attempts to use the
+            HF_TOKEN environment variable or cached credentials.
+        repo_type: Type of repository ("dataset", "model", or "space").
+        commit_message: Commit message for the upload. If None, generates
+            a default message.
+
+    Returns:
+        str: URL of the uploaded file on Hugging Face Hub.
+
+    Raises:
+        ValueError: If authentication fails or file doesn't exist.
+        Exception: If upload fails after authentication.
+    """
+    file_path = Path(file_path)
+    if not file_path.exists():
+        raise ValueError(f"File not found: {file_path}")
+
+    # Handle authentication
+    token = hf_token or os.environ.get("HF_TOKEN")
+    if token:
+        login(token=token)
+    # If no token provided, huggingface_hub will use cached credentials
+
+    api = HfApi()
+
+    # Use filename if path_in_repo not specified
+    if path_in_repo is None:
+        path_in_repo = file_path.name
+
+    # Generate default commit message
+    if commit_message is None:
+        commit_message = f"Upload {file_path.name}"
+
+    try:
+        url = api.upload_file(
+            path_or_fileobj=str(file_path),
+            path_in_repo=path_in_repo,
+            repo_id=repo_id,
+            repo_type=repo_type,
+            commit_message=commit_message,
+        )
+        logger.info(
+            f"Successfully uploaded {file_path.name} to {repo_id}/{path_in_repo}"
+        )
+        return url
+    except Exception as e:
+        logger.error(f"Failed to upload {file_path} to Hugging Face: {e}")
+        raise
+
+
+def upload_files_to_huggingface(
+    file_paths: list[str | Path],
+    repo_id: str,
+    path_prefix: str = "",
+    hf_token: str | None = None,
+    repo_type: str = "dataset",
+    commit_message: str | None = None,
+) -> list[str]:
+    """Upload multiple files to a Hugging Face repository in a single commit.
+
+    Uploads a batch of files to the specified Hugging Face Hub repository
+    efficiently in a single commit operation.
+
+    Args:
+        file_paths: List of local file paths to upload.
+        repo_id: The Hugging Face repository ID (e.g., "username/repo-name").
+        path_prefix: Prefix path in the repository for all files
+            (e.g., "trajectories/" to put files in a subfolder).
+        hf_token: Hugging Face API token. If None, attempts to use the
+            HF_TOKEN environment variable or cached credentials.
+        repo_type: Type of repository ("dataset", "model", or "space").
+        commit_message: Commit message for the upload. If None, generates
+            a default message.
+
+    Returns:
+        list[str]: List of URLs for the uploaded files.
+
+    Raises:
+        ValueError: If authentication fails or any file doesn't exist.
+        Exception: If upload fails after authentication.
+    """
+    # Validate all files exist
+    validated_paths = []
+    for fp in file_paths:
+        path = Path(fp)
+        if not path.exists():
+            raise ValueError(f"File not found: {path}")
+        validated_paths.append(path)
+
+    if not validated_paths:
+        logger.warning("No files to upload")
+        return []
+
+    # Handle authentication
+    token = hf_token or os.environ.get("HF_TOKEN")
+    if token:
+        login(token=token)
+
+    api = HfApi()
+
+    # Generate default commit message
+    if commit_message is None:
+        commit_message = f"Upload {len(validated_paths)} trajectory files"
+
+    # Prepare upload operations
+    operations = []
+    for path in validated_paths:
+        path_in_repo = f"{path_prefix}{path.name}" if path_prefix else path.name
+        operations.append(
+            CommitOperationAdd(
+                path_in_repo=path_in_repo,
+                path_or_fileobj=str(path),
+            )
+        )
+
+    try:
+        commit_info = api.create_commit(
+            repo_id=repo_id,
+            repo_type=repo_type,
+            operations=operations,
+            commit_message=commit_message,
+        )
+        logger.info(
+            f"Successfully uploaded {len(validated_paths)} files to {repo_id} "
+            f"(commit: {commit_info.commit_url})"
+        )
+        # Return URLs for all uploaded files
+        base_url = f"https://huggingface.co/{repo_type}s/{repo_id}/blob/main"
+        urls = [
+            f"{base_url}/{path_prefix}{path.name}"
+            if path_prefix
+            else f"{base_url}/{path.name}"
+            for path in validated_paths
+        ]
+        return urls
+    except Exception as e:
+        logger.error(f"Failed to upload files to Hugging Face: {e}")
+        raise
