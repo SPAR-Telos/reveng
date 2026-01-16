@@ -167,6 +167,10 @@ class Simple2DNavigationEnv(MiniGridEnv):
             else random.randint(0, 3)
         )
 
+        # Store initial positions for safe_reset
+        self._initial_agent_pos = self.agent_pos
+        self._initial_agent_dir = self.agent_dir
+
         self.mission = "Reach the Goal"
 
     def step(self, action):
@@ -270,6 +274,10 @@ class Simple2DNavigationEnv(MiniGridEnv):
         )
         self.goal_pos = goal_pos
 
+        # Store initial positions for safe_reset
+        self._initial_agent_pos = self.agent_pos
+        self._initial_agent_dir = self.agent_dir
+
         self.mission = "Reach the Goal"
 
     def reset(self, **kwargs):
@@ -277,6 +285,38 @@ class Simple2DNavigationEnv(MiniGridEnv):
             "*******************************************WARNING: YOU HAVE CALLED RESET METHOD. THIS WILL REGENERATE THE GRID!!!*******************************************"
         )
         return super().reset(**kwargs)
+
+    def safe_reset(self):
+        """Reset the agent to its starting position without regenerating the grid.
+
+        This method resets the agent's position and direction to the initial values
+        from when the grid was generated or set, but keeps the grid layout unchanged.
+        Use this when you want to run multiple trajectories on the same grid.
+
+        Returns:
+            tuple[ObsType, dict]: A tuple of (observation, info_dict).
+
+        Raises:
+            RuntimeError: If called before the environment has been initialized
+                (i.e., before reset() or set_env_from_list() has been called).
+        """
+        if not hasattr(self, "_initial_agent_pos") or self._initial_agent_pos is None:
+            raise RuntimeError(
+                "safe_reset() called before environment was initialized. "
+                "Call reset() or set_env_from_list() first."
+            )
+
+        # Reset agent to initial position and direction
+        self.agent_pos = self._initial_agent_pos
+        self.agent_dir = self._initial_agent_dir
+
+        # Reset episode state
+        self.step_count = 0
+        self.carrying = None
+
+        # Generate and return observation
+        obs = self.gen_obs()
+        return obs, {}
 
 
 if __name__ == "__main__":

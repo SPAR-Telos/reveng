@@ -49,6 +49,8 @@ def get_trajectory(
     hf_repo_id: str | None = None,
     hf_path_in_repo: str | None = None,
     hf_token: str | None = None,
+    env: FullObservabilityTextWrapper | None = None,
+    use_safe_reset: bool = False,
 ):
     """Generate an agent trajectory in a 2D navigation environment and save detailed results to JSON.
 
@@ -77,6 +79,10 @@ def get_trajectory(
         hf_path_in_repo: Path within the HF repo where the file will be stored.
             If None, uses the output filename.
         hf_token: Hugging Face API token. If None, uses HF_TOKEN env var or cached credentials.
+        env: Optional pre-created environment. If provided, grid_size and grid_complexity
+            are ignored. Useful for generating multiple trajectories on the same grid.
+        use_safe_reset: If True, use safe_reset() which resets agent position without
+            regenerating the grid. Only applicable when env is provided.
 
     Returns:
         str | None: URL of uploaded file if hf_repo_id is provided, otherwise None.
@@ -95,9 +101,18 @@ def get_trajectory(
             - output_text: Model's generated output text
             - output_tokens: Tokenized output with probabilities and annotations
     """
-    base_env = FullObservabilityTextWrapper(
-        Simple2DNavigationEnv(size=grid_size, complexity=grid_complexity)
-    )
+    # Use provided env or create a new one
+    if env is None:
+        base_env = FullObservabilityTextWrapper(
+            Simple2DNavigationEnv(size=grid_size, complexity=grid_complexity)
+        )
+        use_safe_reset = False  # Cannot use safe_reset on a fresh env
+    else:
+        base_env = env
+        # Get grid_size from the provided env
+        grid_size = base_env.unwrapped.width
+        grid_complexity = base_env.unwrapped.complexity
+
     agent = LLMAgent(model_name)
     model_id = "/".join(model_name.split("/")[1:])
     provider = model_name.split("/")[0]
@@ -117,6 +132,7 @@ def get_trajectory(
         },
         verbose=verbose,
         enable_dynamic_max_steps=enable_dynamic_max_steps,
+        use_safe_reset=use_safe_reset,
     )
 
     grid_params = {}
@@ -436,4 +452,347 @@ def get_trajectories(
             path_prefix=hf_path_prefix,
             hf_token=hf_token,
         )
+    return None
+
+
+def get_trajectories_multiple_per_grid(
+    grid_sizes: list[int] = [5],
+    grid_complexities: list[float] = [0.0],
+    max_steps_per_trajectory: int = 50,
+    max_tokens: int = 10000,
+    temperature: float = 0.7,
+    top_p: float = 0.95,
+    top_logprobs: int = 5,
+    seed: int = 42,
+    reasoning_effort: Literal["low", "medium", "high"] = "low",
+    model_names: list[str] = ["together_ai/openai/gpt-oss-20b"],
+    observation_placeholders: list[str] = ["grid_state"],
+    output_dir: str = ".",
+    verbose: bool = False,
+    enable_dynamic_max_steps: bool = False,
+    num_trajectories_per_grid: int = 5,
+    num_grids_per_config: int = 1,
+    max_workers: int | None = None,
+    enable_rate_limit: bool = False,
+    rate_limit: int = 1000,
+    rate_limit_period: float = 300.0,
+    hf_repo_id: str | None = None,
+    hf_path_prefix: str = "",
+    hf_token: str | None = None,
+):
+    """Generate multiple trajectories on the same grid layout for each configuration.
+
+    Creates trajectories where multiple runs are performed on the same grid without
+    regenerating it. This is useful for studying variability in agent behavior on
+    identical environments.
+
+    For each (grid_size, grid_complexity, model_name) combination:
+    - Creates `num_grids_per_config` unique grid layouts
+    - For each grid, generates `num_trajectories_per_grid` trajectories using safe_reset
+
+    Note: Trajectories within the same grid are generated sequentially to ensure the
+    grid is not regenerated between runs. Different grids can be processed in parallel.
+
+    Args:
+        grid_sizes: List of grid sizes to use for trajectory generation.
+        grid_complexities: List of grid complexity levels to use.
+        max_steps_per_trajectory: Maximum number of steps to generate in each trajectory.
+        max_tokens: Maximum tokens for model generation per step.
+        temperature: Sampling temperature for the model (higher = more random).
+        top_p: Nucleus sampling parameter (cumulative probability threshold).
+        top_logprobs: Number of top log probabilities to return for each token.
+        seed: Base random seed for reproducibility. Each grid uses seed + grid_id.
+        reasoning_effort: Reasoning effort level for the model ("low", "medium", or "high").
+        model_names: List of model names in format "provider/model_id".
+        observation_placeholders: List of placeholder names in the prompt template.
+        output_dir: Directory to save the output JSON files.
+        verbose: If True, print detailed logging during trajectory generation.
+        enable_dynamic_max_steps: If True, override max_steps_per_trajectory with
+            a dynamic value based on 1.5x the A* optimal path length.
+        num_trajectories_per_grid: Number of trajectories to generate per grid layout.
+        num_grids_per_config: Number of different grid layouts per (size, complexity, model) combo.
+        max_workers: Maximum number of parallel workers for processing different grids.
+            If None, uses min(32, total_grid_tasks).
+        enable_rate_limit: If True, enforce rate limiting on API requests.
+        rate_limit: Maximum number of requests allowed per rate_limit_period.
+        rate_limit_period: Time period in seconds for rate limiting (default: 300 = 5 minutes).
+        hf_repo_id: Hugging Face repository ID to upload to (e.g., "username/repo-name").
+            If None, no upload is performed.
+        hf_path_prefix: Path prefix within the HF repo (e.g., "trajectories/" to put files
+            in a subfolder).
+        hf_token: Hugging Face API token. If None, uses HF_TOKEN env var or cached credentials.
+
+    Returns:
+        list[str] | None: List of URLs if uploaded to HF, otherwise None.
+        Results are saved to individual JSON files in output_dir with format:
+        {model_sanitized}_size{grid_size}_comp{grid_complexity}_grid{grid_id}_traj{traj_id}.json
+    """
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
+
+    # Generate all grid configurations (each will have multiple trajectories)
+    grid_configs = list(
+        product(
+            grid_sizes,
+            grid_complexities,
+            model_names,
+            range(num_grids_per_config),
+        )
+    )
+
+    total_grid_tasks = len(grid_configs)
+    total_trajectories = total_grid_tasks * num_trajectories_per_grid
+    logger.info(
+        f"Generating {total_trajectories} trajectories across {len(grid_sizes)} grid sizes, "
+        f"{len(grid_complexities)} complexities, {len(model_names)} models, "
+        f"with {num_grids_per_config} grids each and {num_trajectories_per_grid} trajectories per grid."
+    )
+
+    # Create rate limiter if enabled
+    rate_limiter: RateLimiter | None = None
+    if enable_rate_limit:
+        rate_limiter = RateLimiter(rate_limit=rate_limit, period=rate_limit_period)
+        logger.info(
+            f"Rate limiting enabled: {rate_limit} requests per {rate_limit_period} seconds "
+            f"({rate_limit / rate_limit_period:.2f} requests/second)"
+        )
+
+    def _generate_trajectories_for_grid(config: tuple) -> dict:
+        """Generate multiple trajectories on a single grid and save grid data."""
+        grid_size, grid_complexity, model_name, grid_id = config
+        grid_seed = seed + grid_id
+
+        # Sanitize model name for filename
+        model_sanitized = model_name.replace("/", "_").replace(".", "_")
+
+        # Create the environment once for this grid (grid is generated during first reset)
+        np.random.seed(grid_seed)
+        env = FullObservabilityTextWrapper(
+            Simple2DNavigationEnv(size=grid_size, complexity=grid_complexity)
+        )
+        env.reset()
+
+        trajectory_results = []
+        grid_path = None
+
+        for traj_id in range(num_trajectories_per_grid):
+            # Acquire rate limit token if enabled
+            if rate_limiter is not None:
+                rate_limiter.acquire()
+
+            traj_seed = (
+                grid_seed + traj_id * 1000
+            )  # Offset seeds for different trajectories
+
+            output_filename = (
+                f"{model_sanitized}_size{grid_size}_comp{grid_complexity}"
+                f"_grid{grid_id}_traj{traj_id}.json"
+            )
+            output_path = str(Path(output_dir) / output_filename)
+
+            if verbose:
+                logger.info(
+                    f"Starting trajectory: model={model_name}, size={grid_size}, "
+                    f"complexity={grid_complexity}, grid={grid_id}, traj={traj_id}"
+                )
+
+            try:
+                get_trajectory(
+                    grid_size=grid_size,
+                    grid_complexity=grid_complexity,
+                    max_steps_per_trajectory=max_steps_per_trajectory,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                    top_p=top_p,
+                    top_logprobs=top_logprobs,
+                    seed=traj_seed,
+                    reasoning_effort=reasoning_effort,
+                    model_name=model_name,
+                    observation_placeholders=observation_placeholders,
+                    output_path=output_path,
+                    verbose=verbose,
+                    enable_dynamic_max_steps=enable_dynamic_max_steps,
+                    env=env,
+                    use_safe_reset=True,
+                )
+                trajectory_results.append(
+                    {
+                        "status": "success",
+                        "output_path": output_path,
+                        "config": config,
+                        "traj_id": traj_id,
+                    }
+                )
+
+                # After first successful trajectory, save the grid layout
+                if traj_id == 0:
+                    grid_path = _save_grid_layout(
+                        env=env,
+                        grid_size=grid_size,
+                        grid_complexity=grid_complexity,
+                        grid_id=grid_id,
+                        grid_seed=grid_seed,
+                        model_sanitized=model_sanitized,
+                    )
+
+            except Exception as e:
+                logger.error(
+                    f"Failed to generate trajectory for grid {grid_id}, traj {traj_id}: {e}"
+                )
+                trajectory_results.append(
+                    {
+                        "status": "error",
+                        "error": str(e),
+                        "config": config,
+                        "traj_id": traj_id,
+                    }
+                )
+
+        return {
+            "trajectory_results": trajectory_results,
+            "grid_path": grid_path,
+        }
+
+    def _save_grid_layout(
+        env: FullObservabilityTextWrapper,
+        grid_size: int,
+        grid_complexity: float,
+        grid_id: int,
+        grid_seed: int,
+        model_sanitized: str,
+    ) -> str:
+        """Save the grid layout to a JSON file."""
+        unwrapped = env.unwrapped
+
+        # Build grid representation as list of lists
+        grid_list = []
+        for j in range(unwrapped.height):
+            row = []
+            for i in range(unwrapped.width):
+                cell = unwrapped.grid.get(i, j)
+                if (i, j) == unwrapped.agent_pos:
+                    row.append("A")
+                elif cell is None:
+                    row.append("_")
+                elif cell.type == "wall":
+                    row.append("#")
+                elif cell.type == "goal":
+                    row.append("G")
+                else:
+                    row.append("?")
+            grid_list.append(row)
+
+        grid_data = {
+            "grid_id": grid_id,
+            "grid_seed": grid_seed,
+            "grid_size": grid_size,
+            "grid_complexity": grid_complexity,
+            "grid_width": unwrapped.width,
+            "grid_height": unwrapped.height,
+            "agent_start_pos": list(unwrapped._initial_agent_pos),
+            "agent_start_dir": unwrapped._initial_agent_dir,
+            "goal_pos": list(unwrapped.goal_pos),
+            "grid_layout": grid_list,
+            "grid_text": env._render(),
+            "legend": env.grid_cells,
+        }
+
+        grid_filename = (
+            f"{model_sanitized}_size{grid_size}_comp{grid_complexity}"
+            f"_grid{grid_id}.json"
+        )
+        grid_path = str(Path(output_dir) / grid_filename)
+
+        with open(grid_path, "w") as f:
+            json.dump(grid_data, f, indent=2)
+
+        if verbose:
+            logger.info(f"Saved grid layout to {grid_path}")
+
+        return grid_path
+
+    # Set default max_workers if not specified
+    if max_workers is None:
+        max_workers = min(32, total_grid_tasks)
+
+    # Adjust max_workers based on rate limit to avoid excessive idle workers
+    if enable_rate_limit and rate_limiter is not None:
+        sustainable_workers = min(max_workers, int(rate_limiter.tokens_per_second * 2))
+        if sustainable_workers < max_workers:
+            logger.info(
+                f"Adjusting max_workers from {max_workers} to {sustainable_workers} "
+                f"based on rate limit ({rate_limiter.tokens_per_second:.2f} req/sec)"
+            )
+            max_workers = sustainable_workers
+
+    all_trajectory_results = []
+    all_grid_paths = []
+
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = {
+            executor.submit(_generate_trajectories_for_grid, config): config
+            for config in grid_configs
+        }
+
+        for future in tqdm(
+            as_completed(futures),
+            total=total_grid_tasks,
+            desc="Processing grids",
+            unit="grid",
+        ):
+            config = futures[future]
+            try:
+                result = future.result()
+                grid_results = result["trajectory_results"]
+                grid_path = result["grid_path"]
+
+                all_trajectory_results.extend(grid_results)
+                if grid_path is not None:
+                    all_grid_paths.append(grid_path)
+
+                # Report any failures for this grid
+                failures = [r for r in grid_results if r["status"] != "success"]
+                for failure in failures:
+                    tqdm.write(
+                        f"Failed for grid {config}, traj {failure['traj_id']}: "
+                        f"{failure.get('error', 'Unknown error')}"
+                    )
+            except Exception as e:
+                tqdm.write(f"Exception for grid {config}: {e}")
+                # Mark all trajectories for this grid as failed
+                for traj_id in range(num_trajectories_per_grid):
+                    all_trajectory_results.append(
+                        {
+                            "status": "error",
+                            "error": str(e),
+                            "config": config,
+                            "traj_id": traj_id,
+                        }
+                    )
+
+    success_count = sum(1 for r in all_trajectory_results if r["status"] == "success")
+    logger.info(
+        f"Completed {success_count}/{total_trajectories} trajectories successfully."
+    )
+    logger.info(f"Saved {len(all_grid_paths)} grid layout files.")
+
+    # Upload to Hugging Face if repo_id is provided
+    if hf_repo_id is not None and (success_count > 0 or all_grid_paths):
+        all_paths_to_upload = []
+
+        # Add successful trajectory files
+        successful_traj_paths = [
+            r["output_path"] for r in all_trajectory_results if r["status"] == "success"
+        ]
+        all_paths_to_upload.extend(successful_traj_paths)
+
+        # Add grid layout files
+        all_paths_to_upload.extend(all_grid_paths)
+
+        if all_paths_to_upload:
+            return upload_files_to_huggingface(
+                file_paths=all_paths_to_upload,
+                repo_id=hf_repo_id,
+                path_prefix=hf_path_prefix,
+                hf_token=hf_token,
+            )
     return None

@@ -237,6 +237,7 @@ def generate_trajectory(
     metadata: dict = {},
     verbose: bool = False,
     enable_dynamic_max_steps: bool = False,
+    use_safe_reset: bool = False,
 ):
     """Generate a complete agent trajectory in the environment.
 
@@ -254,6 +255,9 @@ def generate_trajectory(
         verbose: If True, log detailed information during generation.
         enable_dynamic_max_steps: If True, override max_steps_per_trajectory with
             a dynamic value based on 1.5x the A* optimal path length.
+        use_safe_reset: If True, use safe_reset() which resets agent position
+            without regenerating the grid. Useful for generating multiple
+            trajectories on the same grid layout.
 
     Returns:
         Trajectory: A Trajectory object containing:
@@ -269,7 +273,13 @@ def generate_trajectory(
     terminated = False
     truncated = False
 
-    observation, _ = env.reset()
+    # Use safe_reset if specified, otherwise use regular reset
+    if use_safe_reset:
+        env.unwrapped.safe_reset()
+        # Re-generate the text observation after safe reset using the wrapper's render method
+        observation = env._render()
+    else:
+        observation, _ = env.reset()
 
     traj_metadata = {}
     start_pos = tuple(int(x) for x in env.unwrapped.agent_pos)
