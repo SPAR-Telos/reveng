@@ -1,5 +1,6 @@
 """Generate and save agent trajectories in navigation environments with detailed token-level analysis."""
 
+import copy
 import json
 import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -473,6 +474,7 @@ def get_trajectories_multiple_per_grid(
     num_trajectories_per_grid: int = 5,
     num_grids_per_config: int = 1,
     max_workers: int | None = None,
+    max_workers_per_grid: int | None = None,
     enable_rate_limit: bool = False,
     rate_limit: int = 1000,
     rate_limit_period: float = 300.0,
@@ -488,10 +490,11 @@ def get_trajectories_multiple_per_grid(
 
     For each (grid_size, grid_complexity, model_name) combination:
     - Creates `num_grids_per_config` unique grid layouts
-    - For each grid, generates `num_trajectories_per_grid` trajectories using safe_reset
+    - For each grid, generates `num_trajectories_per_grid` trajectories in parallel
 
-    Note: Trajectories within the same grid are generated sequentially to ensure the
-    grid is not regenerated between runs. Different grids can be processed in parallel.
+    Note: Trajectories within the same grid use deepcopy of the environment to enable
+    parallel execution while ensuring identical grid layouts. Different grids are also
+    processed in parallel.
 
     Args:
         grid_sizes: List of grid sizes to use for trajectory generation.
@@ -513,6 +516,8 @@ def get_trajectories_multiple_per_grid(
         num_grids_per_config: Number of different grid layouts per (size, complexity, model) combo.
         max_workers: Maximum number of parallel workers for processing different grids.
             If None, uses min(32, total_grid_tasks).
+        max_workers_per_grid: Maximum number of parallel workers for trajectories within each grid.
+            If None, uses num_trajectories_per_grid (full parallelism within each grid).
         enable_rate_limit: If True, enforce rate limiting on API requests.
         rate_limit: Maximum number of requests allowed per rate_limit_period.
         rate_limit_period: Time period in seconds for rate limiting (default: 300 = 5 minutes).
@@ -557,24 +562,32 @@ def get_trajectories_multiple_per_grid(
         )
 
     def _generate_trajectories_for_grid(config: tuple) -> dict:
-        """Generate multiple trajectories on a single grid and save grid data."""
+        """Generate multiple trajectories on a single grid in parallel using deepcopy."""
         grid_size, grid_complexity, model_name, grid_id = config
         grid_seed = seed + grid_id
 
         # Sanitize model name for filename
         model_sanitized = model_name.replace("/", "_").replace(".", "_")
 
-        # Create the environment once for this grid (grid is generated during first reset)
+        # Create the master environment once for this grid
         np.random.seed(grid_seed)
-        env = FullObservabilityTextWrapper(
+        master_env = FullObservabilityTextWrapper(
             Simple2DNavigationEnv(size=grid_size, complexity=grid_complexity)
         )
-        env.reset()
+        master_env.reset()
 
-        trajectory_results = []
-        grid_path = None
+        # Save grid layout from master env immediately
+        grid_path = _save_grid_layout(
+            env=master_env,
+            grid_size=grid_size,
+            grid_complexity=grid_complexity,
+            grid_id=grid_id,
+            grid_seed=grid_seed,
+            model_sanitized=model_sanitized,
+        )
 
-        for traj_id in range(num_trajectories_per_grid):
+        def _generate_single_trajectory(traj_id: int) -> dict:
+            """Generate a single trajectory using a deepcopy of the master environment."""
             # Acquire rate limit token if enabled
             if rate_limiter is not None:
                 rate_limiter.acquire()
@@ -582,6 +595,9 @@ def get_trajectories_multiple_per_grid(
             traj_seed = (
                 grid_seed + traj_id * 1000
             )  # Offset seeds for different trajectories
+
+            # Deep copy the environment to avoid race conditions
+            env_copy = copy.deepcopy(master_env)
 
             output_filename = (
                 f"{model_sanitized}_size{grid_size}_comp{grid_complexity}"
@@ -611,41 +627,55 @@ def get_trajectories_multiple_per_grid(
                     output_path=output_path,
                     verbose=verbose,
                     enable_dynamic_max_steps=enable_dynamic_max_steps,
-                    env=env,
+                    env=env_copy,
                     use_safe_reset=True,
                 )
-                trajectory_results.append(
-                    {
-                        "status": "success",
-                        "output_path": output_path,
-                        "config": config,
-                        "traj_id": traj_id,
-                    }
-                )
-
-                # After first successful trajectory, save the grid layout
-                if traj_id == 0:
-                    grid_path = _save_grid_layout(
-                        env=env,
-                        grid_size=grid_size,
-                        grid_complexity=grid_complexity,
-                        grid_id=grid_id,
-                        grid_seed=grid_seed,
-                        model_sanitized=model_sanitized,
-                    )
-
+                return {
+                    "status": "success",
+                    "output_path": output_path,
+                    "config": config,
+                    "traj_id": traj_id,
+                }
             except Exception as e:
                 logger.error(
                     f"Failed to generate trajectory for grid {grid_id}, traj {traj_id}: {e}"
                 )
-                trajectory_results.append(
-                    {
-                        "status": "error",
-                        "error": str(e),
-                        "config": config,
-                        "traj_id": traj_id,
-                    }
-                )
+                return {
+                    "status": "error",
+                    "error": str(e),
+                    "config": config,
+                    "traj_id": traj_id,
+                }
+
+        # Parallelize trajectories within this grid
+        inner_workers = (
+            max_workers_per_grid
+            if max_workers_per_grid is not None
+            else num_trajectories_per_grid
+        )
+        trajectory_results = []
+
+        with ThreadPoolExecutor(max_workers=inner_workers) as inner_executor:
+            futures = {
+                inner_executor.submit(_generate_single_trajectory, traj_id): traj_id
+                for traj_id in range(num_trajectories_per_grid)
+            }
+
+            for future in as_completed(futures):
+                traj_id = futures[future]
+                try:
+                    result = future.result()
+                    trajectory_results.append(result)
+                except Exception as e:
+                    logger.error(f"Exception for grid {grid_id}, traj {traj_id}: {e}")
+                    trajectory_results.append(
+                        {
+                            "status": "error",
+                            "error": str(e),
+                            "config": config,
+                            "traj_id": traj_id,
+                        }
+                    )
 
         return {
             "trajectory_results": trajectory_results,
