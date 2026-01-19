@@ -22,12 +22,14 @@ class EnvTransformation(ABC):
         self._position_attrs = (
             "agent_pos",
             "agent_start_pos_user",
+            "_initial_agent_pos",
             "goal_pos",
             "goal_pos_user",
         )
         self._direction_attrs = (
             "agent_dir",
             "agent_start_dir_user",
+            "_initial_agent_dir",
         )
 
     def __call__(self, env: MiniGridEnv) -> MiniGridEnv:
@@ -204,7 +206,7 @@ class StartGoalSwap(EnvTransformation):
         old_goal_pos = self._as_tuple(swapped_env.goal_pos)
 
         if old_agent_pos and old_goal_pos:
-            # Update agent position
+            # Update agent position attributes (move agent to where goal was)
             swapped_env.agent_pos = self._coerce_position(
                 swapped_env.agent_pos, old_goal_pos
             )
@@ -212,15 +214,26 @@ class StartGoalSwap(EnvTransformation):
                 swapped_env.agent_start_pos_user = self._coerce_position(
                     swapped_env.agent_start_pos_user, old_goal_pos
                 )
+            if hasattr(swapped_env, "_initial_agent_pos"):
+                swapped_env._initial_agent_pos = self._coerce_position(
+                    swapped_env._initial_agent_pos, old_goal_pos
+                )
 
-            # Update goal position
-            swapped_env.goal_pos = old_agent_pos
+            # Update goal position attributes (move goal to where agent was)
+            swapped_env.goal_pos = self._coerce_position(
+                swapped_env.goal_pos, old_agent_pos
+            )
             if hasattr(swapped_env, "goal_pos_user"):
-                swapped_env.goal_pos_user = old_agent_pos
+                swapped_env.goal_pos_user = self._coerce_position(
+                    swapped_env.goal_pos_user, old_agent_pos
+                )
 
             # Update grid: remove old goal and place new goal
             swapped_env.grid.set(*old_goal_pos, None)
             swapped_env.put_obj(Goal(), *old_agent_pos)
+
+            # Update object positions in the grid
+            self._set_object_positions(swapped_env.grid)
 
         return swapped_env
 
