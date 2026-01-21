@@ -1,0 +1,1486 @@
+"""Analyze fully observable grid trajectories using empirical action distributions.
+
+This module analyzes trajectories from fully observable grids, computing metrics
+based on empirical action distributions (counts across 10 trajectories per grid)
+rather than logprobs.
+
+Key metrics (trajectory-based definitions from the paper):
+
+Capability Metrics:
+- Action Accuracy: (1/T) * Σ_{t=0}^{T-1} 1(a^t ∈ π*_G(s^t))
+- Goal Success: 1(τ_G^T(s^0) = goal)
+- SPL: (1/N) * Σ (1_S * L*) / max(L*, L)
+
+Uncertainty/Calibration Metrics (using empirical distributions):
+- Mean Entropy: (1/T) * Σ H(π^θ_G(·|s^t))
+- Mean JSD: (1/T) * Σ JSD(π^θ_G(·|s^t) || π*_G(s^t))
+- ECE: Expected Calibration Error
+"""
+
+import argparse
+import gc
+import json
+import re
+from collections import defaultdict
+from collections.abc import Iterator
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Optional
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from tqdm import tqdm
+
+from reveng.analysis.analysis_utils import (
+    ACTION_ID_TO_NAME,
+    ACTION_NAME_TO_ID,
+    ActionDist,
+    OptimalActionSet,
+    jensen_shannon_divergence,
+    sanitize_label,
+    shannon_entropy,
+)
+
+# =============================================================================
+# Constants
+# =============================================================================
+
+# Maximum number of trajectories expected per grid
+NUM_TRAJECTORIES_PER_GRID = 10
+
+# Paper-quality plot settings
+PAPER_RC = {
+    "font.family": "serif",
+    "font.size": 10,
+    "axes.titlesize": 11,
+    "axes.labelsize": 10,
+    "xtick.labelsize": 9,
+    "ytick.labelsize": 9,
+    "legend.fontsize": 9,
+    "figure.titlesize": 12,
+    "axes.spines.top": False,
+    "axes.spines.right": False,
+    "axes.linewidth": 0.8,
+    "grid.linewidth": 0.5,
+    "lines.linewidth": 1.5,
+    "lines.markersize": 5,
+}
+
+MODEL_COLORS = [
+    "#0072B2",
+    "#D55E00",
+    "#009E73",
+    "#CC79A7",
+    "#F0E442",
+    "#56B4E9",
+    "#E69F00",
+]
+
+
+def setup_paper_style() -> None:
+    """Configure matplotlib for publication-quality figures."""
+    plt.rcParams.update(PAPER_RC)
+
+
+# =============================================================================
+# Data Classes
+# =============================================================================
+
+
+@dataclass
+class GridParams:
+    """Essential grid parameters extracted from trajectory."""
+
+    grid_size: int
+    complexity: float
+    grid_id: int
+    astar_distance: int
+    agent_start: tuple[int, int]
+    goal: tuple[int, int]
+
+
+@dataclass
+class TrajectoryStep:
+    """A single step in a trajectory."""
+
+    step_id: int
+    agent_position: tuple[int, int]
+    agent_action: str  # "UP", "DOWN", "LEFT", "RIGHT"
+
+
+@dataclass
+class LightweightTrajectory:
+    """Memory-efficient trajectory representation with only essential fields."""
+
+    grid_params: GridParams
+    steps: list[TrajectoryStep]
+    reached_goal: bool
+
+    @property
+    def trajectory_length(self) -> int:
+        return len(self.steps)
+
+
+@dataclass
+class StateActionCounts:
+    """Counts of actions taken at each state across multiple trajectories."""
+
+    # Map from (x, y) position to action counts {action_id: count}
+    counts: dict[tuple[int, int], dict[int, int]] = field(
+        default_factory=lambda: defaultdict(lambda: defaultdict(int))
+    )
+
+    def add(self, position: tuple[int, int], action: str) -> None:
+        """Add an action observation at a position."""
+        action_id = ACTION_NAME_TO_ID.get(action.upper())
+        if action_id is not None:
+            self.counts[position][action_id] += 1
+
+    def get_empirical_distribution(self, position: tuple[int, int]) -> ActionDist:
+        """Get empirical action distribution at a position."""
+        action_counts = self.counts.get(position, {})
+        total = sum(action_counts.values())
+        if total == 0:
+            return {aid: 0.0 for aid in ACTION_ID_TO_NAME}
+        return {aid: action_counts.get(aid, 0) / total for aid in ACTION_ID_TO_NAME}
+
+    def get_total_visits(self, position: tuple[int, int]) -> int:
+        """Get total number of visits to a position."""
+        return sum(self.counts.get(position, {}).values())
+
+
+@dataclass
+class GridTrajectoryMetrics:
+    """Metrics computed from all trajectories for a single grid."""
+
+    grid_id: str
+    grid_size: int
+    complexity: float
+    instance_id: int
+    optimal_path_length: int
+
+    # Capability metrics (trajectory-based)
+    num_trajectories: int
+    num_successful: int
+    goal_success_rate: float
+    mean_trajectory_length: float
+    mean_action_accuracy: float  # Avg across trajectories
+    spl: float  # Success weighted by Path Length
+
+    # Uncertainty metrics (using empirical distribution)
+    mean_entropy: float  # Avg entropy of empirical dist at visited states
+    mean_jsd: float  # Avg JSD between empirical and optimal dist
+    ece: float  # Expected Calibration Error
+
+    # Additional
+    mean_step_accuracy: float  # Per-step accuracy (all steps across all trajs)
+    total_steps: int
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert to dictionary for DataFrame construction."""
+        return {
+            "grid_id": self.grid_id,
+            "grid_size": self.grid_size,
+            "complexity": self.complexity,
+            "instance_id": self.instance_id,
+            "optimal_path_length": self.optimal_path_length,
+            "num_trajectories": self.num_trajectories,
+            "num_successful": self.num_successful,
+            "goal_success_rate": self.goal_success_rate,
+            "mean_trajectory_length": self.mean_trajectory_length,
+            "mean_action_accuracy": self.mean_action_accuracy,
+            "spl": self.spl,
+            "mean_entropy": self.mean_entropy,
+            "mean_jsd": self.mean_jsd,
+            "ece": self.ece,
+            "mean_step_accuracy": self.mean_step_accuracy,
+            "total_steps": self.total_steps,
+        }
+
+
+@dataclass
+class ModelTrajectoryResults:
+    """Results for a single model."""
+
+    model_name: str
+    df: pd.DataFrame  # Per-grid metrics
+    summary_by_size_complexity: pd.DataFrame
+    summary_by_distance: pd.DataFrame  # Per-distance metrics
+    overall_summary: dict[str, Any]
+
+    @property
+    def n_grids(self) -> int:
+        return len(self.df)
+
+
+# =============================================================================
+# File Parsing and Discovery
+# =============================================================================
+
+
+def parse_trajectory_filename(filename: str) -> Optional[dict[str, Any]]:
+    """Parse trajectory filename to extract metadata.
+
+    Expected format: {model}_size{N}_comp{X.X}_grid{N}_base_traj{N}.json
+
+    Returns None if not a valid baseline trajectory file.
+    """
+    # Skip non-base (isotransform) files
+    if "_base_traj" not in filename:
+        return None
+
+    # Pattern: {model}_size{size}_comp{comp}_grid{grid_id}_base_traj{traj_id}.json
+    pattern = r"(.+)_size(\d+)_comp([\d.]+)_grid(\d+)_base_traj(\d+)\.json"
+    match = re.match(pattern, filename)
+
+    if not match:
+        return None
+
+    model, size, comp, grid_id, traj_id = match.groups()
+    return {
+        "model": model,
+        "grid_size": int(size),
+        "complexity": float(comp),
+        "grid_id": int(grid_id),
+        "trajectory_id": int(traj_id),
+    }
+
+
+def discover_trajectory_files(
+    trajectory_dir: Path,
+) -> dict[str, list[Path]]:
+    """Discover trajectory files grouped by grid.
+
+    Returns:
+        Dictionary mapping grid_key to list of trajectory file paths
+        Grid key format: "size{N}_comp{X.X}_grid{N}"
+    """
+    grid_trajectories: dict[str, list[Path]] = defaultdict(list)
+
+    for filepath in sorted(trajectory_dir.glob("*_base_traj*.json")):
+        parsed = parse_trajectory_filename(filepath.name)
+        if parsed:
+            grid_key = (
+                f"size{parsed['grid_size']}_"
+                f"comp{parsed['complexity']}_"
+                f"grid{parsed['grid_id']}"
+            )
+            grid_trajectories[grid_key].append(filepath)
+
+    return dict(grid_trajectories)
+
+
+def discover_model_directories(parent_dir: Path, max_depth: int = 3) -> list[Path]:
+    """Discover directories containing trajectory files.
+
+    Searches recursively up to max_depth levels for directories with
+    baseline trajectory files (*_base_traj*.json).
+
+    Args:
+        parent_dir: Root directory to search from
+        max_depth: Maximum directory depth to search
+
+    Returns:
+        List of directories containing trajectory files
+    """
+    model_dirs = []
+
+    def _search_recursive(current_dir: Path, depth: int) -> None:
+        if depth > max_depth:
+            return
+
+        # Check if this directory has trajectory files
+        traj_files = list(current_dir.glob("*_base_traj*.json"))
+        if traj_files:
+            model_dirs.append(current_dir)
+            return  # Don't search subdirectories if we found files here
+
+        # Otherwise, search subdirectories
+        try:
+            for subdir in sorted(current_dir.iterdir()):
+                if subdir.is_dir() and not subdir.name.startswith("."):
+                    _search_recursive(subdir, depth + 1)
+        except PermissionError:
+            pass
+
+    _search_recursive(parent_dir, 0)
+    return model_dirs
+
+
+# =============================================================================
+# Grid State Parsing
+# =============================================================================
+
+
+def extract_agent_position_from_grid_state(grid_state: list[str]) -> tuple[int, int]:
+    """Extract agent position (x, y) from grid state strings.
+
+    Grid state format: ['  0 1 2 ...', '0 # # # ...', '1 # A _ ...', ...]
+    Agent is marked with 'A'.
+
+    Note: In the grid representation, row index is Y and column index is X.
+    Format is "row col1 col2 ..." where row number is the Y coordinate.
+    """
+    for row_idx, row in enumerate(grid_state):
+        if row_idx == 0:
+            # Header row with column numbers
+            continue
+
+        # Split row into cells
+        parts = row.split()
+        if len(parts) < 2:
+            continue
+
+        # First part is row number (Y coordinate)
+        y = int(parts[0])
+
+        # Find 'A' in remaining parts
+        for col_idx, cell in enumerate(parts[1:], start=0):
+            if cell == "A":
+                return (col_idx, y)
+
+    # Fallback - shouldn't happen with valid data
+    return (-1, -1)
+
+
+def check_reached_goal(final_position: tuple[int, int], goal: tuple[int, int]) -> bool:
+    """Check if trajectory reached the goal."""
+    return final_position == goal
+
+
+# =============================================================================
+# Trajectory Loading (Memory-Efficient)
+# =============================================================================
+
+
+def load_lightweight_trajectory(filepath: Path) -> Optional[LightweightTrajectory]:
+    """Load a trajectory file, keeping only essential fields.
+
+    Discards token-level data to save memory.
+    """
+    try:
+        with open(filepath, "r") as f:
+            data = json.load(f)
+
+        # Extract grid params
+        gp = data.get("grid_params", {})
+        # Note: agent_start_coordinates and goal_coordinates are in [row, col] format
+        # We convert to (x, y) = (col, row) format for consistency
+        start_coords = gp.get("agent_start_coordinates", [0, 0])
+        goal_coords = gp.get("goal_coordinates", [0, 0])
+        grid_params = GridParams(
+            grid_size=gp.get("grid_width", 0),
+            complexity=gp.get("grid_complexity", 0.0),
+            grid_id=0,  # Will be parsed from filename
+            astar_distance=gp.get("astar_distance", 0),
+            agent_start=(
+                start_coords[1],
+                start_coords[0],
+            ),  # Convert [row, col] to (x, y)
+            goal=(goal_coords[1], goal_coords[0]),  # Convert [row, col] to (x, y)
+        )
+
+        # Parse grid_id from filename
+        parsed = parse_trajectory_filename(filepath.name)
+        if parsed:
+            grid_params.grid_id = parsed["grid_id"]
+
+        # Extract steps (only essential fields)
+        steps = []
+        raw_steps = data.get("steps", [])
+
+        for i, step in enumerate(raw_steps):
+            grid_state = step.get("grid_state", [])
+            agent_pos = extract_agent_position_from_grid_state(grid_state)
+            agent_action = step.get("agent_action", "")
+
+            steps.append(
+                TrajectoryStep(
+                    step_id=i,
+                    agent_position=agent_pos,
+                    agent_action=agent_action,
+                )
+            )
+
+        # Determine if reached goal
+        # The final position after taking the last action
+        if steps:
+            final_pos = steps[-1].agent_position
+            # Apply last action to get actual final position
+            last_action = steps[-1].agent_action.upper()
+            dx, dy = 0, 0
+            if last_action == "UP":
+                dy = -1
+            elif last_action == "DOWN":
+                dy = 1
+            elif last_action == "LEFT":
+                dx = -1
+            elif last_action == "RIGHT":
+                dx = 1
+            final_pos = (final_pos[0] + dx, final_pos[1] + dy)
+            reached_goal = check_reached_goal(final_pos, grid_params.goal)
+        else:
+            reached_goal = False
+
+        return LightweightTrajectory(
+            grid_params=grid_params,
+            steps=steps,
+            reached_goal=reached_goal,
+        )
+
+    except (json.JSONDecodeError, KeyError, TypeError) as e:
+        print(f"Warning: Error loading {filepath.name}: {e}")
+        return None
+
+
+def batch_grid_keys(grid_keys: list[str], batch_size: int) -> Iterator[list[str]]:
+    """Yield batches of grid keys."""
+    for i in range(0, len(grid_keys), batch_size):
+        yield grid_keys[i : i + batch_size]
+
+
+# =============================================================================
+# Optimal Actions Computation (Simplified for Text Grids)
+# =============================================================================
+
+
+def compute_optimal_actions_from_text_grid(
+    grid_layout: list[list[str]],
+    goal: tuple[int, int],
+) -> dict[tuple[int, int], OptimalActionSet]:
+    """Compute optimal actions for each cell using backward Dijkstra.
+
+    This is a simplified version that works with text grid layouts
+    (list of lists of symbols) rather than MiniGrid environments.
+
+    Args:
+        grid_layout: 2D grid where '#' is wall, others are passable
+        goal: Goal position (x, y)
+
+    Returns:
+        Dictionary mapping positions to sets of optimal action IDs
+    """
+    import heapq
+
+    height = len(grid_layout)
+    width = len(grid_layout[0]) if height > 0 else 0
+
+    def is_passable(x: int, y: int) -> bool:
+        if x < 0 or y < 0 or x >= width or y >= height:
+            return False
+        return grid_layout[y][x] != "#"
+
+    # (dx, dy, action_id): LEFT, RIGHT, UP, DOWN
+    neighbors = [(-1, 0, 0), (1, 0, 1), (0, -1, 2), (0, 1, 3)]
+
+    # Backward Dijkstra from goal
+    distances: dict[tuple[int, int], int] = {goal: 0}
+    heap: list[tuple[int, tuple[int, int]]] = [(0, goal)]
+
+    while heap:
+        dist, (x, y) = heapq.heappop(heap)
+        if dist > distances.get((x, y), float("inf")):
+            continue
+
+        for dx, dy, _ in neighbors:
+            nx, ny = x + dx, y + dy
+            if is_passable(nx, ny):
+                new_dist = dist + 1
+                if new_dist < distances.get((nx, ny), float("inf")):
+                    distances[(nx, ny)] = new_dist
+                    heapq.heappush(heap, (new_dist, (nx, ny)))
+
+    # Determine optimal actions for each cell
+    optimal_actions: dict[tuple[int, int], OptimalActionSet] = {}
+
+    for y in range(height):
+        for x in range(width):
+            if not is_passable(x, y):
+                continue
+
+            current_dist = distances.get((x, y), float("inf"))
+            if current_dist == float("inf"):
+                continue
+
+            optimal_set: OptimalActionSet = set()
+            for dx, dy, action in neighbors:
+                nx, ny = x + dx, y + dy
+                if is_passable(nx, ny):
+                    neighbor_dist = distances.get((nx, ny), float("inf"))
+                    if neighbor_dist == current_dist - 1:
+                        optimal_set.add(action)
+
+            optimal_actions[(x, y)] = optimal_set
+
+    # Goal cell has no optimal actions
+    optimal_actions[goal] = set()
+
+    return optimal_actions, distances
+
+
+def load_grid_layout(grid_file: Path) -> Optional[list[list[str]]]:
+    """Load grid layout from the grid metadata file.
+
+    Grid file format: {model}_size{N}_comp{X.X}_grid{N}_base.json (no _traj suffix)
+    """
+    try:
+        with open(grid_file, "r") as f:
+            data = json.load(f)
+        return data.get("grid_layout", None)
+    except (json.JSONDecodeError, KeyError):
+        return None
+
+
+# =============================================================================
+# Metrics Computation
+# =============================================================================
+
+
+def compute_trajectory_action_accuracy(
+    trajectory: LightweightTrajectory,
+    optimal_actions: dict[tuple[int, int], OptimalActionSet],
+) -> float:
+    """Compute action accuracy for a single trajectory.
+
+    Acc(τ) = (1/T) * Σ_{t=0}^{T-1} 1(a^t ∈ π*(s^t))
+    """
+    if not trajectory.steps:
+        return 0.0
+
+    correct = 0
+    for step in trajectory.steps:
+        pos = step.agent_position
+        action_id = ACTION_NAME_TO_ID.get(step.agent_action.upper())
+        optimal_set = optimal_actions.get(pos, set())
+
+        if action_id is not None and action_id in optimal_set:
+            correct += 1
+
+    return correct / len(trajectory.steps)
+
+
+def compute_spl(
+    trajectories: list[LightweightTrajectory],
+    optimal_path_length: int,
+) -> float:
+    """Compute Success weighted by Path Length (SPL).
+
+    SPL = (1/N) * Σ (1_S * L*) / max(L*, L)
+
+    Where:
+    - 1_S = 1 if trajectory reached goal, 0 otherwise
+    - L* = optimal path length
+    - L = actual trajectory length
+    """
+    if not trajectories or optimal_path_length <= 0:
+        return 0.0
+
+    total = 0.0
+    for traj in trajectories:
+        if traj.reached_goal:
+            traj_length = traj.trajectory_length
+            total += optimal_path_length / max(optimal_path_length, traj_length)
+
+    return total / len(trajectories)
+
+
+def compute_empirical_uncertainty_metrics(
+    state_action_counts: StateActionCounts,
+    optimal_actions: dict[tuple[int, int], OptimalActionSet],
+) -> tuple[float, float]:
+    """Compute mean entropy and JSD using empirical distributions.
+
+    Returns:
+        (mean_entropy, mean_jsd)
+    """
+    entropies = []
+    jsds = []
+
+    for pos, action_counts in state_action_counts.counts.items():
+        if sum(action_counts.values()) == 0:
+            continue
+
+        empirical_dist = state_action_counts.get_empirical_distribution(pos)
+        optimal_set = optimal_actions.get(pos, set())
+
+        # Entropy of empirical distribution
+        entropy = shannon_entropy(empirical_dist)
+        entropies.append(entropy)
+
+        # JSD between empirical and optimal
+        if optimal_set:
+            jsd = jensen_shannon_divergence(optimal_set, empirical_dist)
+            if jsd is not None:
+                jsds.append(jsd)
+
+    mean_entropy = sum(entropies) / len(entropies) if entropies else 0.0
+    mean_jsd = sum(jsds) / len(jsds) if jsds else 0.0
+
+    return mean_entropy, mean_jsd
+
+
+def compute_ece(
+    state_action_counts: StateActionCounts,
+    optimal_actions: dict[tuple[int, int], OptimalActionSet],
+    n_bins: int = 10,
+) -> float:
+    """Compute Expected Calibration Error.
+
+    ECE = Σ (|B_m|/n) * |acc(B_m) - conf(B_m)|
+
+    For each state, confidence = max probability in empirical distribution,
+    accuracy = 1 if most likely action is optimal, 0 otherwise.
+    """
+    confidences = []
+    accuracies = []
+
+    for pos, action_counts in state_action_counts.counts.items():
+        total = sum(action_counts.values())
+        if total == 0:
+            continue
+
+        empirical_dist = state_action_counts.get_empirical_distribution(pos)
+        optimal_set = optimal_actions.get(pos, set())
+
+        # Confidence = max probability
+        max_prob = max(empirical_dist.values()) if empirical_dist else 0.0
+
+        # Most likely action
+        most_likely_action = max(empirical_dist, key=lambda a: empirical_dist[a])
+
+        # Accuracy = 1 if most likely is optimal
+        is_correct = 1 if most_likely_action in optimal_set else 0
+
+        confidences.append(max_prob)
+        accuracies.append(is_correct)
+
+    if not confidences:
+        return 0.0
+
+    confidences = np.array(confidences)
+    accuracies = np.array(accuracies)
+
+    # Bin by confidence
+    bin_boundaries = np.linspace(0, 1, n_bins + 1)
+    ece = 0.0
+
+    for i in range(n_bins):
+        in_bin = (confidences >= bin_boundaries[i]) & (
+            confidences < bin_boundaries[i + 1]
+        )
+        prop_in_bin = in_bin.mean()
+
+        if prop_in_bin > 0:
+            avg_confidence = confidences[in_bin].mean()
+            avg_accuracy = accuracies[in_bin].mean()
+            ece += prop_in_bin * abs(avg_accuracy - avg_confidence)
+
+    return float(ece)
+
+
+def compute_grid_metrics(
+    trajectories: list[LightweightTrajectory],
+    optimal_actions: dict[tuple[int, int], OptimalActionSet],
+    distances: dict[tuple[int, int], int],
+    grid_key: str,
+) -> tuple[Optional[GridTrajectoryMetrics], list[dict[str, Any]]]:
+    """Compute all metrics for a grid from its trajectories.
+
+    Returns:
+        Tuple of (grid metrics, list of per-state metrics with distance)
+    """
+    if not trajectories:
+        return None, []
+
+    # Parse grid key
+    # Format: "size{N}_comp{X.X}_grid{N}"
+    match = re.match(r"size(\d+)_comp([\d.]+)_grid(\d+)", grid_key)
+    if not match:
+        return None
+
+    grid_size = int(match.group(1))
+    complexity = float(match.group(2))
+    instance_id = int(match.group(3))
+
+    # Get optimal path length from first trajectory
+    optimal_path_length = trajectories[0].grid_params.astar_distance
+
+    # Build state-action counts across all trajectories
+    state_action_counts = StateActionCounts()
+    total_steps = 0
+    total_correct_steps = 0
+
+    trajectory_accuracies = []
+
+    for traj in trajectories:
+        # Compute per-trajectory accuracy
+        acc = compute_trajectory_action_accuracy(traj, optimal_actions)
+        trajectory_accuracies.append(acc)
+
+        # Aggregate state-action counts
+        for step in traj.steps:
+            state_action_counts.add(step.agent_position, step.agent_action)
+            total_steps += 1
+
+            # Count correct steps
+            action_id = ACTION_NAME_TO_ID.get(step.agent_action.upper())
+            optimal_set = optimal_actions.get(step.agent_position, set())
+            if action_id is not None and action_id in optimal_set:
+                total_correct_steps += 1
+
+    # Capability metrics
+    num_successful = sum(1 for t in trajectories if t.reached_goal)
+    goal_success_rate = num_successful / len(trajectories)
+    mean_traj_length = sum(t.trajectory_length for t in trajectories) / len(
+        trajectories
+    )
+    mean_action_accuracy = (
+        sum(trajectory_accuracies) / len(trajectory_accuracies)
+        if trajectory_accuracies
+        else 0.0
+    )
+    spl = compute_spl(trajectories, optimal_path_length)
+
+    # Uncertainty metrics
+    mean_entropy, mean_jsd = compute_empirical_uncertainty_metrics(
+        state_action_counts, optimal_actions
+    )
+    ece = compute_ece(state_action_counts, optimal_actions)
+
+    # Per-step accuracy
+    mean_step_accuracy = total_correct_steps / total_steps if total_steps > 0 else 0.0
+
+    # Compute per-state metrics with distance for distance-to-goal analysis
+    state_metrics_list: list[dict[str, Any]] = []
+    for pos, action_counts in state_action_counts.counts.items():
+        total = sum(action_counts.values())
+        if total == 0:
+            continue
+
+        empirical_dist = state_action_counts.get_empirical_distribution(pos)
+        optimal_set = optimal_actions.get(pos, set())
+        distance = distances.get(pos, -1)
+
+        if distance < 0:  # Skip unreachable states
+            continue
+
+        # Entropy
+        entropy = shannon_entropy(empirical_dist)
+
+        # JSD
+        jsd = None
+        if optimal_set:
+            jsd = jensen_shannon_divergence(optimal_set, empirical_dist)
+
+        # Accuracy: is most likely action optimal?
+        most_likely_action = max(empirical_dist, key=lambda a: empirical_dist[a])
+        is_optimal = 1 if most_likely_action in optimal_set else 0
+
+        state_metrics_list.append(
+            {
+                "distance_to_goal": distance,
+                "entropy": entropy,
+                "jsd": jsd,
+                "is_optimal": is_optimal,
+                "n_observations": total,
+            }
+        )
+
+    grid_metrics = GridTrajectoryMetrics(
+        grid_id=grid_key,
+        grid_size=grid_size,
+        complexity=complexity,
+        instance_id=instance_id,
+        optimal_path_length=optimal_path_length,
+        num_trajectories=len(trajectories),
+        num_successful=num_successful,
+        goal_success_rate=goal_success_rate,
+        mean_trajectory_length=mean_traj_length,
+        mean_action_accuracy=mean_action_accuracy,
+        spl=spl,
+        mean_entropy=mean_entropy,
+        mean_jsd=mean_jsd,
+        ece=ece,
+        mean_step_accuracy=mean_step_accuracy,
+        total_steps=total_steps,
+    )
+
+    return grid_metrics, state_metrics_list
+
+
+# =============================================================================
+# Main Processing Pipeline
+# =============================================================================
+
+
+def process_model_trajectories(
+    trajectory_dir: Path,
+    model_name: Optional[str] = None,
+    batch_size: int = 20,
+) -> ModelTrajectoryResults:
+    """Process all trajectories for a model.
+
+    Args:
+        trajectory_dir: Directory containing trajectory files
+        model_name: Optional model name override
+        batch_size: Number of grids to process per batch
+
+    Returns:
+        ModelTrajectoryResults with per-grid metrics
+    """
+    if model_name is None:
+        model_name = sanitize_label(trajectory_dir.name)
+
+    print(f"\nProcessing model: {model_name}")
+    print(f"Trajectory directory: {trajectory_dir}")
+
+    # Discover trajectory files grouped by grid
+    grid_trajectories = discover_trajectory_files(trajectory_dir)
+    print(f"Found {len(grid_trajectories)} grids with trajectories")
+
+    if not grid_trajectories:
+        raise ValueError(f"No trajectory files found in {trajectory_dir}")
+
+    # Process in batches
+    grid_keys = sorted(grid_trajectories.keys())
+    total_batches = (len(grid_keys) + batch_size - 1) // batch_size
+    all_metrics: list[GridTrajectoryMetrics] = []
+    all_state_metrics: list[dict[str, Any]] = []
+
+    for batch_idx, batch_keys in enumerate(batch_grid_keys(grid_keys, batch_size)):
+        print(
+            f"\n  Batch {batch_idx + 1}/{total_batches}: "
+            f"processing {len(batch_keys)} grids..."
+        )
+
+        for grid_key in tqdm(batch_keys, desc=f"Batch {batch_idx + 1}", leave=False):
+            traj_files = grid_trajectories[grid_key]
+
+            # Load trajectories for this grid
+            trajectories = []
+            for traj_file in traj_files:
+                traj = load_lightweight_trajectory(traj_file)
+                if traj is not None:
+                    trajectories.append(traj)
+
+            if not trajectories:
+                continue
+
+            # Load grid layout for optimal action computation
+            # Grid file has same pattern but without _trajN suffix
+            grid_file_pattern = traj_files[0].name.replace(
+                f"_traj{parse_trajectory_filename(traj_files[0].name)['trajectory_id']}.json",
+                ".json",
+            )
+            grid_file = traj_files[0].parent / grid_file_pattern
+
+            if grid_file.exists():
+                grid_layout = load_grid_layout(grid_file)
+            else:
+                # Try to construct from trajectory's grid_state
+                # Use first step of first trajectory
+                if trajectories[0].steps:
+                    # Re-load to get grid_state (not stored in lightweight)
+                    with open(traj_files[0], "r") as f:
+                        data = json.load(f)
+                    grid_state = data.get("steps", [{}])[0].get("grid_state", [])
+                    # Parse grid_state into layout
+                    grid_layout = []
+                    for row in grid_state[1:]:  # Skip header
+                        parts = row.split()[1:]  # Skip row number
+                        grid_layout.append(parts)
+                else:
+                    continue
+
+            if not grid_layout:
+                continue
+
+            # Compute optimal actions and distances
+            goal = trajectories[0].grid_params.goal
+            optimal_actions, distances = compute_optimal_actions_from_text_grid(
+                grid_layout, goal
+            )
+
+            # Compute metrics
+            metrics, state_metrics = compute_grid_metrics(
+                trajectories, optimal_actions, distances, grid_key
+            )
+            if metrics:
+                all_metrics.append(metrics)
+                all_state_metrics.extend(state_metrics)
+
+        # Free memory
+        gc.collect()
+
+    # Build DataFrame
+    df = pd.DataFrame([m.to_dict() for m in all_metrics])
+
+    # Build state-level DataFrame for distance analysis
+    state_df = pd.DataFrame(all_state_metrics)
+
+    # Compute summaries
+    summary_df = compute_summary_by_size_complexity(df)
+    distance_df = compute_summary_by_distance(state_df)
+    overall = compute_overall_summary(df)
+
+    return ModelTrajectoryResults(
+        model_name=model_name,
+        df=df,
+        summary_by_size_complexity=summary_df,
+        summary_by_distance=distance_df,
+        overall_summary=overall,
+    )
+
+
+def compute_summary_by_size_complexity(df: pd.DataFrame) -> pd.DataFrame:
+    """Compute summary statistics grouped by grid_size and complexity."""
+    if df.empty:
+        return pd.DataFrame()
+
+    summary = (
+        df.groupby(["grid_size", "complexity"])
+        .agg(
+            n_grids=("grid_id", "count"),
+            mean_goal_success=("goal_success_rate", "mean"),
+            std_goal_success=("goal_success_rate", "std"),
+            mean_action_accuracy=("mean_action_accuracy", "mean"),
+            std_action_accuracy=("mean_action_accuracy", "std"),
+            mean_spl=("spl", "mean"),
+            std_spl=("spl", "std"),
+            mean_entropy=("mean_entropy", "mean"),
+            std_entropy=("mean_entropy", "std"),
+            mean_jsd=("mean_jsd", "mean"),
+            std_jsd=("mean_jsd", "std"),
+            mean_ece=("ece", "mean"),
+            std_ece=("ece", "std"),
+        )
+        .reset_index()
+    )
+
+    return summary
+
+
+def compute_summary_by_distance(state_df: pd.DataFrame) -> pd.DataFrame:
+    """Compute summary statistics grouped by distance to goal."""
+    if state_df.empty:
+        return pd.DataFrame()
+
+    summary = (
+        state_df.groupby("distance_to_goal")
+        .agg(
+            n_states=("entropy", "count"),
+            mean_entropy=("entropy", "mean"),
+            std_entropy=("entropy", "std"),
+            mean_jsd=("jsd", "mean"),
+            std_jsd=("jsd", "std"),
+            accuracy=("is_optimal", "mean"),
+            total_observations=("n_observations", "sum"),
+        )
+        .reset_index()
+    )
+
+    return summary
+
+
+def compute_overall_summary(df: pd.DataFrame) -> dict[str, Any]:
+    """Compute overall summary statistics."""
+    if df.empty:
+        return {}
+
+    return {
+        "n_grids": int(len(df)),
+        "total_trajectories": int(df["num_trajectories"].sum()),
+        "total_steps": int(df["total_steps"].sum()),
+        "overall_goal_success": float(df["goal_success_rate"].mean()),
+        "overall_action_accuracy": float(df["mean_action_accuracy"].mean()),
+        "overall_spl": float(df["spl"].mean()),
+        "overall_entropy": float(df["mean_entropy"].mean()),
+        "overall_jsd": float(df["mean_jsd"].mean()),
+        "overall_ece": float(df["ece"].mean()),
+    }
+
+
+# =============================================================================
+# Visualizations
+# =============================================================================
+
+
+def plot_metrics_by_size_complexity(
+    df: pd.DataFrame,
+    output_dir: Path,
+    model_name: str,
+) -> dict[str, Path]:
+    """Generate plots of metrics by grid size and complexity."""
+    setup_paper_style()
+    output_paths = {}
+
+    # Metrics to plot
+    metrics = [
+        ("goal_success_rate", "Goal Success Rate"),
+        ("mean_action_accuracy", "Action Accuracy"),
+        ("spl", "SPL"),
+        ("mean_entropy", "Mean Entropy (bits)"),
+        ("mean_jsd", "Mean JSD"),
+        ("ece", "ECE"),
+    ]
+
+    for metric_col, metric_label in metrics:
+        fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+
+        # By grid size
+        size_summary = df.groupby("grid_size")[metric_col].agg(["mean", "std"])
+        axes[0].errorbar(
+            size_summary.index,
+            size_summary["mean"],
+            yerr=size_summary["std"],
+            marker="o",
+            capsize=3,
+            color=MODEL_COLORS[0],
+        )
+        axes[0].set_xlabel("Grid Size")
+        axes[0].set_ylabel(metric_label)
+        axes[0].set_title(f"{metric_label} by Grid Size")
+        axes[0].grid(True, alpha=0.3)
+
+        # By complexity
+        comp_summary = df.groupby("complexity")[metric_col].agg(["mean", "std"])
+        axes[1].errorbar(
+            comp_summary.index,
+            comp_summary["mean"],
+            yerr=comp_summary["std"],
+            marker="o",
+            capsize=3,
+            color=MODEL_COLORS[1],
+        )
+        axes[1].set_xlabel("Complexity")
+        axes[1].set_ylabel(metric_label)
+        axes[1].set_title(f"{metric_label} by Complexity")
+        axes[1].grid(True, alpha=0.3)
+
+        plt.suptitle(f"{model_name}: {metric_label}", fontweight="bold")
+        # Add note explaining error bars
+        fig.text(
+            0.99,
+            0.01,
+            "Mean over trajectories per grid; Error bars: ±1 standard deviation",
+            ha="right",
+            va="bottom",
+            fontsize=8,
+            style="italic",
+            color="gray",
+        )
+        plt.tight_layout(rect=[0, 0.03, 1, 1])
+
+        output_path = output_dir / f"{metric_col}_by_size_complexity.png"
+        plt.savefig(output_path, dpi=300, bbox_inches="tight")
+        plt.close(fig)
+        output_paths[metric_col] = output_path
+
+    return output_paths
+
+
+def plot_metrics_by_distance(
+    distance_df: pd.DataFrame,
+    output_dir: Path,
+    model_name: str,
+    smoothing_window: int = 5,
+) -> Path:
+    """Plot metrics vs distance to goal with smoothing.
+
+    Args:
+        distance_df: DataFrame with distance summary
+        output_dir: Output directory
+        model_name: Model name for title
+        smoothing_window: Rolling window size for smoothing
+    """
+    if distance_df.empty:
+        return output_dir / "metrics_by_distance.png"
+
+    setup_paper_style()
+
+    # Sort by distance and apply rolling average for smoothing
+    df_sorted = distance_df.sort_values("distance_to_goal").copy()
+    df_sorted["entropy_smooth"] = (
+        df_sorted["mean_entropy"].rolling(window=smoothing_window, center=True).mean()
+    )
+    df_sorted["jsd_smooth"] = (
+        df_sorted["mean_jsd"].rolling(window=smoothing_window, center=True).mean()
+    )
+    df_sorted["accuracy_smooth"] = (
+        df_sorted["accuracy"].rolling(window=smoothing_window, center=True).mean()
+    )
+
+    fig, axes = plt.subplots(1, 3, figsize=(12, 4))
+
+    # Entropy vs distance
+    axes[0].scatter(
+        df_sorted["distance_to_goal"],
+        df_sorted["mean_entropy"],
+        alpha=0.3,
+        s=15,
+        color=MODEL_COLORS[0],
+        label="Raw",
+    )
+    axes[0].plot(
+        df_sorted["distance_to_goal"],
+        df_sorted["entropy_smooth"],
+        linewidth=2,
+        color=MODEL_COLORS[0],
+        label=f"Smoothed (window={smoothing_window})",
+    )
+    axes[0].set_xlabel("Distance to Goal")
+    axes[0].set_ylabel("Mean Entropy (bits)")
+    axes[0].set_title("Entropy vs Distance")
+    axes[0].grid(True, alpha=0.3)
+    axes[0].legend(fontsize=7, loc="upper left", frameon=False)
+
+    # JSD vs distance
+    axes[1].scatter(
+        df_sorted["distance_to_goal"],
+        df_sorted["mean_jsd"],
+        alpha=0.3,
+        s=15,
+        color=MODEL_COLORS[1],
+        label="Raw",
+    )
+    axes[1].plot(
+        df_sorted["distance_to_goal"],
+        df_sorted["jsd_smooth"],
+        linewidth=2,
+        color=MODEL_COLORS[1],
+        label=f"Smoothed (window={smoothing_window})",
+    )
+    axes[1].set_xlabel("Distance to Goal")
+    axes[1].set_ylabel("Mean JSD")
+    axes[1].set_title("JSD vs Distance")
+    axes[1].grid(True, alpha=0.3)
+    axes[1].legend(fontsize=7, loc="upper left", frameon=False)
+
+    # Accuracy vs distance
+    axes[2].scatter(
+        df_sorted["distance_to_goal"],
+        df_sorted["accuracy"],
+        alpha=0.3,
+        s=15,
+        color=MODEL_COLORS[2],
+        label="Raw",
+    )
+    axes[2].plot(
+        df_sorted["distance_to_goal"],
+        df_sorted["accuracy_smooth"],
+        linewidth=2,
+        color=MODEL_COLORS[2],
+        label=f"Smoothed (window={smoothing_window})",
+    )
+    axes[2].set_xlabel("Distance to Goal")
+    axes[2].set_ylabel("Accuracy")
+    axes[2].set_title("Accuracy vs Distance")
+    axes[2].set_ylim(0, 1.05)
+    axes[2].grid(True, alpha=0.3)
+    axes[2].legend(fontsize=7, loc="lower left", frameon=False)
+
+    plt.suptitle(f"{model_name}: Metrics by Distance to Goal", fontweight="bold")
+    fig.text(
+        0.99,
+        0.01,
+        "Points: per-distance aggregates; Line: rolling average",
+        ha="right",
+        va="bottom",
+        fontsize=8,
+        style="italic",
+        color="gray",
+    )
+    plt.tight_layout(rect=[0, 0.03, 1, 1])
+
+    output_path = output_dir / "metrics_by_distance.png"
+    plt.savefig(output_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+
+    return output_path
+
+
+def plot_capability_vs_uncertainty(
+    df: pd.DataFrame,
+    output_dir: Path,
+    model_name: str,
+) -> Path:
+    """Plot capability metrics vs uncertainty metrics."""
+    setup_paper_style()
+
+    fig, axes = plt.subplots(1, 3, figsize=(12, 4))
+
+    # Accuracy vs Entropy
+    axes[0].scatter(
+        df["mean_entropy"],
+        df["mean_action_accuracy"],
+        alpha=0.5,
+        s=20,
+        color=MODEL_COLORS[0],
+    )
+    axes[0].set_xlabel("Mean Entropy (bits)")
+    axes[0].set_ylabel("Action Accuracy")
+    axes[0].set_title("Accuracy vs Entropy")
+    axes[0].grid(True, alpha=0.3)
+
+    # Accuracy vs JSD
+    axes[1].scatter(
+        df["mean_jsd"],
+        df["mean_action_accuracy"],
+        alpha=0.5,
+        s=20,
+        color=MODEL_COLORS[1],
+    )
+    axes[1].set_xlabel("Mean JSD")
+    axes[1].set_ylabel("Action Accuracy")
+    axes[1].set_title("Accuracy vs JSD")
+    axes[1].grid(True, alpha=0.3)
+
+    # SPL vs ECE
+    axes[2].scatter(
+        df["ece"],
+        df["spl"],
+        alpha=0.5,
+        s=20,
+        color=MODEL_COLORS[2],
+    )
+    axes[2].set_xlabel("ECE")
+    axes[2].set_ylabel("SPL")
+    axes[2].set_title("SPL vs ECE")
+    axes[2].grid(True, alpha=0.3)
+
+    plt.suptitle(f"{model_name}: Capability vs Uncertainty", fontweight="bold")
+    plt.tight_layout()
+
+    output_path = output_dir / "capability_vs_uncertainty.png"
+    plt.savefig(output_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+
+    return output_path
+
+
+def plot_heatmaps(
+    summary_df: pd.DataFrame,
+    output_dir: Path,
+    model_name: str,
+) -> Path:
+    """Plot heatmaps of metrics by grid_size x complexity."""
+    setup_paper_style()
+
+    metrics = [
+        ("mean_goal_success", "Goal Success Rate"),
+        ("mean_action_accuracy", "Action Accuracy"),
+        ("mean_spl", "SPL"),
+        ("mean_jsd", "Mean JSD"),
+    ]
+
+    fig, axes = plt.subplots(2, 2, figsize=(10, 8))
+    axes = axes.flatten()
+
+    for idx, (metric_col, metric_label) in enumerate(metrics):
+        pivot = summary_df.pivot(
+            index="complexity", columns="grid_size", values=metric_col
+        )
+
+        im = axes[idx].imshow(pivot.values, cmap="RdYlGn", aspect="auto")
+        axes[idx].set_xticks(range(len(pivot.columns)))
+        axes[idx].set_xticklabels(pivot.columns)
+        axes[idx].set_yticks(range(len(pivot.index)))
+        axes[idx].set_yticklabels([f"{c:.1f}" for c in pivot.index])
+        axes[idx].set_xlabel("Grid Size")
+        axes[idx].set_ylabel("Complexity")
+        axes[idx].set_title(metric_label)
+
+        # Add values
+        for i in range(len(pivot.index)):
+            for j in range(len(pivot.columns)):
+                val = pivot.values[i, j]
+                if not np.isnan(val):
+                    axes[idx].text(
+                        j, i, f"{val:.2f}", ha="center", va="center", fontsize=8
+                    )
+
+        plt.colorbar(im, ax=axes[idx])
+
+    plt.suptitle(f"{model_name}: Metrics Heatmaps", fontweight="bold")
+    plt.tight_layout()
+
+    output_path = output_dir / "metrics_heatmaps.png"
+    plt.savefig(output_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+
+    return output_path
+
+
+# =============================================================================
+# Output Saving
+# =============================================================================
+
+
+def save_results(
+    results: ModelTrajectoryResults,
+    output_dir: Path,
+) -> dict[str, Path]:
+    """Save results to CSV files and generate visualizations."""
+    model_dir = output_dir / results.model_name
+    model_dir.mkdir(parents=True, exist_ok=True)
+
+    output_paths = {}
+
+    # Save per-grid metrics
+    grid_path = model_dir / f"trajectory_metrics_{results.model_name}.csv"
+    results.df.to_csv(grid_path, index=False)
+    output_paths["grid_metrics"] = grid_path
+    print(f"  Saved: {grid_path}")
+
+    # Save summary
+    summary_path = model_dir / "summary_by_size_complexity.csv"
+    results.summary_by_size_complexity.to_csv(summary_path, index=False)
+    output_paths["summary"] = summary_path
+    print(f"  Saved: {summary_path}")
+
+    # Save distance summary
+    distance_path = model_dir / "summary_by_distance.csv"
+    results.summary_by_distance.to_csv(distance_path, index=False)
+    output_paths["distance_summary"] = distance_path
+    print(f"  Saved: {distance_path}")
+
+    # Save overall summary
+    overall_path = model_dir / "overall_summary.json"
+    with open(overall_path, "w") as f:
+        json.dump(results.overall_summary, f, indent=2)
+    output_paths["overall"] = overall_path
+    print(f"  Saved: {overall_path}")
+
+    # Generate visualizations
+    print("  Generating visualizations...")
+    plot_metrics_by_size_complexity(results.df, model_dir, results.model_name)
+    plot_capability_vs_uncertainty(results.df, model_dir, results.model_name)
+    if not results.summary_by_size_complexity.empty:
+        plot_heatmaps(results.summary_by_size_complexity, model_dir, results.model_name)
+    if not results.summary_by_distance.empty:
+        plot_metrics_by_distance(
+            results.summary_by_distance, model_dir, results.model_name
+        )
+
+    return output_paths
+
+
+def print_summary(results: ModelTrajectoryResults) -> None:
+    """Print summary to console."""
+    print("\n" + "=" * 60)
+    print(f"TRAJECTORY ANALYSIS SUMMARY: {results.model_name}")
+    print("=" * 60)
+
+    overall = results.overall_summary
+    print(f"\nTotal grids analyzed: {overall.get('n_grids', 0)}")
+    print(f"Total trajectories: {overall.get('total_trajectories', 0)}")
+    print(f"Total steps: {overall.get('total_steps', 0)}")
+
+    print("\n--- Capability Metrics ---")
+    print(f"Goal Success Rate: {overall.get('overall_goal_success', 0):.4f}")
+    print(f"Action Accuracy: {overall.get('overall_action_accuracy', 0):.4f}")
+    print(f"SPL: {overall.get('overall_spl', 0):.4f}")
+
+    print("\n--- Uncertainty Metrics (Empirical) ---")
+    print(f"Mean Entropy: {overall.get('overall_entropy', 0):.4f} bits")
+    print(f"Mean JSD: {overall.get('overall_jsd', 0):.4f}")
+    print(f"ECE: {overall.get('overall_ece', 0):.4f}")
+
+    print("\n--- By Grid Size ---")
+    size_summary = results.df.groupby("grid_size").agg(
+        {
+            "goal_success_rate": "mean",
+            "mean_action_accuracy": "mean",
+            "spl": "mean",
+            "mean_jsd": "mean",
+        }
+    )
+    print(size_summary.to_string())
+
+    print("\n" + "=" * 60)
+
+
+# =============================================================================
+# CLI
+# =============================================================================
+
+
+def main() -> None:
+    """Command-line interface entry point."""
+    parser = argparse.ArgumentParser(
+        description="Analyze fully observable grid trajectories using empirical distributions",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+
+    parser.add_argument(
+        "--trajectory-dir",
+        type=str,
+        required=True,
+        help="Directory containing trajectory JSON files (or parent with model subdirs)",
+    )
+
+    parser.add_argument(
+        "--output-dir",
+        type=str,
+        default="src/reveng/analysis/outputs/full_obs_trajectory_analysis",
+        help="Directory to save analysis outputs",
+    )
+
+    parser.add_argument(
+        "--batch-size",
+        type=int,
+        default=40,
+        help="Number of grids to process per batch (limits RAM usage)",
+    )
+
+    parser.add_argument(
+        "--model-name",
+        type=str,
+        default=None,
+        help="Override model name (default: derived from directory name)",
+    )
+
+    parser.add_argument(
+        "--multi-model",
+        action="store_true",
+        help="Process multiple models from subdirectories of trajectory-dir",
+    )
+
+    args = parser.parse_args()
+
+    traj_path = Path(args.trajectory_dir)
+    output_path = Path(args.output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    if args.multi_model:
+        # Process multiple model directories
+        model_dirs = discover_model_directories(traj_path)
+        print(f"Found {len(model_dirs)} model directories")
+
+        for model_dir in model_dirs:
+            try:
+                results = process_model_trajectories(
+                    model_dir,
+                    batch_size=args.batch_size,
+                )
+                save_results(results, output_path)
+                print_summary(results)
+            except Exception as e:
+                print(f"Error processing {model_dir.name}: {e}")
+                import traceback
+
+                traceback.print_exc()
+    else:
+        # Process single directory
+        results = process_model_trajectories(
+            traj_path,
+            model_name=args.model_name,
+            batch_size=args.batch_size,
+        )
+        save_results(results, output_path)
+        print_summary(results)
+
+
+if __name__ == "__main__":
+    main()
