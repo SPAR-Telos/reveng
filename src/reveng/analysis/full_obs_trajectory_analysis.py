@@ -178,6 +178,7 @@ class ModelTrajectoryResults:
 
     model_name: str
     df: pd.DataFrame  # Per-grid metrics
+    state_df: pd.DataFrame  # Per-state metrics with distance, size, complexity
     summary_by_size_complexity: pd.DataFrame
     summary_by_distance: pd.DataFrame  # Per-distance metrics
     overall_summary: dict[str, Any]
@@ -599,6 +600,8 @@ def compute_grid_metrics(
 
         state_metrics_list.append(
             {
+                "grid_size": grid_size,
+                "complexity": complexity,
                 "distance_to_goal": distance,
                 "entropy": entropy,
                 "jsd": jsd,
@@ -747,6 +750,7 @@ def process_model_trajectories(
     return ModelTrajectoryResults(
         model_name=model_name,
         df=df,
+        state_df=state_df,
         summary_by_size_complexity=summary_df,
         summary_by_distance=distance_df,
         overall_summary=overall,
@@ -1132,6 +1136,166 @@ def plot_heatmaps(
     return output_path
 
 
+def plot_distance_complexity_heatmap(
+    state_df: pd.DataFrame,
+    output_dir: Path,
+    model_name: str,
+    metric: str = "is_optimal",
+    metric_label: str = "Action Accuracy",
+    n_distance_bins: int = 10,
+) -> Path:
+    """Plot multi-panel heatmap of metric by distance, complexity, and grid size.
+
+    Creates a figure with 5 columns (one per grid size), where:
+    - X-axis: complexity bins (0 to 1)
+    - Y-axis: binned distance to goal
+    - Fill: mean metric value for that combination
+
+    Args:
+        state_df: DataFrame with per-state metrics including grid_size, complexity,
+                  distance_to_goal, and the metric column
+        output_dir: Directory to save the figure
+        model_name: Name of the model for the title
+        metric: Column name for the metric to plot
+        metric_label: Human-readable label for the metric
+        n_distance_bins: Number of bins for distance
+
+    Returns:
+        Path to the saved figure
+    """
+    if state_df.empty or metric not in state_df.columns:
+        return output_dir / f"heatmap_{metric}_by_distance_complexity.png"
+
+    setup_paper_style()
+
+    # Get unique grid sizes (sorted)
+    grid_sizes = sorted(state_df["grid_size"].unique())
+    n_sizes = len(grid_sizes)
+
+    if n_sizes == 0:
+        return output_dir / f"heatmap_{metric}_by_distance_complexity.png"
+
+    # Create distance bins based on overall distance range
+    max_distance = state_df["distance_to_goal"].max()
+    distance_bins = np.linspace(0, max_distance + 1, n_distance_bins + 1)
+    distance_labels = [
+        f"{int(distance_bins[i])}-{int(distance_bins[i + 1])}"
+        for i in range(len(distance_bins) - 1)
+    ]
+
+    # Bin the distances
+    df = state_df.copy()
+    df["distance_bin"] = pd.cut(
+        df["distance_to_goal"],
+        bins=distance_bins,
+        labels=distance_labels,
+        include_lowest=True,
+    )
+
+    # Get unique complexity values (sorted)
+    complexity_values = sorted(df["complexity"].unique())
+
+    # Create figure with subplots for each grid size
+    fig, axes = plt.subplots(1, n_sizes, figsize=(2.5 * n_sizes, 6), sharey=True)
+
+    # Handle single grid size case
+    if n_sizes == 1:
+        axes = [axes]
+
+    # Track global min/max for consistent colorbar
+    all_values = []
+
+    # First pass: compute all pivot tables and find global min/max
+    pivots = []
+    for size in grid_sizes:
+        size_df = df[df["grid_size"] == size]
+
+        # Aggregate by complexity and distance bin
+        pivot = (
+            size_df.groupby(["distance_bin", "complexity"], observed=False)[metric]
+            .mean()
+            .unstack()
+        )
+
+        # Reindex to ensure all complexity values are present
+        pivot = pivot.reindex(columns=complexity_values)
+
+        # Reindex rows to ensure all distance bins are present
+        pivot = pivot.reindex(distance_labels)
+
+        pivots.append(pivot)
+
+        # Collect non-NaN values for colorbar range
+        valid_vals = pivot.values[~np.isnan(pivot.values)]
+        if len(valid_vals) > 0:
+            all_values.extend(valid_vals)
+
+    # Determine color range
+    if all_values:
+        vmin, vmax = np.min(all_values), np.max(all_values)
+    else:
+        vmin, vmax = 0, 1
+
+    # Second pass: plot heatmaps
+    for idx, (size, pivot) in enumerate(zip(grid_sizes, pivots)):
+        ax = axes[idx]
+
+        # Create heatmap
+        im = ax.imshow(
+            pivot.values,
+            cmap="RdYlGn",
+            aspect="auto",
+            vmin=vmin,
+            vmax=vmax,
+            origin="lower",
+        )
+
+        # X-axis: complexity
+        ax.set_xticks(range(len(complexity_values)))
+        ax.set_xticklabels([f"{c:.1f}" for c in complexity_values], fontsize=7)
+        ax.set_xlabel("Complexity", fontsize=9)
+
+        ax.set_title(f"{size}x{size}", fontsize=10, fontweight="bold")
+
+        # Add grid lines between cells (minor ticks)
+        ax.set_xticks(np.arange(-0.5, len(complexity_values), 1), minor=True)
+        ax.set_yticks(np.arange(-0.5, len(distance_labels), 1), minor=True)
+        ax.grid(which="minor", color="white", linestyle="-", linewidth=0.5)
+        ax.tick_params(which="minor", length=0)
+        ax.tick_params(which="major", length=3)
+
+        # Y-axis: distance bins (only show labels for first subplot)
+        if idx == 0:
+            ax.set_ylabel("Distance to Goal", fontsize=9)
+        else:
+            ax.tick_params(labelleft=False)
+
+    # Set y-tick labels on first axis (do this after loop to avoid sharey issues)
+    axes[0].set_yticks(range(len(distance_labels)))
+    axes[0].set_yticklabels(distance_labels, fontsize=7)
+
+    # Adjust layout first to position subplots
+    plt.subplots_adjust(top=0.92, wspace=0.08, left=0.06, right=0.88)
+
+    # Add colorbar in dedicated axes on the right (doesn't steal space from subplots)
+    cbar_ax = fig.add_axes([0.91, 0.15, 0.015, 0.65])  # [left, bottom, width, height]
+    cbar = fig.colorbar(im, cax=cbar_ax)
+    cbar.set_label(metric_label, fontsize=9)
+
+    plt.suptitle(
+        f"{model_name}: {metric_label} by Grid Size, Complexity, and Distance",
+        fontweight="bold",
+        fontsize=11,
+        y=1.02,
+    )
+
+    output_path = output_dir / f"heatmap_{metric}_by_distance_complexity.png"
+    plt.savefig(output_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+
+    return output_path
+
+
 # =============================================================================
 # Output Saving
 # =============================================================================
@@ -1181,6 +1345,30 @@ def save_results(
     if not results.summary_by_distance.empty:
         plot_metrics_by_distance(
             results.summary_by_distance, model_dir, results.model_name
+        )
+
+    # Generate distance-complexity heatmaps for multiple metrics
+    if not results.state_df.empty:
+        plot_distance_complexity_heatmap(
+            results.state_df,
+            model_dir,
+            results.model_name,
+            metric="is_optimal",
+            metric_label="Action Accuracy",
+        )
+        plot_distance_complexity_heatmap(
+            results.state_df,
+            model_dir,
+            results.model_name,
+            metric="entropy",
+            metric_label="Entropy",
+        )
+        plot_distance_complexity_heatmap(
+            results.state_df,
+            model_dir,
+            results.model_name,
+            metric="jsd",
+            metric_label="JSD",
         )
 
     return output_paths

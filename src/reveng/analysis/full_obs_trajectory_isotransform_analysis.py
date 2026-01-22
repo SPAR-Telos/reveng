@@ -72,7 +72,7 @@ PAPER_RC = {
 
 # Colorblind-friendly palette for transforms
 TRANSFORM_COLORS = {
-    "base": "#000000",  # Black
+    "base": "#888888",  # Grey
     "ReflectEnv": "#0072B2",  # Blue
     "RotateEnv": "#D55E00",  # Vermillion
     "StartGoalSwap": "#009E73",  # Bluish green
@@ -861,8 +861,10 @@ def plot_paired_test_results(
     axes[0].set_xticklabels(pivot_effect.index, rotation=45, ha="right")
     axes[0].set_ylabel("Effect Size (rank-biserial r)")
     axes[0].set_title("Effect Size by Transform")
-    axes[0].legend(fontsize=8, frameon=False)
     axes[0].grid(True, alpha=0.3, axis="y")
+
+    # Collect legend handles from first plot
+    handles, labels = axes[0].get_legend_handles_labels()
 
     # P-values (log scale)
     pivot_pval = test_df.pivot(index="transform", columns="metric", values="p_value")
@@ -873,21 +875,30 @@ def plot_paired_test_results(
             [xi + offset for xi in x],
             pivot_pval[metric],
             width,
-            label=metric.replace("_", " ").title(),
             color=metric_colors[i],
         )
 
-    axes[1].axhline(y=0.05, color="red", linestyle="--", linewidth=1, label="α=0.05")
+    alpha_line = axes[1].axhline(y=0.05, color="red", linestyle="--", linewidth=1)
+    handles.append(alpha_line)
+    labels.append("α=0.05")
+
     axes[1].set_xticks(x)
     axes[1].set_xticklabels(pivot_pval.index, rotation=45, ha="right")
     axes[1].set_ylabel("p-value")
     axes[1].set_yscale("log")
     axes[1].set_title("Statistical Significance")
-    axes[1].legend(fontsize=8, frameon=False)
     axes[1].grid(True, alpha=0.3, axis="y")
 
     plt.suptitle(f"{model_name}: Paired Test Results", fontweight="bold")
-    plt.tight_layout()
+    fig.legend(
+        handles,
+        labels,
+        loc="center right",
+        fontsize=8,
+        frameon=False,
+        bbox_to_anchor=(1.12, 0.5),
+    )
+    plt.tight_layout(rect=[0, 0, 0.88, 1])
 
     output_path = output_dir / "paired_test_summary.png"
     plt.savefig(output_path, dpi=300, bbox_inches="tight")
