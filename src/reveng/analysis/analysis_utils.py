@@ -97,6 +97,202 @@ class CellMetrics:
 
 
 # =============================================================================
+# Trajectory Data Classes (for trajectory-based analysis)
+# =============================================================================
+
+
+@dataclass
+class TrajectoryGridParams:
+    """Essential grid parameters extracted from trajectory file."""
+
+    grid_size: int
+    complexity: float
+    grid_id: int
+    astar_distance: int
+    agent_start: tuple[int, int]
+    goal: tuple[int, int]
+
+
+@dataclass
+class TrajectoryStep:
+    """A single step in a trajectory."""
+
+    step_id: int
+    agent_position: tuple[int, int]
+    agent_action: str  # "UP", "DOWN", "LEFT", "RIGHT"
+
+
+@dataclass
+class LightweightTrajectory:
+    """Memory-efficient trajectory representation with only essential fields."""
+
+    grid_params: TrajectoryGridParams
+    steps: list[TrajectoryStep]
+    reached_goal: bool
+    transform_type: str = "base"  # "base", "ReflectEnv", "RotateEnv", etc.
+
+    @property
+    def trajectory_length(self) -> int:
+        return len(self.steps)
+
+
+# =============================================================================
+# Trajectory Parsing Utilities
+# =============================================================================
+
+
+def extract_agent_position_from_grid_state(grid_state: list[str]) -> tuple[int, int]:
+    """Extract agent position (x, y) from grid state strings.
+
+    Grid state format: ['  0 1 2 ...', '0 # # # ...', '1 # A _ ...', ...]
+    Agent is marked with 'A'.
+
+    Note: In the grid representation, row index is Y and column index is X.
+    Format is "row col1 col2 ..." where row number is the Y coordinate.
+    """
+    for row_idx, row in enumerate(grid_state):
+        if row_idx == 0:
+            # Header row with column numbers
+            continue
+
+        # Split row into cells
+        parts = row.split()
+        if len(parts) < 2:
+            continue
+
+        # First part is row number (Y coordinate)
+        y = int(parts[0])
+
+        # Find 'A' in remaining parts
+        for col_idx, cell in enumerate(parts[1:], start=0):
+            if cell == "A":
+                return (col_idx, y)
+
+    # Fallback - shouldn't happen with valid data
+    return (-1, -1)
+
+
+def compute_optimal_actions_from_text_grid(
+    grid_layout: list[list[str]],
+    goal: tuple[int, int],
+) -> tuple[dict[tuple[int, int], OptimalActionSet], dict[tuple[int, int], int]]:
+    """Compute optimal actions for each cell using backward Dijkstra.
+
+    This is a simplified version that works with text grid layouts
+    (list of lists of symbols) rather than MiniGrid environments.
+
+    Args:
+        grid_layout: 2D grid where '#' is wall, others are passable
+        goal: Goal position (x, y)
+
+    Returns:
+        Tuple of (optimal_actions dict, distances dict)
+    """
+    height = len(grid_layout)
+    width = len(grid_layout[0]) if height > 0 else 0
+
+    def is_passable(x: int, y: int) -> bool:
+        if x < 0 or y < 0 or x >= width or y >= height:
+            return False
+        return grid_layout[y][x] != "#"
+
+    # (dx, dy, action_id): LEFT, RIGHT, UP, DOWN
+    neighbors = [(-1, 0, 0), (1, 0, 1), (0, -1, 2), (0, 1, 3)]
+
+    # Backward Dijkstra from goal
+    distances: dict[tuple[int, int], int] = {goal: 0}
+    heap_queue: list[tuple[int, tuple[int, int]]] = [(0, goal)]
+
+    while heap_queue:
+        dist, (x, y) = heapq.heappop(heap_queue)
+        if dist > distances.get((x, y), float("inf")):
+            continue
+
+        for dx, dy, _ in neighbors:
+            nx, ny = x + dx, y + dy
+            if is_passable(nx, ny):
+                new_dist = dist + 1
+                if new_dist < distances.get((nx, ny), float("inf")):
+                    distances[(nx, ny)] = new_dist
+                    heapq.heappush(heap_queue, (new_dist, (nx, ny)))
+
+    # Determine optimal actions for each cell
+    optimal_actions: dict[tuple[int, int], OptimalActionSet] = {}
+
+    for y in range(height):
+        for x in range(width):
+            if not is_passable(x, y):
+                continue
+
+            current_dist = distances.get((x, y), float("inf"))
+            if current_dist == float("inf"):
+                continue
+
+            optimal_set: OptimalActionSet = set()
+            for dx, dy, action in neighbors:
+                nx, ny = x + dx, y + dy
+                if is_passable(nx, ny):
+                    neighbor_dist = distances.get((nx, ny), float("inf"))
+                    if neighbor_dist == current_dist - 1:
+                        optimal_set.add(action)
+
+            optimal_actions[(x, y)] = optimal_set
+
+    # Goal cell has no optimal actions
+    optimal_actions[goal] = set()
+
+    return optimal_actions, distances
+
+
+def compute_trajectory_action_accuracy(
+    trajectory: LightweightTrajectory,
+    optimal_actions: dict[tuple[int, int], OptimalActionSet],
+) -> float:
+    """Compute action accuracy for a single trajectory.
+
+    Acc(τ) = (1/T) * Σ_{t=0}^{T-1} 1(a^t ∈ π*(s^t))
+    """
+    if not trajectory.steps:
+        return 0.0
+
+    correct = 0
+    for step in trajectory.steps:
+        pos = step.agent_position
+        action_id = ACTION_NAME_TO_ID.get(step.agent_action.upper())
+        optimal_set = optimal_actions.get(pos, set())
+
+        if action_id is not None and action_id in optimal_set:
+            correct += 1
+
+    return correct / len(trajectory.steps)
+
+
+def compute_spl(
+    trajectories: list[LightweightTrajectory],
+    optimal_path_length: int,
+) -> float:
+    """Compute Success weighted by Path Length (SPL).
+
+    SPL = (1/N) * Σ (1_S * L*) / max(L*, L)
+
+    Where:
+    - 1_S = 1 if trajectory reached goal, 0 otherwise
+    - L* = optimal path length
+    - L = actual trajectory length
+    """
+    if not trajectories or optimal_path_length <= 0:
+        return 0.0
+
+    total = 0.0
+    for traj in trajectories:
+        if traj.reached_goal:
+            traj_length = traj.trajectory_length
+            total += optimal_path_length / max(optimal_path_length, traj_length)
+
+    return total / len(trajectories)
+
+
+# =============================================================================
 # File Parsing Utilities
 # =============================================================================
 

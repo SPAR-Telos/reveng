@@ -1,3 +1,4 @@
+# ruff: noqa
 """Script to analyze LLM policies vs optimal A* policies."""
 
 import argparse
@@ -11,11 +12,14 @@ import pandas as pd
 import seaborn as sns
 from tqdm import tqdm
 import os, sys, glob
-sys.path.append(os.path.join('C:/Users\hchen\Dropbox/reveng', "src"))
+
+sys.path.append(os.path.join("C:/Users\hchen\Dropbox/reveng", "src"))
 # sys.path.append(os.path.join('D:/Phoebe\Dropbox/reveng', "src"))
 
 import reveng
-basepath = 'C:/Users\hchen\Dropbox/reveng'
+
+basepath = "C:/Users\hchen\Dropbox/reveng"
+
 
 def parse_filename(filepath, include_transform=False):
     """Extract grid_size, complexity, and instance_id from filename. adding transform type for the iso difficulties"""
@@ -161,13 +165,17 @@ def compare_policies(llm_policy, optimal_actions):
     error_rate = errors / total_cells if total_cells > 0 else 0.0
     return total_cells, errors, error_rate, multi_optimal_cells
 
+
 """
 saving result csvs
 """
-dataset_path_iso = basepath+'/experiments/datasets/isodifficulty_grids.pkl'
-metadata_dir = 'D:\Phoebe\maps/together_ai_openai_gpt-oss-120b-iso-transforms/together_ai_openai_gpt-oss-120b'
-output_dir = basepath+'/src/reveng/experiments/results/together_ai_openai_gpt-oss-120b-iso-transforms'
-is_isodifficulty = 'iso-transforms' in metadata_dir
+dataset_path_iso = basepath + "/experiments/datasets/isodifficulty_grids.pkl"
+metadata_dir = "D:\Phoebe\maps/together_ai_openai_gpt-oss-120b-iso-transforms/together_ai_openai_gpt-oss-120b"
+output_dir = (
+    basepath
+    + "/src/reveng/experiments/results/together_ai_openai_gpt-oss-120b-iso-transforms"
+)
+is_isodifficulty = "iso-transforms" in metadata_dir
 
 print("=" * 80)
 print("LLM POLICY vs OPTIMAL A* POLICY ANALYSIS")
@@ -215,7 +223,9 @@ for start in range(0, len(metadata_files), batch_size):
     metadata_dict = {}
     for fpath in tqdm(batch, desc="Loading metadata (batch)"):
         if is_isodifficulty:
-            grid_size, complexity, instance_id, transform_type = parse_filename(fpath, is_isodifficulty)
+            grid_size, complexity, instance_id, transform_type = parse_filename(
+                fpath, is_isodifficulty
+            )
             key = f"grid_size{grid_size}_complexity{complexity:.2f}_{instance_id:04d}_{transform_type}"
         else:
             grid_size, complexity, instance_id = parse_filename(fpath)
@@ -231,7 +241,7 @@ for start in range(0, len(metadata_files), batch_size):
                     "grid_size": grid_size,
                     "complexity": complexity,
                     "instance_id": instance_id,
-                    'transform_type': transform_type
+                    "transform_type": transform_type,
                 }
             else:
                 metadata_dict[key] = {
@@ -248,7 +258,9 @@ for start in range(0, len(metadata_files), batch_size):
     results = []
 
     common_keys = set(metadata_dict.keys()) & set(grids_dataset.keys())
-    print(f"   Processing {len(common_keys)} grids with both metadata and environment data")
+    print(
+        f"   Processing {len(common_keys)} grids with both metadata and environment data"
+    )
 
     for key in tqdm(sorted(common_keys), desc="Analyzing grids (batch)"):
         meta_info = metadata_dict[key]
@@ -295,12 +307,17 @@ for start in range(0, len(metadata_files), batch_size):
 """
 analyse iso transforms and plot
 """
-df_dir = basepath+'/src/reveng/experiments/results/together_ai_openai_gpt-oss-20b-iso-transforms'
+df_dir = (
+    basepath
+    + "/src/reveng/experiments/results/together_ai_openai_gpt-oss-20b-iso-transforms"
+)
 csv_files = glob.glob(os.path.join(df_dir, "*.csv"))
 # Read and concatenate all CSVs
 df_transform = pd.concat((pd.read_csv(f) for f in csv_files), ignore_index=True)
-df_transform['transform_type'] = df_transform.grid_id.str.split('_').str[-1]
-df_transform.loc[df_transform['transform_type'].str.contains('00'),'transform_type'] = 'baseline'
+df_transform["transform_type"] = df_transform.grid_id.str.split("_").str[-1]
+df_transform.loc[
+    df_transform["transform_type"].str.contains("00"), "transform_type"
+] = "baseline"
 df_all = df_transform
 
 output_dir = df_dir
@@ -308,10 +325,8 @@ output_dir = df_dir
 # df_all.to_csv(df_dir+'/isodiff.csv')
 
 # Aggregate mean error_rate by grid_size, complexity, and transform_type
-agg = (
-    df_all
-    .groupby(["grid_size", "complexity", "transform_type"], as_index=False)
-    .agg(mean_error_rate=("error_rate", "mean"))
+agg = df_all.groupby(["grid_size", "complexity", "transform_type"], as_index=False).agg(
+    mean_error_rate=("error_rate", "mean")
 )
 """
 a. barplot
@@ -322,12 +337,14 @@ grid_vals = sorted(agg["grid_size"].unique())
 complexity_vals = sorted(agg["complexity"].unique())
 
 nrows, ncols = len(grid_vals), len(complexity_vals)
-fig, axes = plt.subplots(nrows, ncols, figsize=(4*ncols, 3.5*nrows), squeeze=False, sharey=True)
+fig, axes = plt.subplots(
+    nrows, ncols, figsize=(4 * ncols, 3.5 * nrows), squeeze=False, sharey=True
+)
 
 for i, g in enumerate(grid_vals):
     for j, c in enumerate(complexity_vals):
         ax = axes[i, j]
-        sub = agg[(agg["grid_size"]==g) & (agg["complexity"]==c)]
+        sub = agg[(agg["grid_size"] == g) & (agg["complexity"] == c)]
         sns.barplot(data=sub, x="transform_type", y="mean_error_rate", ax=ax)
         ax.set_title(f"grid={g}, complexity={c}")
         ax.set_xlabel("")
@@ -339,24 +356,22 @@ for i, g in enumerate(grid_vals):
 
 plt.tight_layout()
 plt.show()
-fig.savefig(output_dir+"/barplot.png", dpi=300, bbox_inches="tight")
+fig.savefig(output_dir + "/barplot.png", dpi=300, bbox_inches="tight")
 
 """
 b. lineplot
 """
 # Get baseline rows
-baseline = (
-    df_all[df_all["transform_type"] == "baseline"]
-    .rename(columns={"error_rate": "baseline_error_rate"})
-    [["grid_size", "complexity", "instance_id", "baseline_error_rate"]]
-)
+baseline = df_all[df_all["transform_type"] == "baseline"].rename(
+    columns={"error_rate": "baseline_error_rate"}
+)[["grid_size", "complexity", "instance_id", "baseline_error_rate"]]
 
 # Join baseline back onto all rows (including baseline itself)
 df_merged = df_all.merge(
     baseline,
     on=["grid_size", "complexity", "instance_id"],
     how="inner",
-    validate="many_to_one"
+    validate="many_to_one",
 )
 
 # Compute per-unit difference from baseline
@@ -365,38 +380,29 @@ df_merged["diff_from_baseline"] = (
 )
 
 agg_diff = (
-    df_merged
-    # we usually don't care about the baseline row itself (diff = 0)
-    [df_merged["transform_type"] != "baseline"]
+    df_merged[
+        # we usually don't care about the baseline row itself (diff = 0)
+        df_merged["transform_type"] != "baseline"
+    ]
     .groupby(["grid_size", "complexity", "transform_type"])
     .agg(
         mean_diff=("diff_from_baseline", "mean"),
-        std_diff=("diff_from_baseline", "std"),   # <<< HERE: std of differences
+        std_diff=("diff_from_baseline", "std"),  # <<< HERE: std of differences
     )
     .reset_index()
 )
 
 mean_wide = agg_diff.pivot_table(
-    index=["grid_size", "complexity"],
-    columns="transform_type",
-    values="mean_diff"
+    index=["grid_size", "complexity"], columns="transform_type", values="mean_diff"
 )
 
 std_wide = agg_diff.pivot_table(
-    index=["grid_size", "complexity"],
-    columns="transform_type",
-    values="std_diff"
+    index=["grid_size", "complexity"], columns="transform_type", values="std_diff"
 )
 
 # Put into a single dataframe like your original `diff`
-diff = (
-    mean_wide
-    .reset_index()
-    .merge(
-        std_wide.reset_index(),
-        on=["grid_size", "complexity"],
-        suffixes=("", "_std")
-    )
+diff = mean_wide.reset_index().merge(
+    std_wide.reset_index(), on=["grid_size", "complexity"], suffixes=("", "_std")
 )
 
 # Remove complexity == 0
@@ -407,9 +413,7 @@ transforms = [t for t in mean_wide.columns]  # all non-baseline transforms
 grid_vals = sorted(diff["grid_size"].unique())
 
 fig, axes = plt.subplots(
-    1, len(grid_vals),
-    figsize=(5 * len(grid_vals), 4),
-    sharey=True
+    1, len(grid_vals), figsize=(5 * len(grid_vals), 4), sharey=True
 )
 
 if len(grid_vals) == 1:
@@ -421,8 +425,8 @@ for ax, g in zip(axes, grid_vals):
     for t in transforms:
         ax.errorbar(
             sub["complexity"],
-            sub[t],                      # mean difference
-            yerr=sub[f"{t}_std"],        # std of difference
+            sub[t],  # mean difference
+            yerr=sub[f"{t}_std"],  # std of difference
             marker="o",
             capsize=4,
             label=t,
@@ -439,27 +443,20 @@ for ax, g in zip(axes, grid_vals):
 
 # Shared legend
 handles, labels = axes[-1].get_legend_handles_labels()
-fig.legend(
-    handles, labels,
-    loc="upper center",
-    ncol=len(transforms),
-    frameon=False
-)
+fig.legend(handles, labels, loc="upper center", ncol=len(transforms), frameon=False)
 
 plt.tight_layout()
 plt.show()
 
-fig.savefig(output_dir+"/lineplot.png", dpi=300, bbox_inches="tight")
+fig.savefig(output_dir + "/lineplot.png", dpi=300, bbox_inches="tight")
 
 """
 c.line plots with datapoints
 """
 
-baseline = (
-    df_all[df_all["transform_type"] == "baseline"]
-    .rename(columns={"error_rate": "baseline_error_rate"})
-    [["grid_size", "complexity", "instance_id", "baseline_error_rate"]]
-)
+baseline = df_all[df_all["transform_type"] == "baseline"].rename(
+    columns={"error_rate": "baseline_error_rate"}
+)[["grid_size", "complexity", "instance_id", "baseline_error_rate"]]
 
 df_merged = df_all.merge(
     baseline,
@@ -481,8 +478,7 @@ df_merged_nb = df_merged[df_merged["transform_type"] != "baseline"]
 # ---------------------------------------------------------
 
 agg_mean = (
-    df_merged_nb
-    .groupby(["grid_size", "complexity", "transform_type"])
+    df_merged_nb.groupby(["grid_size", "complexity", "transform_type"])
     .agg(mean_diff=("diff_from_baseline", "mean"))
     .reset_index()
 )
@@ -491,11 +487,11 @@ agg_mean = (
 # 3. Determine transforms (rows) and grid sizes (columns)
 # ---------------------------------------------------------
 
-transforms = sorted(df_merged_nb["transform_type"].unique())   # rows
-grid_vals = sorted(df_merged_nb["grid_size"].unique())        # columns
+transforms = sorted(df_merged_nb["transform_type"].unique())  # rows
+grid_vals = sorted(df_merged_nb["grid_size"].unique())  # columns
 
 n_rows = len(transforms)  # expected 4
-n_cols = len(grid_vals)   # expected 5
+n_cols = len(grid_vals)  # expected 5
 
 # ---------------------------------------------------------
 # 4. Create n x m subplot grid
@@ -520,25 +516,20 @@ if n_rows == 1:
 if n_cols == 1:
     axes = [[ax] for ax in axes]
 
-for i, t in enumerate(transforms):          # row index
-    t_color = color_map.get(t, "black")     # default black if missing
+for i, t in enumerate(transforms):  # row index
+    t_color = color_map.get(t, "black")  # default black if missing
 
-    for j, g in enumerate(grid_vals):       # col index
+    for j, g in enumerate(grid_vals):  # col index
         ax = axes[i][j]
 
         # Mean differences
-        mean_sub = (
-            agg_mean[
-                (agg_mean["transform_type"] == t)
-                & (agg_mean["grid_size"] == g)
-            ]
-            .sort_values("complexity")
-        )
+        mean_sub = agg_mean[
+            (agg_mean["transform_type"] == t) & (agg_mean["grid_size"] == g)
+        ].sort_values("complexity")
 
         # Per-instance diffs
         pts_sub = df_merged_nb[
-            (df_merged_nb["transform_type"] == t)
-            & (df_merged_nb["grid_size"] == g)
+            (df_merged_nb["transform_type"] == t) & (df_merged_nb["grid_size"] == g)
         ]
 
         # Instance-level scatter
@@ -580,17 +571,15 @@ plt.tight_layout()
 plt.show()
 
 
-
 """
 d. heatmap
 """
 # Compute difference vs baseline
-delta = (
-    agg.pivot_table(index=["grid_size", "complexity"],
-                    columns="transform_type",
-                    values="mean_error_rate")
-    .pipe(lambda t: t.subtract(t["baseline"], axis=0))
-)
+delta = agg.pivot_table(
+    index=["grid_size", "complexity"],
+    columns="transform_type",
+    values="mean_error_rate",
+).pipe(lambda t: t.subtract(t["baseline"], axis=0))
 
 # Remove complexity == 0
 delta = delta.reset_index()
@@ -607,7 +596,7 @@ vmax = delta[transforms].max().max()
 # Layout: 2x2 subplots (adjust if you have more/fewer transforms)
 n = len(transforms)
 nrows, ncols = 2, 2
-fig, axes = plt.subplots(nrows, ncols, figsize=(5*ncols, 4.5*nrows))
+fig, axes = plt.subplots(nrows, ncols, figsize=(5 * ncols, 4.5 * nrows))
 
 # Flatten axes for easy indexing
 axes = axes.flatten()
@@ -616,14 +605,23 @@ axes = axes.flatten()
 for i, t in enumerate(transforms):
     ax = axes[i]
     pivot = delta[t].unstack("complexity")
-    sns.heatmap(pivot, ax=ax, cmap="coolwarm", center=0,
-                vmin=vmin, vmax=vmax, cbar=False, annot=True, fmt=".2f")
+    sns.heatmap(
+        pivot,
+        ax=ax,
+        cmap="coolwarm",
+        center=0,
+        vmin=vmin,
+        vmax=vmax,
+        cbar=False,
+        annot=True,
+        fmt=".2f",
+    )
     ax.set_title(f"Δ error_rate vs baseline: {t}")
     ax.set_xlabel("complexity")
     ax.set_ylabel("grid_size")
 
 # Remove any unused subplots if transforms < 4
-for j in range(i+1, len(axes)):
+for j in range(i + 1, len(axes)):
     fig.delaxes(axes[j])
 
 # Shared colorbar
@@ -636,7 +634,7 @@ fig.colorbar(sm, cax=cbar_ax, label="Δ mean error_rate")
 plt.suptitle("Difference from baseline across transforms", fontsize=15, y=0.98)
 plt.tight_layout(rect=[0, 0, 0.9, 0.95])
 plt.show()
-fig.savefig(output_dir+"/heatmap.png", dpi=300, bbox_inches="tight")
+fig.savefig(output_dir + "/heatmap.png", dpi=300, bbox_inches="tight")
 
 
 if __name__ == "__main__":
