@@ -625,11 +625,11 @@ def compute_summary_by_transform(df: pd.DataFrame) -> pd.DataFrame:
             n_grids=("grid_key", "nunique"),
             n_trajectories=("num_trajectories", "sum"),
             mean_goal_success=("goal_success_rate", "mean"),
-            std_goal_success=("goal_success_rate", "std"),
+            se_goal_success=("goal_success_rate", "sem"),
             mean_action_accuracy=("mean_action_accuracy", "mean"),
-            std_action_accuracy=("mean_action_accuracy", "std"),
+            se_action_accuracy=("mean_action_accuracy", "sem"),
             mean_spl=("spl", "mean"),
-            std_spl=("spl", "std"),
+            se_spl=("spl", "sem"),
         )
         .reset_index()
     )
@@ -647,11 +647,11 @@ def compute_summary_by_size_transform(df: pd.DataFrame) -> pd.DataFrame:
         .agg(
             n_grids=("grid_key", "nunique"),
             mean_goal_success=("goal_success_rate", "mean"),
-            std_goal_success=("goal_success_rate", "std"),
+            se_goal_success=("goal_success_rate", "sem"),
             mean_action_accuracy=("mean_action_accuracy", "mean"),
-            std_action_accuracy=("mean_action_accuracy", "std"),
+            se_action_accuracy=("mean_action_accuracy", "sem"),
             mean_spl=("spl", "mean"),
-            std_spl=("spl", "std"),
+            se_spl=("spl", "sem"),
         )
         .reset_index()
     )
@@ -664,10 +664,36 @@ def compute_summary_by_size_transform(df: pd.DataFrame) -> pd.DataFrame:
 # =============================================================================
 
 
+def save_figure(fig: plt.Figure, output_dir: Path, filename: str) -> Path:
+    """Save figure to both PNG and PDF subfolders.
+
+    Args:
+        fig: Matplotlib figure to save
+        output_dir: Base output directory
+        filename: Filename without extension (e.g., "metrics_by_transform")
+
+    Returns:
+        Path to the PNG file
+    """
+    # Create subfolders
+    png_dir = output_dir / "png"
+    pdf_dir = output_dir / "pdf"
+    png_dir.mkdir(parents=True, exist_ok=True)
+    pdf_dir.mkdir(parents=True, exist_ok=True)
+
+    # Save both formats
+    png_path = png_dir / f"{filename}.png"
+    pdf_path = pdf_dir / f"{filename}.pdf"
+
+    fig.savefig(png_path, dpi=300, bbox_inches="tight")
+    fig.savefig(pdf_path, bbox_inches="tight")
+
+    return png_path
+
+
 def plot_metrics_by_transform(
     df: pd.DataFrame,
     output_dir: Path,
-    model_name: str,
 ) -> Path:
     """Plot bar charts of metrics by transform type."""
     setup_paper_style()
@@ -681,24 +707,32 @@ def plot_metrics_by_transform(
     fig, axes = plt.subplots(1, 3, figsize=(12, 4))
 
     for idx, (metric_col, metric_label) in enumerate(metrics):
-        summary = df.groupby("transform_type")[metric_col].agg(["mean", "std"])
+        summary = df.groupby("transform_type")[metric_col].agg(["mean", "sem"])
         summary = summary.reindex([t for t in TRANSFORM_TYPES if t in summary.index])
 
         colors = [TRANSFORM_COLORS.get(t, "gray") for t in summary.index]
         x = range(len(summary))
 
-        axes[idx].bar(x, summary["mean"], yerr=summary["std"], capsize=3, color=colors)
+        axes[idx].bar(x, summary["mean"], yerr=summary["sem"], capsize=3, color=colors)
         axes[idx].set_xticks(x)
         axes[idx].set_xticklabels(summary.index, rotation=45, ha="right")
         axes[idx].set_ylabel(metric_label)
         axes[idx].set_title(f"{metric_label} by Transform")
         axes[idx].grid(True, alpha=0.3, axis="y")
 
-    plt.suptitle(f"{model_name}: Performance by Transform", fontweight="bold")
-    plt.tight_layout()
+    fig.text(
+        0.99,
+        0.01,
+        "Mean over grids; Error bars: ±1 SE",
+        ha="right",
+        va="bottom",
+        fontsize=8,
+        style="italic",
+        color="gray",
+    )
+    plt.tight_layout(rect=[0, 0.03, 1, 1])
 
-    output_path = output_dir / "metrics_by_transform.png"
-    plt.savefig(output_path, dpi=300, bbox_inches="tight")
+    output_path = save_figure(fig, output_dir, "metrics_by_transform")
     plt.close(fig)
 
     return output_path
@@ -707,7 +741,6 @@ def plot_metrics_by_transform(
 def plot_delta_from_baseline(
     df: pd.DataFrame,
     output_dir: Path,
-    model_name: str,
 ) -> Path:
     """Plot change in metrics relative to baseline."""
     setup_paper_style()
@@ -734,12 +767,14 @@ def plot_delta_from_baseline(
                     transform_df.loc[common_grids, metric].values
                     - baseline_df.loc[common_grids, metric].values
                 )
+                n = len(delta)
+                se_delta = delta.std() / (n**0.5) if n > 1 else 0.0
                 deltas.append(
                     {
                         "transform": transform,
                         "mean_delta": delta.mean(),
-                        "std_delta": delta.std(),
-                        "n": len(delta),
+                        "se_delta": se_delta,
+                        "n": n,
                     }
                 )
 
@@ -751,7 +786,7 @@ def plot_delta_from_baseline(
             axes[idx].bar(
                 x,
                 delta_df["mean_delta"],
-                yerr=delta_df["std_delta"],
+                yerr=delta_df["se_delta"],
                 capsize=3,
                 color=colors,
             )
@@ -762,11 +797,19 @@ def plot_delta_from_baseline(
             axes[idx].set_title(f"{label} (vs Baseline)")
             axes[idx].grid(True, alpha=0.3, axis="y")
 
-    plt.suptitle(f"{model_name}: Change from Baseline", fontweight="bold")
-    plt.tight_layout()
+    fig.text(
+        0.99,
+        0.01,
+        "Mean over paired grids; Error bars: ±1 SE",
+        ha="right",
+        va="bottom",
+        fontsize=8,
+        style="italic",
+        color="gray",
+    )
+    plt.tight_layout(rect=[0, 0.03, 1, 1])
 
-    output_path = output_dir / "delta_from_baseline.png"
-    plt.savefig(output_path, dpi=300, bbox_inches="tight")
+    output_path = save_figure(fig, output_dir, "delta_from_baseline")
     plt.close(fig)
 
     return output_path
@@ -775,7 +818,6 @@ def plot_delta_from_baseline(
 def plot_metrics_by_size_transform(
     df: pd.DataFrame,
     output_dir: Path,
-    model_name: str,
 ) -> Path:
     """Plot metrics by grid size, with separate lines for each transform."""
     setup_paper_style()
@@ -793,13 +835,13 @@ def plot_metrics_by_size_transform(
     for idx, (metric_col, metric_label) in enumerate(metrics):
         for transform in transforms:
             subset = df[df["transform_type"] == transform]
-            summary = subset.groupby("grid_size")[metric_col].agg(["mean", "std"])
+            summary = subset.groupby("grid_size")[metric_col].agg(["mean", "sem"])
 
             color = TRANSFORM_COLORS.get(transform, "gray")
             axes[idx].errorbar(
                 summary.index,
                 summary["mean"],
-                yerr=summary["std"],
+                yerr=summary["sem"],
                 marker="o",
                 capsize=3,
                 color=color,
@@ -813,11 +855,19 @@ def plot_metrics_by_size_transform(
         if idx == 0:
             axes[idx].legend(fontsize=7, loc="best", frameon=False)
 
-    plt.suptitle(f"{model_name}: Metrics by Grid Size", fontweight="bold")
-    plt.tight_layout()
+    fig.text(
+        0.99,
+        0.01,
+        "Mean over grids; Error bars: ±1 SE",
+        ha="right",
+        va="bottom",
+        fontsize=8,
+        style="italic",
+        color="gray",
+    )
+    plt.tight_layout(rect=[0, 0.03, 1, 1])
 
-    output_path = output_dir / "metrics_by_size_transform.png"
-    plt.savefig(output_path, dpi=300, bbox_inches="tight")
+    output_path = save_figure(fig, output_dir, "metrics_by_size_transform")
     plt.close(fig)
 
     return output_path
@@ -826,11 +876,10 @@ def plot_metrics_by_size_transform(
 def plot_paired_test_results(
     paired_tests: list[PairedTestResult],
     output_dir: Path,
-    model_name: str,
 ) -> Path:
     """Plot summary of paired test results."""
     if not paired_tests:
-        return output_dir / "paired_test_summary.png"
+        return output_dir / "png" / "paired_test_summary.png"
 
     setup_paper_style()
 
@@ -889,7 +938,6 @@ def plot_paired_test_results(
     axes[1].set_title("Statistical Significance")
     axes[1].grid(True, alpha=0.3, axis="y")
 
-    plt.suptitle(f"{model_name}: Paired Test Results", fontweight="bold")
     fig.legend(
         handles,
         labels,
@@ -900,8 +948,7 @@ def plot_paired_test_results(
     )
     plt.tight_layout(rect=[0, 0, 0.88, 1])
 
-    output_path = output_dir / "paired_test_summary.png"
-    plt.savefig(output_path, dpi=300, bbox_inches="tight")
+    output_path = save_figure(fig, output_dir, "paired_test_summary")
     plt.close(fig)
 
     return output_path
@@ -950,11 +997,11 @@ def save_results(
 
     # Generate visualizations
     print("  Generating visualizations...")
-    plot_metrics_by_transform(results.df, model_dir, results.model_name)
-    plot_delta_from_baseline(results.df, model_dir, results.model_name)
-    plot_metrics_by_size_transform(results.df, model_dir, results.model_name)
+    plot_metrics_by_transform(results.df, model_dir)
+    plot_delta_from_baseline(results.df, model_dir)
+    plot_metrics_by_size_transform(results.df, model_dir)
     if results.paired_tests:
-        plot_paired_test_results(results.paired_tests, model_dir, results.model_name)
+        plot_paired_test_results(results.paired_tests, model_dir)
 
     return output_paths
 

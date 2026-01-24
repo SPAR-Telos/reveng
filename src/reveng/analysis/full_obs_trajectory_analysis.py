@@ -767,17 +767,17 @@ def compute_summary_by_size_complexity(df: pd.DataFrame) -> pd.DataFrame:
         .agg(
             n_grids=("grid_id", "count"),
             mean_goal_success=("goal_success_rate", "mean"),
-            std_goal_success=("goal_success_rate", "std"),
+            se_goal_success=("goal_success_rate", "sem"),
             mean_action_accuracy=("mean_action_accuracy", "mean"),
-            std_action_accuracy=("mean_action_accuracy", "std"),
+            se_action_accuracy=("mean_action_accuracy", "sem"),
             mean_spl=("spl", "mean"),
-            std_spl=("spl", "std"),
+            se_spl=("spl", "sem"),
             mean_entropy=("mean_entropy", "mean"),
-            std_entropy=("mean_entropy", "std"),
+            se_entropy=("mean_entropy", "sem"),
             mean_jsd=("mean_jsd", "mean"),
-            std_jsd=("mean_jsd", "std"),
+            se_jsd=("mean_jsd", "sem"),
             mean_ece=("ece", "mean"),
-            std_ece=("ece", "std"),
+            se_ece=("ece", "sem"),
         )
         .reset_index()
     )
@@ -785,24 +785,46 @@ def compute_summary_by_size_complexity(df: pd.DataFrame) -> pd.DataFrame:
     return summary
 
 
-def compute_summary_by_distance(state_df: pd.DataFrame) -> pd.DataFrame:
-    """Compute summary statistics grouped by distance to goal."""
+def compute_summary_by_distance(
+    state_df: pd.DataFrame,
+    max_distance: int = 50,
+) -> pd.DataFrame:
+    """Compute summary statistics grouped by distance to goal.
+
+    Args:
+        state_df: DataFrame with per-state metrics
+        max_distance: Maximum distance to show; all distances >= max_distance
+                      are grouped into a single bucket (e.g., "50+")
+
+    Returns:
+        DataFrame with summary statistics by distance, capped at max_distance
+    """
     if state_df.empty:
         return pd.DataFrame()
 
+    # Create a copy and cap the distance
+    df = state_df.copy()
+    df["distance_capped"] = df["distance_to_goal"].clip(upper=max_distance)
+
     summary = (
-        state_df.groupby("distance_to_goal")
+        df.groupby("distance_capped")
         .agg(
             n_states=("entropy", "count"),
             mean_entropy=("entropy", "mean"),
-            std_entropy=("entropy", "std"),
+            se_entropy=("entropy", "sem"),
             mean_jsd=("jsd", "mean"),
-            std_jsd=("jsd", "std"),
+            se_jsd=("jsd", "sem"),
             accuracy=("is_optimal", "mean"),
             total_observations=("n_observations", "sum"),
         )
         .reset_index()
     )
+
+    # Rename back to distance_to_goal for compatibility
+    summary = summary.rename(columns={"distance_capped": "distance_to_goal"})
+
+    # Mark the max distance as "50+" in a separate column for labeling
+    summary["is_capped"] = summary["distance_to_goal"] == max_distance
 
     return summary
 
@@ -830,6 +852,33 @@ def compute_overall_summary(df: pd.DataFrame) -> dict[str, Any]:
 # =============================================================================
 
 
+def save_figure(fig: plt.Figure, output_dir: Path, filename: str) -> Path:
+    """Save figure to both PNG and PDF subfolders.
+
+    Args:
+        fig: Matplotlib figure to save
+        output_dir: Base output directory
+        filename: Filename without extension (e.g., "metrics_by_distance")
+
+    Returns:
+        Path to the PNG file
+    """
+    # Create subfolders
+    png_dir = output_dir / "png"
+    pdf_dir = output_dir / "pdf"
+    png_dir.mkdir(parents=True, exist_ok=True)
+    pdf_dir.mkdir(parents=True, exist_ok=True)
+
+    # Save both formats
+    png_path = png_dir / f"{filename}.png"
+    pdf_path = pdf_dir / f"{filename}.pdf"
+
+    fig.savefig(png_path, dpi=300, bbox_inches="tight")
+    fig.savefig(pdf_path, bbox_inches="tight")
+
+    return png_path
+
+
 def plot_metrics_by_size_complexity(
     df: pd.DataFrame,
     output_dir: Path,
@@ -853,11 +902,11 @@ def plot_metrics_by_size_complexity(
         fig, axes = plt.subplots(1, 2, figsize=(10, 4))
 
         # By grid size
-        size_summary = df.groupby("grid_size")[metric_col].agg(["mean", "std"])
+        size_summary = df.groupby("grid_size")[metric_col].agg(["mean", "sem"])
         axes[0].errorbar(
             size_summary.index,
             size_summary["mean"],
-            yerr=size_summary["std"],
+            yerr=size_summary["sem"],
             marker="o",
             capsize=3,
             color=MODEL_COLORS[0],
@@ -868,11 +917,11 @@ def plot_metrics_by_size_complexity(
         axes[0].grid(True, alpha=0.3)
 
         # By complexity
-        comp_summary = df.groupby("complexity")[metric_col].agg(["mean", "std"])
+        comp_summary = df.groupby("complexity")[metric_col].agg(["mean", "sem"])
         axes[1].errorbar(
             comp_summary.index,
             comp_summary["mean"],
-            yerr=comp_summary["std"],
+            yerr=comp_summary["sem"],
             marker="o",
             capsize=3,
             color=MODEL_COLORS[1],
@@ -882,12 +931,12 @@ def plot_metrics_by_size_complexity(
         axes[1].set_title(f"{metric_label} by Complexity")
         axes[1].grid(True, alpha=0.3)
 
-        plt.suptitle(f"{model_name}: {metric_label}", fontweight="bold")
+        plt.suptitle(f"{metric_label}", fontweight="bold")
         # Add note explaining error bars
         fig.text(
             0.99,
             0.01,
-            "Mean over trajectories per grid; Error bars: ±1 standard deviation",
+            "Mean over grids; Error bars: ±1 SE",
             ha="right",
             va="bottom",
             fontsize=8,
@@ -896,8 +945,7 @@ def plot_metrics_by_size_complexity(
         )
         plt.tight_layout(rect=[0, 0.03, 1, 1])
 
-        output_path = output_dir / f"{metric_col}_by_size_complexity.png"
-        plt.savefig(output_path, dpi=300, bbox_inches="tight")
+        output_path = save_figure(fig, output_dir, f"{metric_col}_by_size_complexity")
         plt.close(fig)
         output_paths[metric_col] = output_path
 
@@ -909,6 +957,7 @@ def plot_metrics_by_distance(
     output_dir: Path,
     model_name: str,
     smoothing_window: int = 5,
+    max_distance: int = 50,
 ) -> Path:
     """Plot metrics vs distance to goal with smoothing.
 
@@ -917,9 +966,10 @@ def plot_metrics_by_distance(
         output_dir: Output directory
         model_name: Model name for title
         smoothing_window: Rolling window size for smoothing
+        max_distance: Maximum distance value (last bucket is "{max_distance}+")
     """
     if distance_df.empty:
-        return output_dir / "metrics_by_distance.png"
+        return output_dir / "png" / "metrics_by_distance.png"
 
     setup_paper_style()
 
@@ -1004,11 +1054,23 @@ def plot_metrics_by_distance(
     axes[2].grid(True, alpha=0.3)
     axes[2].legend(fontsize=7, loc="lower left", frameon=False)
 
-    plt.suptitle(f"{model_name}: Metrics by Distance to Goal", fontweight="bold")
+    # Set explicit x-axis limits and ticks for all panels
+    # The data is capped at max_distance, so we set appropriate limits
+    for ax in axes:
+        ax.set_xlim(-1, max_distance + 3)
+        # Create evenly spaced ticks: 0, 10, 20, 30, 40, 50
+        tick_values = list(range(0, max_distance + 1, 10))
+        tick_labels = [
+            str(t) if t < max_distance else f"{max_distance}+" for t in tick_values
+        ]
+        ax.set_xticks(tick_values)
+        ax.set_xticklabels(tick_labels)
+
+    plt.suptitle("Metrics by Distance to Goal", fontweight="bold")
     fig.text(
         0.99,
         0.01,
-        "Points: per-distance aggregates; Line: rolling average",
+        f"Points: per-distance aggregates (capped at {max_distance}+); Line: rolling average",
         ha="right",
         va="bottom",
         fontsize=8,
@@ -1017,8 +1079,7 @@ def plot_metrics_by_distance(
     )
     plt.tight_layout(rect=[0, 0.03, 1, 1])
 
-    output_path = output_dir / "metrics_by_distance.png"
-    plt.savefig(output_path, dpi=300, bbox_inches="tight")
+    output_path = save_figure(fig, output_dir, "metrics_by_distance")
     plt.close(fig)
 
     return output_path
@@ -1073,11 +1134,10 @@ def plot_capability_vs_uncertainty(
     axes[2].set_title("SPL vs ECE")
     axes[2].grid(True, alpha=0.3)
 
-    plt.suptitle(f"{model_name}: Capability vs Uncertainty", fontweight="bold")
+    plt.suptitle("Capability vs Uncertainty", fontweight="bold")
     plt.tight_layout()
 
-    output_path = output_dir / "capability_vs_uncertainty.png"
-    plt.savefig(output_path, dpi=300, bbox_inches="tight")
+    output_path = save_figure(fig, output_dir, "capability_vs_uncertainty")
     plt.close(fig)
 
     return output_path
@@ -1126,11 +1186,10 @@ def plot_heatmaps(
 
         plt.colorbar(im, ax=axes[idx])
 
-    plt.suptitle(f"{model_name}: Metrics Heatmaps", fontweight="bold")
+    plt.suptitle("Metrics Heatmaps", fontweight="bold")
     plt.tight_layout()
 
-    output_path = output_dir / "metrics_heatmaps.png"
-    plt.savefig(output_path, dpi=300, bbox_inches="tight")
+    output_path = save_figure(fig, output_dir, "metrics_heatmaps")
     plt.close(fig)
 
     return output_path
@@ -1143,6 +1202,7 @@ def plot_distance_complexity_heatmap(
     metric: str = "is_optimal",
     metric_label: str = "Action Accuracy",
     n_distance_bins: int = 10,
+    max_distance: int = 50,
 ) -> Path:
     """Plot multi-panel heatmap of metric by distance, complexity, and grid size.
 
@@ -1159,12 +1219,13 @@ def plot_distance_complexity_heatmap(
         metric: Column name for the metric to plot
         metric_label: Human-readable label for the metric
         n_distance_bins: Number of bins for distance
+        max_distance: Maximum distance to show; distances >= max_distance are capped
 
     Returns:
         Path to the saved figure
     """
     if state_df.empty or metric not in state_df.columns:
-        return output_dir / f"heatmap_{metric}_by_distance_complexity.png"
+        return output_dir / "png" / f"heatmap_{metric}_by_distance_complexity.png"
 
     setup_paper_style()
 
@@ -1173,20 +1234,34 @@ def plot_distance_complexity_heatmap(
     n_sizes = len(grid_sizes)
 
     if n_sizes == 0:
-        return output_dir / f"heatmap_{metric}_by_distance_complexity.png"
+        return output_dir / "png" / f"heatmap_{metric}_by_distance_complexity.png"
 
-    # Create distance bins based on overall distance range
-    max_distance = state_df["distance_to_goal"].max()
-    distance_bins = np.linspace(0, max_distance + 1, n_distance_bins + 1)
-    distance_labels = [
-        f"{int(distance_bins[i])}-{int(distance_bins[i + 1])}"
-        for i in range(len(distance_bins) - 1)
+    # Cap the distance at max_distance + 0.5 so values >= max_distance
+    # fall into the "50+" bin (which is (50, 51])
+    df = state_df.copy()
+    df["distance_capped"] = df["distance_to_goal"].clip(upper=max_distance + 0.5)
+
+    # Create distance bins with integer-aligned edges
+    # Use bin_width to divide max_distance evenly
+    bin_width = max_distance // n_distance_bins
+    distance_bins = list(range(0, max_distance, bin_width)) + [
+        max_distance,
+        max_distance + 1,
     ]
 
+    distance_labels = []
+    for i in range(len(distance_bins) - 1):
+        start = distance_bins[i]
+        end = distance_bins[i + 1]
+        if start == max_distance:
+            # Last bin: "50+"
+            distance_labels.append(f"{max_distance}+")
+        else:
+            distance_labels.append(f"{start}-{end}")
+
     # Bin the distances
-    df = state_df.copy()
     df["distance_bin"] = pd.cut(
-        df["distance_to_goal"],
+        df["distance_capped"],
         bins=distance_bins,
         labels=distance_labels,
         include_lowest=True,
@@ -1283,14 +1358,15 @@ def plot_distance_complexity_heatmap(
     cbar.set_label(metric_label, fontsize=9)
 
     plt.suptitle(
-        f"{model_name}: {metric_label} by Grid Size, Complexity, and Distance",
+        f"{metric_label} by Grid Size, Complexity, and Distance",
         fontweight="bold",
         fontsize=11,
         y=1.02,
     )
 
-    output_path = output_dir / f"heatmap_{metric}_by_distance_complexity.png"
-    plt.savefig(output_path, dpi=300, bbox_inches="tight")
+    output_path = save_figure(
+        fig, output_dir, f"heatmap_{metric}_by_distance_complexity"
+    )
     plt.close(fig)
 
     return output_path
