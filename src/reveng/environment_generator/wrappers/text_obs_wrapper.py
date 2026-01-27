@@ -17,6 +17,7 @@ DEFAULT_CELLS_CONFIG = {
     "empty": {"symbol": "_", "description": "Open space (can be visited)"},
     "door": {"symbol": "D", "description": "Door (locked or unlocked)"},
     "key": {"symbol": "K", "description": "Key (can unlock doors)"},
+    "ball": {"symbol": "C", "description": "Coin (collectible item)"},
     "unknown_obj": {"symbol": "?", "description": "Unknown object"},
     "fog": {
         "symbol": "*",

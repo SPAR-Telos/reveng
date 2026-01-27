@@ -21,6 +21,7 @@ from reveng.environment_generator.env_transformations import (
     EnvTransformation,
     IsoDifficultyTransformationFactory,
 )
+from reveng.environment_generator.utils import remove_door
 from reveng.environment_generator.wrappers.text_obs_wrapper import (
     FullObservabilityTextWrapper,
 )
@@ -308,6 +309,8 @@ def generate_trajectory(
     verbose: bool = False,
     enable_dynamic_max_steps: bool = False,
     use_safe_reset: bool = False,
+    remove_door_from_env: bool = False,
+    skip_reset: bool = False,
 ):
     """Generate a complete agent trajectory in the environment.
 
@@ -328,6 +331,9 @@ def generate_trajectory(
         use_safe_reset: If True, use safe_reset() which resets agent position
             without regenerating the grid. Useful for generating multiple
             trajectories on the same grid layout.
+        remove_door_from_env: If True, remove the door from the environment after reset (keeps the key).
+        skip_reset: If True, skip environment reset and use current state. Useful when
+            environment is already pre-configured (e.g., key already removed). Default: False.
 
     Returns:
         Trajectory: A Trajectory object containing:
@@ -350,6 +356,20 @@ def generate_trajectory(
         observation = env._render()
     else:
         observation, _ = env.reset()
+
+    if skip_reset:
+        # Don't reset the environment, just get the current observation
+        raw_obs = env.unwrapped.gen_obs()
+        observation = env.observation(raw_obs)
+    else:
+        observation, _ = env.reset()
+
+        # Remove the door after reset if requested
+        if remove_door_from_env:
+            env.unwrapped.grid = remove_door(env.unwrapped).grid
+            # Regenerate observation after modifying the grid
+            raw_obs = env.unwrapped.gen_obs()
+            observation = env.observation(raw_obs)
 
     traj_metadata = {}
     start_pos = tuple(int(x) for x in env.unwrapped.agent_pos)
@@ -393,6 +413,14 @@ def generate_trajectory(
 
         metadata = agent._build_base_metadata(action, cost, logprobs_serialized)
         metadata["action"] = action_name
+
+        # Capture carrying_key status before taking the step
+        base_env = getattr(env, "unwrapped", env)
+        carrying_key = False
+        if hasattr(base_env, "carrying") and base_env.carrying is not None:
+            carrying_key = base_env.carrying.type == "key"
+        metadata["carrying_key"] = carrying_key
+
         next_obs, reward, terminated, truncated, _ = env.step(action)
         total_reward += float(reward)
 

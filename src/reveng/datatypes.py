@@ -13,6 +13,7 @@ class Step:
     reward: t.Optional[float]
     note: t.Optional[str]
     metadata: Dict
+    agent_pos: t.Optional[t.Tuple[int, int]] = None
 
     def __dict__(self) -> dict:
         return {
@@ -21,6 +22,7 @@ class Step:
             "reward": self.reward,
             "note": self.note,
             "metadata": self.metadata,
+            "agent_pos": self.agent_pos,
         }
 
     def __json__(self) -> dict:

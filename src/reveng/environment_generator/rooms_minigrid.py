@@ -6,9 +6,15 @@ from reveng.environment_generator.custom_minigrid import Simple2DNavigationEnv
 
 class RoomsMinigridEnv(Simple2DNavigationEnv):
     """
-    A 9-room environment where each room is 3x3 and connected via unique paths.
+    A multi-room environment where each room is 3x3 and connected via unique paths.
 
-    The layout is a 3x3 grid of rooms:
+    Supports 2x2 and 3x3 room layouts:
+
+    2x2 layout (4 rooms):
+    [Room 0] [Room 1]
+    [Room 2] [Room 3]
+
+    3x3 layout (9 rooms):
     [Room 0] [Room 1] [Room 2]
     [Room 3] [Room 4] [Room 5]
     [Room 6] [Room 7] [Room 8]
@@ -25,11 +31,17 @@ class RoomsMinigridEnv(Simple2DNavigationEnv):
         max_steps: int | None = None,
         allow_quit_action: bool = False,
         add_door_key: bool = True,
+        rooms_per_side: int = 3,
         **kwargs,
     ):
-        # Size is fixed: 3 rooms * 3 cells per room + 4 walls = 13
-        # (walls on borders + walls between rooms)
-        size = 13
+        # Size calculation: rooms_per_side rooms * 3 cells per room + (rooms_per_side + 1) walls
+        # For 2x2: 2 * 3 + 3 = 9
+        # For 3x3: 3 * 3 + 4 = 13
+        if rooms_per_side not in [2, 3]:
+            raise ValueError("rooms_per_side must be 2 or 3")
+
+        self.rooms_per_side = rooms_per_side
+        size = rooms_per_side * 3 + (rooms_per_side + 1)
         self.add_door_key = add_door_key
 
         super().__init__(
@@ -55,14 +67,14 @@ class RoomsMinigridEnv(Simple2DNavigationEnv):
             for j in range(height):
                 self.grid.set(i, j, Wall())
 
-        # Define the 9 rooms (each is 3x3 interior space)
+        # Define the rooms (each is 3x3 interior space)
         # Room positions in the grid (top-left corner of interior)
         room_size = 3
         wall_thickness = 1
         room_coords = []
 
-        for row in range(3):
-            for col in range(3):
+        for row in range(self.rooms_per_side):
+            for col in range(self.rooms_per_side):
                 x = wall_thickness + col * (room_size + wall_thickness)
                 y = wall_thickness + row * (room_size + wall_thickness)
                 room_coords.append((x, y))
@@ -333,24 +345,25 @@ class RoomsMinigridEnv(Simple2DNavigationEnv):
         edges = []
 
         # Horizontal connections (room to room on the right)
-        for row in range(3):
-            for col in range(2):
-                room1 = row * 3 + col
-                room2 = row * 3 + col + 1
+        for row in range(self.rooms_per_side):
+            for col in range(self.rooms_per_side - 1):
+                room1 = row * self.rooms_per_side + col
+                room2 = row * self.rooms_per_side + col + 1
                 edges.append((room1, room2))
 
         # Vertical connections (room to room below)
-        for row in range(2):
-            for col in range(3):
-                room1 = row * 3 + col
-                room2 = (row + 1) * 3 + col
+        for row in range(self.rooms_per_side - 1):
+            for col in range(self.rooms_per_side):
+                room1 = row * self.rooms_per_side + col
+                room2 = (row + 1) * self.rooms_per_side + col
                 edges.append((room1, room2))
 
         # Shuffle edges for randomization
         random.shuffle(edges)
 
         # Kruskal's algorithm with Union-Find
-        parent = list(range(9))
+        num_rooms = self.rooms_per_side * self.rooms_per_side
+        parent = list(range(num_rooms))
 
         def find(x):
             if parent[x] != x:
@@ -368,7 +381,7 @@ class RoomsMinigridEnv(Simple2DNavigationEnv):
         for room1, room2 in edges:
             if union(room1, room2):
                 connections.append((room1, room2))
-                if len(connections) == 8:  # Spanning tree has n-1 edges
+                if len(connections) == num_rooms - 1:  # Spanning tree has n-1 edges
                     break
 
         return connections
@@ -395,21 +408,106 @@ class RoomsMinigridEnv(Simple2DNavigationEnv):
             self.grid.set(wall_x, wall_y, None)
             return (wall_x, wall_y)
 
+    def set_env_from_list(self, grid_list):
+        """
+        Set the environment from a list of lists with strings.
+
+        Extends the base implementation to support doors and keys.
+
+        Args:
+            grid_list: List of lists where each string represents a cell.
+                Supported symbols:
+                'A' - Agent position
+                '#' - Wall
+                'G' - Goal
+                '_' - Empty space (open space)
+                'K' - Key (yellow)
+                'D' - Door (yellow, locked)
+                'O' - Door (yellow, open)
+
+        Example:
+            grid = [
+                ['#', '#', '#', '#', '#'],
+                ['#', 'A', '_', 'K', '#'],
+                ['#', '_', '#', 'D', '#'],
+                ['#', '_', '_', 'G', '#'],
+                ['#', '#', '#', '#', '#']
+            ]
+        """
+        height = len(grid_list)
+        width = len(grid_list[0]) if height > 0 else 0
+
+        # Recreate the grid with the specified dimensions
+        self.grid = Grid(width, height)
+
+        agent_pos = None
+        goal_pos = None
+
+        # Reset carrying state
+        self.carrying = None
+
+        # Parse the grid list and place objects
+        for j, row in enumerate(grid_list):
+            for i, cell in enumerate(row):
+                cell_str = cell.strip()
+
+                if cell_str == "#":
+                    self.grid.set(i, j, Wall())
+                elif cell_str == "A":
+                    agent_pos = (i, j)
+                    self.grid.set(i, j, None)  # Agent position is empty
+                elif cell_str == "G":
+                    goal_pos = (i, j)
+                    self.put_obj(Goal(), i, j)
+                elif cell_str == "_":
+                    self.grid.set(i, j, None)  # Empty space
+                elif cell_str == "K":
+                    # Place a yellow key
+                    key = Key("yellow")
+                    self.put_obj(key, i, j)
+                elif cell_str == "D":
+                    # Place a yellow locked door
+                    door = Door("yellow", is_locked=True)
+                    self.put_obj(door, i, j)
+                elif cell_str == "O":
+                    # Place a yellow open door
+                    door = Door("yellow", is_locked=False)
+                    door.is_open = True
+                    self.put_obj(door, i, j)
+                else:
+                    # Default to empty for unknown characters
+                    self.grid.set(i, j, None)
+
+        # Set agent position and direction
+        if agent_pos is None:
+            raise ValueError("Agent position 'A' not found in grid_list")
+        self.agent_pos = agent_pos
+        self.agent_dir = (
+            self.agent_start_dir_user if self.agent_start_dir_user is not None else 0
+        )
+        self.goal_pos = goal_pos
+
+        self.mission = "Reach the Goal"
+
 
 if __name__ == "__main__":
     import pygame
     from reveng.environment_generator.wrappers.text_obs_wrapper import (
         FullObservabilityTextWrapper,
     )
+    from reveng.environment_generator.utils import remove_door
 
-    # Manual control for 9-Room Environment
-    print("--- Manual Control: 9-Room Environment with door/key ---")
+    # Manual control for 4-Room Environment (2x2)
+    print("--- Manual Control: 4-Room Environment (2x2) without door ---")
     print("Use arrow keys to move the agent")
-    print("The agent will automatically pick up the key and open doors")
+    print("The environment has a key but the door has been removed")
 
     base_env = RoomsMinigridEnv(render_mode="human", add_door_key=True)
     env = FullObservabilityTextWrapper(base_env)
-    env.reset()
+    obs, info = env.reset()
+
+    # Remove the door after reset
+    env.unwrapped.grid = remove_door(env.unwrapped).grid
 
     # Map pygame keys to environment actions
     key_to_action = {

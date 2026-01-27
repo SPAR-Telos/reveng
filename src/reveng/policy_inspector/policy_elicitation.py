@@ -112,19 +112,17 @@ def generate_one_trajectory(
     text_env = text_wrapper_cls(clone_env(env))
     obs = text_env.observation(text_env.env.gen_obs())
 
-    # Setup image saving if requested
-    if save_images:
-        if image_save_dir is None:
-            raise ValueError("image_save_dir must be provided when save_images=True")
-        image_path = Path(image_save_dir)
-        image_path.mkdir(parents=True, exist_ok=True)
-
     if dynamic_steps_per_trajectory:
         max_steps_per_trajectory = find_dynamic_steps_per_trajectory(env)
 
     # Setup image saving if requested - use a cloned environment
     img_env_clone = None
     if save_images:
+        if image_save_dir is None:
+            raise ValueError("image_save_dir must be provided when save_images=True")
+        image_path = Path(image_save_dir)
+        image_path.mkdir(parents=True, exist_ok=True)
+
         img_env_clone = clone_env(env)
         # Save initial observation using get_frame
         img_array = img_env_clone.get_frame(highlight=True, tile_size=32)

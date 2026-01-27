@@ -122,6 +122,138 @@ def remove_doors_and_keys(env: MiniGridEnv) -> MiniGridEnv:
     return cloned_env
 
 
+def remove_door(env: MiniGridEnv) -> MiniGridEnv:
+    """
+    Create a copy of the environment with the door removed.
+
+    Args:
+        env: The environment to copy and modify
+
+    Returns:
+        A new environment instance with the door removed
+    """
+    # Clone the environment
+    cloned_env = clone_env(env)
+
+    # Remove any doors from the grid
+    for x in range(cloned_env.width):
+        for y in range(cloned_env.height):
+            cell = cloned_env.grid.get(x, y)
+            if cell is not None and cell.type == "door":
+                cloned_env.grid.set(x, y, None)
+
+    return cloned_env
+
+
+def remove_coin(env: MiniGridEnv) -> MiniGridEnv:
+    """
+    Create a copy of the environment with the coin removed.
+
+    Args:
+        env: The environment to copy and modify
+
+    Returns:
+        A new environment instance with the coin removed
+    """
+    # Clone the environment
+    cloned_env = clone_env(env)
+
+    # Remove any coins (balls) from the grid
+    for x in range(cloned_env.width):
+        for y in range(cloned_env.height):
+            cell = cloned_env.grid.get(x, y)
+            if cell is not None and cell.type == "ball":
+                cloned_env.grid.set(x, y, None)
+
+    # Reset coin_collected flag if it exists
+    if hasattr(cloned_env, "coin_collected"):
+        cloned_env.coin_collected = None
+
+    return cloned_env
+
+
+def remove_key(env: MiniGridEnv) -> MiniGridEnv:
+    """
+    Create a copy of the environment with the key removed.
+
+    Args:
+        env: The environment to copy and modify
+
+    Returns:
+        A new environment instance with the key removed
+    """
+    # Clone the environment
+    cloned_env = clone_env(env)
+
+    # Remove any keys from the grid
+    for x in range(cloned_env.width):
+        for y in range(cloned_env.height):
+            cell = cloned_env.grid.get(x, y)
+            if cell is not None and cell.type == "key":
+                cloned_env.grid.set(x, y, None)
+
+    # Clear the carrying inventory if it contains a key
+    if hasattr(cloned_env, "carrying") and cloned_env.carrying is not None:
+        if cloned_env.carrying.type == "key":
+            cloned_env.carrying = None
+
+    return cloned_env
+
+
+def replace_key_with_goal(env: MiniGridEnv) -> MiniGridEnv:
+    """
+    Create a copy of the environment with the key replaced by a goal.
+
+    This function:
+    1. Clones the environment
+    2. Finds and removes the current goal from the grid
+    3. Finds the key position
+    4. Removes the key and places a goal at that position
+    5. Updates the environment's goal_pos attribute
+
+    Args:
+        env: The environment to copy and modify
+
+    Returns:
+        A new environment instance with the key replaced by a goal
+
+    Raises:
+        ValueError: If no key is found in the environment
+    """
+    from minigrid.core.world_object import Goal
+
+    # Clone the environment
+    cloned_env = clone_env(env)
+
+    key_pos = None
+    goal_pos = None
+
+    # Scan the grid to find key and goal positions
+    for x in range(cloned_env.width):
+        for y in range(cloned_env.height):
+            cell = cloned_env.grid.get(x, y)
+            if cell is not None:
+                if cell.type == "key":
+                    key_pos = (x, y)
+                elif cell.type == "goal":
+                    goal_pos = (x, y)
+
+    # Check if key was found
+    if key_pos is None:
+        raise ValueError("No key found in the environment")
+
+    # Remove the current goal if it exists
+    if goal_pos is not None:
+        cloned_env.grid.set(goal_pos[0], goal_pos[1], None)
+
+    # Replace the key with a new goal
+    cloned_env.grid.set(key_pos[0], key_pos[1], None)  # Remove key
+    cloned_env.put_obj(Goal(), key_pos[0], key_pos[1])  # Place goal
+    cloned_env.goal_pos = key_pos
+
+    return cloned_env
+
+
 def compute_optimal_path_length(env: MiniGridEnv) -> float:
     """
     Compute the shortest path length using generate_one_trajectory with AlphaStarAgent.
@@ -148,6 +280,91 @@ def compute_optimal_path_length(env: MiniGridEnv) -> float:
         return len(trajectory.steps)
 
     return float("inf")  # No path found
+
+
+def compute_optimal_actions_from_position(
+    env: MiniGridEnv, position: tuple[int, int]
+) -> list[int]:
+    """
+    Compute all optimal actions from a given position to the goal using BFS.
+
+    An action is optimal if it moves the agent one step closer to the goal
+    along any shortest path.
+
+    Args:
+        env: The environment to analyze
+        position: The (x, y) position to find optimal actions from
+
+    Returns:
+        A list of action indices that are optimal from the given position.
+        Returns an empty list if the position is unreachable or is the goal.
+    """
+    from collections import deque
+
+    # If there's no goal, return empty
+    if not hasattr(env, "goal_pos") or env.goal_pos is None:
+        return []
+
+    goal = tuple(env.goal_pos)
+
+    # If we're already at the goal, no actions needed
+    if position == goal:
+        return []
+
+    # First, compute distances from goal to all positions using BFS backwards
+    distances = {}
+    distances[goal] = 0
+    queue = deque([goal])
+
+    while queue:
+        x, y = queue.popleft()
+        current_dist = distances[(x, y)]
+
+        # Check all four directions
+        for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+            nx, ny = x + dx, y + dy
+
+            # Skip if already visited
+            if (nx, ny) in distances:
+                continue
+
+            # Check if the new position is within bounds
+            if nx < 0 or ny < 0 or nx >= env.width or ny >= env.height:
+                continue
+
+            # Get the cell at the new position
+            cell = env.grid.get(nx, ny)
+
+            # Check if we can move to this cell (None or can_overlap)
+            if cell is None or (hasattr(cell, "can_overlap") and cell.can_overlap()):
+                distances[(nx, ny)] = current_dist + 1
+                queue.append((nx, ny))
+
+    # If the given position is not reachable from the goal, return empty
+    if position not in distances:
+        return []
+
+    current_distance = distances[position]
+    optimal_actions = []
+
+    # Check each possible action from the current position
+    # Action mapping: LEFT=0, RIGHT=1, UP=2, DOWN=3 (from Simple2DNavigationEnv)
+    action_to_delta = {
+        0: (-1, 0),  # LEFT
+        1: (1, 0),  # RIGHT
+        2: (0, -1),  # UP
+        3: (0, 1),  # DOWN
+    }
+
+    x, y = position
+    for action, (dx, dy) in action_to_delta.items():
+        nx, ny = x + dx, y + dy
+
+        # Check if this neighbor exists and has distance exactly 1 less
+        if (nx, ny) in distances and distances[(nx, ny)] == current_distance - 1:
+            optimal_actions.append(action)
+
+    return optimal_actions
 
 
 def is_solvable(env: MiniGridEnv) -> bool:

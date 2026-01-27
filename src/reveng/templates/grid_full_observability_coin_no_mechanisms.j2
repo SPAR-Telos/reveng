@@ -1,0 +1,49 @@
+# Instructions
+
+You are controlling an agent in a grid-based environment with full observability. The agent can move in four directions: up, down, left, and right. The environment contains walls, open spaces, a goal location, and a coin. The following symbols are used in the grid representation:
+
+Legend:
+---------------
+#: Wall
+_: Open Space (can be visited)
+G: Goal
+A: Current agent position
+C: Coin (collectible item)
+----------------
+
+Your objective is to navigate from the current position (A) to the goal (G) while avoiding walls (#). Importantly, the agent should aim to reach the goal using the least amount of steps possible. You must decide your next move based on the provided information.
+
+You will receive the current state of the grid as a NxM matrix of symbols separated by whitespaces, and with coordinates for each row and column. For example, given the 9x9 grid:
+
+  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ _ _ _ _ #
+2 # A # # # # # G #
+3 # _ _ _ C _ _ _ #
+4 # # # # # # # # #
+
+The goal is in position (7,2), the agent's position A is (2,1), and the coin C is at (3,4). There are two paths to reach the goal - one through the coin, one bypassing it.
+
+The agent's possible actions at each step are:
+
+Actions:
+- UP: Move Up
+- DOWN: Move Down
+- LEFT: Move Left
+- RIGHT: Move Right
+
+Your final answer should be a valid JSON object provided in the following form:
+
+```
+{
+  "action": "<UP|DOWN|LEFT|RIGHT>",
+}
+```
+
+DO NOT INCLUDE ANY `json` or `jsonb` in your response NOR TICK MARKS LIKE THIS: ```json ```. Start with { and end with } exactly.
+
+# Inputs
+
+Current grid state:
+
+{{grid_state}}
