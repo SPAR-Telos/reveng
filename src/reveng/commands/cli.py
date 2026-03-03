@@ -12,6 +12,12 @@ from reveng.commands.get_trajectory import (
     get_trajectory_key_door_env,
     upload_trajectories_dir,
 )
+from reveng.experiments.counterfactual_artifact_builder import (
+    build_counterfactual_patch_artifacts,
+)
+from reveng.experiments.counterfactual_activation_patching import (
+    counterfactual_activation_patching,
+)
 
 
 def main():
@@ -25,6 +31,8 @@ def main():
     - upload_trajectories_dir: Upload a directory of trajectory/grid JSON files to Hugging Face
     - get_trajectory_key_door_env: Generate and save agent trajectories in rooms environments with key-door mechanics
     - get_trajectories_key_door_env: Generate multiple agent trajectories in rooms environments with key-door mechanics across parameter combinations in parallel
+    - build_counterfactual_patch_artifacts: Build A/B/patched artifacts in-repo for counterfactual evaluation
+    - counterfactual_activation_patching: Evaluate belief/action counterfactual outcomes from artifacts
     """
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
     tyro.extras.subcommand_cli_from_dict(
@@ -35,6 +43,8 @@ def main():
             "upload_trajectories_dir": upload_trajectories_dir,
             "get_trajectory_key_door_env": get_trajectory_key_door_env,
             "get_trajectories_key_door_env": get_trajectories_key_door_env,
+            "build_counterfactual_patch_artifacts": build_counterfactual_patch_artifacts,
+            "counterfactual_activation_patching": counterfactual_activation_patching,
         }
     )
 

@@ -1,4 +1,5 @@
 import logging
+import os
 import traceback
 from pathlib import Path
 from typing import Optional, Tuple
@@ -15,6 +16,14 @@ logger = logging.getLogger(__name__)
 ENV_FILE = Path(__file__).parent.parent.parent / ".env"
 
 litellm.enable_json_schema_validation = True
+
+
+def _set_provider_key_aliases() -> None:
+    """Map common provider API-key aliases to keys expected by LiteLLM."""
+    # LiteLLM's Together provider uses TOGETHERAI_API_KEY. Accept TOGETHER_API_KEY too.
+    together_alias = os.getenv("TOGETHER_API_KEY")
+    if together_alias and not os.getenv("TOGETHERAI_API_KEY"):
+        os.environ["TOGETHERAI_API_KEY"] = together_alias
 
 
 class BaseLLMInterface:
@@ -48,6 +57,7 @@ class BaseLLMInterface:
             logger.error(
                 f"No .env file found at {ENV_FILE}! Please create a .env file in the root of the project."
             )
+        _set_provider_key_aliases()
 
     @staticmethod
     def _load_template(template_path: Path) -> Template:

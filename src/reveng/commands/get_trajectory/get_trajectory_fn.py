@@ -40,6 +40,11 @@ logger = logging.getLogger(__file__)
 logging.getLogger("LiteLLM").setLevel(logging.WARNING)
 
 
+def _ensure_output_parent_dir(output_path: str) -> None:
+    """Create parent directory for output_path if it does not exist."""
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+
+
 def get_trajectory(
     grid_size: int = 5,
     grid_complexity: float = 0.0,
@@ -269,6 +274,7 @@ def get_trajectory(
         "prompt": prompt,
         "steps": steps,
     }
+    _ensure_output_parent_dir(output_path)
     with open(output_path, "w") as f:
         json.dump(out, f, cls=CompactJSONEncoder, ensure_ascii=False, indent=4)
 
@@ -698,6 +704,7 @@ def get_trajectory_no_key_env(
     }
 
     # Save to JSON file
+    _ensure_output_parent_dir(output_path)
     with open(output_path, "w") as f:
         json.dump(out, f, cls=CompactJSONEncoder, ensure_ascii=False, indent=4)
 
@@ -971,6 +978,7 @@ def get_trajectory_key_door_env(
         "prompt": prompt,
         "steps": steps,
     }
+    _ensure_output_parent_dir(output_path)
     with open(output_path, "w") as f:
         json.dump(out, f, cls=CompactJSONEncoder, ensure_ascii=False, indent=4)
 
