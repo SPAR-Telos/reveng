@@ -10,13 +10,15 @@ uv pip install torch --index-url https://download.pytorch.org/whl/cpu
 
 ## Counterfactual Pipeline
 
-Scope here is only:
+Scope:
 
 `grid pairs -> pair manifest -> artifacts (A/B/patched) -> eval manifest -> evaluation outputs`
 
 Constraints are documented in [`counterfactual_constraints.md`](counterfactual_constraints.md).
 
 ### 0) Generate grid pairs
+
+Default backward-compatible mode (`goal_move` only):
 
 ```bash
 reveng-cli generate_counterfactual_grid_pairs \
@@ -28,13 +30,18 @@ reveng-cli generate_counterfactual_grid_pairs \
   --overwrite
 ```
 
-This creates:
+Multi-category mode (10 per category by default):
 
-- `data/cf/pair_000/grid_a.txt` + `grid_b.txt`
-- `data/cf/pair_001/grid_a.txt` + `grid_b.txt`
-- ...
-
-Manual grids are still supported, but no longer the default path.
+```bash
+reveng-cli generate_counterfactual_grid_pairs \
+  --output-root data/cf \
+  --categories goal_move start_goal_swap rotate_90 reflect_vertical transpose \
+  --num-pairs-per-category 10 \
+  --grid-size 7 \
+  --grid-complexity 0.4 \
+  --seed 42 \
+  --overwrite
+```
 
 ### 1) Generate pair manifest
 
@@ -45,9 +52,14 @@ reveng-cli generate_counterfactual_pair_manifest \
   --overwrite
 ```
 
-The generator scans recursively for `pair_*` directories containing `grid_a.txt` and `grid_b.txt`.
+Manifest rows now include:
 
-Important: `--overwrite` is a flag (`--overwrite` / `--no-overwrite`). Do not pass `True`.
+- `pair_id`
+- `category`
+- `grid_a_path`, `grid_b_path`
+- `goal_a`, `goal_b`
+
+Legacy `goal_orig` / `goal_new` are still accepted.
 
 ### 2) Preflight pair manifest
 
@@ -73,13 +85,6 @@ reveng-cli build_counterfactual_patch_artifacts \
   --patch-action-source b
 ```
 
-This writes:
-
-- `data/cf/artifacts/<pair_id>/A.json`
-- `data/cf/artifacts/<pair_id>/B.json`
-- `data/cf/artifacts/<pair_id>/patched.json`
-- `data/cf/artifacts/manifest_for_counterfactual_activation_patching.json`
-
 ### 4) Optional: regenerate eval manifest from artifacts
 
 ```bash
@@ -104,7 +109,7 @@ Then run evaluator using manifest row count as `expected_k`:
 reveng-cli counterfactual_activation_patching \
   --manifest-path data/cf/artifacts/manifest_for_counterfactual_activation_patching.json \
   --output-dir data/cf/eval_results \
-  --expected-k 10
+  --expected-k 50
 ```
 
 Outputs:
@@ -114,12 +119,19 @@ Outputs:
 - `data/cf/eval_results/aggregate_summary.json`
 - `data/cf/eval_results/report.md`
 
+Report highlights:
+
+- invalid summary and disruptive summary are separate
+- action summary by category
+- separate MLP and linear belief-action 2x2 tables
+- probe agreement/disagreement section
+
 ## Common Errors
 
 - `Unrecognized options: True`
   - Use `--overwrite`, not `--overwrite True`.
 - `No pair directories found under data/cf ...`
-  - Create `data/cf/pair_*/grid_a.txt` and `grid_b.txt` first.
+  - Generate pairs first with `generate_counterfactual_grid_pairs`.
 - `Missing Together API key...`
   - Set `TOGETHERAI_API_KEY` or `TOGETHER_API_KEY`.
 - `expected_k mismatch...`

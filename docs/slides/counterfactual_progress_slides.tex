@@ -1,0 +1,87 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+\usefonttheme{professionalfonts}
+
+\title{Counterfactual Pipeline Progress Update}
+\subtitle{Gridworld Belief--Action Evaluation}
+\author{reveng Project}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{What Is Implemented Now}
+\textbf{Pipeline status (implemented end-to-end):}
+\begin{itemize}
+  \item Counterfactual categories: \texttt{goal\_move}, \texttt{start\_goal\_swap}, \texttt{rotate\_90}, \texttt{reflect\_vertical}, \texttt{transpose}
+  \item Default generation: \textbf{10 pairs per category} (50 total)
+  \item Manifests include \texttt{category}, \texttt{goal\_a}, \texttt{goal\_b} (legacy keys still accepted)
+  \item Preflight validates category-specific constraints before expensive runs
+  \item Evaluator outputs separate MLP vs Linear belief-action metrics
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{Interpretability improvement:}
+\begin{itemize}
+  \item Invalid and disruptive cases are excluded from 2x2 belief-action tables
+  \item Invalid/disruptive cases are still reported explicitly for diagnosis
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Key Artifacts and Metric Semantics}
+\textbf{Core artifacts:}
+\begin{itemize}
+  \item Pair manifest: \texttt{data/cf/pair\_manifest.json}
+  \item Per-pair traces: \texttt{A.json}, \texttt{B.json}, \texttt{patched.json}
+  \item Eval manifest: \texttt{manifest\_for\_counterfactual\_activation\_patching.json}
+  \item Outputs: \texttt{per\_pair\_results.(jsonl,csv)}, \texttt{aggregate\_summary.json}, \texttt{report.md}
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{What the action metrics mean:}
+\begin{itemize}
+  \item \texttt{A\_target} (alias \texttt{A\_new}): fraction of evaluated steps optimal under grid-B policy
+  \item \texttt{A\_base} (alias \texttt{A\_orig}): fraction of evaluated steps optimal under grid-A policy
+  \item Non-integers are expected: each value is a ratio \texttt{aligned\_steps / evaluated\_steps}
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{Disruptive reason now reported per pair:}
+\begin{itemize}
+  \item Triggered when \texttt{A\_target < threshold} and \texttt{A\_base < threshold}
+  \item Report includes threshold and actual values for interpretability
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Likely Cross-Disciplinary Questions (and How to Respond)}
+\textbf{Likely doubts/comments:}
+\begin{itemize}
+  \item \textbf{ML question:} ``Why do MLP and Linear disagree?''
+  \item \textbf{CogSci question:} ``Are action errors belief errors or planning errors?''
+  \item \textbf{Methods question:} ``Are transformed categories still comparable?''
+  \item \textbf{Ops question:} ``Can we reproduce this exactly?''
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{Feedback hooks included in current outputs:}
+\begin{itemize}
+  \item Probe agreement/disagreement section (MLP vs Linear)
+  \item Per-category action + belief summaries
+  \item Invalid and disruptive summaries with explicit reasons
+  \item Deterministic generation via seeds + manifest-driven execution
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{What to ask reviewers for:}
+\begin{itemize}
+  \item Preferred belief label policy (MLP, Linear, consensus, or separate reporting)
+  \item Acceptable disruptive threshold for your domain interpretation
+  \item Category set to prioritize for final experiment budget
+\end{itemize}
+\end{frame}
+
+\end{document}

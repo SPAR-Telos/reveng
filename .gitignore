@@ -212,9 +212,24 @@ __marimo__/
 .env/
 
 **/.DS_Store
+# Data outputs (default ignore)
 data/
-# Counterfactual experiment artifacts
-data/cf/
+# Reproducibility-critical counterfactual inputs/manifests (track these)
+!data/
+data/*
+!data/cf/
+data/cf/*
+!data/cf/pair_manifest.json
+!data/cf/pair_*/
+data/cf/pair_*/**
+!data/cf/pair_*/grid_a.txt
+!data/cf/pair_*/grid_b.txt
+!data/cf/artifacts/
+data/cf/artifacts/*
+!data/cf/artifacts/manifest_for_counterfactual_activation_patching.json
+# Keep heavy generated outputs ignored
+data/cf/artifacts/pair_*/
+data/cf/eval_results/
 counterfactual_artifacts/
 counterfactual_activation_patching_results/
 

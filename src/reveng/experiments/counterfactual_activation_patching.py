@@ -1,7 +1,7 @@
-"""Minimal counterfactual activation-patching experiment runner.
+"""Counterfactual activation-patching experiment runner.
 
 This module evaluates whether patched activations (produced externally) cause
-counterfactual navigation behavior toward a moved goal in grid-world traces.
+counterfactual navigation behavior toward a target environment (grid B).
 """
 
 from __future__ import annotations
@@ -10,13 +10,27 @@ import csv
 import json
 import math
 import re
+from collections import defaultdict
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Optional
 
-from reveng.analysis.analysis_utils import ACTION_NAME_TO_ID, compute_optimal_actions_from_text_grid
+from reveng.analysis.analysis_utils import (
+    ACTION_NAME_TO_ID,
+    compute_optimal_actions_from_text_grid,
+)
+from reveng.experiments.counterfactual_artifact_builder import (
+    LAYER_KEY_DEFAULT,
+    ArtifactPairSpec,
+    _extract_agent_goal,
+    _parse_coord,
+    _parse_grid_text_file,
+    map_action_a_to_b,
+    map_position_a_to_b,
+    normalize_counterfactual_category,
+    validate_counterfactual_pair,
+)
 
-LAYER_KEY_DEFAULT = "model.layers.15.output"
 EXPECTED_K = 10
 ACTION_TRUE_THRESHOLD = 0.70
 DISRUPTIVE_THRESHOLD = 0.35
@@ -25,10 +39,11 @@ DISRUPTIVE_THRESHOLD = 0.35
 @dataclass
 class GridPairSpec:
     pair_id: str
+    category: str
     grid_a_path: Path
     grid_b_path: Path
-    goal_orig: tuple[int, int]
-    goal_new: tuple[int, int]
+    goal_a: tuple[int, int]
+    goal_b: tuple[int, int]
 
 
 @dataclass
@@ -41,18 +56,21 @@ class RunArtifacts:
 @dataclass
 class PairMetrics:
     pair_id: str
+    category: str
     evaluated_steps: int
-    a_new: float
-    a_orig: float
-    belief_mlp_new_match: Optional[bool]
-    belief_linear_new_match: Optional[bool]
+    a_target: float
+    a_base: float
     action_label: Optional[bool]
-    belief_label: Optional[bool]
     disruptive: Optional[bool]
-    outcome_cell: Optional[tuple[bool, bool]]
+    belief_mlp_match_target: Optional[bool]
+    belief_linear_match_target: Optional[bool]
+    belief_available_mlp: bool
+    belief_available_linear: bool
+    outcome_cell_mlp: Optional[tuple[bool, bool]]
+    outcome_cell_linear: Optional[tuple[bool, bool]]
     valid_pair: bool
-    belief_available: bool
     invalid_reason: Optional[str]
+    disruptive_reason: Optional[str] = None
 
 
 @dataclass
@@ -61,15 +79,28 @@ class AggregateMetrics:
     total_pairs_processed: int
     total_pairs_valid: int
     total_pairs_invalid: int
-    total_pairs_belief_available: int
     total_pairs_disruptive: int
     disruptive_rate: float
-    tt_count: int
-    tf_count: int
-    ft_count: int
-    ff_count: int
-    tt_over_tt_tf: Optional[float]
-    tt_over_tt_ft: Optional[float]
+    table_rows_mlp: int
+    table_rows_linear: int
+    total_pairs_belief_available: int  # Deprecated alias for table_rows_mlp
+    mlp_tt_count: int
+    mlp_tf_count: int
+    mlp_ft_count: int
+    mlp_ff_count: int
+    mlp_tt_over_tt_tf: Optional[float]
+    mlp_tt_over_tt_ft: Optional[float]
+    linear_tt_count: int
+    linear_tf_count: int
+    linear_ft_count: int
+    linear_ff_count: int
+    linear_tt_over_tt_tf: Optional[float]
+    linear_tt_over_tt_ft: Optional[float]
+    probe_both_available: int
+    probe_agree_count: int
+    probe_disagree_count: int
+    probe_disagreement_rate: Optional[float]
+    per_category: dict[str, dict[str, Any]]
     stopped_early: bool
     early_stop_reason: Optional[str]
 
@@ -78,25 +109,6 @@ class AggregateMetrics:
 class PairRecord:
     spec: GridPairSpec
     artifacts: RunArtifacts
-
-
-def _parse_coord(value: Any) -> tuple[int, int]:
-    if isinstance(value, (list, tuple)) and len(value) == 2:
-        return int(value[0]), int(value[1])
-    if isinstance(value, str):
-        stripped = value.strip()
-        try:
-            parsed = json.loads(stripped)
-            if isinstance(parsed, (list, tuple)) and len(parsed) == 2:
-                return int(parsed[0]), int(parsed[1])
-        except Exception:
-            pass
-
-        cleaned = stripped.strip("[]()")
-        parts = [p.strip() for p in cleaned.split(",")]
-        if len(parts) == 2 and all(part for part in parts):
-            return int(parts[0]), int(parts[1])
-    raise ValueError(f"Invalid coordinate format: {value}")
 
 
 def _read_manifest(manifest_path: Path) -> list[PairRecord]:
@@ -121,12 +133,20 @@ def _read_manifest(manifest_path: Path) -> list[PairRecord]:
     records: list[PairRecord] = []
     for idx, row in enumerate(entries):
         pair_id = str(row.get("pair_id", f"pair_{idx:03d}"))
+        goal_a_raw = row.get("goal_a", row.get("goal_orig"))
+        goal_b_raw = row.get("goal_b", row.get("goal_new"))
+        if goal_a_raw is None or goal_b_raw is None:
+            raise ValueError(
+                f"pair={pair_id}: missing goal_a/goal_b (legacy goal_orig/goal_new accepted)."
+            )
+
         spec = GridPairSpec(
             pair_id=pair_id,
+            category=normalize_counterfactual_category(row.get("category", "goal_move")),
             grid_a_path=Path(str(row["grid_a_path"])),
             grid_b_path=Path(str(row["grid_b_path"])),
-            goal_orig=_parse_coord(row["goal_orig"]),
-            goal_new=_parse_coord(row["goal_new"]),
+            goal_a=_parse_coord(goal_a_raw),
+            goal_b=_parse_coord(goal_b_raw),
         )
         artifacts = RunArtifacts(
             a_trace_path=Path(str(row["a_trace_path"])),
@@ -175,11 +195,9 @@ def _parse_grid_state_to_layout(grid_state: list[str]) -> list[list[str]]:
         parts = line.strip().split()
         if not parts:
             continue
-        # Skip header like: "0 1 2 3 4"
         if all(p.lstrip("-").isdigit() for p in parts):
             saw_header = True
             continue
-        # Data rows must start with a row index in this artifact format.
         if not parts[0].lstrip("-").isdigit() or len(parts) <= 1:
             raise ValueError("Invalid grid row format (missing row index)")
         parts = parts[1:]
@@ -197,59 +215,28 @@ def _parse_grid_state_to_layout(grid_state: list[str]) -> list[list[str]]:
     return rows
 
 
-def _extract_agent_goal(layout: list[list[str]]) -> tuple[tuple[int, int], tuple[int, int]]:
-    agent: Optional[tuple[int, int]] = None
-    goal: Optional[tuple[int, int]] = None
-    for y, row in enumerate(layout):
-        for x, cell in enumerate(row):
-            if cell == "A":
-                agent = (x, y)
-            elif cell == "G":
-                goal = (x, y)
-    if agent is None or goal is None:
-        raise ValueError("Grid must contain exactly one agent 'A' and one goal 'G'")
-    return agent, goal
-
-
-def _normalize_layout_for_topology(layout: list[list[str]]) -> list[list[str]]:
-    normalized = []
-    for row in layout:
-        out_row = []
-        for cell in row:
-            if cell in {"A", "G"}:
-                out_row.append("_")
-            else:
-                out_row.append(cell)
-        normalized.append(out_row)
-    return normalized
-
-
-def _validate_goal_move_only(spec: GridPairSpec) -> Optional[str]:
-    if spec.goal_orig == spec.goal_new:
-        return "goal_orig and goal_new must differ"
-
+def _validate_pair_spec_against_files(spec: GridPairSpec) -> Optional[str]:
     try:
-        grid_a_layout = _parse_grid_state_to_layout(spec.grid_a_path.read_text().splitlines())
-        grid_b_layout = _parse_grid_state_to_layout(spec.grid_b_path.read_text().splitlines())
+        layout_a = _parse_grid_text_file(spec.grid_a_path)
+        layout_b = _parse_grid_text_file(spec.grid_b_path)
     except Exception as exc:
         return f"failed to parse grid files: {exc}"
 
     try:
-        agent_a, goal_a = _extract_agent_goal(grid_a_layout)
-        agent_b, goal_b = _extract_agent_goal(grid_b_layout)
+        validate_counterfactual_pair(
+            ArtifactPairSpec(
+                pair_id=spec.pair_id,
+                category=spec.category,
+                grid_a_path=spec.grid_a_path,
+                grid_b_path=spec.grid_b_path,
+                goal_a=spec.goal_a,
+                goal_b=spec.goal_b,
+            ),
+            layout_a,
+            layout_b,
+        )
     except Exception as exc:
-        return f"invalid grid files: {exc}"
-
-    if goal_a != spec.goal_orig:
-        return f"grid_a goal {goal_a} != manifest goal_orig {spec.goal_orig}"
-    if goal_b != spec.goal_new:
-        return f"grid_b goal {goal_b} != manifest goal_new {spec.goal_new}"
-
-    if agent_a != agent_b:
-        return "agent position changed between grid A and grid B"
-
-    if _normalize_layout_for_topology(grid_a_layout) != _normalize_layout_for_topology(grid_b_layout):
-        return "non-goal topology changed between grid A and grid B"
+        return str(exc)
 
     return None
 
@@ -373,46 +360,65 @@ def _decode_goal_from_probes(
 
 def _compute_action_metrics(
     patched_trace: dict[str, Any],
-    goal_orig: tuple[int, int],
-    goal_new: tuple[int, int],
+    spec: GridPairSpec,
+    layout_a: list[list[str]],
+    layout_b: list[list[str]],
 ) -> tuple[int, float, float]:
     steps = patched_trace.get("steps", [])
-    aligned_new = 0
-    aligned_orig = 0
+    aligned_target = 0
+    aligned_base = 0
     evaluated_steps = 0
+
+    try:
+        optimal_base, _ = compute_optimal_actions_from_text_grid(layout_a, spec.goal_a)
+        optimal_target, _ = compute_optimal_actions_from_text_grid(layout_b, spec.goal_b)
+    except Exception:
+        return 0, 0.0, 0.0
+
+    height_a = len(layout_a)
+    width_a = len(layout_a[0]) if height_a else 0
 
     for step in steps:
         grid_state = step.get("grid_state")
         action_raw = step.get("agent_action")
         if not isinstance(grid_state, list):
             continue
-        action_id = _action_to_id(action_raw)
-        if action_id is None:
+        action_a = _action_to_id(action_raw)
+        if action_a is None:
             continue
 
         try:
-            layout = _parse_grid_state_to_layout(grid_state)
-            optimal_new, _ = compute_optimal_actions_from_text_grid(layout, goal_new)
-            optimal_orig, _ = compute_optimal_actions_from_text_grid(layout, goal_orig)
-            agent_pos, _ = _extract_agent_goal(layout)
+            layout_step = _parse_grid_state_to_layout(grid_state)
+            agent_pos_a, _ = _extract_agent_goal(layout_step)
         except Exception:
             continue
 
-        if agent_pos not in optimal_new or agent_pos not in optimal_orig:
+        try:
+            agent_pos_b = map_position_a_to_b(
+                agent_pos_a,
+                spec.category,
+                width=width_a,
+                height=height_a,
+            )
+            action_b = map_action_a_to_b(action_a, spec.category)
+        except Exception:
+            continue
+
+        if agent_pos_a not in optimal_base or agent_pos_b not in optimal_target:
             continue
 
         evaluated_steps += 1
-        if action_id in optimal_new[agent_pos]:
-            aligned_new += 1
-        if action_id in optimal_orig[agent_pos]:
-            aligned_orig += 1
+        if action_b in optimal_target[agent_pos_b]:
+            aligned_target += 1
+        if action_a in optimal_base[agent_pos_a]:
+            aligned_base += 1
 
     if evaluated_steps == 0:
         return 0, 0.0, 0.0
 
-    a_new = aligned_new / evaluated_steps
-    a_orig = aligned_orig / evaluated_steps
-    return evaluated_steps, a_new, a_orig
+    a_target = aligned_target / evaluated_steps
+    a_base = aligned_base / evaluated_steps
+    return evaluated_steps, a_target, a_base
 
 
 def evaluate_pair(
@@ -427,36 +433,40 @@ def evaluate_pair(
     if not spec.grid_a_path.exists() or not spec.grid_b_path.exists():
         return PairMetrics(
             pair_id=spec.pair_id,
+            category=spec.category,
             evaluated_steps=0,
-            a_new=0.0,
-            a_orig=0.0,
-            belief_mlp_new_match=None,
-            belief_linear_new_match=None,
+            a_target=0.0,
+            a_base=0.0,
             action_label=None,
-            belief_label=None,
             disruptive=None,
-            outcome_cell=None,
+            belief_mlp_match_target=None,
+            belief_linear_match_target=None,
+            belief_available_mlp=False,
+            belief_available_linear=False,
+            outcome_cell_mlp=None,
+            outcome_cell_linear=None,
             valid_pair=False,
-            belief_available=False,
             invalid_reason="missing grid_a_path or grid_b_path",
         )
 
-    goal_move_only_error = _validate_goal_move_only(spec)
-    if goal_move_only_error is not None:
+    relationship_error = _validate_pair_spec_against_files(spec)
+    if relationship_error is not None:
         return PairMetrics(
             pair_id=spec.pair_id,
+            category=spec.category,
             evaluated_steps=0,
-            a_new=0.0,
-            a_orig=0.0,
-            belief_mlp_new_match=None,
-            belief_linear_new_match=None,
+            a_target=0.0,
+            a_base=0.0,
             action_label=None,
-            belief_label=None,
             disruptive=None,
-            outcome_cell=None,
+            belief_mlp_match_target=None,
+            belief_linear_match_target=None,
+            belief_available_mlp=False,
+            belief_available_linear=False,
+            outcome_cell_mlp=None,
+            outcome_cell_linear=None,
             valid_pair=False,
-            belief_available=False,
-            invalid_reason=goal_move_only_error,
+            invalid_reason=relationship_error,
         )
 
     try:
@@ -466,34 +476,42 @@ def evaluate_pair(
     except Exception as exc:
         return PairMetrics(
             pair_id=spec.pair_id,
+            category=spec.category,
             evaluated_steps=0,
-            a_new=0.0,
-            a_orig=0.0,
-            belief_mlp_new_match=None,
-            belief_linear_new_match=None,
+            a_target=0.0,
+            a_base=0.0,
             action_label=None,
-            belief_label=None,
             disruptive=None,
-            outcome_cell=None,
+            belief_mlp_match_target=None,
+            belief_linear_match_target=None,
+            belief_available_mlp=False,
+            belief_available_linear=False,
+            outcome_cell_mlp=None,
+            outcome_cell_linear=None,
             valid_pair=False,
-            belief_available=False,
             invalid_reason=f"trace loading failed: {exc}",
         )
 
-    if not _has_required_step_fields(a_trace) or not _has_required_step_fields(b_trace) or not _has_required_step_fields(patched_trace):
+    if (
+        not _has_required_step_fields(a_trace)
+        or not _has_required_step_fields(b_trace)
+        or not _has_required_step_fields(patched_trace)
+    ):
         return PairMetrics(
             pair_id=spec.pair_id,
+            category=spec.category,
             evaluated_steps=0,
-            a_new=0.0,
-            a_orig=0.0,
-            belief_mlp_new_match=None,
-            belief_linear_new_match=None,
+            a_target=0.0,
+            a_base=0.0,
             action_label=None,
-            belief_label=None,
             disruptive=None,
-            outcome_cell=None,
+            belief_mlp_match_target=None,
+            belief_linear_match_target=None,
+            belief_available_mlp=False,
+            belief_available_linear=False,
+            outcome_cell_mlp=None,
+            outcome_cell_linear=None,
             valid_pair=False,
-            belief_available=False,
             invalid_reason="trace missing required step fields",
         )
 
@@ -501,28 +519,43 @@ def evaluate_pair(
     if patch_metadata_error is not None:
         return PairMetrics(
             pair_id=spec.pair_id,
+            category=spec.category,
             evaluated_steps=0,
-            a_new=0.0,
-            a_orig=0.0,
-            belief_mlp_new_match=None,
-            belief_linear_new_match=None,
+            a_target=0.0,
+            a_base=0.0,
             action_label=None,
-            belief_label=None,
             disruptive=None,
-            outcome_cell=None,
+            belief_mlp_match_target=None,
+            belief_linear_match_target=None,
+            belief_available_mlp=False,
+            belief_available_linear=False,
+            outcome_cell_mlp=None,
+            outcome_cell_linear=None,
             valid_pair=False,
-            belief_available=False,
             invalid_reason=patch_metadata_error,
         )
 
-    evaluated_steps, a_new, a_orig = _compute_action_metrics(
+    layout_a = _parse_grid_text_file(spec.grid_a_path)
+    layout_b = _parse_grid_text_file(spec.grid_b_path)
+
+    evaluated_steps, a_target, a_base = _compute_action_metrics(
         patched_trace=patched_trace,
-        goal_orig=spec.goal_orig,
-        goal_new=spec.goal_new,
+        spec=spec,
+        layout_a=layout_a,
+        layout_b=layout_b,
     )
 
-    action_label = (a_new > a_orig) and (a_new >= action_true_threshold)
-    disruptive = (a_new < disruptive_threshold) and (a_orig < disruptive_threshold)
+    action_label: Optional[bool] = None
+    disruptive: Optional[bool] = None
+    disruptive_reason: Optional[str] = None
+    if evaluated_steps > 0:
+        action_label = (a_target > a_base) and (a_target >= action_true_threshold)
+        disruptive = (a_target < disruptive_threshold) and (a_base < disruptive_threshold)
+        if disruptive:
+            disruptive_reason = (
+                f"A_target={a_target:.4f} and A_base={a_base:.4f} are both below "
+                f"disruptive_threshold={disruptive_threshold:.2f}"
+            )
 
     all_probe_dicts: list[dict[str, Any]] = []
     for step in patched_trace.get("steps", []):
@@ -531,30 +564,36 @@ def evaluate_pair(
     mlp_goal = _decode_goal_from_probes(all_probe_dicts, layer_key=layer_key, probe_type="mlp")
     linear_goal = _decode_goal_from_probes(all_probe_dicts, layer_key=layer_key, probe_type="linear")
 
-    belief_mlp_new_match = None if mlp_goal is None else (mlp_goal == spec.goal_new)
-    belief_linear_new_match = None if linear_goal is None else (linear_goal == spec.goal_new)
+    belief_mlp_match_target = None if mlp_goal is None else (mlp_goal == spec.goal_b)
+    belief_linear_match_target = None if linear_goal is None else (linear_goal == spec.goal_b)
+    belief_available_mlp = belief_mlp_match_target is not None
+    belief_available_linear = belief_linear_match_target is not None
 
-    belief_available = belief_mlp_new_match is not None
-    belief_label = belief_mlp_new_match if belief_available else None
+    outcome_cell_mlp = None
+    if belief_mlp_match_target is not None and action_label is not None:
+        outcome_cell_mlp = (belief_mlp_match_target, action_label)
 
-    outcome_cell = None
-    if belief_label is not None:
-        outcome_cell = (belief_label, action_label)
+    outcome_cell_linear = None
+    if belief_linear_match_target is not None and action_label is not None:
+        outcome_cell_linear = (belief_linear_match_target, action_label)
 
     return PairMetrics(
         pair_id=spec.pair_id,
+        category=spec.category,
         evaluated_steps=evaluated_steps,
-        a_new=a_new,
-        a_orig=a_orig,
-        belief_mlp_new_match=belief_mlp_new_match,
-        belief_linear_new_match=belief_linear_new_match,
+        a_target=a_target,
+        a_base=a_base,
         action_label=action_label,
-        belief_label=belief_label,
         disruptive=disruptive,
-        outcome_cell=outcome_cell,
+        belief_mlp_match_target=belief_mlp_match_target,
+        belief_linear_match_target=belief_linear_match_target,
+        belief_available_mlp=belief_available_mlp,
+        belief_available_linear=belief_available_linear,
+        outcome_cell_mlp=outcome_cell_mlp,
+        outcome_cell_linear=outcome_cell_linear,
         valid_pair=True,
-        belief_available=belief_available,
         invalid_reason=None,
+        disruptive_reason=disruptive_reason,
     )
 
 
@@ -562,6 +601,54 @@ def _safe_ratio(numer: int, denom: int) -> Optional[float]:
     if denom == 0:
         return None
     return numer / denom
+
+
+def _count_outcomes(
+    rows: list[PairMetrics],
+    field_name: str,
+) -> tuple[int, int, int, int]:
+    tt = tf = ft = ff = 0
+    for row in rows:
+        cell = getattr(row, field_name)
+        if cell == (True, True):
+            tt += 1
+        elif cell == (True, False):
+            tf += 1
+        elif cell == (False, True):
+            ft += 1
+        elif cell == (False, False):
+            ff += 1
+    return tt, tf, ft, ff
+
+
+def _compute_per_category_summary(pair_metrics: list[PairMetrics]) -> dict[str, dict[str, Any]]:
+    grouped: dict[str, list[PairMetrics]] = defaultdict(list)
+    for metric in pair_metrics:
+        grouped[metric.category].append(metric)
+
+    summary: dict[str, dict[str, Any]] = {}
+    for category, rows in grouped.items():
+        valid_rows = [r for r in rows if r.valid_pair]
+        disruptive_rows = [r for r in valid_rows if r.disruptive is True]
+        action_rows = [r for r in valid_rows if r.action_label is not None and r.disruptive is False]
+        action_true = sum(1 for r in action_rows if r.action_label is True)
+
+        mlp_rows = [r for r in action_rows if r.belief_available_mlp]
+        linear_rows = [r for r in action_rows if r.belief_available_linear]
+
+        summary[category] = {
+            "total_pairs": len(rows),
+            "valid_pairs": len(valid_rows),
+            "invalid_pairs": len(rows) - len(valid_rows),
+            "disruptive_pairs": len(disruptive_rows),
+            "disruptive_rate": _safe_ratio(len(disruptive_rows), len(valid_rows)),
+            "action_true_count": action_true,
+            "action_true_rate": _safe_ratio(action_true, len(action_rows)),
+            "table_rows_mlp": len(mlp_rows),
+            "table_rows_linear": len(linear_rows),
+        }
+
+    return summary
 
 
 def aggregate_results(
@@ -572,34 +659,63 @@ def aggregate_results(
     valid_pairs = [p for p in pair_metrics if p.valid_pair]
     invalid_pairs = [p for p in pair_metrics if not p.valid_pair]
 
-    # Disruptive runs are reported separately and excluded from the main 2x2 belief/action table.
-    table_pairs = [
+    disruptive_count = sum(1 for p in valid_pairs if p.disruptive is True)
+
+    mlp_rows = [
         p
         for p in valid_pairs
-        if p.belief_available and p.action_label is not None and p.disruptive is False
+        if p.belief_available_mlp and p.action_label is not None and p.disruptive is False
+    ]
+    linear_rows = [
+        p
+        for p in valid_pairs
+        if p.belief_available_linear and p.action_label is not None and p.disruptive is False
     ]
 
-    tt = sum(1 for p in table_pairs if p.outcome_cell == (True, True))
-    tf = sum(1 for p in table_pairs if p.outcome_cell == (True, False))
-    ft = sum(1 for p in table_pairs if p.outcome_cell == (False, True))
-    ff = sum(1 for p in table_pairs if p.outcome_cell == (False, False))
+    mlp_tt, mlp_tf, mlp_ft, mlp_ff = _count_outcomes(mlp_rows, "outcome_cell_mlp")
+    linear_tt, linear_tf, linear_ft, linear_ff = _count_outcomes(
+        linear_rows, "outcome_cell_linear"
+    )
 
-    disruptive_count = sum(1 for p in valid_pairs if p.disruptive is True)
+    probe_comparison_rows = [
+        p
+        for p in valid_pairs
+        if p.belief_available_mlp and p.belief_available_linear and p.disruptive is False
+    ]
+    probe_agree = sum(
+        1
+        for p in probe_comparison_rows
+        if p.belief_mlp_match_target == p.belief_linear_match_target
+    )
+    probe_disagree = len(probe_comparison_rows) - probe_agree
 
     return AggregateMetrics(
         total_pairs_manifest=len(pair_metrics),
         total_pairs_processed=len(pair_metrics),
         total_pairs_valid=len(valid_pairs),
         total_pairs_invalid=len(invalid_pairs),
-        total_pairs_belief_available=len(table_pairs),
         total_pairs_disruptive=disruptive_count,
         disruptive_rate=_safe_ratio(disruptive_count, len(valid_pairs)) or 0.0,
-        tt_count=tt,
-        tf_count=tf,
-        ft_count=ft,
-        ff_count=ff,
-        tt_over_tt_tf=_safe_ratio(tt, tt + tf),
-        tt_over_tt_ft=_safe_ratio(tt, tt + ft),
+        table_rows_mlp=len(mlp_rows),
+        table_rows_linear=len(linear_rows),
+        total_pairs_belief_available=len(mlp_rows),
+        mlp_tt_count=mlp_tt,
+        mlp_tf_count=mlp_tf,
+        mlp_ft_count=mlp_ft,
+        mlp_ff_count=mlp_ff,
+        mlp_tt_over_tt_tf=_safe_ratio(mlp_tt, mlp_tt + mlp_tf),
+        mlp_tt_over_tt_ft=_safe_ratio(mlp_tt, mlp_tt + mlp_ft),
+        linear_tt_count=linear_tt,
+        linear_tf_count=linear_tf,
+        linear_ft_count=linear_ft,
+        linear_ff_count=linear_ff,
+        linear_tt_over_tt_tf=_safe_ratio(linear_tt, linear_tt + linear_tf),
+        linear_tt_over_tt_ft=_safe_ratio(linear_tt, linear_tt + linear_ft),
+        probe_both_available=len(probe_comparison_rows),
+        probe_agree_count=probe_agree,
+        probe_disagree_count=probe_disagree,
+        probe_disagreement_rate=_safe_ratio(probe_disagree, len(probe_comparison_rows)),
+        per_category=_compute_per_category_summary(pair_metrics),
         stopped_early=stopped_early,
         early_stop_reason=early_stop_reason,
     )
@@ -626,6 +742,16 @@ def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
             writer.writerow(row)
 
 
+def _invalid_reason_counts(pair_metrics: list[PairMetrics]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for metric in pair_metrics:
+        if metric.valid_pair:
+            continue
+        reason = metric.invalid_reason or "unknown"
+        counts[reason] = counts.get(reason, 0) + 1
+    return counts
+
+
 def _write_markdown_report(
     path: Path,
     aggregate: AggregateMetrics,
@@ -634,6 +760,9 @@ def _write_markdown_report(
     action_true_threshold: float,
     disruptive_threshold: float,
 ) -> None:
+    invalid_reason_counts = _invalid_reason_counts(pair_metrics)
+    disruptive_rows = [p for p in pair_metrics if p.disruptive is True]
+
     lines = [
         "# Counterfactual Activation Patching Report",
         "",
@@ -641,56 +770,115 @@ def _write_markdown_report(
         f"- layer_key: `{layer_key}`",
         "- hook tensor: residual output",
         "- patch token set: last 3 pre-reasoning + last 3 post-reasoning",
-        f"- Action=True rule: A_new > A_orig and A_new >= {action_true_threshold:.2f}",
-        f"- Disruptive rule: A_new < {disruptive_threshold:.2f} and A_orig < {disruptive_threshold:.2f}",
-        "- Belief label: MLP primary, linear secondary",
+        f"- Action=True rule: A_target > A_base and A_target >= {action_true_threshold:.2f}",
+        f"- Disruptive rule: A_target < {disruptive_threshold:.2f} and A_base < {disruptive_threshold:.2f}",
         "",
-        "## 2x2 Outcome Table",
+        "## Metric Glossary",
+        "- `A_target` (alias `A_new`): per-pair fraction of evaluated steps where the patched action is optimal under grid B policy.",
+        "- `A_base` (alias `A_orig`): per-pair fraction of evaluated steps where the patched action is optimal under grid A policy.",
+        "- Why these are non-integers: each value is a ratio `aligned_steps / evaluated_steps`, not a raw count.",
+        "- `evaluated_steps` excludes steps where action parsing or position mapping is invalid for that pair.",
         "",
-        "| Belief \\ Action | True | False |",
-        "|---|---:|---:|",
-        f"| True | {aggregate.tt_count} | {aggregate.tf_count} |",
-        f"| False | {aggregate.ft_count} | {aggregate.ff_count} |",
-        "",
-        "## Aggregate Metrics",
+        "## Manifest and Processing Summary",
         f"- total_pairs_manifest: {aggregate.total_pairs_manifest}",
+        f"- total_pairs_processed: {aggregate.total_pairs_processed}",
         f"- total_pairs_valid: {aggregate.total_pairs_valid}",
         f"- total_pairs_invalid: {aggregate.total_pairs_invalid}",
-        f"- total_pairs_belief_available: {aggregate.total_pairs_belief_available}",
-        f"- disruptive_count: {aggregate.total_pairs_disruptive}",
-        f"- disruptive_rate: {aggregate.disruptive_rate:.4f}",
-        f"- TT/(TT+TF): {aggregate.tt_over_tt_tf if aggregate.tt_over_tt_tf is not None else 'NA'}",
-        f"- TT/(TT+FT): {aggregate.tt_over_tt_ft if aggregate.tt_over_tt_ft is not None else 'NA'}",
         f"- stopped_early: {aggregate.stopped_early}",
         f"- early_stop_reason: {aggregate.early_stop_reason or 'NA'}",
         "",
-        "## Pair Results",
-        "",
-        "| pair_id | valid | belief_available | A_new | A_orig | action | belief | disruptive | invalid_reason |",
-        "|---|---|---|---:|---:|---|---|---|---|",
+        "## Invalid Summary",
     ]
+
+    if invalid_reason_counts:
+        for reason, count in sorted(invalid_reason_counts.items(), key=lambda x: (-x[1], x[0])):
+            lines.append(f"- {reason}: {count}")
+    else:
+        lines.append("- None")
+
+    lines.extend(
+        [
+            "",
+            "## Disruptive Summary",
+            f"- disruptive_count: {aggregate.total_pairs_disruptive}",
+            f"- disruptive_rate: {aggregate.disruptive_rate:.4f}",
+            "- disruptive_pairs:",
+        ]
+    )
+
+    if disruptive_rows:
+        for row in disruptive_rows:
+            lines.append(f"  - {row.pair_id}: {row.disruptive_reason or 'threshold rule met'}")
+    else:
+        lines.append("  - None")
+
+    lines.extend(["", "## Action Summary by Category"])
+    lines.append("| category | total | valid | invalid | disruptive | action_true_rate |")
+    lines.append("|---|---:|---:|---:|---:|---:|")
+    for category, row in sorted(aggregate.per_category.items()):
+        atr = row["action_true_rate"]
+        lines.append(
+            f"| {category} | {row['total_pairs']} | {row['valid_pairs']} | {row['invalid_pairs']} | {row['disruptive_pairs']} | {atr if atr is not None else 'NA'} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## MLP Belief-Action 2x2",
+            f"- denominator (table_rows_mlp): {aggregate.table_rows_mlp}",
+            "| Belief (MLP) \\ Action | True | False |",
+            "|---|---:|---:|",
+            f"| True | {aggregate.mlp_tt_count} | {aggregate.mlp_tf_count} |",
+            f"| False | {aggregate.mlp_ft_count} | {aggregate.mlp_ff_count} |",
+            f"- TT/(TT+TF): {aggregate.mlp_tt_over_tt_tf if aggregate.mlp_tt_over_tt_tf is not None else 'NA'}",
+            f"- TT/(TT+FT): {aggregate.mlp_tt_over_tt_ft if aggregate.mlp_tt_over_tt_ft is not None else 'NA'}",
+            "",
+            "## Linear Belief-Action 2x2",
+            f"- denominator (table_rows_linear): {aggregate.table_rows_linear}",
+            "| Belief (Linear) \\ Action | True | False |",
+            "|---|---:|---:|",
+            f"| True | {aggregate.linear_tt_count} | {aggregate.linear_tf_count} |",
+            f"| False | {aggregate.linear_ft_count} | {aggregate.linear_ff_count} |",
+            f"- TT/(TT+TF): {aggregate.linear_tt_over_tt_tf if aggregate.linear_tt_over_tt_tf is not None else 'NA'}",
+            f"- TT/(TT+FT): {aggregate.linear_tt_over_tt_ft if aggregate.linear_tt_over_tt_ft is not None else 'NA'}",
+            "",
+            "## Probe Agreement/Disagreement",
+            f"- probe_both_available: {aggregate.probe_both_available}",
+            f"- probe_agree_count: {aggregate.probe_agree_count}",
+            f"- probe_disagree_count: {aggregate.probe_disagree_count}",
+            f"- probe_disagreement_rate: {aggregate.probe_disagreement_rate if aggregate.probe_disagreement_rate is not None else 'NA'}",
+            "",
+            "## Pair Results",
+            "",
+            "| pair_id | category | valid | A_target | A_base | action | disruptive | disruptive_reason | belief_mlp | belief_linear | avail_mlp | avail_linear | invalid_reason |",
+            "|---|---|---|---:|---:|---|---|---|---|---|---|---|---|",
+        ]
+    )
 
     for p in pair_metrics:
         lines.append(
-            f"| {p.pair_id} | {p.valid_pair} | {p.belief_available} | {p.a_new:.4f} | {p.a_orig:.4f} | {p.action_label} | {p.belief_label} | {p.disruptive} | {p.invalid_reason or ''} |"
+            f"| {p.pair_id} | {p.category} | {p.valid_pair} | {p.a_target:.4f} | {p.a_base:.4f} | {p.action_label} | {p.disruptive} | {p.disruptive_reason or ''} | {p.belief_mlp_match_target} | {p.belief_linear_match_target} | {p.belief_available_mlp} | {p.belief_available_linear} | {p.invalid_reason or ''} |"
         )
-
-    lines.append("")
-    lines.append("## Disruptive Cases")
-    disruptive_ids = [p.pair_id for p in pair_metrics if p.disruptive is True]
-    if disruptive_ids:
-        for pair_id in disruptive_ids:
-            lines.append(f"- {pair_id}")
-    else:
-        lines.append("- None")
 
     path.write_text("\n".join(lines) + "\n")
 
 
 def _pair_metrics_to_dict(metric: PairMetrics) -> dict[str, Any]:
     row = asdict(metric)
-    if row["outcome_cell"] is not None:
-        row["outcome_cell"] = list(row["outcome_cell"])
+    if row["outcome_cell_mlp"] is not None:
+        row["outcome_cell_mlp"] = list(row["outcome_cell_mlp"])
+    if row["outcome_cell_linear"] is not None:
+        row["outcome_cell_linear"] = list(row["outcome_cell_linear"])
+
+    # Backward-compatible aliases
+    row["a_new"] = row["a_target"]
+    row["a_orig"] = row["a_base"]
+    row["belief_mlp_new_match"] = row["belief_mlp_match_target"]
+    row["belief_linear_new_match"] = row["belief_linear_match_target"]
+    row["belief_available"] = row["belief_available_mlp"]
+    row["belief_label"] = row["belief_mlp_match_target"]
+    row["outcome_cell"] = row["outcome_cell_mlp"]
+
     return row
 
 
@@ -702,14 +890,14 @@ def counterfactual_activation_patching(
     action_true_threshold: float = ACTION_TRUE_THRESHOLD,
     disruptive_threshold: float = DISRUPTIVE_THRESHOLD,
 ) -> None:
-    """Run minimal counterfactual activation-patching evaluation from artifacts.
+    """Run counterfactual activation-patching evaluation from artifacts.
 
     Manifest columns/keys required (JSON or CSV):
     - pair_id
+    - category (optional, defaults to goal_move)
     - grid_a_path
     - grid_b_path
-    - goal_orig
-    - goal_new
+    - goal_a/goal_b (legacy goal_orig/goal_new accepted)
     - a_trace_path
     - b_trace_path
     - patched_trace_path
@@ -744,21 +932,25 @@ def counterfactual_activation_patching(
         )
         pair_metrics.append(metric)
 
-        if metric.valid_pair and metric.action_label is not None and metric.disruptive is not None:
+        if (
+            metric.valid_pair
+            and metric.action_label is not None
+            and metric.disruptive is not None
+        ):
             evaluated_for_early_stop.append(metric)
 
         if len(evaluated_for_early_stop) >= 3 and not stopped_early:
             first_three = evaluated_for_early_stop[:3]
             should_stop = all(
                 (m.action_label is False)
-                and (m.a_orig > m.a_new)
+                and (m.a_base > m.a_target)
                 and (m.disruptive is False)
                 for m in first_three
             )
             if should_stop:
                 stopped_early = True
                 early_stop_reason = (
-                    "first 3 evaluated pairs are Action=False with A_orig > A_new and non-disruptive"
+                    "first 3 evaluated pairs are Action=False with A_base > A_target and non-disruptive"
                 )
                 break
 
@@ -773,6 +965,8 @@ def counterfactual_activation_patching(
     _write_csv(out_dir / "per_pair_results.csv", per_pair_rows)
 
     aggregate_dict = asdict(aggregate)
+    aggregate_dict["a_target_label"] = "A_target"
+    aggregate_dict["a_base_label"] = "A_base"
     (out_dir / "aggregate_summary.json").write_text(json.dumps(aggregate_dict, indent=2))
 
     _write_markdown_report(
@@ -792,7 +986,9 @@ __all__ = [
     "GridPairSpec",
     "PairMetrics",
     "RunArtifacts",
+    "aggregate_results",
     "counterfactual_activation_patching",
     "evaluate_pair",
-    "aggregate_results",
+    "_read_manifest",
+    "_validate_pair_spec_against_files",
 ]

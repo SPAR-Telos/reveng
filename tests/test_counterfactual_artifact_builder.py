@@ -52,11 +52,12 @@ def test_build_patched_trace_uses_b_actions_and_injects_metadata():
     patched = build_patched_trace(
         trace_a=trace_a,
         trace_b=trace_b,
-        goal_orig=(1, 2),
-        goal_new=(3, 2),
+        goal_a=(1, 2),
+        goal_b=(3, 2),
+        category="goal_move",
         layer_key=LAYER_KEY,
         patch_action_source="b",
-        linear_target="orig",
+        linear_target="a",
         synthetic_goal_prob=0.99,
     )
 
@@ -82,6 +83,27 @@ def test_build_patched_trace_uses_b_actions_and_injects_metadata():
         assert any("_linear_" in k for k in probe_keys)
 
 
+def test_build_patched_trace_maps_b_actions_to_a_frame_for_rotate():
+    trace_a = _trace(["LEFT"])
+    trace_b = _trace(["UP"])
+
+    patched = build_patched_trace(
+        trace_a=trace_a,
+        trace_b=trace_b,
+        goal_a=(1, 2),
+        goal_b=(2, 3),
+        category="rotate_90",
+        layer_key=LAYER_KEY,
+        patch_action_source="b",
+        linear_target="b",
+        synthetic_goal_prob=0.99,
+    )
+
+    # rotate_90 mapping A->B is RIGHT->UP, so inverse maps B:UP -> A:RIGHT
+    actions = [s["agent_action"] for s in patched["steps"]]
+    assert actions == ["RIGHT"]
+
+
 def test_build_patched_trace_can_keep_a_actions():
     trace_a = _trace(["LEFT", "LEFT", "LEFT"])
     trace_b = _trace(["RIGHT", "DOWN", "UP"])
@@ -89,11 +111,12 @@ def test_build_patched_trace_can_keep_a_actions():
     patched = build_patched_trace(
         trace_a=trace_a,
         trace_b=trace_b,
-        goal_orig=(1, 2),
-        goal_new=(3, 2),
+        goal_a=(1, 2),
+        goal_b=(3, 2),
+        category="goal_move",
         layer_key=LAYER_KEY,
         patch_action_source="a",
-        linear_target="new",
+        linear_target="b",
         synthetic_goal_prob=0.95,
     )
 
@@ -114,7 +137,7 @@ def test_missing_pair_manifest_creates_template(tmp_path: Path):
 
 
 def test_build_counterfactual_patch_artifacts_with_existing_traces(tmp_path: Path):
-    pair_dir = tmp_path / "pair_000"
+    pair_dir = tmp_path / "pair_goal_move_000"
     pair_dir.mkdir(parents=True, exist_ok=True)
 
     grid_a_path = pair_dir / "grid_a.txt"
@@ -127,11 +150,12 @@ def test_build_counterfactual_patch_artifacts_with_existing_traces(tmp_path: Pat
         json.dumps(
             [
                 {
-                    "pair_id": "pair_000",
+                    "pair_id": "pair_goal_move_000",
+                    "category": "goal_move",
                     "grid_a_path": str(grid_a_path),
                     "grid_b_path": str(grid_b_path),
-                    "goal_orig": [1, 2],
-                    "goal_new": [3, 2],
+                    "goal_a": [1, 2],
+                    "goal_b": [3, 2],
                 }
             ],
             indent=2,
@@ -139,7 +163,7 @@ def test_build_counterfactual_patch_artifacts_with_existing_traces(tmp_path: Pat
     )
 
     output_dir = tmp_path / "artifacts"
-    pair_artifact_dir = output_dir / "pair_000"
+    pair_artifact_dir = output_dir / "pair_goal_move_000"
     pair_artifact_dir.mkdir(parents=True, exist_ok=True)
     (pair_artifact_dir / "A.json").write_text(json.dumps(_trace(["RIGHT"]), indent=2))
     (pair_artifact_dir / "B.json").write_text(json.dumps(_trace(["LEFT"]), indent=2))
@@ -155,4 +179,5 @@ def test_build_counterfactual_patch_artifacts_with_existing_traces(tmp_path: Pat
     assert eval_manifest_path.exists()
     rows = json.loads(eval_manifest_path.read_text())
     assert len(rows) == 1
-    assert rows[0]["pair_id"] == "pair_000"
+    assert rows[0]["pair_id"] == "pair_goal_move_000"
+    assert rows[0]["category"] == "goal_move"

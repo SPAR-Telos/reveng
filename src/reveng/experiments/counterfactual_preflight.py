@@ -8,13 +8,12 @@ from pathlib import Path
 from typing import Any, Optional
 
 from reveng.experiments.counterfactual_activation_patching import (
+    GridPairSpec,
     _read_manifest,
-    _validate_goal_move_only as _validate_eval_goal_move_only,
+    _validate_pair_spec_against_files,
 )
 from reveng.experiments.counterfactual_artifact_builder import (
     LAYER_KEY_DEFAULT,
-    _parse_grid_text_file,
-    _validate_goal_move_only as _validate_pair_goal_move_only,
 )
 from reveng.experiments.counterfactual_manifest_tools import (
     read_pair_manifest_strict,
@@ -32,10 +31,10 @@ def _check_api_key_presence() -> None:
 def _check_eval_manifest_rows(eval_manifest_path: Path, layer_key: str) -> int:
     records = _read_manifest(eval_manifest_path)
     for record in records:
-        goal_move_only_error = _validate_eval_goal_move_only(record.spec)
-        if goal_move_only_error is not None:
+        relationship_error = _validate_pair_spec_against_files(record.spec)
+        if relationship_error is not None:
             raise ValueError(
-                f"eval manifest pair={record.spec.pair_id} violates goal-move-only constraint: {goal_move_only_error}"
+                f"eval manifest pair={record.spec.pair_id} violates category constraints: {relationship_error}"
             )
 
         # If patched trace already exists, validate metadata now so failures are early and actionable.
@@ -74,8 +73,8 @@ def validate_counterfactual_preflight(
     """Validate counterfactual pipeline prerequisites without mutating tracked files.
 
     This validates:
-    - Pair-manifest schema and coordinate parsing.
-    - Referenced grid files and goal-move-only topology constraints.
+    - Pair-manifest schema and coordinate parsing (goal_a/goal_b with legacy aliases accepted).
+    - Referenced grid files and category constraints.
     - Runtime prerequisites for trajectory generation (API key).
     - Optional eval-manifest constraints and patched-trace metadata compatibility.
     - expected_k consistency for evaluator.
@@ -86,9 +85,18 @@ def validate_counterfactual_preflight(
 
     pair_specs = read_pair_manifest_strict(pair_manifest)
     for spec in pair_specs:
-        layout_a = _parse_grid_text_file(spec.grid_a_path)
-        layout_b = _parse_grid_text_file(spec.grid_b_path)
-        _validate_pair_goal_move_only(spec, layout_a, layout_b)
+        relationship_error = _validate_pair_spec_against_files(
+            GridPairSpec(
+                pair_id=spec.pair_id,
+                category=spec.category,
+                grid_a_path=spec.grid_a_path,
+                grid_b_path=spec.grid_b_path,
+                goal_a=spec.goal_a,
+                goal_b=spec.goal_b,
+            )
+        )
+        if relationship_error is not None:
+            raise ValueError(f"pair manifest pair={spec.pair_id}: {relationship_error}")
 
     if require_api_key and not skip_trajectory_generation:
         _check_api_key_presence()
@@ -108,10 +116,15 @@ def validate_counterfactual_preflight(
             f"Use --expected-k {recommended_expected_k}."
         )
 
+    category_counts: dict[str, int] = {}
+    for spec in pair_specs:
+        category_counts[spec.category] = category_counts.get(spec.category, 0) + 1
+
     summary = {
         "status": "ok",
         "pair_manifest_path": str(pair_manifest),
         "n_pair_manifest_rows": len(pair_specs),
+        "n_pair_manifest_rows_per_category": category_counts,
         "eval_manifest_path": eval_manifest_path,
         "n_eval_manifest_rows": eval_manifest_rows,
         "recommended_expected_k": recommended_expected_k,

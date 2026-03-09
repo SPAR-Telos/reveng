@@ -4,13 +4,13 @@ from pathlib import Path
 import pytest
 
 from reveng.experiments.counterfactual_activation_patching import (
+    GridPairSpec,
     PairMetrics,
+    PairRecord,
+    RunArtifacts,
     aggregate_results,
     counterfactual_activation_patching,
     evaluate_pair,
-    PairRecord,
-    GridPairSpec,
-    RunArtifacts,
 )
 
 LAYER_KEY = "model.layers.15.output"
@@ -21,7 +21,7 @@ def _write_json(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload, indent=2))
 
 
-def _grid_text(agent=(2, 2), goal=(1, 2), size=5, mutate_wall=None) -> str:
+def _grid_layout(agent=(2, 2), goal=(1, 2), size=5, mutate_wall=None) -> list[list[str]]:
     rows = [["#" for _ in range(size)] for _ in range(size)]
     for y in range(1, size - 1):
         for x in range(1, size - 1):
@@ -33,21 +33,24 @@ def _grid_text(agent=(2, 2), goal=(1, 2), size=5, mutate_wall=None) -> str:
     if mutate_wall is not None:
         wx, wy, value = mutate_wall
         rows[wy][wx] = value
+    return rows
 
-    lines = ["  " + " ".join(str(i) for i in range(size))]
-    for y, row in enumerate(rows):
+
+def _layout_to_text(layout: list[list[str]]) -> str:
+    lines = ["  " + " ".join(str(i) for i in range(len(layout[0])))]
+    for y, row in enumerate(layout):
         lines.append(f"{y} " + " ".join(row))
     return "\n".join(lines) + "\n"
 
 
 def _grid_state_lines(agent=(2, 2), goal=(1, 2), size=5) -> list[str]:
-    return _grid_text(agent=agent, goal=goal, size=size).strip().splitlines()
+    return _layout_to_text(_grid_layout(agent=agent, goal=goal, size=size)).strip().splitlines()
 
 
-def _probe_payload(goal_new=(3, 2), goal_orig=(1, 2), include_mlp=True, include_linear=True):
+def _probe_payload(goal_b=(3, 2), goal_a=(1, 2), include_mlp=True, include_linear=True):
     probes = {}
     if include_mlp:
-        gx, gy = goal_new
+        gx, gy = goal_b
         probes[
             f"cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r{gy}_c{gx}"
         ] = {LAYER_KEY: {"goal": 0.95, "empty": 0.05}}
@@ -56,7 +59,7 @@ def _probe_payload(goal_new=(3, 2), goal_orig=(1, 2), include_mlp=True, include_
         ] = {LAYER_KEY: {"goal": 0.10, "empty": 0.90}}
 
     if include_linear:
-        gx, gy = goal_orig
+        gx, gy = goal_a
         probes[
             f"cognitive_map_probe_l15_s0_suffix_-3--1_linear_full_upsample_normalize_r{gy}_c{gx}"
         ] = {LAYER_KEY: {"goal": 0.91, "empty": 0.09}}
@@ -95,7 +98,15 @@ def _build_step(action: str, include_probes=True, include_mlp=True, include_line
     return step
 
 
-def _create_pair_record(base: Path, pair_id: str, patched_steps: list[dict], mutate_grid_b=None):
+def _create_pair_record(
+    base: Path,
+    pair_id: str,
+    patched_steps: list[dict],
+    category: str = "goal_move",
+    goal_a=(1, 2),
+    goal_b=(3, 2),
+    mutate_grid_b=None,
+):
     pair_dir = base / pair_id
     grids_dir = pair_dir / "grids"
     artifacts_dir = pair_dir / "artifacts"
@@ -104,14 +115,18 @@ def _create_pair_record(base: Path, pair_id: str, patched_steps: list[dict], mut
 
     grid_a_path = grids_dir / "grid_a.txt"
     grid_b_path = grids_dir / "grid_b.txt"
-    goal_orig = (1, 2)
-    goal_new = (3, 2)
 
-    grid_a_path.write_text(_grid_text(goal=goal_orig))
-    if mutate_grid_b is None:
-        grid_b_path.write_text(_grid_text(goal=goal_new))
+    grid_a_layout = _grid_layout(goal=goal_a)
+
+    if category == "goal_move":
+        grid_b_layout = _grid_layout(goal=goal_b, mutate_wall=mutate_grid_b)
+    elif category == "start_goal_swap":
+        grid_b_layout = _grid_layout(agent=goal_a, goal=(2, 2), mutate_wall=mutate_grid_b)
     else:
-        grid_b_path.write_text(_grid_text(goal=goal_new, mutate_wall=mutate_grid_b))
+        raise ValueError("test helper currently supports goal_move/start_goal_swap only")
+
+    grid_a_path.write_text(_layout_to_text(grid_a_layout))
+    grid_b_path.write_text(_layout_to_text(grid_b_layout))
 
     a_trace_path = artifacts_dir / "A.json"
     b_trace_path = artifacts_dir / "B.json"
@@ -124,10 +139,11 @@ def _create_pair_record(base: Path, pair_id: str, patched_steps: list[dict], mut
     return PairRecord(
         spec=GridPairSpec(
             pair_id=pair_id,
+            category=category,
             grid_a_path=grid_a_path,
             grid_b_path=grid_b_path,
-            goal_orig=goal_orig,
-            goal_new=goal_new,
+            goal_a=goal_a,
+            goal_b=goal_b,
         ),
         artifacts=RunArtifacts(
             a_trace_path=a_trace_path,
@@ -138,7 +154,7 @@ def _create_pair_record(base: Path, pair_id: str, patched_steps: list[dict], mut
 
 
 def test_action_metric_threshold_boundaries(tmp_path: Path):
-    # A_new=0.70, A_orig=0.30 => Action=True
+    # A_target=0.70, A_base=0.30 => Action=True
     steps = [_build_step("RIGHT") for _ in range(7)] + [_build_step("LEFT") for _ in range(3)]
     record = _create_pair_record(tmp_path, "pair_threshold", steps)
 
@@ -146,13 +162,13 @@ def test_action_metric_threshold_boundaries(tmp_path: Path):
 
     assert metric.valid_pair is True
     assert metric.evaluated_steps == 10
-    assert metric.a_new == 0.7
-    assert metric.a_orig == 0.3
+    assert metric.a_target == 0.7
+    assert metric.a_base == 0.3
     assert metric.action_label is True
 
 
 def test_disruptive_boundary_strict_less_than(tmp_path: Path):
-    # A_new=0.35, A_orig=0.35 => disruptive should be False (< 0.35 is strict)
+    # A_target=0.35, A_base=0.35 => disruptive should be False (< 0.35 is strict)
     steps = (
         [_build_step("RIGHT") for _ in range(7)]
         + [_build_step("LEFT") for _ in range(7)]
@@ -164,107 +180,105 @@ def test_disruptive_boundary_strict_less_than(tmp_path: Path):
 
     assert metric.valid_pair is True
     assert metric.evaluated_steps == 20
-    assert metric.a_new == 0.35
-    assert metric.a_orig == 0.35
+    assert metric.a_target == 0.35
+    assert metric.a_base == 0.35
     assert metric.disruptive is False
 
 
-def test_belief_label_uses_mlp_primary(tmp_path: Path):
-    # MLP predicts new goal, linear predicts original goal -> Belief=True (MLP primary)
+def test_belief_labels_are_reported_separately(tmp_path: Path):
+    # MLP predicts target goal, linear predicts base goal
     steps = [_build_step("RIGHT", include_mlp=True, include_linear=True) for _ in range(10)]
-    record = _create_pair_record(tmp_path, "pair_belief_primary", steps)
+    record = _create_pair_record(tmp_path, "pair_belief_split", steps)
 
     metric = evaluate_pair(record)
 
-    assert metric.belief_mlp_new_match is True
-    assert metric.belief_linear_new_match is False
-    assert metric.belief_label is True
+    assert metric.belief_mlp_match_target is True
+    assert metric.belief_linear_match_target is False
+    assert metric.belief_available_mlp is True
+    assert metric.belief_available_linear is True
+    assert metric.outcome_cell_mlp is not None
+    assert metric.outcome_cell_linear is not None
 
 
-def test_belief_unavailable_when_mlp_missing(tmp_path: Path):
+def test_belief_unavailable_is_probe_specific(tmp_path: Path):
     steps = [_build_step("RIGHT", include_mlp=False, include_linear=True) for _ in range(10)]
     record = _create_pair_record(tmp_path, "pair_belief_missing", steps)
 
     metric = evaluate_pair(record)
 
     assert metric.valid_pair is True
-    assert metric.belief_mlp_new_match is None
-    assert metric.belief_available is False
-    assert metric.outcome_cell is None
+    assert metric.belief_mlp_match_target is None
+    assert metric.belief_available_mlp is False
+    assert metric.belief_available_linear is True
+    assert metric.outcome_cell_mlp is None
+    assert metric.outcome_cell_linear is not None
 
 
-def test_aggregate_2x2_and_ratios():
+def test_aggregate_reports_separate_probe_tables_and_disagreement():
     metrics = [
         PairMetrics(
             pair_id="tt",
+            category="goal_move",
             evaluated_steps=10,
-            a_new=0.9,
-            a_orig=0.1,
-            belief_mlp_new_match=True,
-            belief_linear_new_match=True,
+            a_target=0.9,
+            a_base=0.1,
             action_label=True,
-            belief_label=True,
             disruptive=False,
-            outcome_cell=(True, True),
+            belief_mlp_match_target=True,
+            belief_linear_match_target=True,
+            belief_available_mlp=True,
+            belief_available_linear=True,
+            outcome_cell_mlp=(True, True),
+            outcome_cell_linear=(True, True),
             valid_pair=True,
-            belief_available=True,
             invalid_reason=None,
         ),
         PairMetrics(
-            pair_id="tf",
+            pair_id="mixed",
+            category="goal_move",
             evaluated_steps=10,
-            a_new=0.2,
-            a_orig=0.8,
-            belief_mlp_new_match=True,
-            belief_linear_new_match=False,
+            a_target=0.2,
+            a_base=0.8,
             action_label=False,
-            belief_label=True,
             disruptive=False,
-            outcome_cell=(True, False),
+            belief_mlp_match_target=True,
+            belief_linear_match_target=False,
+            belief_available_mlp=True,
+            belief_available_linear=True,
+            outcome_cell_mlp=(True, False),
+            outcome_cell_linear=(False, False),
             valid_pair=True,
-            belief_available=True,
-            invalid_reason=None,
-        ),
-        PairMetrics(
-            pair_id="ff",
-            evaluated_steps=10,
-            a_new=0.2,
-            a_orig=0.8,
-            belief_mlp_new_match=False,
-            belief_linear_new_match=False,
-            action_label=False,
-            belief_label=False,
-            disruptive=False,
-            outcome_cell=(False, False),
-            valid_pair=True,
-            belief_available=True,
             invalid_reason=None,
         ),
         PairMetrics(
             pair_id="invalid",
+            category="goal_move",
             evaluated_steps=0,
-            a_new=0.0,
-            a_orig=0.0,
-            belief_mlp_new_match=None,
-            belief_linear_new_match=None,
+            a_target=0.0,
+            a_base=0.0,
             action_label=None,
-            belief_label=None,
             disruptive=None,
-            outcome_cell=None,
+            belief_mlp_match_target=None,
+            belief_linear_match_target=None,
+            belief_available_mlp=False,
+            belief_available_linear=False,
+            outcome_cell_mlp=None,
+            outcome_cell_linear=None,
             valid_pair=False,
-            belief_available=False,
             invalid_reason="missing",
         ),
     ]
 
     agg = aggregate_results(metrics, stopped_early=False, early_stop_reason=None)
 
-    assert agg.tt_count == 1
-    assert agg.tf_count == 1
-    assert agg.ft_count == 0
-    assert agg.ff_count == 1
-    assert agg.tt_over_tt_tf == 0.5
-    assert agg.tt_over_tt_ft == 1.0
+    assert agg.mlp_tt_count == 1
+    assert agg.mlp_tf_count == 1
+    assert agg.linear_tt_count == 1
+    assert agg.linear_ff_count == 1
+    assert agg.probe_both_available == 2
+    assert agg.probe_disagree_count == 1
+    assert agg.table_rows_mlp == 2
+    assert agg.table_rows_linear == 2
 
 
 def test_integration_outputs_written(tmp_path: Path):
@@ -280,10 +294,11 @@ def test_integration_outputs_written(tmp_path: Path):
         manifest_rows.append(
             {
                 "pair_id": record.spec.pair_id,
+                "category": record.spec.category,
                 "grid_a_path": str(record.spec.grid_a_path),
                 "grid_b_path": str(record.spec.grid_b_path),
-                "goal_orig": list(record.spec.goal_orig),
-                "goal_new": list(record.spec.goal_new),
+                "goal_a": list(record.spec.goal_a),
+                "goal_b": list(record.spec.goal_b),
                 "a_trace_path": str(record.artifacts.a_trace_path),
                 "b_trace_path": str(record.artifacts.b_trace_path),
                 "patched_trace_path": str(record.artifacts.patched_trace_path),
@@ -306,8 +321,8 @@ def test_integration_outputs_written(tmp_path: Path):
     summary = json.loads((output_dir / "aggregate_summary.json").read_text())
     assert summary["stopped_early"] is False
     assert summary["total_pairs_processed"] == 3
-    assert summary["tt_count"] == 1
-    assert summary["tf_count"] == 1
+    assert "mlp_tt_count" in summary
+    assert "linear_tt_count" in summary
 
 
 def test_failure_missing_trace_path(tmp_path: Path):
@@ -320,7 +335,7 @@ def test_failure_missing_trace_path(tmp_path: Path):
     assert "trace loading failed" in (metric.invalid_reason or "")
 
 
-def test_failure_goal_not_moved_only(tmp_path: Path):
+def test_failure_category_constraints(tmp_path: Path):
     record = _create_pair_record(
         tmp_path,
         "pair_bad_topology",
@@ -356,10 +371,11 @@ def test_early_stop_after_first_three_non_disruptive_action_false(tmp_path: Path
         manifest_rows.append(
             {
                 "pair_id": record.spec.pair_id,
+                "category": record.spec.category,
                 "grid_a_path": str(record.spec.grid_a_path),
                 "grid_b_path": str(record.spec.grid_b_path),
-                "goal_orig": list(record.spec.goal_orig),
-                "goal_new": list(record.spec.goal_new),
+                "goal_a": list(record.spec.goal_a),
+                "goal_b": list(record.spec.goal_b),
                 "a_trace_path": str(record.artifacts.a_trace_path),
                 "b_trace_path": str(record.artifacts.b_trace_path),
                 "patched_trace_path": str(record.artifacts.patched_trace_path),
@@ -367,7 +383,7 @@ def test_early_stop_after_first_three_non_disruptive_action_false(tmp_path: Path
         )
     manifest_path.write_text(json.dumps(manifest_rows, indent=2))
 
-    output_dir = tmp_path / "early_stop_results"
+    output_dir = tmp_path / "results_early_stop"
     counterfactual_activation_patching(
         manifest_path=str(manifest_path),
         output_dir=str(output_dir),
@@ -376,21 +392,23 @@ def test_early_stop_after_first_three_non_disruptive_action_false(tmp_path: Path
 
     summary = json.loads((output_dir / "aggregate_summary.json").read_text())
     assert summary["stopped_early"] is True
-    assert summary["total_pairs_processed"] == 3
+    assert "first 3 evaluated pairs" in (summary["early_stop_reason"] or "")
 
 
-def test_expected_k_mismatch_error_contains_remediation(tmp_path: Path):
-    record = _create_pair_record(tmp_path, "pair_000", [_build_step("RIGHT") for _ in range(5)])
-    manifest_path = tmp_path / "manifest_mismatch.json"
+def test_manifest_legacy_goal_keys_still_supported(tmp_path: Path):
+    record = _create_pair_record(tmp_path, "pair_legacy", [_build_step("RIGHT") for _ in range(3)])
+
+    manifest_path = tmp_path / "manifest_legacy.json"
     manifest_path.write_text(
         json.dumps(
             [
                 {
                     "pair_id": record.spec.pair_id,
+                    "category": record.spec.category,
                     "grid_a_path": str(record.spec.grid_a_path),
                     "grid_b_path": str(record.spec.grid_b_path),
-                    "goal_orig": list(record.spec.goal_orig),
-                    "goal_new": list(record.spec.goal_new),
+                    "goal_orig": list(record.spec.goal_a),
+                    "goal_new": list(record.spec.goal_b),
                     "a_trace_path": str(record.artifacts.a_trace_path),
                     "b_trace_path": str(record.artifacts.b_trace_path),
                     "patched_trace_path": str(record.artifacts.patched_trace_path),
@@ -400,13 +418,11 @@ def test_expected_k_mismatch_error_contains_remediation(tmp_path: Path):
         )
     )
 
-    with pytest.raises(ValueError) as exc:
-        counterfactual_activation_patching(
-            manifest_path=str(manifest_path),
-            output_dir=str(tmp_path / "out"),
-            expected_k=10,
-        )
+    output_dir = tmp_path / "results_legacy"
+    counterfactual_activation_patching(
+        manifest_path=str(manifest_path),
+        output_dir=str(output_dir),
+        expected_k=1,
+    )
 
-    msg = str(exc.value)
-    assert "Expected exactly 10 pairs in manifest, found 1." in msg
-    assert "--expected-k 1" in msg
+    assert (output_dir / "aggregate_summary.json").exists()

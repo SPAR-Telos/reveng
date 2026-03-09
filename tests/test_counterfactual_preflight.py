@@ -31,11 +31,14 @@ def _trace_with_patch_metadata(valid: bool = True) -> dict:
     }
     if not valid:
         patch_metadata["pre_reasoning_last_n"] = 2
-    return {"steps": [{"grid_state": _grid_text().strip().splitlines(), "agent_action": "RIGHT"}], "patch_metadata": patch_metadata}
+    return {
+        "steps": [{"grid_state": _grid_text().strip().splitlines(), "agent_action": "RIGHT"}],
+        "patch_metadata": patch_metadata,
+    }
 
 
-def test_preflight_accepts_coordinate_coercion_and_reports_expected_k(tmp_path: Path):
-    pair_dir = tmp_path / "pair_000"
+def test_preflight_accepts_legacy_coordinate_coercion_and_reports_expected_k(tmp_path: Path):
+    pair_dir = tmp_path / "pair_goal_move_000"
     pair_dir.mkdir(parents=True, exist_ok=True)
     grid_a = pair_dir / "grid_a.txt"
     grid_b = pair_dir / "grid_b.txt"
@@ -47,7 +50,8 @@ def test_preflight_accepts_coordinate_coercion_and_reports_expected_k(tmp_path: 
         json.dumps(
             [
                 {
-                    "pair_id": "pair_000",
+                    "pair_id": "pair_goal_move_000",
+                    "category": "goal_move",
                     "grid_a_path": str(grid_a),
                     "grid_b_path": str(grid_b),
                     "goal_orig": "(1,2)",
@@ -67,10 +71,11 @@ def test_preflight_accepts_coordinate_coercion_and_reports_expected_k(tmp_path: 
     )
     assert summary["status"] == "ok"
     assert summary["recommended_expected_k"] == 1
+    assert summary["n_pair_manifest_rows_per_category"]["goal_move"] == 1
 
 
 def test_preflight_requires_api_key_when_generating(tmp_path: Path, monkeypatch):
-    pair_dir = tmp_path / "pair_000"
+    pair_dir = tmp_path / "pair_goal_move_000"
     pair_dir.mkdir(parents=True, exist_ok=True)
     grid_a = pair_dir / "grid_a.txt"
     grid_b = pair_dir / "grid_b.txt"
@@ -81,11 +86,12 @@ def test_preflight_requires_api_key_when_generating(tmp_path: Path, monkeypatch)
         json.dumps(
             [
                 {
-                    "pair_id": "pair_000",
+                    "pair_id": "pair_goal_move_000",
+                    "category": "goal_move",
                     "grid_a_path": str(grid_a),
                     "grid_b_path": str(grid_b),
-                    "goal_orig": [1, 2],
-                    "goal_new": [3, 2],
+                    "goal_a": [1, 2],
+                    "goal_b": [3, 2],
                 }
             ],
             indent=2,
@@ -106,7 +112,7 @@ def test_preflight_requires_api_key_when_generating(tmp_path: Path, monkeypatch)
 
 
 def test_preflight_fails_on_invalid_patch_metadata(tmp_path: Path):
-    pair_dir = tmp_path / "pair_000"
+    pair_dir = tmp_path / "pair_goal_move_000"
     pair_dir.mkdir(parents=True, exist_ok=True)
     grid_a = pair_dir / "grid_a.txt"
     grid_b = pair_dir / "grid_b.txt"
@@ -117,18 +123,19 @@ def test_preflight_fails_on_invalid_patch_metadata(tmp_path: Path):
         json.dumps(
             [
                 {
-                    "pair_id": "pair_000",
+                    "pair_id": "pair_goal_move_000",
+                    "category": "goal_move",
                     "grid_a_path": str(grid_a),
                     "grid_b_path": str(grid_b),
-                    "goal_orig": [1, 2],
-                    "goal_new": [3, 2],
+                    "goal_a": [1, 2],
+                    "goal_b": [3, 2],
                 }
             ],
             indent=2,
         )
     )
 
-    artifacts_dir = tmp_path / "artifacts" / "pair_000"
+    artifacts_dir = tmp_path / "artifacts" / "pair_goal_move_000"
     artifacts_dir.mkdir(parents=True, exist_ok=True)
     a_trace = artifacts_dir / "A.json"
     b_trace = artifacts_dir / "B.json"
@@ -143,11 +150,12 @@ def test_preflight_fails_on_invalid_patch_metadata(tmp_path: Path):
         json.dumps(
             [
                 {
-                    "pair_id": "pair_000",
+                    "pair_id": "pair_goal_move_000",
+                    "category": "goal_move",
                     "grid_a_path": str(grid_a),
                     "grid_b_path": str(grid_b),
-                    "goal_orig": [1, 2],
-                    "goal_new": [3, 2],
+                    "goal_a": [1, 2],
+                    "goal_b": [3, 2],
                     "a_trace_path": str(a_trace),
                     "b_trace_path": str(b_trace),
                     "patched_trace_path": str(patched),
