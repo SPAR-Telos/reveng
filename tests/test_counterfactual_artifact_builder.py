@@ -5,6 +5,7 @@ import pytest
 
 from reveng.experiments.counterfactual_artifact_builder import (
     _read_pair_manifest,
+    build_counterfactual_patch_artifacts,
     build_patched_trace,
 )
 
@@ -110,3 +111,48 @@ def test_missing_pair_manifest_creates_template(tmp_path: Path):
     created = json.loads(manifest_path.read_text())
     assert isinstance(created, list)
     assert "Created template file" in str(exc.value)
+
+
+def test_build_counterfactual_patch_artifacts_with_existing_traces(tmp_path: Path):
+    pair_dir = tmp_path / "pair_000"
+    pair_dir.mkdir(parents=True, exist_ok=True)
+
+    grid_a_path = pair_dir / "grid_a.txt"
+    grid_b_path = pair_dir / "grid_b.txt"
+    grid_a_path.write_text("\n".join(_grid_state(goal=(1, 2))) + "\n")
+    grid_b_path.write_text("\n".join(_grid_state(goal=(3, 2))) + "\n")
+
+    manifest_path = tmp_path / "pair_manifest.json"
+    manifest_path.write_text(
+        json.dumps(
+            [
+                {
+                    "pair_id": "pair_000",
+                    "grid_a_path": str(grid_a_path),
+                    "grid_b_path": str(grid_b_path),
+                    "goal_orig": [1, 2],
+                    "goal_new": [3, 2],
+                }
+            ],
+            indent=2,
+        )
+    )
+
+    output_dir = tmp_path / "artifacts"
+    pair_artifact_dir = output_dir / "pair_000"
+    pair_artifact_dir.mkdir(parents=True, exist_ok=True)
+    (pair_artifact_dir / "A.json").write_text(json.dumps(_trace(["RIGHT"]), indent=2))
+    (pair_artifact_dir / "B.json").write_text(json.dumps(_trace(["LEFT"]), indent=2))
+
+    build_counterfactual_patch_artifacts(
+        pair_manifest_path=str(manifest_path),
+        output_dir=str(output_dir),
+        skip_trajectory_generation=True,
+    )
+
+    assert (pair_artifact_dir / "patched.json").exists()
+    eval_manifest_path = output_dir / "manifest_for_counterfactual_activation_patching.json"
+    assert eval_manifest_path.exists()
+    rows = json.loads(eval_manifest_path.read_text())
+    assert len(rows) == 1
+    assert rows[0]["pair_id"] == "pair_000"

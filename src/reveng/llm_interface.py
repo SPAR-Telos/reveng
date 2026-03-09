@@ -1,6 +1,7 @@
 import logging
 import os
 import traceback
+from importlib.util import find_spec
 from pathlib import Path
 from typing import Optional, Tuple
 
@@ -24,6 +25,25 @@ def _set_provider_key_aliases() -> None:
     together_alias = os.getenv("TOGETHER_API_KEY")
     if together_alias and not os.getenv("TOGETHERAI_API_KEY"):
         os.environ["TOGETHERAI_API_KEY"] = together_alias
+
+
+def _configure_hf_transfer() -> None:
+    """Disable hf_transfer optimization when requested but unavailable.
+
+    Some environments set HF_HUB_ENABLE_HF_TRANSFER=1 globally. If the optional
+    `hf_transfer` package is not installed, huggingface_hub may fail while
+    downloading model/tokenizer assets. We downgrade to the default transport.
+    """
+    enabled = os.getenv("HF_HUB_ENABLE_HF_TRANSFER", "").strip().lower()
+    if enabled not in {"1", "true", "yes", "on"}:
+        return
+    if find_spec("hf_transfer") is not None:
+        return
+    os.environ["HF_HUB_ENABLE_HF_TRANSFER"] = "0"
+    logger.warning(
+        "HF_HUB_ENABLE_HF_TRANSFER is enabled but hf_transfer is not installed; "
+        "falling back to default Hugging Face download transport."
+    )
 
 
 class BaseLLMInterface:
@@ -58,6 +78,7 @@ class BaseLLMInterface:
                 f"No .env file found at {ENV_FILE}! Please create a .env file in the root of the project."
             )
         _set_provider_key_aliases()
+        _configure_hf_transfer()
 
     @staticmethod
     def _load_template(template_path: Path) -> Template:

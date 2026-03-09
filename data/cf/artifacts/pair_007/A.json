@@ -1,0 +1,2203 @@
+{
+    "grid_params": {
+        "grid_width": 7,
+        "grid_height": 7,
+        "grid_complexity": 0.0,
+        "fully_observable": true,
+        "transform_type": "base",
+        "astar_distance": 3,
+        "agent_start_coordinates": [3, 3],
+        "goal_coordinates": [2, 5],
+        "legend": {
+            "agent": { "symbol": "A", "description": "Current agent position" },
+            "wall": { "symbol": "#", "description": "Wall" },
+            "goal": { "symbol": "G", "description": "Goal" },
+            "empty": { "symbol": "_", "description": "Open space (can be visited)" },
+            "door": { "symbol": "D", "description": "Door (locked or unlocked)" },
+            "key": { "symbol": "K", "description": "Key (can unlock doors)" },
+            "ball": { "symbol": "C", "description": "Coin (collectible item)" },
+            "unknown_obj": { "symbol": "?", "description": "Unknown object" },
+            "fog": { "symbol": "*", "description": "Hidden Space (reveals a Wall, Goal or Open Space when observed)" }
+        }
+    },
+    "model_params": {
+        "model_id": "openai/gpt-oss-20b",
+        "provider": "together_ai",
+        "interface": "litellm",
+        "n_interactions_in_context": 0,
+        "max_tokens": 10000,
+        "max_steps_per_trajectory": 50,
+        "temperature": 0.0,
+        "reasoning_effort": "low",
+        "top_p": 0.95,
+        "top_logprobs": 5,
+        "seed": 42
+    },
+    "prompt": {
+        "prompt_template": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-03-09\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|># Instructions\n\nYou are controlling an agent in a grid-based environment with full observability. The agent can move in four directions: up, down, left, and right. The environment contains walls, open spaces, and a goal location. The following symbols are used in the grid representation:\n\nLegend:\n---------------\n#: Wall\n_: Open Space (can be visited)\nG: Goal\nA: Current agent position\n----------------\n\nYour objective is to navigate from the current position (A) to the goal (G) while avoiding walls (#). Importantly, the agent should aim to reach the goal using the least amount of steps possible. You must decide your next move based on the provided information.\n\nYou will receive the current state of the grid as a NxM matrix of symbols separated by whitespaces, and with coordinates for each row an column. For example, given the 4x5 grid:\n\n  0 1 2 3 4\n0 # # # # #\n1 # _ _ G #\n2 # A _ _ #\n3 # # # # #\n\nThe goal is in position (1,3), while the agent's position A is (2,1).\n\nThe agent's possible actions at each step are:\n\nActions:\n- UP: Move Up\n- DOWN: Move Down\n- LEFT: Move Left\n- RIGHT: Move Right\n\nYour final answer should be a valid JSON object provided in the following form:\n\n```\n{\n  \"action\": \"<UP|DOWN|LEFT|RIGHT>\",\n}\n```\n\nDO NOT INCLUDE ANY `json` or `jsonb` in your response NOR TICK MARKS LIKE THIS: ```json ```. Start with { and end with } exactly.\n\n# Inputs\n\nCurrent grid state:\n\n{{grid_state}}<|end|><|start|>assistant",
+        "prompt_template_n_tokens": 421,
+        "prompt_prefix_tokens": [
+            { "id": 0, "token": "<|start|>", "token_id": 200006, "token_groups": ["prompt", "template"] },
+            { "id": 1, "token": "system", "token_id": 17360, "token_groups": ["prompt", "template"] },
+            { "id": 2, "token": "<|message|>", "token_id": 200008, "token_groups": ["prompt", "template"] },
+            { "id": 3, "token": "You", "token_id": 3575, "token_groups": ["prompt", "template"] },
+            { "id": 4, "token": "Ġare", "token_id": 553, "token_groups": ["prompt", "template"] },
+            { "id": 5, "token": "ĠChat", "token_id": 17554, "token_groups": ["prompt", "template"] },
+            { "id": 6, "token": "GPT", "token_id": 162016, "token_groups": ["prompt", "template"] },
+            { "id": 7, "token": ",", "token_id": 11, "token_groups": ["prompt", "template"] },
+            { "id": 8, "token": "Ġa", "token_id": 261, "token_groups": ["prompt", "template"] },
+            { "id": 9, "token": "Ġlarge", "token_id": 4410, "token_groups": ["prompt", "template"] },
+            { "id": 10, "token": "Ġlanguage", "token_id": 6439, "token_groups": ["prompt", "template"] },
+            { "id": 11, "token": "Ġmodel", "token_id": 2359, "token_groups": ["prompt", "template"] },
+            { "id": 12, "token": "Ġtrained", "token_id": 22203, "token_groups": ["prompt", "template"] },
+            { "id": 13, "token": "Ġby", "token_id": 656, "token_groups": ["prompt", "template"] },
+            { "id": 14, "token": "ĠOpen", "token_id": 7788, "token_groups": ["prompt", "template"] },
+            { "id": 15, "token": "AI", "token_id": 17527, "token_groups": ["prompt", "template"] },
+            { "id": 16, "token": ".Ċ", "token_id": 558, "token_groups": ["prompt", "template"] },
+            { "id": 17, "token": "Knowledge", "token_id": 87447, "token_groups": ["prompt", "template"] },
+            { "id": 18, "token": "Ġcutoff", "token_id": 100594, "token_groups": ["prompt", "template"] },
+            { "id": 19, "token": ":", "token_id": 25, "token_groups": ["prompt", "template"] },
+            { "id": 20, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "template"] },
+            { "id": 21, "token": "202", "token_id": 1323, "token_groups": ["prompt", "template"] },
+            { "id": 22, "token": "4", "token_id": 19, "token_groups": ["prompt", "template"] },
+            { "id": 23, "token": "-", "token_id": 12, "token_groups": ["prompt", "template"] },
+            { "id": 24, "token": "06", "token_id": 3218, "token_groups": ["prompt", "template"] },
+            { "id": 25, "token": "Ċ", "token_id": 198, "token_groups": ["prompt", "template"] },
+            { "id": 26, "token": "Current", "token_id": 6576, "token_groups": ["prompt", "template"] },
+            { "id": 27, "token": "Ġdate", "token_id": 3521, "token_groups": ["prompt", "template"] },
+            { "id": 28, "token": ":", "token_id": 25, "token_groups": ["prompt", "template"] },
+            { "id": 29, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "template"] },
+            { "id": 30, "token": "202", "token_id": 1323, "token_groups": ["prompt", "template"] },
+            { "id": 31, "token": "6", "token_id": 21, "token_groups": ["prompt", "template"] },
+            { "id": 32, "token": "-", "token_id": 12, "token_groups": ["prompt", "template"] },
+            { "id": 33, "token": "03", "token_id": 3659, "token_groups": ["prompt", "template"] },
+            { "id": 34, "token": "-", "token_id": 12, "token_groups": ["prompt", "template"] },
+            { "id": 35, "token": "09", "token_id": 3114, "token_groups": ["prompt", "template"] },
+            { "id": 36, "token": "ĊĊ", "token_id": 279, "token_groups": ["prompt", "template"] },
+            { "id": 37, "token": "Reason", "token_id": 30377, "token_groups": ["prompt", "template"] },
+            { "id": 38, "token": "ing", "token_id": 289, "token_groups": ["prompt", "template"] },
+            { "id": 39, "token": ":", "token_id": 25, "token_groups": ["prompt", "template"] },
+            { "id": 40, "token": "Ġmedium", "token_id": 14093, "token_groups": ["prompt", "template"] },
+            { "id": 41, "token": "ĊĊ", "token_id": 279, "token_groups": ["prompt", "template"] },
+            { "id": 42, "token": "#", "token_id": 2, "token_groups": ["prompt", "template"] },
+            { "id": 43, "token": "ĠValid", "token_id": 13888, "token_groups": ["prompt", "template"] },
+            { "id": 44, "token": "Ġchannels", "token_id": 18403, "token_groups": ["prompt", "template"] },
+            { "id": 45, "token": ":", "token_id": 25, "token_groups": ["prompt", "template"] },
+            { "id": 46, "token": "Ġanalysis", "token_id": 8450, "token_groups": ["prompt", "template"] },
+            { "id": 47, "token": ",", "token_id": 11, "token_groups": ["prompt", "template"] },
+            { "id": 48, "token": "Ġcommentary", "token_id": 49159, "token_groups": ["prompt", "template"] },
+            { "id": 49, "token": ",", "token_id": 11, "token_groups": ["prompt", "template"] },
+            { "id": 50, "token": "Ġfinal", "token_id": 1721, "token_groups": ["prompt", "template"] },
+            { "id": 51, "token": ".", "token_id": 13, "token_groups": ["prompt", "template"] },
+            { "id": 52, "token": "ĠChannel", "token_id": 21030, "token_groups": ["prompt", "template"] },
+            { "id": 53, "token": "Ġmust", "token_id": 2804, "token_groups": ["prompt", "template"] },
+            { "id": 54, "token": "Ġbe", "token_id": 413, "token_groups": ["prompt", "template"] },
+            { "id": 55, "token": "Ġincluded", "token_id": 7360, "token_groups": ["prompt", "template"] },
+            { "id": 56, "token": "Ġfor", "token_id": 395, "token_groups": ["prompt", "template"] },
+            { "id": 57, "token": "Ġevery", "token_id": 1753, "token_groups": ["prompt", "template"] },
+            { "id": 58, "token": "Ġmessage", "token_id": 3176, "token_groups": ["prompt", "template"] },
+            { "id": 59, "token": ".", "token_id": 13, "token_groups": ["prompt", "template"] },
+            { "id": 60, "token": "<|end|>", "token_id": 200007, "token_groups": ["prompt", "template"] },
+            { "id": 61, "token": "<|start|>", "token_id": 200006, "token_groups": ["prompt", "template"] },
+            { "id": 62, "token": "user", "token_id": 1428, "token_groups": ["prompt", "template"] },
+            { "id": 63, "token": "<|message|>", "token_id": 200008, "token_groups": ["prompt", "template"] },
+            { "id": 64, "token": "#", "token_id": 2, "token_groups": ["prompt"] },
+            { "id": 65, "token": "ĠInstructions", "token_id": 68406, "token_groups": ["prompt"] },
+            { "id": 66, "token": "ĊĊ", "token_id": 279, "token_groups": ["prompt"] },
+            { "id": 67, "token": "You", "token_id": 3575, "token_groups": ["prompt"] },
+            { "id": 68, "token": "Ġare", "token_id": 553, "token_groups": ["prompt"] },
+            { "id": 69, "token": "Ġcontrolling", "token_id": 44125, "token_groups": ["prompt"] },
+            { "id": 70, "token": "Ġan", "token_id": 448, "token_groups": ["prompt"] },
+            { "id": 71, "token": "Ġagent", "token_id": 11793, "token_groups": ["prompt"] },
+            { "id": 72, "token": "Ġin", "token_id": 306, "token_groups": ["prompt"] },
+            { "id": 73, "token": "Ġa", "token_id": 261, "token_groups": ["prompt"] },
+            { "id": 74, "token": "Ġgrid", "token_id": 10586, "token_groups": ["prompt"] },
+            { "id": 75, "token": "-based", "token_id": 8235, "token_groups": ["prompt"] },
+            { "id": 76, "token": "Ġenvironment", "token_id": 5870, "token_groups": ["prompt"] },
+            { "id": 77, "token": "Ġwith", "token_id": 483, "token_groups": ["prompt"] },
+            { "id": 78, "token": "Ġfull", "token_id": 3149, "token_groups": ["prompt"] },
+            { "id": 79, "token": "Ġobserv", "token_id": 8664, "token_groups": ["prompt"] },
+            { "id": 80, "token": "ability", "token_id": 3563, "token_groups": ["prompt"] },
+            { "id": 81, "token": ".", "token_id": 13, "token_groups": ["prompt"] },
+            { "id": 82, "token": "ĠThe", "token_id": 623, "token_groups": ["prompt"] },
+            { "id": 83, "token": "Ġagent", "token_id": 11793, "token_groups": ["prompt"] },
+            { "id": 84, "token": "Ġcan", "token_id": 665, "token_groups": ["prompt"] },
+            { "id": 85, "token": "Ġmove", "token_id": 5275, "token_groups": ["prompt"] },
+            { "id": 86, "token": "Ġin", "token_id": 306, "token_groups": ["prompt"] },
+            { "id": 87, "token": "Ġfour", "token_id": 4242, "token_groups": ["prompt"] },
+            { "id": 88, "token": "Ġdirections", "token_id": 24921, "token_groups": ["prompt"] },
+            { "id": 89, "token": ":", "token_id": 25, "token_groups": ["prompt"] },
+            { "id": 90, "token": "Ġup", "token_id": 869, "token_groups": ["prompt"] },
+            { "id": 91, "token": ",", "token_id": 11, "token_groups": ["prompt"] },
+            { "id": 92, "token": "Ġdown", "token_id": 1917, "token_groups": ["prompt"] },
+            { "id": 93, "token": ",", "token_id": 11, "token_groups": ["prompt"] },
+            { "id": 94, "token": "Ġleft", "token_id": 3561, "token_groups": ["prompt"] },
+            { "id": 95, "token": ",", "token_id": 11, "token_groups": ["prompt"] },
+            { "id": 96, "token": "Ġand", "token_id": 326, "token_groups": ["prompt"] },
+            { "id": 97, "token": "Ġright", "token_id": 1849, "token_groups": ["prompt"] },
+            { "id": 98, "token": ".", "token_id": 13, "token_groups": ["prompt"] },
+            { "id": 99, "token": "ĠThe", "token_id": 623, "token_groups": ["prompt"] },
+            { "id": 100, "token": "Ġenvironment", "token_id": 5870, "token_groups": ["prompt"] },
+            { "id": 101, "token": "Ġcontains", "token_id": 8895, "token_groups": ["prompt"] },
+            { "id": 102, "token": "Ġwalls", "token_id": 20562, "token_groups": ["prompt"] },
+            { "id": 103, "token": ",", "token_id": 11, "token_groups": ["prompt"] },
+            { "id": 104, "token": "Ġopen", "token_id": 2494, "token_groups": ["prompt"] },
+            { "id": 105, "token": "Ġspaces", "token_id": 18608, "token_groups": ["prompt"] },
+            { "id": 106, "token": ",", "token_id": 11, "token_groups": ["prompt"] },
+            { "id": 107, "token": "Ġand", "token_id": 326, "token_groups": ["prompt"] },
+            { "id": 108, "token": "Ġa", "token_id": 261, "token_groups": ["prompt"] },
+            { "id": 109, "token": "Ġgoal", "token_id": 8583, "token_groups": ["prompt"] },
+            { "id": 110, "token": "Ġlocation", "token_id": 5100, "token_groups": ["prompt"] },
+            { "id": 111, "token": ".", "token_id": 13, "token_groups": ["prompt"] },
+            { "id": 112, "token": "ĠThe", "token_id": 623, "token_groups": ["prompt"] },
+            { "id": 113, "token": "Ġfollowing", "token_id": 3992, "token_groups": ["prompt"] },
+            { "id": 114, "token": "Ġsymbols", "token_id": 29502, "token_groups": ["prompt"] },
+            { "id": 115, "token": "Ġare", "token_id": 553, "token_groups": ["prompt"] },
+            { "id": 116, "token": "Ġused", "token_id": 2061, "token_groups": ["prompt"] },
+            { "id": 117, "token": "Ġin", "token_id": 306, "token_groups": ["prompt"] },
+            { "id": 118, "token": "Ġthe", "token_id": 290, "token_groups": ["prompt"] },
+            { "id": 119, "token": "Ġgrid", "token_id": 10586, "token_groups": ["prompt"] },
+            { "id": 120, "token": "Ġrepresentation", "token_id": 22311, "token_groups": ["prompt"] },
+            { "id": 121, "token": ":ĊĊ", "token_id": 1402, "token_groups": ["prompt"] },
+            { "id": 122, "token": "Legend", "token_id": 64305, "token_groups": ["prompt"] },
+            { "id": 123, "token": ":Ċ", "token_id": 734, "token_groups": ["prompt"] },
+            { "id": 124, "token": "---------------Ċ", "token_id": 110746, "token_groups": ["prompt"] },
+            { "id": 125, "token": "#:", "token_id": 97210, "token_groups": ["prompt"] },
+            { "id": 126, "token": "ĠWall", "token_id": 14606, "token_groups": ["prompt"] },
+            { "id": 127, "token": "Ċ", "token_id": 198, "token_groups": ["prompt"] },
+            { "id": 128, "token": "_:", "token_id": 52270, "token_groups": ["prompt"] },
+            { "id": 129, "token": "ĠOpen", "token_id": 7788, "token_groups": ["prompt"] },
+            { "id": 130, "token": "ĠSpace", "token_id": 19468, "token_groups": ["prompt"] },
+            { "id": 131, "token": "Ġ(", "token_id": 350, "token_groups": ["prompt"] },
+            { "id": 132, "token": "can", "token_id": 6929, "token_groups": ["prompt"] },
+            { "id": 133, "token": "Ġbe", "token_id": 413, "token_groups": ["prompt"] },
+            { "id": 134, "token": "Ġvisited", "token_id": 18416, "token_groups": ["prompt"] },
+            { "id": 135, "token": ")Ċ", "token_id": 446, "token_groups": ["prompt"] },
+            { "id": 136, "token": "G", "token_id": 38, "token_groups": ["prompt"] },
+            { "id": 137, "token": ":", "token_id": 25, "token_groups": ["prompt"] },
+            { "id": 138, "token": "ĠGoal", "token_id": 67160, "token_groups": ["prompt"] },
+            { "id": 139, "token": "Ċ", "token_id": 198, "token_groups": ["prompt"] },
+            { "id": 140, "token": "A", "token_id": 32, "token_groups": ["prompt"] },
+            { "id": 141, "token": ":", "token_id": 25, "token_groups": ["prompt"] },
+            { "id": 142, "token": "ĠCurrent", "token_id": 14536, "token_groups": ["prompt"] },
+            { "id": 143, "token": "Ġagent", "token_id": 11793, "token_groups": ["prompt"] },
+            { "id": 144, "token": "Ġposition", "token_id": 4010, "token_groups": ["prompt"] },
+            { "id": 145, "token": "Ċ", "token_id": 198, "token_groups": ["prompt"] },
+            { "id": 146, "token": "----------------", "token_id": 1297, "token_groups": ["prompt"] },
+            { "id": 147, "token": "ĊĊ", "token_id": 279, "token_groups": ["prompt"] },
+            { "id": 148, "token": "Your", "token_id": 9719, "token_groups": ["prompt"] },
+            { "id": 149, "token": "Ġobjective", "token_id": 23062, "token_groups": ["prompt"] },
+            { "id": 150, "token": "Ġis", "token_id": 382, "token_groups": ["prompt"] },
+            { "id": 151, "token": "Ġto", "token_id": 316, "token_groups": ["prompt"] },
+            { "id": 152, "token": "Ġnavigate", "token_id": 23690, "token_groups": ["prompt"] },
+            { "id": 153, "token": "Ġfrom", "token_id": 591, "token_groups": ["prompt"] },
+            { "id": 154, "token": "Ġthe", "token_id": 290, "token_groups": ["prompt"] },
+            { "id": 155, "token": "Ġcurrent", "token_id": 2208, "token_groups": ["prompt"] },
+            { "id": 156, "token": "Ġposition", "token_id": 4010, "token_groups": ["prompt"] },
+            { "id": 157, "token": "Ġ(", "token_id": 350, "token_groups": ["prompt"] },
+            { "id": 158, "token": "A", "token_id": 32, "token_groups": ["prompt"] },
+            { "id": 159, "token": ")", "token_id": 8, "token_groups": ["prompt"] },
+            { "id": 160, "token": "Ġto", "token_id": 316, "token_groups": ["prompt"] },
+            { "id": 161, "token": "Ġthe", "token_id": 290, "token_groups": ["prompt"] },
+            { "id": 162, "token": "Ġgoal", "token_id": 8583, "token_groups": ["prompt"] },
+            { "id": 163, "token": "Ġ(", "token_id": 350, "token_groups": ["prompt"] },
+            { "id": 164, "token": "G", "token_id": 38, "token_groups": ["prompt"] },
+            { "id": 165, "token": ")", "token_id": 8, "token_groups": ["prompt"] },
+            { "id": 166, "token": "Ġwhile", "token_id": 2049, "token_groups": ["prompt"] },
+            { "id": 167, "token": "Ġavoiding", "token_id": 49354, "token_groups": ["prompt"] },
+            { "id": 168, "token": "Ġwalls", "token_id": 20562, "token_groups": ["prompt"] },
+            { "id": 169, "token": "Ġ(#", "token_id": 66375, "token_groups": ["prompt"] },
+            { "id": 170, "token": ").", "token_id": 741, "token_groups": ["prompt"] },
+            { "id": 171, "token": "ĠImport", "token_id": 19998, "token_groups": ["prompt"] },
+            { "id": 172, "token": "antly", "token_id": 29180, "token_groups": ["prompt"] },
+            { "id": 173, "token": ",", "token_id": 11, "token_groups": ["prompt"] },
+            { "id": 174, "token": "Ġthe", "token_id": 290, "token_groups": ["prompt"] },
+            { "id": 175, "token": "Ġagent", "token_id": 11793, "token_groups": ["prompt"] },
+            { "id": 176, "token": "Ġshould", "token_id": 1757, "token_groups": ["prompt"] },
+            { "id": 177, "token": "Ġaim", "token_id": 11773, "token_groups": ["prompt"] },
+            { "id": 178, "token": "Ġto", "token_id": 316, "token_groups": ["prompt"] },
+            { "id": 179, "token": "Ġreach", "token_id": 7627, "token_groups": ["prompt"] },
+            { "id": 180, "token": "Ġthe", "token_id": 290, "token_groups": ["prompt"] },
+            { "id": 181, "token": "Ġgoal", "token_id": 8583, "token_groups": ["prompt"] },
+            { "id": 182, "token": "Ġusing", "token_id": 2360, "token_groups": ["prompt"] },
+            { "id": 183, "token": "Ġthe", "token_id": 290, "token_groups": ["prompt"] },
+            { "id": 184, "token": "Ġleast", "token_id": 5153, "token_groups": ["prompt"] },
+            { "id": 185, "token": "Ġamount", "token_id": 4527, "token_groups": ["prompt"] },
+            { "id": 186, "token": "Ġof", "token_id": 328, "token_groups": ["prompt"] },
+            { "id": 187, "token": "Ġsteps", "token_id": 10331, "token_groups": ["prompt"] },
+            { "id": 188, "token": "Ġpossible", "token_id": 4149, "token_groups": ["prompt"] },
+            { "id": 189, "token": ".", "token_id": 13, "token_groups": ["prompt"] },
+            { "id": 190, "token": "ĠYou", "token_id": 1608, "token_groups": ["prompt"] },
+            { "id": 191, "token": "Ġmust", "token_id": 2804, "token_groups": ["prompt"] },
+            { "id": 192, "token": "Ġdecide", "token_id": 13001, "token_groups": ["prompt"] },
+            { "id": 193, "token": "Ġyour", "token_id": 634, "token_groups": ["prompt"] },
+            { "id": 194, "token": "Ġnext", "token_id": 2613, "token_groups": ["prompt"] },
+            { "id": 195, "token": "Ġmove", "token_id": 5275, "token_groups": ["prompt"] },
+            { "id": 196, "token": "Ġbased", "token_id": 4122, "token_groups": ["prompt"] },
+            { "id": 197, "token": "Ġon", "token_id": 402, "token_groups": ["prompt"] },
+            { "id": 198, "token": "Ġthe", "token_id": 290, "token_groups": ["prompt"] },
+            { "id": 199, "token": "Ġprovided", "token_id": 5181, "token_groups": ["prompt"] },
+            { "id": 200, "token": "Ġinformation", "token_id": 2164, "token_groups": ["prompt"] },
+            { "id": 201, "token": ".ĊĊ", "token_id": 364, "token_groups": ["prompt"] },
+            { "id": 202, "token": "You", "token_id": 3575, "token_groups": ["prompt"] },
+            { "id": 203, "token": "Ġwill", "token_id": 738, "token_groups": ["prompt"] },
+            { "id": 204, "token": "Ġreceive", "token_id": 6442, "token_groups": ["prompt"] },
+            { "id": 205, "token": "Ġthe", "token_id": 290, "token_groups": ["prompt"] },
+            { "id": 206, "token": "Ġcurrent", "token_id": 2208, "token_groups": ["prompt"] },
+            { "id": 207, "token": "Ġstate", "token_id": 2608, "token_groups": ["prompt"] },
+            { "id": 208, "token": "Ġof", "token_id": 328, "token_groups": ["prompt"] },
+            { "id": 209, "token": "Ġthe", "token_id": 290, "token_groups": ["prompt"] },
+            { "id": 210, "token": "Ġgrid", "token_id": 10586, "token_groups": ["prompt"] },
+            { "id": 211, "token": "Ġas", "token_id": 472, "token_groups": ["prompt"] },
+            { "id": 212, "token": "Ġa", "token_id": 261, "token_groups": ["prompt"] },
+            { "id": 213, "token": "ĠNx", "token_id": 178338, "token_groups": ["prompt"] },
+            { "id": 214, "token": "M", "token_id": 44, "token_groups": ["prompt"] },
+            { "id": 215, "token": "Ġmatrix", "token_id": 12248, "token_groups": ["prompt"] },
+            { "id": 216, "token": "Ġof", "token_id": 328, "token_groups": ["prompt"] },
+            { "id": 217, "token": "Ġsymbols", "token_id": 29502, "token_groups": ["prompt"] },
+            { "id": 218, "token": "Ġseparated", "token_id": 33930, "token_groups": ["prompt"] },
+            { "id": 219, "token": "Ġby", "token_id": 656, "token_groups": ["prompt"] },
+            { "id": 220, "token": "Ġwhites", "token_id": 45716, "token_groups": ["prompt"] },
+            { "id": 221, "token": "paces", "token_id": 53176, "token_groups": ["prompt"] },
+            { "id": 222, "token": ",", "token_id": 11, "token_groups": ["prompt"] },
+            { "id": 223, "token": "Ġand", "token_id": 326, "token_groups": ["prompt"] },
+            { "id": 224, "token": "Ġwith", "token_id": 483, "token_groups": ["prompt"] },
+            { "id": 225, "token": "Ġcoordinates", "token_id": 27933, "token_groups": ["prompt"] },
+            { "id": 226, "token": "Ġfor", "token_id": 395, "token_groups": ["prompt"] },
+            { "id": 227, "token": "Ġeach", "token_id": 2454, "token_groups": ["prompt"] },
+            { "id": 228, "token": "Ġrow", "token_id": 5225, "token_groups": ["prompt"] },
+            { "id": 229, "token": "Ġan", "token_id": 448, "token_groups": ["prompt"] },
+            { "id": 230, "token": "Ġcolumn", "token_id": 6000, "token_groups": ["prompt"] },
+            { "id": 231, "token": ".", "token_id": 13, "token_groups": ["prompt"] },
+            { "id": 232, "token": "ĠFor", "token_id": 2214, "token_groups": ["prompt"] },
+            { "id": 233, "token": "Ġexample", "token_id": 4994, "token_groups": ["prompt"] },
+            { "id": 234, "token": ",", "token_id": 11, "token_groups": ["prompt"] },
+            { "id": 235, "token": "Ġgiven", "token_id": 4335, "token_groups": ["prompt"] },
+            { "id": 236, "token": "Ġthe", "token_id": 290, "token_groups": ["prompt"] },
+            { "id": 237, "token": "Ġ", "token_id": 220, "token_groups": ["prompt"] },
+            { "id": 238, "token": "4", "token_id": 19, "token_groups": ["prompt"] },
+            { "id": 239, "token": "x", "token_id": 87, "token_groups": ["prompt"] },
+            { "id": 240, "token": "5", "token_id": 20, "token_groups": ["prompt"] },
+            { "id": 241, "token": "Ġgrid", "token_id": 10586, "token_groups": ["prompt"] },
+            { "id": 242, "token": ":ĊĊ", "token_id": 1402, "token_groups": ["prompt"] },
+            { "id": 243, "token": "Ġ", "token_id": 220, "token_groups": ["prompt"] },
+            { "id": 244, "token": "Ġ", "token_id": 220, "token_groups": ["prompt"] },
+            { "id": 245, "token": "0", "token_id": 15, "token_groups": ["prompt"] },
+            { "id": 246, "token": "Ġ", "token_id": 220, "token_groups": ["prompt"] },
+            { "id": 247, "token": "1", "token_id": 16, "token_groups": ["prompt"] },
+            { "id": 248, "token": "Ġ", "token_id": 220, "token_groups": ["prompt"] },
+            { "id": 249, "token": "2", "token_id": 17, "token_groups": ["prompt"] },
+            { "id": 250, "token": "Ġ", "token_id": 220, "token_groups": ["prompt"] },
+            { "id": 251, "token": "3", "token_id": 18, "token_groups": ["prompt"] },
+            { "id": 252, "token": "Ġ", "token_id": 220, "token_groups": ["prompt"] },
+            { "id": 253, "token": "4", "token_id": 19, "token_groups": ["prompt"] },
+            { "id": 254, "token": "Ċ", "token_id": 198, "token_groups": ["prompt"] },
+            { "id": 255, "token": "0", "token_id": 15, "token_groups": ["prompt"] },
+            { "id": 256, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt"] },
+            { "id": 257, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt"] },
+            { "id": 258, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt"] },
+            { "id": 259, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt"] },
+            { "id": 260, "token": "Ġ#Ċ", "token_id": 21888, "token_groups": ["prompt"] },
+            { "id": 261, "token": "1", "token_id": 16, "token_groups": ["prompt"] },
+            { "id": 262, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt"] },
+            { "id": 263, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt"] },
+            { "id": 264, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt"] },
+            { "id": 265, "token": "ĠG", "token_id": 499, "token_groups": ["prompt"] },
+            { "id": 266, "token": "Ġ#Ċ", "token_id": 21888, "token_groups": ["prompt"] },
+            { "id": 267, "token": "2", "token_id": 17, "token_groups": ["prompt"] },
+            { "id": 268, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt"] },
+            { "id": 269, "token": "ĠA", "token_id": 355, "token_groups": ["prompt"] },
+            { "id": 270, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt"] },
+            { "id": 271, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt"] },
+            { "id": 272, "token": "Ġ#Ċ", "token_id": 21888, "token_groups": ["prompt"] },
+            { "id": 273, "token": "3", "token_id": 18, "token_groups": ["prompt"] },
+            { "id": 274, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt"] },
+            { "id": 275, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt"] },
+            { "id": 276, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt"] },
+            { "id": 277, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt"] },
+            { "id": 278, "token": "Ġ#ĊĊ", "token_id": 139657, "token_groups": ["prompt"] },
+            { "id": 279, "token": "The", "token_id": 976, "token_groups": ["prompt"] },
+            { "id": 280, "token": "Ġgoal", "token_id": 8583, "token_groups": ["prompt"] },
+            { "id": 281, "token": "Ġis", "token_id": 382, "token_groups": ["prompt"] },
+            { "id": 282, "token": "Ġin", "token_id": 306, "token_groups": ["prompt"] },
+            { "id": 283, "token": "Ġposition", "token_id": 4010, "token_groups": ["prompt"] },
+            { "id": 284, "token": "Ġ(", "token_id": 350, "token_groups": ["prompt"] },
+            { "id": 285, "token": "1", "token_id": 16, "token_groups": ["prompt"] },
+            { "id": 286, "token": ",", "token_id": 11, "token_groups": ["prompt"] },
+            { "id": 287, "token": "3", "token_id": 18, "token_groups": ["prompt"] },
+            { "id": 288, "token": "),", "token_id": 936, "token_groups": ["prompt"] },
+            { "id": 289, "token": "Ġwhile", "token_id": 2049, "token_groups": ["prompt"] },
+            { "id": 290, "token": "Ġthe", "token_id": 290, "token_groups": ["prompt"] },
+            { "id": 291, "token": "Ġagent", "token_id": 11793, "token_groups": ["prompt"] },
+            { "id": 292, "token": "'s", "token_id": 885, "token_groups": ["prompt"] },
+            { "id": 293, "token": "Ġposition", "token_id": 4010, "token_groups": ["prompt"] },
+            { "id": 294, "token": "ĠA", "token_id": 355, "token_groups": ["prompt"] },
+            { "id": 295, "token": "Ġis", "token_id": 382, "token_groups": ["prompt"] },
+            { "id": 296, "token": "Ġ(", "token_id": 350, "token_groups": ["prompt"] },
+            { "id": 297, "token": "2", "token_id": 17, "token_groups": ["prompt"] },
+            { "id": 298, "token": ",", "token_id": 11, "token_groups": ["prompt"] },
+            { "id": 299, "token": "1", "token_id": 16, "token_groups": ["prompt"] },
+            { "id": 300, "token": ").ĊĊ", "token_id": 3991, "token_groups": ["prompt"] },
+            { "id": 301, "token": "The", "token_id": 976, "token_groups": ["prompt"] },
+            { "id": 302, "token": "Ġagent", "token_id": 11793, "token_groups": ["prompt"] },
+            { "id": 303, "token": "'s", "token_id": 885, "token_groups": ["prompt"] },
+            { "id": 304, "token": "Ġpossible", "token_id": 4149, "token_groups": ["prompt"] },
+            { "id": 305, "token": "Ġactions", "token_id": 10370, "token_groups": ["prompt"] },
+            { "id": 306, "token": "Ġat", "token_id": 540, "token_groups": ["prompt"] },
+            { "id": 307, "token": "Ġeach", "token_id": 2454, "token_groups": ["prompt"] },
+            { "id": 308, "token": "Ġstep", "token_id": 5983, "token_groups": ["prompt"] },
+            { "id": 309, "token": "Ġare", "token_id": 553, "token_groups": ["prompt"] },
+            { "id": 310, "token": ":ĊĊ", "token_id": 1402, "token_groups": ["prompt"] },
+            { "id": 311, "token": "Actions", "token_id": 16642, "token_groups": ["prompt"] },
+            { "id": 312, "token": ":Ċ", "token_id": 734, "token_groups": ["prompt"] },
+            { "id": 313, "token": "-", "token_id": 12, "token_groups": ["prompt"] },
+            { "id": 314, "token": "ĠUP", "token_id": 19153, "token_groups": ["prompt"] },
+            { "id": 315, "token": ":", "token_id": 25, "token_groups": ["prompt"] },
+            { "id": 316, "token": "ĠMove", "token_id": 25485, "token_groups": ["prompt"] },
+            { "id": 317, "token": "ĠUp", "token_id": 4686, "token_groups": ["prompt"] },
+            { "id": 318, "token": "Ċ", "token_id": 198, "token_groups": ["prompt"] },
+            { "id": 319, "token": "-", "token_id": 12, "token_groups": ["prompt"] },
+            { "id": 320, "token": "ĠDOWN", "token_id": 56168, "token_groups": ["prompt"] },
+            { "id": 321, "token": ":", "token_id": 25, "token_groups": ["prompt"] },
+            { "id": 322, "token": "ĠMove", "token_id": 25485, "token_groups": ["prompt"] },
+            { "id": 323, "token": "ĠDown", "token_id": 8755, "token_groups": ["prompt"] },
+            { "id": 324, "token": "Ċ", "token_id": 198, "token_groups": ["prompt"] },
+            { "id": 325, "token": "-", "token_id": 12, "token_groups": ["prompt"] },
+            { "id": 326, "token": "ĠLEFT", "token_id": 48606, "token_groups": ["prompt"] },
+            { "id": 327, "token": ":", "token_id": 25, "token_groups": ["prompt"] },
+            { "id": 328, "token": "ĠMove", "token_id": 25485, "token_groups": ["prompt"] },
+            { "id": 329, "token": "ĠLeft", "token_id": 26982, "token_groups": ["prompt"] },
+            { "id": 330, "token": "Ċ", "token_id": 198, "token_groups": ["prompt"] },
+            { "id": 331, "token": "-", "token_id": 12, "token_groups": ["prompt"] },
+            { "id": 332, "token": "ĠRIGHT", "token_id": 51066, "token_groups": ["prompt"] },
+            { "id": 333, "token": ":", "token_id": 25, "token_groups": ["prompt"] },
+            { "id": 334, "token": "ĠMove", "token_id": 25485, "token_groups": ["prompt"] },
+            { "id": 335, "token": "ĠRight", "token_id": 16354, "token_groups": ["prompt"] },
+            { "id": 336, "token": "ĊĊ", "token_id": 279, "token_groups": ["prompt"] },
+            { "id": 337, "token": "Your", "token_id": 9719, "token_groups": ["prompt"] },
+            { "id": 338, "token": "Ġfinal", "token_id": 1721, "token_groups": ["prompt"] },
+            { "id": 339, "token": "Ġanswer", "token_id": 6052, "token_groups": ["prompt"] },
+            { "id": 340, "token": "Ġshould", "token_id": 1757, "token_groups": ["prompt"] },
+            { "id": 341, "token": "Ġbe", "token_id": 413, "token_groups": ["prompt"] },
+            { "id": 342, "token": "Ġa", "token_id": 261, "token_groups": ["prompt"] },
+            { "id": 343, "token": "Ġvalid", "token_id": 4529, "token_groups": ["prompt"] },
+            { "id": 344, "token": "ĠJSON", "token_id": 8205, "token_groups": ["prompt"] },
+            { "id": 345, "token": "Ġobject", "token_id": 2817, "token_groups": ["prompt"] },
+            { "id": 346, "token": "Ġprovided", "token_id": 5181, "token_groups": ["prompt"] },
+            { "id": 347, "token": "Ġin", "token_id": 306, "token_groups": ["prompt"] },
+            { "id": 348, "token": "Ġthe", "token_id": 290, "token_groups": ["prompt"] },
+            { "id": 349, "token": "Ġfollowing", "token_id": 3992, "token_groups": ["prompt"] },
+            { "id": 350, "token": "Ġform", "token_id": 1625, "token_groups": ["prompt"] },
+            { "id": 351, "token": ":ĊĊ", "token_id": 1402, "token_groups": ["prompt"] },
+            { "id": 352, "token": "``", "token_id": 26178, "token_groups": ["prompt"] },
+            { "id": 353, "token": "`Ċ", "token_id": 7450, "token_groups": ["prompt"] },
+            { "id": 354, "token": "{Ċ", "token_id": 745, "token_groups": ["prompt"] },
+            { "id": 355, "token": "Ġ", "token_id": 220, "token_groups": ["prompt"] },
+            { "id": 356, "token": "Ġ\"", "token_id": 392, "token_groups": ["prompt"] },
+            { "id": 357, "token": "action", "token_id": 1976, "token_groups": ["prompt"] },
+            { "id": 358, "token": "\":", "token_id": 1243, "token_groups": ["prompt"] },
+            { "id": 359, "token": "Ġ\"<", "token_id": 8817, "token_groups": ["prompt"] },
+            { "id": 360, "token": "UP", "token_id": 5082, "token_groups": ["prompt"] },
+            { "id": 361, "token": "|", "token_id": 91, "token_groups": ["prompt"] },
+            { "id": 362, "token": "DOWN", "token_id": 49412, "token_groups": ["prompt"] },
+            { "id": 363, "token": "|", "token_id": 91, "token_groups": ["prompt"] },
+            { "id": 364, "token": "LEFT", "token_id": 51729, "token_groups": ["prompt"] },
+            { "id": 365, "token": "|", "token_id": 91, "token_groups": ["prompt"] },
+            { "id": 366, "token": "RIGHT", "token_id": 24822, "token_groups": ["prompt"] },
+            { "id": 367, "token": ">\",Ċ", "token_id": 73539, "token_groups": ["prompt"] },
+            { "id": 368, "token": "}Ċ", "token_id": 739, "token_groups": ["prompt"] },
+            { "id": 369, "token": "``", "token_id": 26178, "token_groups": ["prompt"] },
+            { "id": 370, "token": "`ĊĊ", "token_id": 38193, "token_groups": ["prompt"] },
+            { "id": 371, "token": "DO", "token_id": 11492, "token_groups": ["prompt"] },
+            { "id": 372, "token": "ĠNOT", "token_id": 7116, "token_groups": ["prompt"] },
+            { "id": 373, "token": "ĠINCLUDE", "token_id": 140768, "token_groups": ["prompt"] },
+            { "id": 374, "token": "ĠANY", "token_id": 7894, "token_groups": ["prompt"] },
+            { "id": 375, "token": "Ġ`", "token_id": 2700, "token_groups": ["prompt"] },
+            { "id": 376, "token": "json", "token_id": 4108, "token_groups": ["prompt"] },
+            { "id": 377, "token": "`", "token_id": 63, "token_groups": ["prompt"] },
+            { "id": 378, "token": "Ġor", "token_id": 503, "token_groups": ["prompt"] },
+            { "id": 379, "token": "Ġ`", "token_id": 2700, "token_groups": ["prompt"] },
+            { "id": 380, "token": "json", "token_id": 4108, "token_groups": ["prompt"] },
+            { "id": 381, "token": "b", "token_id": 65, "token_groups": ["prompt"] },
+            { "id": 382, "token": "`", "token_id": 63, "token_groups": ["prompt"] },
+            { "id": 383, "token": "Ġin", "token_id": 306, "token_groups": ["prompt"] },
+            { "id": 384, "token": "Ġyour", "token_id": 634, "token_groups": ["prompt"] },
+            { "id": 385, "token": "Ġresponse", "token_id": 3322, "token_groups": ["prompt"] },
+            { "id": 386, "token": "ĠNOR", "token_id": 95851, "token_groups": ["prompt"] },
+            { "id": 387, "token": "ĠT", "token_id": 353, "token_groups": ["prompt"] },
+            { "id": 388, "token": "ICK", "token_id": 20538, "token_groups": ["prompt"] },
+            { "id": 389, "token": "ĠMARK", "token_id": 37273, "token_groups": ["prompt"] },
+            { "id": 390, "token": "S", "token_id": 50, "token_groups": ["prompt"] },
+            { "id": 391, "token": "ĠLIKE", "token_id": 40213, "token_groups": ["prompt"] },
+            { "id": 392, "token": "ĠTHIS", "token_id": 17683, "token_groups": ["prompt"] },
+            { "id": 393, "token": ":", "token_id": 25, "token_groups": ["prompt"] },
+            { "id": 394, "token": "Ġ```", "token_id": 101822, "token_groups": ["prompt"] },
+            { "id": 395, "token": "json", "token_id": 4108, "token_groups": ["prompt"] },
+            { "id": 396, "token": "Ġ``", "token_id": 21398, "token_groups": ["prompt"] },
+            { "id": 397, "token": "`.", "token_id": 62102, "token_groups": ["prompt"] },
+            { "id": 398, "token": "ĠStart", "token_id": 7972, "token_groups": ["prompt"] },
+            { "id": 399, "token": "Ġwith", "token_id": 483, "token_groups": ["prompt"] },
+            { "id": 400, "token": "Ġ{", "token_id": 354, "token_groups": ["prompt"] },
+            { "id": 401, "token": "Ġand", "token_id": 326, "token_groups": ["prompt"] },
+            { "id": 402, "token": "Ġend", "token_id": 1268, "token_groups": ["prompt"] },
+            { "id": 403, "token": "Ġwith", "token_id": 483, "token_groups": ["prompt"] },
+            { "id": 404, "token": "Ġ}", "token_id": 388, "token_groups": ["prompt"] },
+            { "id": 405, "token": "Ġexactly", "token_id": 9707, "token_groups": ["prompt"] },
+            { "id": 406, "token": ".ĊĊ", "token_id": 364, "token_groups": ["prompt"] },
+            { "id": 407, "token": "#", "token_id": 2, "token_groups": ["prompt"] },
+            { "id": 408, "token": "ĠInputs", "token_id": 107999, "token_groups": ["prompt"] },
+            { "id": 409, "token": "ĊĊ", "token_id": 279, "token_groups": ["prompt"] },
+            { "id": 410, "token": "Current", "token_id": 6576, "token_groups": ["prompt"] },
+            { "id": 411, "token": "Ġgrid", "token_id": 10586, "token_groups": ["prompt"] },
+            { "id": 412, "token": "Ġstate", "token_id": 2608, "token_groups": ["prompt"] },
+            { "id": 413, "token": ":ĊĊ", "token_id": 1402, "token_groups": ["prompt"] }
+        ],
+        "prompt_prefix_n_tokens": 414,
+        "prompt_placeholder_tokens": [
+            { "id": 0, "token": "{{", "token_id": 5973, "token_groups": ["prompt", "placeholder"] },
+            { "id": 1, "token": "grid", "token_id": 7886, "token_groups": ["prompt", "placeholder"] },
+            { "id": 2, "token": "_state", "token_id": 9479, "token_groups": ["prompt", "placeholder"] },
+            { "id": 3, "token": "}}", "token_id": 6478, "token_groups": ["prompt", "placeholder"] }
+        ],
+        "prompt_placeholder_n_tokens": 4,
+        "prompt_suffix_tokens": [
+            { "id": 0, "token": "<|end|>", "token_id": 200007, "token_groups": ["prompt", "template"] },
+            { "id": 1, "token": "<|start|>", "token_id": 200006, "token_groups": ["prompt", "template"] },
+            { "id": 2, "token": "assistant", "token_id": 173781, "token_groups": ["prompt", "template"] }
+        ],
+        "prompt_suffix_n_tokens": 3
+    },
+    "steps": [
+        {
+            "step_id": 0,
+            "grid_state": [
+                "  0 1 2 3 4 5 6 ",
+                "0 # # # # # # # ",
+                "1 # _ _ _ _ _ # ",
+                "2 # _ _ _ _ G # ",
+                "3 # _ _ A _ _ # ",
+                "4 # _ _ _ _ _ # ",
+                "5 # _ _ _ _ _ # ",
+                "6 # # # # # # # "
+            ],
+            "grid_state_tokens": [
+                { "id": 0, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 1, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 2, "token": "0", "token_id": 15, "token_groups": ["prompt", "grid_state"] },
+                { "id": 3, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 4, "token": "1", "token_id": 16, "token_groups": ["prompt", "grid_state"] },
+                { "id": 5, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 6, "token": "2", "token_id": 17, "token_groups": ["prompt", "grid_state"] },
+                { "id": 7, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 8, "token": "3", "token_id": 18, "token_groups": ["prompt", "grid_state"] },
+                { "id": 9, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 10, "token": "4", "token_id": 19, "token_groups": ["prompt", "grid_state"] },
+                { "id": 11, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 12, "token": "5", "token_id": 20, "token_groups": ["prompt", "grid_state"] },
+                { "id": 13, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 14, "token": "6", "token_id": 21, "token_groups": ["prompt", "grid_state"] },
+                { "id": 15, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 16, "token": "0", "token_id": 15, "token_groups": ["prompt", "grid_state"] },
+                { "id": 17, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 18, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 19, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 20, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 21, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 22, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 23, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 24, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 25, "token": "1", "token_id": 16, "token_groups": ["prompt", "grid_state"] },
+                { "id": 26, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 27, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 28, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 29, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 30, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 31, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 32, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 33, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 34, "token": "2", "token_id": 17, "token_groups": ["prompt", "grid_state"] },
+                { "id": 35, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 36, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 37, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 38, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 39, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 40, "token": "ĠG", "token_id": 499, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 41, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 42, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 43, "token": "3", "token_id": 18, "token_groups": ["prompt", "grid_state"] },
+                { "id": 44, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 45, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 46, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 47, "token": "ĠA", "token_id": 355, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 48, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 49, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 50, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 51, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 52, "token": "4", "token_id": 19, "token_groups": ["prompt", "grid_state"] },
+                { "id": 53, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 54, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 55, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 56, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 57, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 58, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 59, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 60, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 61, "token": "5", "token_id": 20, "token_groups": ["prompt", "grid_state"] },
+                { "id": 62, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 63, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 64, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 65, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 66, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 67, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 68, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 69, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 70, "token": "6", "token_id": 21, "token_groups": ["prompt", "grid_state"] },
+                { "id": 71, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 72, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 73, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 74, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 75, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 76, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 77, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 78, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] }
+            ],
+            "grid_state_n_tokens": 79,
+            "prompt_suffix_tokens": [
+                { "id": 0, "token": "<|end|>", "token_id": 200007, "token_groups": ["prompt", "template"] },
+                { "id": 1, "token": "<|start|>", "token_id": 200006, "token_groups": ["prompt", "template"] },
+                { "id": 2, "token": "assistant", "token_id": 173781, "token_groups": ["prompt", "template"] }
+            ],
+            "prompt_suffix_n_tokens": 3,
+            "agent_action": "UP",
+            "output_text": "<|channel|>analysis<|message|>We need shortest path from A at (3,3) to G at (2,5). Open spaces. Likely move up then right twice. From (3,3) up to (2,3), right to (2,4), right to (2,5). So first action: UP.<|end|><|start|>assistant<|channel|>final<|message|>{\n  \"action\": \"UP\"\n}<|return|>",
+            "output_tokens": [
+                { "id": 0, "token": "<|channel|>", "token_id": 200005, "token_groups": ["output", "template"] },
+                { "id": 1, "token": "analysis", "token_id": 35644, "token_groups": ["output", "template"] },
+                { "id": 2, "token": "<|message|>", "token_id": 200008, "token_groups": ["output", "template"] },
+                {
+                    "id": 3,
+                    "token": "We",
+                    "token_id": 2167,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "We": 0.721, "Need": 0.0976, "Compute": 0.0592, "Find": 0.0522, "Goal": 0.0218 }
+                },
+                {
+                    "id": 4,
+                    "token": "Ġneed",
+                    "token_id": 1309,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " need": 0.9744, " have": 0.0084, " must": 0.0051, " want": 0.0035, " find": 0.0024 }
+                },
+                {
+                    "id": 5,
+                    "token": "Ġshortest",
+                    "token_id": 70564,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " shortest": 0.5014, " next": 0.3446, " move": 0.0769, " to": 0.0283, " best": 0.0104 }
+                },
+                {
+                    "id": 6,
+                    "token": "Ġpath",
+                    "token_id": 3104,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " path": 0.8532, " move": 0.07, " to": 0.0375, " from": 0.0107, ".": 0.0107 }
+                },
+                {
+                    "id": 7,
+                    "token": "Ġfrom",
+                    "token_id": 591,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " from": 0.6795, ".": 0.2206, ":": 0.0632, " to": 0.0299, " up": 0.0031 }
+                },
+                {
+                    "id": 8,
+                    "token": "ĠA",
+                    "token_id": 355,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " A": 0.9498, " (": 0.0325, " agent": 0.0174, " Agent": 0.0002, " current": 0.0 }
+                },
+                {
+                    "id": 9,
+                    "token": "Ġat",
+                    "token_id": 540,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " at": 0.9772, " (": 0.0109, "(": 0.0085, " to": 0.0031, ".": 0.0002 }
+                },
+                {
+                    "id": 10,
+                    "token": "Ġ(",
+                    "token_id": 350,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " (": 0.9768, " row": 0.023, "?": 0.0001, "(": 0.0001, " position": 0.0 }
+                },
+                {
+                    "id": 11,
+                    "token": "3",
+                    "token_id": 18,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "3": 1.0, "row": 0.0, "4": 0.0, "2": 0.0, "??": 0.0 }
+                },
+                {
+                    "id": 12,
+                    "token": ",",
+                    "token_id": 11,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ",": 1.0, "?": 0.0, ",row": 0.0, "?)": 0.0, "?,": 0.0 }
+                },
+                {
+                    "id": 13,
+                    "token": "3",
+                    "token_id": 18,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "3": 0.9999, "4": 0.0, "2": 0.0, "?": 0.0, "1": 0.0 }
+                },
+                {
+                    "id": 14,
+                    "token": ")",
+                    "token_id": 8,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ")": 0.6177, "?)": 0.3307, ")?": 0.0308, ").": 0.0113, "?": 0.0088 }
+                },
+                {
+                    "id": 15,
+                    "token": "Ġto",
+                    "token_id": 316,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " to": 0.965, " (": 0.0227, " zero": 0.0031, "??": 0.0021, " row": 0.0015 }
+                },
+                {
+                    "id": 16,
+                    "token": "ĠG",
+                    "token_id": 499,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " G": 0.9999, " goal": 0.0001, " Goal": 0.0, " Go": 0.0, "G": 0.0 }
+                },
+                {
+                    "id": 17,
+                    "token": "Ġat",
+                    "token_id": 540,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " at": 0.9997, " (": 0.0003, "(": 0.0, "?": 0.0, " which": 0.0 }
+                },
+                {
+                    "id": 18,
+                    "token": "Ġ(",
+                    "token_id": 350,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " (": 0.9998, "(": 0.0002, " row": 0.0, "?": 0.0, " (?)": 0.0 }
+                },
+                {
+                    "id": 19,
+                    "token": "2",
+                    "token_id": 17,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "2": 1.0, "1": 0.0, "3": 0.0, "??": 0.0, "0": 0.0 }
+                },
+                {
+                    "id": 20,
+                    "token": ",",
+                    "token_id": 11,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ",": 1.0, "?": 0.0, "5": 0.0, "/": 0.0, "-": 0.0 }
+                },
+                {
+                    "id": 21,
+                    "token": "5",
+                    "token_id": 20,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "5": 0.9995, "4": 0.0005, "3": 0.0, "?": 0.0, " five": 0.0 }
+                },
+                {
+                    "id": 22,
+                    "token": ").",
+                    "token_id": 741,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ").": 0.9973, ")": 0.0019, ")?": 0.0005, "?).": 0.0002, ").\n\n": 0.0 }
+                },
+                {
+                    "id": 23,
+                    "token": "ĠOpen",
+                    "token_id": 7788,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " Open": 0.1597, " Grid": 0.1409, " Move": 0.1097, " Moves": 0.0457, " Lik": 0.0457 }
+                },
+                {
+                    "id": 24,
+                    "token": "Ġspaces",
+                    "token_id": 18608,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " spaces": 0.8025, " cells": 0.0453, " grid": 0.04, " space": 0.04, " area": 0.0214 }
+                },
+                {
+                    "id": 25,
+                    "token": ".",
+                    "token_id": 13,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ".": 0.489, " around": 0.2038, " all": 0.0963, " elsewhere": 0.0455, " otherwise": 0.0401 }
+                },
+                {
+                    "id": 26,
+                    "token": "ĠLik",
+                    "token_id": 52762,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " Lik": 0.547, " Move": 0.0839, " We": 0.0449, " Path": 0.0396, " So": 0.035 }
+                },
+                {
+                    "id": 27,
+                    "token": "ely",
+                    "token_id": 1151,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "ely": 1.0, "elihood": 0.0, "est": 0.0, "eli": 0.0, "ewise": 0.0 }
+                },
+                {
+                    "id": 28,
+                    "token": "Ġmove",
+                    "token_id": 5275,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " move": 0.6782, " go": 0.1943, " up": 0.0631, " best": 0.0141, " right": 0.011 }
+                },
+                {
+                    "id": 29,
+                    "token": "Ġup",
+                    "token_id": 869,
+                    "token_groups": ["output", "analysis", "action"],
+                    "probabilities": { " up": 0.4359, " RIGHT": 0.2644, " right": 0.1817, " UP": 0.059, " left": 0.0217 }
+                },
+                {
+                    "id": 30,
+                    "token": "Ġthen",
+                    "token_id": 1815,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " then": 0.7886, " to": 0.0504, ",": 0.0393, " and": 0.0238, " one": 0.0164 }
+                },
+                {
+                    "id": 31,
+                    "token": "Ġright",
+                    "token_id": 1849,
+                    "token_groups": ["output", "analysis", "action"],
+                    "probabilities": { " right": 0.9986, " two": 0.001, " up": 0.0002, " rights": 0.0001, " to": 0.0 }
+                },
+                {
+                    "id": 32,
+                    "token": "Ġtwice",
+                    "token_id": 18370,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " twice": 0.7842, " right": 0.1363, " two": 0.0209, "?": 0.0163, ".": 0.0144 }
+                },
+                {
+                    "id": 33,
+                    "token": ".",
+                    "token_id": 13,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ".": 0.5685, "?": 0.3448, ":": 0.0412, " or": 0.0283, " etc": 0.0056 }
+                },
+                {
+                    "id": 34,
+                    "token": "ĠFrom",
+                    "token_id": 7217,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " From": 0.541, " Up": 0.1065, " So": 0.094, " But": 0.0392, " Path": 0.0346 }
+                },
+                {
+                    "id": 35,
+                    "token": "Ġ(",
+                    "token_id": 350,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " (": 0.9835, " A": 0.0159, " ": 0.0005, " current": 0.0001, "(": 0.0 }
+                },
+                {
+                    "id": 36,
+                    "token": "3",
+                    "token_id": 18,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "3": 1.0, "2": 0.0, "4": 0.0, "1": 0.0, "5": 0.0 }
+                },
+                {
+                    "id": 37,
+                    "token": ",",
+                    "token_id": 11,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ",": 1.0, ")": 0.0, "3": 0.0, " ": 0.0, ".": 0.0 }
+                },
+                {
+                    "id": 38,
+                    "token": "3",
+                    "token_id": 18,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "3": 1.0, "?": 0.0, "4": 0.0, "1": 0.0, " ": 0.0 }
+                },
+                {
+                    "id": 39,
+                    "token": ")",
+                    "token_id": 8,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ")": 0.9118, "):": 0.0661, ")->": 0.0189, "),": 0.0029, ").": 0.0001 }
+                },
+                {
+                    "id": 40,
+                    "token": "Ġup",
+                    "token_id": 869,
+                    "token_groups": ["output", "analysis", "action"],
+                    "probabilities": { " up": 0.8159, " UP": 0.086, " go": 0.0358, " to": 0.0358, " Up": 0.0132 }
+                },
+                {
+                    "id": 41,
+                    "token": "Ġto",
+                    "token_id": 316,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " to": 0.9917, " ->": 0.0052, "->": 0.0015, " (": 0.0007, " =>": 0.0004 }
+                },
+                {
+                    "id": 42,
+                    "token": "Ġ(",
+                    "token_id": 350,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " (": 0.9998, "(": 0.0001, " ": 0.0001, " row": 0.0, " y": 0.0 }
+                },
+                {
+                    "id": 43,
+                    "token": "2",
+                    "token_id": 17,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "2": 1.0, "1": 0.0, "3": 0.0, "0": 0.0, "??": 0.0 }
+                },
+                {
+                    "id": 44,
+                    "token": ",",
+                    "token_id": 11,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ",": 1.0, "?": 0.0, ")": 0.0, "?)": 0.0, ".": 0.0 }
+                },
+                {
+                    "id": 45,
+                    "token": "3",
+                    "token_id": 18,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "3": 1.0, "?": 0.0, "??": 0.0, "4": 0.0, "three": 0.0 }
+                },
+                {
+                    "id": 46,
+                    "token": "),",
+                    "token_id": 936,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "),": 0.6571, ")": 0.3104, ").": 0.0289, ");": 0.0021, "):": 0.0013 }
+                },
+                {
+                    "id": 47,
+                    "token": "Ġright",
+                    "token_id": 1849,
+                    "token_groups": ["output", "analysis", "action"],
+                    "probabilities": { " right": 0.6511, " then": 0.3485, " left": 0.0001, " up": 0.0001, " rights": 0.0 }
+                },
+                {
+                    "id": 48,
+                    "token": "Ġto",
+                    "token_id": 316,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " to": 0.9971, " (": 0.0025, "->": 0.0001, " ->": 0.0001, " twice": 0.0001 }
+                },
+                {
+                    "id": 49,
+                    "token": "Ġ(",
+                    "token_id": 350,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " (": 0.9998, "(": 0.0002, " ": 0.0, " G": 0.0, " right": 0.0 }
+                },
+                {
+                    "id": 50,
+                    "token": "2",
+                    "token_id": 17,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "2": 1.0, "3": 0.0, "1": 0.0, "0": 0.0, "4": 0.0 }
+                },
+                {
+                    "id": 51,
+                    "token": ",",
+                    "token_id": 11,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ",": 1.0, "4": 0.0, "?": 0.0, ",...": 0.0, "...": 0.0 }
+                },
+                {
+                    "id": 52,
+                    "token": "4",
+                    "token_id": 19,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "4": 1.0, "5": 0.0, " four": 0.0, "3": 0.0, "?": 0.0 }
+                },
+                {
+                    "id": 53,
+                    "token": "),",
+                    "token_id": 936,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "),": 0.9953, ")": 0.0046, "),(": 0.0, "?),": 0.0, ")?": 0.0 }
+                },
+                {
+                    "id": 54,
+                    "token": "Ġright",
+                    "token_id": 1849,
+                    "token_groups": ["output", "analysis", "action"],
+                    "probabilities": { " right": 0.9986, " then": 0.0013, " to": 0.0001, "right": 0.0, " up": 0.0 }
+                },
+                {
+                    "id": 55,
+                    "token": "Ġto",
+                    "token_id": 316,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " to": 1.0, " (": 0.0, " into": 0.0, " again": 0.0, " ->": 0.0 }
+                },
+                {
+                    "id": 56,
+                    "token": "Ġ(",
+                    "token_id": 350,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " (": 0.9806, " goal": 0.0096, " G": 0.0096, "(": 0.0001, " Goal": 0.0 }
+                },
+                {
+                    "id": 57,
+                    "token": "2",
+                    "token_id": 17,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "2": 1.0, "3": 0.0, "1": 0.0, "G": 0.0, "4": 0.0 }
+                },
+                {
+                    "id": 58,
+                    "token": ",",
+                    "token_id": 11,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ",": 1.0, "/": 0.0, "5": 0.0, "?": 0.0, "-": 0.0 }
+                },
+                {
+                    "id": 59,
+                    "token": "5",
+                    "token_id": 20,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "5": 1.0, " five": 0.0, "4": 0.0, " fifth": 0.0, "?": 0.0 }
+                },
+                {
+                    "id": 60,
+                    "token": ").",
+                    "token_id": 741,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ").": 0.9763, ")": 0.023, ")=": 0.0005, "):": 0.0002, ").\n\n": 0.0 }
+                },
+                {
+                    "id": 61,
+                    "token": "ĠSo",
+                    "token_id": 2632,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " So": 0.7868, " That's": 0.1755, " That": 0.0238, " ": 0.002, " Action": 0.0014 }
+                },
+                {
+                    "id": 62,
+                    "token": "Ġfirst",
+                    "token_id": 1577,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " first": 0.7435, " action": 0.188, " next": 0.061, " answer": 0.0011, " FIRST": 0.001 }
+                },
+                {
+                    "id": 63,
+                    "token": "Ġaction",
+                    "token_id": 3736,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " action": 0.7211, " move": 0.2653, " step": 0.0132, " MOVE": 0.0001, " next": 0.0001 }
+                },
+                {
+                    "id": 64,
+                    "token": ":",
+                    "token_id": 25,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ":": 0.4226, " UP": 0.2563, " is": 0.2262, " should": 0.0734, " \"": 0.0041 }
+                },
+                {
+                    "id": 65,
+                    "token": "ĠUP",
+                    "token_id": 19153,
+                    "token_groups": ["output", "analysis", "action"],
+                    "probabilities": { " UP": 0.9996, " \"": 0.0002, " up": 0.0001, " Up": 0.0, " DOWN": 0.0 }
+                },
+                {
+                    "id": 66,
+                    "token": ".",
+                    "token_id": 13,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ".": 0.9949, "?": 0.0025, ".\n\n": 0.0022, " or": 0.0002, ",": 0.0001 }
+                },
+                { "id": 67, "token": "<|end|>", "token_id": 200007, "token_groups": ["output", "template"] },
+                { "id": 68, "token": "<|start|>", "token_id": 200006, "token_groups": ["output", "template"] },
+                { "id": 69, "token": "assistant", "token_id": 173781, "token_groups": ["output", "template"] },
+                { "id": 70, "token": "<|channel|>", "token_id": 200005, "token_groups": ["output", "template"] },
+                { "id": 71, "token": "final", "token_id": 17196, "token_groups": ["output", "template"] },
+                { "id": 72, "token": "<|message|>", "token_id": 200008, "token_groups": ["output", "template"] },
+                {
+                    "id": 73,
+                    "token": "{Ċ",
+                    "token_id": 745,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { "{\n": 0.6624, "{": 0.1898, "{\"": 0.1478, "{\n\n": 0.0, "{\\": 0.0 }
+                },
+                {
+                    "id": 74,
+                    "token": "Ġ",
+                    "token_id": 220,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { " ": 1.0, " \"": 0.0, " ": 0.0, "\"": 0.0, "   ": 0.0 }
+                },
+                {
+                    "id": 75,
+                    "token": "Ġ\"",
+                    "token_id": 392,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { " \"": 1.0, " “": 0.0, " \"_": 0.0, " \\\"": 0.0, " \"$": 0.0 }
+                },
+                {
+                    "id": 76,
+                    "token": "action",
+                    "token_id": 1976,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { "action": 1.0, "answer": 0.0, "actions": 0.0, " action": 0.0, "analysis": 0.0 }
+                },
+                {
+                    "id": 77,
+                    "token": "\":",
+                    "token_id": 1243,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { "\":": 0.9997, "\":\"": 0.0003, "\"": 0.0, "\":\n": 0.0, "\\\":": 0.0 }
+                },
+                {
+                    "id": 78,
+                    "token": "Ġ\"",
+                    "token_id": 392,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { " \"": 1.0, " \"<": 0.0, " \"\\\"": 0.0, " \"_": 0.0, " \"[": 0.0 }
+                },
+                {
+                    "id": 79,
+                    "token": "UP",
+                    "token_id": 5082,
+                    "token_groups": ["output", "final", "action"],
+                    "probabilities": { "UP": 1.0, "DOWN": 0.0, "UPS": 0.0, " UP": 0.0, "LEFT": 0.0 }
+                },
+                {
+                    "id": 80,
+                    "token": "\"Ċ",
+                    "token_id": 1092,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { "\"\n": 1.0, "\",\n": 0.0, "\"": 0.0, "\"}\n": 0.0, "'\n": 0.0 }
+                },
+                {
+                    "id": 81,
+                    "token": "}",
+                    "token_id": 92,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { "}": 0.9997, "}\n": 0.0003, "}\n\n": 0.0, "}`": 0.0, " }": 0.0 }
+                },
+                { "id": 82, "token": "<|return|>", "token_id": 200002, "token_groups": ["output", "template"] }
+            ],
+            "output_n_tokens": 83
+        },
+        {
+            "step_id": 1,
+            "grid_state": [
+                "  0 1 2 3 4 5 6 ",
+                "0 # # # # # # # ",
+                "1 # _ _ _ _ _ # ",
+                "2 # _ _ A _ G # ",
+                "3 # _ _ _ _ _ # ",
+                "4 # _ _ _ _ _ # ",
+                "5 # _ _ _ _ _ # ",
+                "6 # # # # # # # "
+            ],
+            "grid_state_tokens": [
+                { "id": 0, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 1, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 2, "token": "0", "token_id": 15, "token_groups": ["prompt", "grid_state"] },
+                { "id": 3, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 4, "token": "1", "token_id": 16, "token_groups": ["prompt", "grid_state"] },
+                { "id": 5, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 6, "token": "2", "token_id": 17, "token_groups": ["prompt", "grid_state"] },
+                { "id": 7, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 8, "token": "3", "token_id": 18, "token_groups": ["prompt", "grid_state"] },
+                { "id": 9, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 10, "token": "4", "token_id": 19, "token_groups": ["prompt", "grid_state"] },
+                { "id": 11, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 12, "token": "5", "token_id": 20, "token_groups": ["prompt", "grid_state"] },
+                { "id": 13, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 14, "token": "6", "token_id": 21, "token_groups": ["prompt", "grid_state"] },
+                { "id": 15, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 16, "token": "0", "token_id": 15, "token_groups": ["prompt", "grid_state"] },
+                { "id": 17, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 18, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 19, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 20, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 21, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 22, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 23, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 24, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 25, "token": "1", "token_id": 16, "token_groups": ["prompt", "grid_state"] },
+                { "id": 26, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 27, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 28, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 29, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 30, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 31, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 32, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 33, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 34, "token": "2", "token_id": 17, "token_groups": ["prompt", "grid_state"] },
+                { "id": 35, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 36, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 37, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 38, "token": "ĠA", "token_id": 355, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 39, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 40, "token": "ĠG", "token_id": 499, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 41, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 42, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 43, "token": "3", "token_id": 18, "token_groups": ["prompt", "grid_state"] },
+                { "id": 44, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 45, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 46, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 47, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 48, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 49, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 50, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 51, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 52, "token": "4", "token_id": 19, "token_groups": ["prompt", "grid_state"] },
+                { "id": 53, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 54, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 55, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 56, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 57, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 58, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 59, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 60, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 61, "token": "5", "token_id": 20, "token_groups": ["prompt", "grid_state"] },
+                { "id": 62, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 63, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 64, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 65, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 66, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 67, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 68, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 69, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 70, "token": "6", "token_id": 21, "token_groups": ["prompt", "grid_state"] },
+                { "id": 71, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 72, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 73, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 74, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 75, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 76, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 77, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 78, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] }
+            ],
+            "grid_state_n_tokens": 79,
+            "prompt_suffix_tokens": [
+                { "id": 0, "token": "<|end|>", "token_id": 200007, "token_groups": ["prompt", "template"] },
+                { "id": 1, "token": "<|start|>", "token_id": 200006, "token_groups": ["prompt", "template"] },
+                { "id": 2, "token": "assistant", "token_id": 173781, "token_groups": ["prompt", "template"] }
+            ],
+            "prompt_suffix_n_tokens": 3,
+            "agent_action": "RIGHT",
+            "output_text": "<|channel|>analysis<|message|>We need shortest path from A at (2,3) to G at (2,5). They are in same row, columns 3 to 5. Path: RIGHT, RIGHT. But check walls: row2 col4 is '_' open. So first move RIGHT to (2,4). Next RIGHT to (2,5) goal. So action: RIGHT.<|end|><|start|>assistant<|channel|>final<|message|>{\n  \"action\": \"RIGHT\"\n}<|return|>",
+            "output_tokens": [
+                { "id": 0, "token": "<|channel|>", "token_id": 200005, "token_groups": ["output", "template"] },
+                { "id": 1, "token": "analysis", "token_id": 35644, "token_groups": ["output", "template"] },
+                { "id": 2, "token": "<|message|>", "token_id": 200008, "token_groups": ["output", "template"] },
+                {
+                    "id": 3,
+                    "token": "We",
+                    "token_id": 2167,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "We": 0.7349, "Need": 0.0878, "Compute": 0.0603, "Find": 0.0415, "Grid": 0.0251 }
+                },
+                {
+                    "id": 4,
+                    "token": "Ġneed",
+                    "token_id": 1309,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " need": 0.9599, " have": 0.0137, " must": 0.0065, " want": 0.0044, " can": 0.0027 }
+                },
+                {
+                    "id": 5,
+                    "token": "Ġshortest",
+                    "token_id": 70564,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " shortest": 0.4425, " next": 0.3905, " move": 0.0769, " to": 0.0283, " minimal": 0.0134 }
+                },
+                {
+                    "id": 6,
+                    "token": "Ġpath",
+                    "token_id": 3104,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " path": 0.842, " move": 0.0783, " to": 0.0288, ".": 0.0154, ":": 0.0106 }
+                },
+                {
+                    "id": 7,
+                    "token": "Ġfrom",
+                    "token_id": 591,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " from": 0.5201, ".": 0.3574, ":": 0.1024, " to": 0.0139, ";": 0.0013 }
+                },
+                {
+                    "id": 8,
+                    "token": "ĠA",
+                    "token_id": 355,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " A": 0.9174, " (": 0.0753, " agent": 0.007, " Agent": 0.0001, " current": 0.0 }
+                },
+                {
+                    "id": 9,
+                    "token": "Ġat",
+                    "token_id": 540,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " at": 0.955, " (": 0.0198, "(": 0.0154, " to": 0.0094, " position": 0.0001 }
+                },
+                {
+                    "id": 10,
+                    "token": "Ġ(",
+                    "token_id": 350,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " (": 0.9858, " row": 0.0141, "(": 0.0001, "?": 0.0, " position": 0.0 }
+                },
+                {
+                    "id": 11,
+                    "token": "2",
+                    "token_id": 17,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "2": 1.0, "row": 0.0, "1": 0.0, "3": 0.0, "??": 0.0 }
+                },
+                {
+                    "id": 12,
+                    "token": ",",
+                    "token_id": 11,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ",": 1.0, "?": 0.0, "3": 0.0, "-": 0.0, ")": 0.0 }
+                },
+                {
+                    "id": 13,
+                    "token": "3",
+                    "token_id": 18,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "3": 1.0, "2": 0.0, "?": 0.0, "1": 0.0, "4": 0.0 }
+                },
+                {
+                    "id": 14,
+                    "token": ")",
+                    "token_id": 8,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ")": 0.7054, "?)": 0.229, ")?": 0.0451, ").": 0.0129, "?": 0.0069 }
+                },
+                {
+                    "id": 15,
+                    "token": "Ġto",
+                    "token_id": 316,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " to": 0.9806, " (": 0.0096, "??": 0.0031, " actually": 0.0017, " or": 0.0007 }
+                },
+                {
+                    "id": 16,
+                    "token": "ĠG",
+                    "token_id": 499,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " G": 1.0, " goal": 0.0, " Goal": 0.0, " Go": 0.0, "G": 0.0 }
+                },
+                {
+                    "id": 17,
+                    "token": "Ġat",
+                    "token_id": 540,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " at": 0.9997, " (": 0.0003, "(": 0.0, "?": 0.0, " which": 0.0 }
+                },
+                {
+                    "id": 18,
+                    "token": "Ġ(",
+                    "token_id": 350,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " (": 0.9994, "(": 0.0006, "?": 0.0, " row": 0.0, " ": 0.0 }
+                },
+                {
+                    "id": 19,
+                    "token": "2",
+                    "token_id": 17,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "2": 1.0, "3": 0.0, "1": 0.0, "0": 0.0, "??": 0.0 }
+                },
+                {
+                    "id": 20,
+                    "token": ",",
+                    "token_id": 11,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ",": 1.0, "?": 0.0, "-": 0.0, "/": 0.0, "5": 0.0 }
+                },
+                {
+                    "id": 21,
+                    "token": "5",
+                    "token_id": 20,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "5": 1.0, "4": 0.0, " five": 0.0, "6": 0.0, " fifth": 0.0 }
+                },
+                {
+                    "id": 22,
+                    "token": ").",
+                    "token_id": 741,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ").": 0.973, ")": 0.0259, "),": 0.0005, ")?": 0.0002, "):": 0.0002 }
+                },
+                {
+                    "id": 23,
+                    "token": "ĠThey",
+                    "token_id": 3164,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " They": 0.2243, " Open": 0.1361, " Path": 0.0728, " Move": 0.0728, " It's": 0.0567 }
+                },
+                {
+                    "id": 24,
+                    "token": "Ġare",
+                    "token_id": 553,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " are": 0.9911, " share": 0.0046, " can": 0.0015, " adjacent": 0.0013, "’re": 0.0006 }
+                },
+                {
+                    "id": 25,
+                    "token": "Ġin",
+                    "token_id": 306,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " in": 0.3352, " on": 0.2958, " same": 0.2304, " adjacent": 0.096, " horizontally": 0.0214 }
+                },
+                {
+                    "id": 26,
+                    "token": "Ġsame",
+                    "token_id": 2684,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " same": 0.9938, " row": 0.0059, " the": 0.0002, " line": 0.0, " open": 0.0 }
+                },
+                {
+                    "id": 27,
+                    "token": "Ġrow",
+                    "token_id": 5225,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " row": 1.0, " line": 0.0, " column": 0.0, " Row": 0.0, " corridor": 0.0 }
+                },
+                {
+                    "id": 28,
+                    "token": ",",
+                    "token_id": 11,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ",": 0.6255, ".": 0.2301, " with": 0.0659, ";": 0.0311, " separated": 0.0167 }
+                },
+                {
+                    "id": 29,
+                    "token": "Ġcolumns",
+                    "token_id": 15697,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " columns": 0.3022, " two": 0.2667, " distance": 0.0866, " separated": 0.0525, " ": 0.0409 }
+                },
+                {
+                    "id": 30,
+                    "token": "Ġ",
+                    "token_id": 220,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " ": 0.966, " difference": 0.0227, " differ": 0.0035, " diff": 0.0024, ":": 0.0016 }
+                },
+                {
+                    "id": 31,
+                    "token": "3",
+                    "token_id": 18,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "3": 0.9993, "4": 0.0004, "2": 0.0001, "1": 0.0001, "0": 0.0 }
+                },
+                {
+                    "id": 32,
+                    "token": "Ġto",
+                    "token_id": 316,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " to": 0.6133, " and": 0.372, "->": 0.0112, " ->": 0.0022, "-": 0.0003 }
+                },
+                {
+                    "id": 33,
+                    "token": "Ġ",
+                    "token_id": 220,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " ": 0.8176, "5": 0.1824, "4": 0.0, "6": 0.0, "1": 0.0 }
+                },
+                {
+                    "id": 34,
+                    "token": "5",
+                    "token_id": 20,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "5": 1.0, "4": 0.0, "6": 0.0, "1": 0.0, "2": 0.0 }
+                },
+                {
+                    "id": 35,
+                    "token": ".",
+                    "token_id": 13,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ".": 0.6641, ",": 0.2156, " with": 0.0899, ":": 0.0122, ";": 0.0107 }
+                },
+                {
+                    "id": 36,
+                    "token": "ĠPath",
+                    "token_id": 14027,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": {
+                        " Path": 0.6606,
+                        " Check": 0.0479,
+                        " Positions": 0.0422,
+                        " Cells": 0.0256,
+                        " There's": 0.0256
+                    }
+                },
+                {
+                    "id": 37,
+                    "token": ":",
+                    "token_id": 25,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ":": 0.972, " is": 0.0084, " right": 0.0045, " could": 0.0024, " can": 0.0024 }
+                },
+                {
+                    "id": 38,
+                    "token": "ĠRIGHT",
+                    "token_id": 51066,
+                    "token_groups": ["output", "analysis", "action"],
+                    "probabilities": { " RIGHT": 0.4075, " right": 0.3596, " move": 0.1323, " Right": 0.0487, " go": 0.0139 }
+                },
+                {
+                    "id": 39,
+                    "token": ",",
+                    "token_id": 11,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ",": 0.5123, " to": 0.2135, " then": 0.1295, " twice": 0.1009, " once": 0.0073 }
+                },
+                {
+                    "id": 40,
+                    "token": "ĠRIGHT",
+                    "token_id": 51066,
+                    "token_groups": ["output", "analysis", "action"],
+                    "probabilities": { " RIGHT": 0.9993, "RIGHT": 0.0006, " then": 0.0, " right": 0.0, " LEFT": 0.0 }
+                },
+                {
+                    "id": 41,
+                    "token": ".",
+                    "token_id": 13,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ".": 0.9748, "?": 0.0158, " to": 0.0024, ".\n\n": 0.0017, " (": 0.0015 }
+                },
+                {
+                    "id": 42,
+                    "token": "ĠBut",
+                    "token_id": 3072,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " But": 0.2837, " So": 0.2504, " Check": 0.1183, " First": 0.0921, " Both": 0.0717 }
+                },
+                {
+                    "id": 43,
+                    "token": "Ġcheck",
+                    "token_id": 2371,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " check": 0.5679, " need": 0.2682, " must": 0.0411, " first": 0.022, " we": 0.0151 }
+                },
+                {
+                    "id": 44,
+                    "token": "Ġwalls",
+                    "token_id": 20562,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " walls": 0.3957, " obstacles": 0.24, " if": 0.24, " cells": 0.0197, " wall": 0.0135 }
+                },
+                {
+                    "id": 45,
+                    "token": ":",
+                    "token_id": 25,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ":": 0.6443, "?": 0.3043, " at": 0.0321, " around": 0.0072, " none": 0.0063 }
+                },
+                {
+                    "id": 46,
+                    "token": "Ġrow",
+                    "token_id": 5225,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " row": 0.9158, " positions": 0.0313, " at": 0.0131, " Row": 0.0115, " grid": 0.0102 }
+                },
+                {
+                    "id": 47,
+                    "token": "2",
+                    "token_id": 17,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "2": 0.5272, " ": 0.4653, "1": 0.0059, " indices": 0.0005, " index": 0.0002 }
+                },
+                {
+                    "id": 48,
+                    "token": "Ġcol",
+                    "token_id": 996,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " col": 0.7782, ":": 0.082, " columns": 0.0639, " has": 0.0302, " cols": 0.0162 }
+                },
+                {
+                    "id": 49,
+                    "token": "4",
+                    "token_id": 19,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "4": 0.9936, "3": 0.0059, "5": 0.0002, " ": 0.0001, "2": 0.0001 }
+                },
+                {
+                    "id": 50,
+                    "token": "Ġis",
+                    "token_id": 382,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " is": 0.9662, " open": 0.0107, " '_'": 0.0084, " and": 0.0084, " =": 0.0013 }
+                },
+                {
+                    "id": 51,
+                    "token": "Ġ'_'",
+                    "token_id": 86115,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " '_'": 0.6854, " _,": 0.135, " _": 0.0496, " underscore": 0.0438, " open": 0.0438 }
+                },
+                {
+                    "id": 52,
+                    "token": "Ġopen",
+                    "token_id": 2494,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " open": 0.7836, "?": 0.0936, " so": 0.0568, " yes": 0.0163, " (": 0.0112 }
+                },
+                {
+                    "id": 53,
+                    "token": ".",
+                    "token_id": 13,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ".": 0.7365, ",": 0.2391, ";": 0.0173, "?": 0.0056, " yes": 0.0005 }
+                },
+                {
+                    "id": 54,
+                    "token": "ĠSo",
+                    "token_id": 2632,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " So": 0.9348, " col": 0.0362, " so": 0.0071, " Yes": 0.0043, " Good": 0.0043 }
+                },
+                {
+                    "id": 55,
+                    "token": "Ġfirst",
+                    "token_id": 1577,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " first": 0.616, " two": 0.2266, " move": 0.0307, " action": 0.0239, " best": 0.0211 }
+                },
+                {
+                    "id": 56,
+                    "token": "Ġmove",
+                    "token_id": 5275,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " move": 0.59, " action": 0.1492, " step": 0.1316, " RIGHT": 0.1162, " right": 0.0095 }
+                },
+                {
+                    "id": 57,
+                    "token": "ĠRIGHT",
+                    "token_id": 51066,
+                    "token_groups": ["output", "analysis", "action"],
+                    "probabilities": { " RIGHT": 0.9555, ":": 0.0175, " right": 0.0136, " Right": 0.0064, " to": 0.0021 }
+                },
+                {
+                    "id": 58,
+                    "token": "Ġto",
+                    "token_id": 316,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " to": 0.9768, " from": 0.0058, " leads": 0.0045, " (": 0.0035, ".": 0.0031 }
+                },
+                {
+                    "id": 59,
+                    "token": "Ġ(",
+                    "token_id": 350,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " (": 0.9874, " col": 0.0124, " column": 0.0001, " ": 0.0, "(": 0.0 }
+                },
+                {
+                    "id": 60,
+                    "token": "2",
+                    "token_id": 17,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "2": 1.0, "3": 0.0, "1": 0.0, "0": 0.0, "row": 0.0 }
+                },
+                {
+                    "id": 61,
+                    "token": ",",
+                    "token_id": 11,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ",": 1.0, "4": 0.0, " ": 0.0, "+": 0.0, "-": 0.0 }
+                },
+                {
+                    "id": 62,
+                    "token": "4",
+                    "token_id": 19,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "4": 1.0, "3": 0.0, " four": 0.0, " fourth": 0.0, "2": 0.0 }
+                },
+                {
+                    "id": 63,
+                    "token": ").",
+                    "token_id": 741,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ").": 0.7388, "),": 0.2117, ")": 0.0472, ");": 0.0021, "):": 0.0002 }
+                },
+                {
+                    "id": 64,
+                    "token": "ĠNext",
+                    "token_id": 13886,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " Then": 0.3831, " Next": 0.3831, " Second": 0.1409, " second": 0.0587, " then": 0.008 }
+                },
+                {
+                    "id": 65,
+                    "token": "ĠRIGHT",
+                    "token_id": 51066,
+                    "token_groups": ["output", "analysis", "action"],
+                    "probabilities": { " RIGHT": 0.9801, " move": 0.0123, " right": 0.0031, " to": 0.0019, " step": 0.0009 }
+                },
+                {
+                    "id": 66,
+                    "token": "Ġto",
+                    "token_id": 316,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " to": 0.9998, " (": 0.0001, ".": 0.0, " reaches": 0.0, " G": 0.0 }
+                },
+                {
+                    "id": 67,
+                    "token": "Ġ(",
+                    "token_id": 350,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " (": 0.7756, " goal": 0.1189, " G": 0.105, " Goal": 0.0004, " ": 0.0 }
+                },
+                {
+                    "id": 68,
+                    "token": "2",
+                    "token_id": 17,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "2": 1.0, "3": 0.0, "1": 0.0, "0": 0.0, "G": 0.0 }
+                },
+                {
+                    "id": 69,
+                    "token": ",",
+                    "token_id": 11,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ",": 1.0, "5": 0.0, ".": 0.0, "/": 0.0, "-": 0.0 }
+                },
+                {
+                    "id": 70,
+                    "token": "5",
+                    "token_id": 20,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "5": 1.0, " five": 0.0, " ": 0.0, " fifth": 0.0, "45": 0.0 }
+                },
+                {
+                    "id": 71,
+                    "token": ")",
+                    "token_id": 8,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ")": 0.7506, ").": 0.2437, ")=": 0.0045, " G": 0.0006, ").\n\n": 0.0003 }
+                },
+                {
+                    "id": 72,
+                    "token": "Ġgoal",
+                    "token_id": 8583,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " goal": 0.8944, " G": 0.0648, " which": 0.0347, " Goal": 0.002, " where": 0.0017 }
+                },
+                {
+                    "id": 73,
+                    "token": ".",
+                    "token_id": 13,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ".": 0.9856, ".\n\n": 0.0141, " reached": 0.0002, " G": 0.0, " reachable": 0.0 }
+                },
+                {
+                    "id": 74,
+                    "token": "ĠSo",
+                    "token_id": 2632,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " So": 0.9751, " Thus": 0.0058, " Output": 0.0035, " That's": 0.0027, " Could": 0.0015 }
+                },
+                {
+                    "id": 75,
+                    "token": "Ġaction",
+                    "token_id": 3736,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " action": 0.8019, " next": 0.0658, " first": 0.0658, " output": 0.0214, " best": 0.0147 }
+                },
+                {
+                    "id": 76,
+                    "token": ":",
+                    "token_id": 25,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ":": 0.3069, " RIGHT": 0.239, " is": 0.239, " should": 0.0776, " \"": 0.0323 }
+                },
+                {
+                    "id": 77,
+                    "token": "ĠRIGHT",
+                    "token_id": 51066,
+                    "token_groups": ["output", "analysis", "action"],
+                    "probabilities": { " RIGHT": 0.9921, " \"": 0.0076, " Right": 0.0001, " right": 0.0001, "RIGHT": 0.0 }
+                },
+                {
+                    "id": 78,
+                    "token": ".",
+                    "token_id": 13,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ".": 0.9893, ".\n\n": 0.0086, "?": 0.0007, " first": 0.0002, " (": 0.0002 }
+                },
+                { "id": 79, "token": "<|end|>", "token_id": 200007, "token_groups": ["output", "template"] },
+                { "id": 80, "token": "<|start|>", "token_id": 200006, "token_groups": ["output", "template"] },
+                { "id": 81, "token": "assistant", "token_id": 173781, "token_groups": ["output", "template"] },
+                { "id": 82, "token": "<|channel|>", "token_id": 200005, "token_groups": ["output", "template"] },
+                { "id": 83, "token": "final", "token_id": 17196, "token_groups": ["output", "template"] },
+                { "id": 84, "token": "<|message|>", "token_id": 200008, "token_groups": ["output", "template"] },
+                {
+                    "id": 85,
+                    "token": "{Ċ",
+                    "token_id": 745,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { "{\n": 0.7159, "{": 0.1597, "{\"": 0.1244, "{\n\n": 0.0, "{\\": 0.0 }
+                },
+                {
+                    "id": 86,
+                    "token": "Ġ",
+                    "token_id": 220,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { " ": 1.0, " \"": 0.0, " ": 0.0, "\"": 0.0, "   ": 0.0 }
+                },
+                {
+                    "id": 87,
+                    "token": "Ġ\"",
+                    "token_id": 392,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { " \"": 1.0, " “": 0.0, " \"$": 0.0, " \"_": 0.0, " \\\"": 0.0 }
+                },
+                {
+                    "id": 88,
+                    "token": "action",
+                    "token_id": 1976,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { "action": 1.0, "answer": 0.0, "Action": 0.0, "actions": 0.0, " action": 0.0 }
+                },
+                {
+                    "id": 89,
+                    "token": "\":",
+                    "token_id": 1243,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { "\":": 0.9997, "\":\"": 0.0003, "\"": 0.0, "\":\n": 0.0, "\\\":": 0.0 }
+                },
+                {
+                    "id": 90,
+                    "token": "Ġ\"",
+                    "token_id": 392,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { " \"": 1.0, " \"<": 0.0, " \"\\\"": 0.0, " \"[": 0.0, " \"_": 0.0 }
+                },
+                {
+                    "id": 91,
+                    "token": "RIGHT",
+                    "token_id": 24822,
+                    "token_groups": ["output", "final", "action"],
+                    "probabilities": { "RIGHT": 1.0, "LEFT": 0.0, " RIGHT": 0.0, "DOWN": 0.0, "R": 0.0 }
+                },
+                {
+                    "id": 92,
+                    "token": "\"Ċ",
+                    "token_id": 1092,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { "\"\n": 1.0, "\",\n": 0.0, "\"": 0.0, "\"}\n": 0.0, "\")\n": 0.0 }
+                },
+                {
+                    "id": 93,
+                    "token": "}",
+                    "token_id": 92,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { "}": 0.9998, "}\n": 0.0002, "}\n\n": 0.0, "}`": 0.0, " }": 0.0 }
+                },
+                { "id": 94, "token": "<|return|>", "token_id": 200002, "token_groups": ["output", "template"] }
+            ],
+            "output_n_tokens": 95
+        },
+        {
+            "step_id": 2,
+            "grid_state": [
+                "  0 1 2 3 4 5 6 ",
+                "0 # # # # # # # ",
+                "1 # _ _ _ _ _ # ",
+                "2 # _ _ _ A G # ",
+                "3 # _ _ _ _ _ # ",
+                "4 # _ _ _ _ _ # ",
+                "5 # _ _ _ _ _ # ",
+                "6 # # # # # # # "
+            ],
+            "grid_state_tokens": [
+                { "id": 0, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 1, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 2, "token": "0", "token_id": 15, "token_groups": ["prompt", "grid_state"] },
+                { "id": 3, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 4, "token": "1", "token_id": 16, "token_groups": ["prompt", "grid_state"] },
+                { "id": 5, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 6, "token": "2", "token_id": 17, "token_groups": ["prompt", "grid_state"] },
+                { "id": 7, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 8, "token": "3", "token_id": 18, "token_groups": ["prompt", "grid_state"] },
+                { "id": 9, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 10, "token": "4", "token_id": 19, "token_groups": ["prompt", "grid_state"] },
+                { "id": 11, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 12, "token": "5", "token_id": 20, "token_groups": ["prompt", "grid_state"] },
+                { "id": 13, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] },
+                { "id": 14, "token": "6", "token_id": 21, "token_groups": ["prompt", "grid_state"] },
+                { "id": 15, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 16, "token": "0", "token_id": 15, "token_groups": ["prompt", "grid_state"] },
+                { "id": 17, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 18, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 19, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 20, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 21, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 22, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 23, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 24, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 25, "token": "1", "token_id": 16, "token_groups": ["prompt", "grid_state"] },
+                { "id": 26, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 27, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 28, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 29, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 30, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 31, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 32, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 33, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 34, "token": "2", "token_id": 17, "token_groups": ["prompt", "grid_state"] },
+                { "id": 35, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 36, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 37, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 38, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 39, "token": "ĠA", "token_id": 355, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 40, "token": "ĠG", "token_id": 499, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 41, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 42, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 43, "token": "3", "token_id": 18, "token_groups": ["prompt", "grid_state"] },
+                { "id": 44, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 45, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 46, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 47, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 48, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 49, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 50, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 51, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 52, "token": "4", "token_id": 19, "token_groups": ["prompt", "grid_state"] },
+                { "id": 53, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 54, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 55, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 56, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 57, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 58, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 59, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 60, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 61, "token": "5", "token_id": 20, "token_groups": ["prompt", "grid_state"] },
+                { "id": 62, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 63, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 64, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 65, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 66, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 67, "token": "Ġ_", "token_id": 1175, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 68, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 69, "token": "ĠĊ", "token_id": 793, "token_groups": ["prompt", "grid_state"] },
+                { "id": 70, "token": "6", "token_id": 21, "token_groups": ["prompt", "grid_state"] },
+                { "id": 71, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 72, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 73, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 74, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 75, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 76, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 77, "token": "Ġ#", "token_id": 1069, "token_groups": ["prompt", "grid_state", "grid_tile"] },
+                { "id": 78, "token": "Ġ", "token_id": 220, "token_groups": ["prompt", "grid_state"] }
+            ],
+            "grid_state_n_tokens": 79,
+            "prompt_suffix_tokens": [
+                { "id": 0, "token": "<|end|>", "token_id": 200007, "token_groups": ["prompt", "template"] },
+                { "id": 1, "token": "<|start|>", "token_id": 200006, "token_groups": ["prompt", "template"] },
+                { "id": 2, "token": "assistant", "token_id": 173781, "token_groups": ["prompt", "template"] }
+            ],
+            "prompt_suffix_n_tokens": 3,
+            "agent_action": "RIGHT",
+            "output_text": "<|channel|>analysis<|message|>We need next move from A at (2,4) to G at (2,5). Right is free. So action RIGHT.<|end|><|start|>assistant<|channel|>final<|message|>{\n  \"action\": \"RIGHT\"\n}<|return|>",
+            "output_tokens": [
+                { "id": 0, "token": "<|channel|>", "token_id": 200005, "token_groups": ["output", "template"] },
+                { "id": 1, "token": "analysis", "token_id": 35644, "token_groups": ["output", "template"] },
+                { "id": 2, "token": "<|message|>", "token_id": 200008, "token_groups": ["output", "template"] },
+                {
+                    "id": 3,
+                    "token": "We",
+                    "token_id": 2167,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "We": 0.7249, "Need": 0.0674, "Grid": 0.0463, "Compute": 0.0409, "Find": 0.0361 }
+                },
+                {
+                    "id": 4,
+                    "token": "Ġneed",
+                    "token_id": 1309,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " need": 0.9329, " have": 0.0362, " must": 0.0081, " see": 0.0055, " want": 0.0049 }
+                },
+                {
+                    "id": 5,
+                    "token": "Ġnext",
+                    "token_id": 2613,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " next": 0.5227, " shortest": 0.2798, " move": 0.1029, " to": 0.0334, " minimal": 0.0139 }
+                },
+                {
+                    "id": 6,
+                    "token": "Ġmove",
+                    "token_id": 5275,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " move": 0.8641, " action": 0.1032, " best": 0.0261, " step": 0.0035, " optimal": 0.0028 }
+                },
+                {
+                    "id": 7,
+                    "token": "Ġfrom",
+                    "token_id": 591,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " from": 0.5014, ".": 0.2684, " shortest": 0.0412, " towards": 0.0363, ":": 0.0363 }
+                },
+                {
+                    "id": 8,
+                    "token": "ĠA",
+                    "token_id": 355,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " A": 0.9723, " (": 0.0122, " agent": 0.0095, " current": 0.0045, " position": 0.0009 }
+                },
+                {
+                    "id": 9,
+                    "token": "Ġat",
+                    "token_id": 540,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " at": 0.8738, " to": 0.0921, " (": 0.016, "(": 0.011, " towards": 0.0025 }
+                },
+                {
+                    "id": 10,
+                    "token": "Ġ(",
+                    "token_id": 350,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " (": 0.9636, " row": 0.033, " position": 0.0027, "?": 0.0002, " coordinates": 0.0001 }
+                },
+                {
+                    "id": 11,
+                    "token": "2",
+                    "token_id": 17,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "2": 0.9999, "row": 0.0001, "3": 0.0, "1": 0.0, "??": 0.0 }
+                },
+                {
+                    "id": 12,
+                    "token": ",",
+                    "token_id": 11,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ",": 1.0, "?": 0.0, "-": 0.0, "?)": 0.0, ")": 0.0 }
+                },
+                {
+                    "id": 13,
+                    "token": "4",
+                    "token_id": 19,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "4": 0.9997, "3": 0.0002, "5": 0.0001, "?": 0.0, "1": 0.0 }
+                },
+                {
+                    "id": 14,
+                    "token": ")",
+                    "token_id": 8,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ")": 0.5339, "?)": 0.1964, ").": 0.135, ")?": 0.1191, "?": 0.0086 }
+                },
+                {
+                    "id": 15,
+                    "token": "Ġto",
+                    "token_id": 316,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " to": 0.8945, " goal": 0.0505, " (": 0.0164, " towards": 0.0099, " with": 0.0053 }
+                },
+                {
+                    "id": 16,
+                    "token": "ĠG",
+                    "token_id": 499,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " G": 0.9704, " goal": 0.0293, " Goal": 0.0003, " Go": 0.0, " target": 0.0 }
+                },
+                {
+                    "id": 17,
+                    "token": "Ġat",
+                    "token_id": 540,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " at": 0.9997, " (": 0.0002, "?": 0.0, "(": 0.0, " which": 0.0 }
+                },
+                {
+                    "id": 18,
+                    "token": "Ġ(",
+                    "token_id": 350,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " (": 0.9995, "(": 0.0004, " same": 0.0, "?": 0.0, " row": 0.0 }
+                },
+                {
+                    "id": 19,
+                    "token": "2",
+                    "token_id": 17,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "2": 1.0, "1": 0.0, "3": 0.0, "0": 0.0, "??": 0.0 }
+                },
+                {
+                    "id": 20,
+                    "token": ",",
+                    "token_id": 11,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ",": 1.0, "?": 0.0, "-": 0.0, "/": 0.0, ")": 0.0 }
+                },
+                {
+                    "id": 21,
+                    "token": "5",
+                    "token_id": 20,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { "5": 1.0, "6": 0.0, "4": 0.0, " ": 0.0, "?": 0.0 }
+                },
+                {
+                    "id": 22,
+                    "token": ").",
+                    "token_id": 741,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ").": 0.8788, ")": 0.105, "):": 0.0086, "),": 0.0067, ");": 0.0007 }
+                },
+                {
+                    "id": 23,
+                    "token": "ĠRight",
+                    "token_id": 16354,
+                    "token_groups": ["output", "analysis", "action"],
+                    "probabilities": { " Right": 0.568, " So": 0.1436, " Move": 0.0528, " Adj": 0.0363, " It's": 0.0363 }
+                },
+                {
+                    "id": 24,
+                    "token": "Ġis",
+                    "token_id": 382,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " is": 0.4004, ".": 0.3533, " move": 0.0788, " step": 0.0614, " moves": 0.029 }
+                },
+                {
+                    "id": 25,
+                    "token": "Ġfree",
+                    "token_id": 2240,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": {
+                        " free": 0.3555,
+                        " goal": 0.2443,
+                        " immediate": 0.0793,
+                        " possible": 0.0545,
+                        " adjacent": 0.0481
+                    }
+                },
+                {
+                    "id": 26,
+                    "token": ".",
+                    "token_id": 13,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ".": 0.9005, "?": 0.0396, ",": 0.0165, " and": 0.0113, " '_'": 0.0054 }
+                },
+                {
+                    "id": 27,
+                    "token": "ĠSo",
+                    "token_id": 2632,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { " So": 0.8684, "<|end|>": 0.0915, " Output": 0.0109, " Answer": 0.0052, " Return": 0.0049 }
+                },
+                {
+                    "id": 28,
+                    "token": "Ġaction",
+                    "token_id": 3736,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": {
+                        " action": 0.9613,
+                        " output": 0.0137,
+                        " answer": 0.0121,
+                        " choose": 0.0035,
+                        " ACTION": 0.0024
+                    }
+                },
+                {
+                    "id": 29,
+                    "token": "ĠRIGHT",
+                    "token_id": 51066,
+                    "token_groups": ["output", "analysis", "action"],
+                    "probabilities": { " RIGHT": 0.975, ":": 0.0139, " \"": 0.0084, "=": 0.0009, " Right": 0.0008 }
+                },
+                {
+                    "id": 30,
+                    "token": ".",
+                    "token_id": 13,
+                    "token_groups": ["output", "analysis"],
+                    "probabilities": { ".": 0.9995, ".\n\n": 0.0004, ".L": 0.0, "。": 0.0, "\n\n": 0.0 }
+                },
+                { "id": 31, "token": "<|end|>", "token_id": 200007, "token_groups": ["output", "template"] },
+                { "id": 32, "token": "<|start|>", "token_id": 200006, "token_groups": ["output", "template"] },
+                { "id": 33, "token": "assistant", "token_id": 173781, "token_groups": ["output", "template"] },
+                { "id": 34, "token": "<|channel|>", "token_id": 200005, "token_groups": ["output", "template"] },
+                { "id": 35, "token": "final", "token_id": 17196, "token_groups": ["output", "template"] },
+                { "id": 36, "token": "<|message|>", "token_id": 200008, "token_groups": ["output", "template"] },
+                {
+                    "id": 37,
+                    "token": "{Ċ",
+                    "token_id": 745,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { "{\n": 0.4842, "{": 0.3771, "{\"": 0.1387, "{\n\n": 0.0, "{\\": 0.0 }
+                },
+                {
+                    "id": 38,
+                    "token": "Ġ",
+                    "token_id": 220,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { " ": 1.0, " \"": 0.0, " ": 0.0, "\"": 0.0, "   ": 0.0 }
+                },
+                {
+                    "id": 39,
+                    "token": "Ġ\"",
+                    "token_id": 392,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { " \"": 1.0, " “": 0.0, " \"_": 0.0, " \"$": 0.0, " \\\"": 0.0 }
+                },
+                {
+                    "id": 40,
+                    "token": "action",
+                    "token_id": 1976,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { "action": 1.0, "actions": 0.0, "answer": 0.0, "Action": 0.0, "act": 0.0 }
+                },
+                {
+                    "id": 41,
+                    "token": "\":",
+                    "token_id": 1243,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { "\":": 0.9994, "\":\"": 0.0006, "\"": 0.0, "\":\n": 0.0, "\"\n": 0.0 }
+                },
+                {
+                    "id": 42,
+                    "token": "Ġ\"",
+                    "token_id": 392,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { " \"": 1.0, " \"<": 0.0, " \"\\\"": 0.0, " \"[": 0.0, " \"_": 0.0 }
+                },
+                {
+                    "id": 43,
+                    "token": "RIGHT",
+                    "token_id": 24822,
+                    "token_groups": ["output", "final", "action"],
+                    "probabilities": { "RIGHT": 1.0, " RIGHT": 0.0, "LEFT": 0.0, "Right": 0.0, "R": 0.0 }
+                },
+                {
+                    "id": 44,
+                    "token": "\"Ċ",
+                    "token_id": 1092,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { "\"\n": 1.0, "\",\n": 0.0, "\"": 0.0, "\"}\n": 0.0, "\")\n": 0.0 }
+                },
+                {
+                    "id": 45,
+                    "token": "}",
+                    "token_id": 92,
+                    "token_groups": ["output", "final"],
+                    "probabilities": { "}": 0.9999, "}\n": 0.0001, "}\n\n": 0.0, "}`": 0.0, " }": 0.0 }
+                },
+                { "id": 46, "token": "<|return|>", "token_id": 200002, "token_groups": ["output", "template"] }
+            ],
+            "output_n_tokens": 47
+        }
+    ]
+}

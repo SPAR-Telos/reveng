@@ -696,7 +696,7 @@ def _pair_metrics_to_dict(metric: PairMetrics) -> dict[str, Any]:
 
 def counterfactual_activation_patching(
     manifest_path: str,
-    output_dir: str = "counterfactual_activation_patching_results",
+    output_dir: str = "data/cf/eval_results",
     layer_key: str = LAYER_KEY_DEFAULT,
     expected_k: int = EXPECTED_K,
     action_true_threshold: float = ACTION_TRUE_THRESHOLD,
@@ -720,8 +720,14 @@ def counterfactual_activation_patching(
 
     records = _read_manifest(manifest)
     if len(records) != expected_k:
+        recommendation = (
+            "Run with the manifest row count, e.g. "
+            f"`reveng-cli counterfactual_activation_patching --manifest-path {manifest} "
+            f"--output-dir {out_dir} --expected-k {len(records)}`"
+        )
         raise ValueError(
-            f"Expected exactly {expected_k} pairs in manifest, found {len(records)}"
+            f"Expected exactly {expected_k} pairs in manifest, found {len(records)}. "
+            f"{recommendation}"
         )
 
     pair_metrics: list[PairMetrics] = []

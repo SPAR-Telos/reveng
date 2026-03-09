@@ -1,0 +1,162 @@
+[
+  {
+    "pair_id": "pair_000",
+    "grid_a_path": "data/cf/pair_000/grid_a.txt",
+    "grid_b_path": "data/cf/pair_000/grid_b.txt",
+    "goal_orig": [
+      3,
+      1
+    ],
+    "goal_new": [
+      1,
+      1
+    ],
+    "a_trace_path": "data/cf/artifacts/pair_000/A.json",
+    "b_trace_path": "data/cf/artifacts/pair_000/B.json",
+    "patched_trace_path": "data/cf/artifacts/pair_000/patched.json"
+  },
+  {
+    "pair_id": "pair_001",
+    "grid_a_path": "data/cf/pair_001/grid_a.txt",
+    "grid_b_path": "data/cf/pair_001/grid_b.txt",
+    "goal_orig": [
+      1,
+      1
+    ],
+    "goal_new": [
+      1,
+      3
+    ],
+    "a_trace_path": "data/cf/artifacts/pair_001/A.json",
+    "b_trace_path": "data/cf/artifacts/pair_001/B.json",
+    "patched_trace_path": "data/cf/artifacts/pair_001/patched.json"
+  },
+  {
+    "pair_id": "pair_002",
+    "grid_a_path": "data/cf/pair_002/grid_a.txt",
+    "grid_b_path": "data/cf/pair_002/grid_b.txt",
+    "goal_orig": [
+      5,
+      5
+    ],
+    "goal_new": [
+      5,
+      1
+    ],
+    "a_trace_path": "data/cf/artifacts/pair_002/A.json",
+    "b_trace_path": "data/cf/artifacts/pair_002/B.json",
+    "patched_trace_path": "data/cf/artifacts/pair_002/patched.json"
+  },
+  {
+    "pair_id": "pair_003",
+    "grid_a_path": "data/cf/pair_003/grid_a.txt",
+    "grid_b_path": "data/cf/pair_003/grid_b.txt",
+    "goal_orig": [
+      1,
+      2
+    ],
+    "goal_new": [
+      4,
+      1
+    ],
+    "a_trace_path": "data/cf/artifacts/pair_003/A.json",
+    "b_trace_path": "data/cf/artifacts/pair_003/B.json",
+    "patched_trace_path": "data/cf/artifacts/pair_003/patched.json"
+  },
+  {
+    "pair_id": "pair_004",
+    "grid_a_path": "data/cf/pair_004/grid_a.txt",
+    "grid_b_path": "data/cf/pair_004/grid_b.txt",
+    "goal_orig": [
+      4,
+      1
+    ],
+    "goal_new": [
+      2,
+      1
+    ],
+    "a_trace_path": "data/cf/artifacts/pair_004/A.json",
+    "b_trace_path": "data/cf/artifacts/pair_004/B.json",
+    "patched_trace_path": "data/cf/artifacts/pair_004/patched.json"
+  },
+  {
+    "pair_id": "pair_005",
+    "grid_a_path": "data/cf/pair_005/grid_a.txt",
+    "grid_b_path": "data/cf/pair_005/grid_b.txt",
+    "goal_orig": [
+      2,
+      1
+    ],
+    "goal_new": [
+      3,
+      2
+    ],
+    "a_trace_path": "data/cf/artifacts/pair_005/A.json",
+    "b_trace_path": "data/cf/artifacts/pair_005/B.json",
+    "patched_trace_path": "data/cf/artifacts/pair_005/patched.json"
+  },
+  {
+    "pair_id": "pair_006",
+    "grid_a_path": "data/cf/pair_006/grid_a.txt",
+    "grid_b_path": "data/cf/pair_006/grid_b.txt",
+    "goal_orig": [
+      4,
+      4
+    ],
+    "goal_new": [
+      5,
+      1
+    ],
+    "a_trace_path": "data/cf/artifacts/pair_006/A.json",
+    "b_trace_path": "data/cf/artifacts/pair_006/B.json",
+    "patched_trace_path": "data/cf/artifacts/pair_006/patched.json"
+  },
+  {
+    "pair_id": "pair_007",
+    "grid_a_path": "data/cf/pair_007/grid_a.txt",
+    "grid_b_path": "data/cf/pair_007/grid_b.txt",
+    "goal_orig": [
+      5,
+      4
+    ],
+    "goal_new": [
+      5,
+      2
+    ],
+    "a_trace_path": "data/cf/artifacts/pair_007/A.json",
+    "b_trace_path": "data/cf/artifacts/pair_007/B.json",
+    "patched_trace_path": "data/cf/artifacts/pair_007/patched.json"
+  },
+  {
+    "pair_id": "pair_008",
+    "grid_a_path": "data/cf/pair_008/grid_a.txt",
+    "grid_b_path": "data/cf/pair_008/grid_b.txt",
+    "goal_orig": [
+      3,
+      1
+    ],
+    "goal_new": [
+      3,
+      3
+    ],
+    "a_trace_path": "data/cf/artifacts/pair_008/A.json",
+    "b_trace_path": "data/cf/artifacts/pair_008/B.json",
+    "patched_trace_path": "data/cf/artifacts/pair_008/patched.json"
+  },
+  {
+    "pair_id": "pair_009",
+    "grid_a_path": "data/cf/pair_009/grid_a.txt",
+    "grid_b_path": "data/cf/pair_009/grid_b.txt",
+    "goal_orig": [
+      1,
+      2
+    ],
+    "goal_new": [
+      5,
+      3
+    ],
+    "a_trace_path": "data/cf/artifacts/pair_009/A.json",
+    "b_trace_path": "data/cf/artifacts/pair_009/B.json",
+    "patched_trace_path": "data/cf/artifacts/pair_009/patched.json"
+  }
+]

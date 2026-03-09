@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+import pytest
+
 from reveng.experiments.counterfactual_activation_patching import (
     PairMetrics,
     aggregate_results,
@@ -375,3 +377,36 @@ def test_early_stop_after_first_three_non_disruptive_action_false(tmp_path: Path
     summary = json.loads((output_dir / "aggregate_summary.json").read_text())
     assert summary["stopped_early"] is True
     assert summary["total_pairs_processed"] == 3
+
+
+def test_expected_k_mismatch_error_contains_remediation(tmp_path: Path):
+    record = _create_pair_record(tmp_path, "pair_000", [_build_step("RIGHT") for _ in range(5)])
+    manifest_path = tmp_path / "manifest_mismatch.json"
+    manifest_path.write_text(
+        json.dumps(
+            [
+                {
+                    "pair_id": record.spec.pair_id,
+                    "grid_a_path": str(record.spec.grid_a_path),
+                    "grid_b_path": str(record.spec.grid_b_path),
+                    "goal_orig": list(record.spec.goal_orig),
+                    "goal_new": list(record.spec.goal_new),
+                    "a_trace_path": str(record.artifacts.a_trace_path),
+                    "b_trace_path": str(record.artifacts.b_trace_path),
+                    "patched_trace_path": str(record.artifacts.patched_trace_path),
+                }
+            ],
+            indent=2,
+        )
+    )
+
+    with pytest.raises(ValueError) as exc:
+        counterfactual_activation_patching(
+            manifest_path=str(manifest_path),
+            output_dir=str(tmp_path / "out"),
+            expected_k=10,
+        )
+
+    msg = str(exc.value)
+    assert "Expected exactly 10 pairs in manifest, found 1." in msg
+    assert "--expected-k 1" in msg

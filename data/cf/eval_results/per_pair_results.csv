@@ -1,0 +1,11 @@
+a_new,a_orig,action_label,belief_available,belief_label,belief_linear_new_match,belief_mlp_new_match,disruptive,evaluated_steps,invalid_reason,outcome_cell,pair_id,valid_pair
+1.0,0.75,True,True,True,False,True,False,4,,"[True, True]",pair_000,True
+0.0,0.0,False,True,True,False,True,True,3,,"[True, False]",pair_001,True
+0.6666666666666666,1.0,False,True,True,False,True,False,3,,"[True, False]",pair_002,True
+0.0,0.0,False,True,True,False,True,True,3,,"[True, False]",pair_003,True
+0.0,0.3333333333333333,False,True,True,False,True,True,3,,"[True, False]",pair_004,True
+0.0,0.0,False,True,True,False,True,True,3,,"[True, False]",pair_005,True
+1.0,0.0,True,True,True,False,True,False,1,,"[True, True]",pair_006,True
+0.6666666666666666,0.3333333333333333,False,True,True,False,True,False,3,,"[True, False]",pair_007,True
+0.5,0.5,False,True,True,False,True,False,2,,"[True, False]",pair_008,True
+0.0,0.75,False,True,True,False,True,False,4,,"[True, False]",pair_009,True

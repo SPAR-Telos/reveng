@@ -308,7 +308,7 @@ def _generate_trajectory_for_grid(
 
 def build_counterfactual_patch_artifacts(
     pair_manifest_path: str,
-    output_dir: str = "counterfactual_artifacts",
+    output_dir: str = "data/cf/artifacts",
     model_name: str = "together_ai/openai/gpt-oss-20b",
     max_steps_per_trajectory: int = 50,
     max_tokens: int = 10000,

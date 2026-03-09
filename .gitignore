@@ -217,3 +217,5 @@ data/
 data/cf/
 counterfactual_artifacts/
 counterfactual_activation_patching_results/
+
+*.pdf

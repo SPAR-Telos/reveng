@@ -1,0 +1,17 @@
+{
+  "total_pairs_manifest": 10,
+  "total_pairs_processed": 10,
+  "total_pairs_valid": 10,
+  "total_pairs_invalid": 0,
+  "total_pairs_belief_available": 6,
+  "total_pairs_disruptive": 4,
+  "disruptive_rate": 0.4,
+  "tt_count": 2,
+  "tf_count": 4,
+  "ft_count": 0,
+  "ff_count": 0,
+  "tt_over_tt_tf": 0.3333333333333333,
+  "tt_over_tt_ft": 1.0,
+  "stopped_early": false,
+  "early_stop_reason": null
+}

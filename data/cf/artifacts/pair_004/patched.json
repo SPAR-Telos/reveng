@@ -1,0 +1,8483 @@
+{
+  "grid_params": {
+    "grid_width": 7,
+    "grid_height": 7,
+    "grid_complexity": 0.0,
+    "fully_observable": true,
+    "transform_type": "base",
+    "astar_distance": 3,
+    "agent_start_coordinates": [
+      1,
+      2
+    ],
+    "goal_coordinates": [
+      1,
+      5
+    ],
+    "legend": {
+      "agent": {
+        "symbol": "A",
+        "description": "Current agent position"
+      },
+      "wall": {
+        "symbol": "#",
+        "description": "Wall"
+      },
+      "goal": {
+        "symbol": "G",
+        "description": "Goal"
+      },
+      "empty": {
+        "symbol": "_",
+        "description": "Open space (can be visited)"
+      },
+      "door": {
+        "symbol": "D",
+        "description": "Door (locked or unlocked)"
+      },
+      "key": {
+        "symbol": "K",
+        "description": "Key (can unlock doors)"
+      },
+      "ball": {
+        "symbol": "C",
+        "description": "Coin (collectible item)"
+      },
+      "unknown_obj": {
+        "symbol": "?",
+        "description": "Unknown object"
+      },
+      "fog": {
+        "symbol": "*",
+        "description": "Hidden Space (reveals a Wall, Goal or Open Space when observed)"
+      }
+    }
+  },
+  "model_params": {
+    "model_id": "openai/gpt-oss-20b",
+    "provider": "together_ai",
+    "interface": "litellm",
+    "n_interactions_in_context": 0,
+    "max_tokens": 10000,
+    "max_steps_per_trajectory": 50,
+    "temperature": 0.0,
+    "reasoning_effort": "low",
+    "top_p": 0.95,
+    "top_logprobs": 5,
+    "seed": 42
+  },
+  "prompt": {
+    "prompt_template": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-03-09\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|># Instructions\n\nYou are controlling an agent in a grid-based environment with full observability. The agent can move in four directions: up, down, left, and right. The environment contains walls, open spaces, and a goal location. The following symbols are used in the grid representation:\n\nLegend:\n---------------\n#: Wall\n_: Open Space (can be visited)\nG: Goal\nA: Current agent position\n----------------\n\nYour objective is to navigate from the current position (A) to the goal (G) while avoiding walls (#). Importantly, the agent should aim to reach the goal using the least amount of steps possible. You must decide your next move based on the provided information.\n\nYou will receive the current state of the grid as a NxM matrix of symbols separated by whitespaces, and with coordinates for each row an column. For example, given the 4x5 grid:\n\n  0 1 2 3 4\n0 # # # # #\n1 # _ _ G #\n2 # A _ _ #\n3 # # # # #\n\nThe goal is in position (1,3), while the agent's position A is (2,1).\n\nThe agent's possible actions at each step are:\n\nActions:\n- UP: Move Up\n- DOWN: Move Down\n- LEFT: Move Left\n- RIGHT: Move Right\n\nYour final answer should be a valid JSON object provided in the following form:\n\n```\n{\n  \"action\": \"<UP|DOWN|LEFT|RIGHT>\",\n}\n```\n\nDO NOT INCLUDE ANY `json` or `jsonb` in your response NOR TICK MARKS LIKE THIS: ```json ```. Start with { and end with } exactly.\n\n# Inputs\n\nCurrent grid state:\n\n{{grid_state}}<|end|><|start|>assistant",
+    "prompt_template_n_tokens": 421,
+    "prompt_prefix_tokens": [
+      {
+        "id": 0,
+        "token": "<|start|>",
+        "token_id": 200006,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 1,
+        "token": "system",
+        "token_id": 17360,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 2,
+        "token": "<|message|>",
+        "token_id": 200008,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 3,
+        "token": "You",
+        "token_id": 3575,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 4,
+        "token": "\u0120are",
+        "token_id": 553,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 5,
+        "token": "\u0120Chat",
+        "token_id": 17554,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 6,
+        "token": "GPT",
+        "token_id": 162016,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 7,
+        "token": ",",
+        "token_id": 11,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 8,
+        "token": "\u0120a",
+        "token_id": 261,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 9,
+        "token": "\u0120large",
+        "token_id": 4410,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 10,
+        "token": "\u0120language",
+        "token_id": 6439,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 11,
+        "token": "\u0120model",
+        "token_id": 2359,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 12,
+        "token": "\u0120trained",
+        "token_id": 22203,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 13,
+        "token": "\u0120by",
+        "token_id": 656,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 14,
+        "token": "\u0120Open",
+        "token_id": 7788,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 15,
+        "token": "AI",
+        "token_id": 17527,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 16,
+        "token": ".\u010a",
+        "token_id": 558,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 17,
+        "token": "Knowledge",
+        "token_id": 87447,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 18,
+        "token": "\u0120cutoff",
+        "token_id": 100594,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 19,
+        "token": ":",
+        "token_id": 25,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 20,
+        "token": "\u0120",
+        "token_id": 220,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 21,
+        "token": "202",
+        "token_id": 1323,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 22,
+        "token": "4",
+        "token_id": 19,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 23,
+        "token": "-",
+        "token_id": 12,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 24,
+        "token": "06",
+        "token_id": 3218,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 25,
+        "token": "\u010a",
+        "token_id": 198,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 26,
+        "token": "Current",
+        "token_id": 6576,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 27,
+        "token": "\u0120date",
+        "token_id": 3521,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 28,
+        "token": ":",
+        "token_id": 25,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 29,
+        "token": "\u0120",
+        "token_id": 220,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 30,
+        "token": "202",
+        "token_id": 1323,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 31,
+        "token": "6",
+        "token_id": 21,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 32,
+        "token": "-",
+        "token_id": 12,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 33,
+        "token": "03",
+        "token_id": 3659,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 34,
+        "token": "-",
+        "token_id": 12,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 35,
+        "token": "09",
+        "token_id": 3114,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 36,
+        "token": "\u010a\u010a",
+        "token_id": 279,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 37,
+        "token": "Reason",
+        "token_id": 30377,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 38,
+        "token": "ing",
+        "token_id": 289,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 39,
+        "token": ":",
+        "token_id": 25,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 40,
+        "token": "\u0120medium",
+        "token_id": 14093,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 41,
+        "token": "\u010a\u010a",
+        "token_id": 279,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 42,
+        "token": "#",
+        "token_id": 2,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 43,
+        "token": "\u0120Valid",
+        "token_id": 13888,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 44,
+        "token": "\u0120channels",
+        "token_id": 18403,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 45,
+        "token": ":",
+        "token_id": 25,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 46,
+        "token": "\u0120analysis",
+        "token_id": 8450,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 47,
+        "token": ",",
+        "token_id": 11,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 48,
+        "token": "\u0120commentary",
+        "token_id": 49159,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 49,
+        "token": ",",
+        "token_id": 11,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 50,
+        "token": "\u0120final",
+        "token_id": 1721,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 51,
+        "token": ".",
+        "token_id": 13,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 52,
+        "token": "\u0120Channel",
+        "token_id": 21030,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 53,
+        "token": "\u0120must",
+        "token_id": 2804,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 54,
+        "token": "\u0120be",
+        "token_id": 413,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 55,
+        "token": "\u0120included",
+        "token_id": 7360,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 56,
+        "token": "\u0120for",
+        "token_id": 395,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 57,
+        "token": "\u0120every",
+        "token_id": 1753,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 58,
+        "token": "\u0120message",
+        "token_id": 3176,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 59,
+        "token": ".",
+        "token_id": 13,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 60,
+        "token": "<|end|>",
+        "token_id": 200007,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 61,
+        "token": "<|start|>",
+        "token_id": 200006,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 62,
+        "token": "user",
+        "token_id": 1428,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 63,
+        "token": "<|message|>",
+        "token_id": 200008,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 64,
+        "token": "#",
+        "token_id": 2,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 65,
+        "token": "\u0120Instructions",
+        "token_id": 68406,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 66,
+        "token": "\u010a\u010a",
+        "token_id": 279,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 67,
+        "token": "You",
+        "token_id": 3575,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 68,
+        "token": "\u0120are",
+        "token_id": 553,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 69,
+        "token": "\u0120controlling",
+        "token_id": 44125,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 70,
+        "token": "\u0120an",
+        "token_id": 448,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 71,
+        "token": "\u0120agent",
+        "token_id": 11793,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 72,
+        "token": "\u0120in",
+        "token_id": 306,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 73,
+        "token": "\u0120a",
+        "token_id": 261,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 74,
+        "token": "\u0120grid",
+        "token_id": 10586,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 75,
+        "token": "-based",
+        "token_id": 8235,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 76,
+        "token": "\u0120environment",
+        "token_id": 5870,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 77,
+        "token": "\u0120with",
+        "token_id": 483,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 78,
+        "token": "\u0120full",
+        "token_id": 3149,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 79,
+        "token": "\u0120observ",
+        "token_id": 8664,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 80,
+        "token": "ability",
+        "token_id": 3563,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 81,
+        "token": ".",
+        "token_id": 13,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 82,
+        "token": "\u0120The",
+        "token_id": 623,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 83,
+        "token": "\u0120agent",
+        "token_id": 11793,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 84,
+        "token": "\u0120can",
+        "token_id": 665,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 85,
+        "token": "\u0120move",
+        "token_id": 5275,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 86,
+        "token": "\u0120in",
+        "token_id": 306,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 87,
+        "token": "\u0120four",
+        "token_id": 4242,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 88,
+        "token": "\u0120directions",
+        "token_id": 24921,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 89,
+        "token": ":",
+        "token_id": 25,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 90,
+        "token": "\u0120up",
+        "token_id": 869,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 91,
+        "token": ",",
+        "token_id": 11,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 92,
+        "token": "\u0120down",
+        "token_id": 1917,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 93,
+        "token": ",",
+        "token_id": 11,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 94,
+        "token": "\u0120left",
+        "token_id": 3561,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 95,
+        "token": ",",
+        "token_id": 11,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 96,
+        "token": "\u0120and",
+        "token_id": 326,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 97,
+        "token": "\u0120right",
+        "token_id": 1849,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 98,
+        "token": ".",
+        "token_id": 13,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 99,
+        "token": "\u0120The",
+        "token_id": 623,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 100,
+        "token": "\u0120environment",
+        "token_id": 5870,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 101,
+        "token": "\u0120contains",
+        "token_id": 8895,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 102,
+        "token": "\u0120walls",
+        "token_id": 20562,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 103,
+        "token": ",",
+        "token_id": 11,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 104,
+        "token": "\u0120open",
+        "token_id": 2494,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 105,
+        "token": "\u0120spaces",
+        "token_id": 18608,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 106,
+        "token": ",",
+        "token_id": 11,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 107,
+        "token": "\u0120and",
+        "token_id": 326,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 108,
+        "token": "\u0120a",
+        "token_id": 261,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 109,
+        "token": "\u0120goal",
+        "token_id": 8583,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 110,
+        "token": "\u0120location",
+        "token_id": 5100,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 111,
+        "token": ".",
+        "token_id": 13,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 112,
+        "token": "\u0120The",
+        "token_id": 623,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 113,
+        "token": "\u0120following",
+        "token_id": 3992,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 114,
+        "token": "\u0120symbols",
+        "token_id": 29502,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 115,
+        "token": "\u0120are",
+        "token_id": 553,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 116,
+        "token": "\u0120used",
+        "token_id": 2061,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 117,
+        "token": "\u0120in",
+        "token_id": 306,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 118,
+        "token": "\u0120the",
+        "token_id": 290,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 119,
+        "token": "\u0120grid",
+        "token_id": 10586,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 120,
+        "token": "\u0120representation",
+        "token_id": 22311,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 121,
+        "token": ":\u010a\u010a",
+        "token_id": 1402,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 122,
+        "token": "Legend",
+        "token_id": 64305,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 123,
+        "token": ":\u010a",
+        "token_id": 734,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 124,
+        "token": "---------------\u010a",
+        "token_id": 110746,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 125,
+        "token": "#:",
+        "token_id": 97210,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 126,
+        "token": "\u0120Wall",
+        "token_id": 14606,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 127,
+        "token": "\u010a",
+        "token_id": 198,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 128,
+        "token": "_:",
+        "token_id": 52270,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 129,
+        "token": "\u0120Open",
+        "token_id": 7788,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 130,
+        "token": "\u0120Space",
+        "token_id": 19468,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 131,
+        "token": "\u0120(",
+        "token_id": 350,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 132,
+        "token": "can",
+        "token_id": 6929,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 133,
+        "token": "\u0120be",
+        "token_id": 413,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 134,
+        "token": "\u0120visited",
+        "token_id": 18416,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 135,
+        "token": ")\u010a",
+        "token_id": 446,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 136,
+        "token": "G",
+        "token_id": 38,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 137,
+        "token": ":",
+        "token_id": 25,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 138,
+        "token": "\u0120Goal",
+        "token_id": 67160,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 139,
+        "token": "\u010a",
+        "token_id": 198,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 140,
+        "token": "A",
+        "token_id": 32,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 141,
+        "token": ":",
+        "token_id": 25,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 142,
+        "token": "\u0120Current",
+        "token_id": 14536,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 143,
+        "token": "\u0120agent",
+        "token_id": 11793,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 144,
+        "token": "\u0120position",
+        "token_id": 4010,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 145,
+        "token": "\u010a",
+        "token_id": 198,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 146,
+        "token": "----------------",
+        "token_id": 1297,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 147,
+        "token": "\u010a\u010a",
+        "token_id": 279,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 148,
+        "token": "Your",
+        "token_id": 9719,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 149,
+        "token": "\u0120objective",
+        "token_id": 23062,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 150,
+        "token": "\u0120is",
+        "token_id": 382,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 151,
+        "token": "\u0120to",
+        "token_id": 316,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 152,
+        "token": "\u0120navigate",
+        "token_id": 23690,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 153,
+        "token": "\u0120from",
+        "token_id": 591,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 154,
+        "token": "\u0120the",
+        "token_id": 290,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 155,
+        "token": "\u0120current",
+        "token_id": 2208,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 156,
+        "token": "\u0120position",
+        "token_id": 4010,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 157,
+        "token": "\u0120(",
+        "token_id": 350,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 158,
+        "token": "A",
+        "token_id": 32,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 159,
+        "token": ")",
+        "token_id": 8,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 160,
+        "token": "\u0120to",
+        "token_id": 316,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 161,
+        "token": "\u0120the",
+        "token_id": 290,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 162,
+        "token": "\u0120goal",
+        "token_id": 8583,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 163,
+        "token": "\u0120(",
+        "token_id": 350,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 164,
+        "token": "G",
+        "token_id": 38,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 165,
+        "token": ")",
+        "token_id": 8,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 166,
+        "token": "\u0120while",
+        "token_id": 2049,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 167,
+        "token": "\u0120avoiding",
+        "token_id": 49354,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 168,
+        "token": "\u0120walls",
+        "token_id": 20562,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 169,
+        "token": "\u0120(#",
+        "token_id": 66375,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 170,
+        "token": ").",
+        "token_id": 741,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 171,
+        "token": "\u0120Import",
+        "token_id": 19998,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 172,
+        "token": "antly",
+        "token_id": 29180,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 173,
+        "token": ",",
+        "token_id": 11,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 174,
+        "token": "\u0120the",
+        "token_id": 290,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 175,
+        "token": "\u0120agent",
+        "token_id": 11793,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 176,
+        "token": "\u0120should",
+        "token_id": 1757,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 177,
+        "token": "\u0120aim",
+        "token_id": 11773,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 178,
+        "token": "\u0120to",
+        "token_id": 316,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 179,
+        "token": "\u0120reach",
+        "token_id": 7627,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 180,
+        "token": "\u0120the",
+        "token_id": 290,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 181,
+        "token": "\u0120goal",
+        "token_id": 8583,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 182,
+        "token": "\u0120using",
+        "token_id": 2360,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 183,
+        "token": "\u0120the",
+        "token_id": 290,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 184,
+        "token": "\u0120least",
+        "token_id": 5153,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 185,
+        "token": "\u0120amount",
+        "token_id": 4527,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 186,
+        "token": "\u0120of",
+        "token_id": 328,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 187,
+        "token": "\u0120steps",
+        "token_id": 10331,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 188,
+        "token": "\u0120possible",
+        "token_id": 4149,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 189,
+        "token": ".",
+        "token_id": 13,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 190,
+        "token": "\u0120You",
+        "token_id": 1608,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 191,
+        "token": "\u0120must",
+        "token_id": 2804,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 192,
+        "token": "\u0120decide",
+        "token_id": 13001,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 193,
+        "token": "\u0120your",
+        "token_id": 634,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 194,
+        "token": "\u0120next",
+        "token_id": 2613,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 195,
+        "token": "\u0120move",
+        "token_id": 5275,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 196,
+        "token": "\u0120based",
+        "token_id": 4122,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 197,
+        "token": "\u0120on",
+        "token_id": 402,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 198,
+        "token": "\u0120the",
+        "token_id": 290,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 199,
+        "token": "\u0120provided",
+        "token_id": 5181,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 200,
+        "token": "\u0120information",
+        "token_id": 2164,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 201,
+        "token": ".\u010a\u010a",
+        "token_id": 364,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 202,
+        "token": "You",
+        "token_id": 3575,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 203,
+        "token": "\u0120will",
+        "token_id": 738,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 204,
+        "token": "\u0120receive",
+        "token_id": 6442,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 205,
+        "token": "\u0120the",
+        "token_id": 290,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 206,
+        "token": "\u0120current",
+        "token_id": 2208,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 207,
+        "token": "\u0120state",
+        "token_id": 2608,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 208,
+        "token": "\u0120of",
+        "token_id": 328,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 209,
+        "token": "\u0120the",
+        "token_id": 290,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 210,
+        "token": "\u0120grid",
+        "token_id": 10586,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 211,
+        "token": "\u0120as",
+        "token_id": 472,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 212,
+        "token": "\u0120a",
+        "token_id": 261,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 213,
+        "token": "\u0120Nx",
+        "token_id": 178338,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 214,
+        "token": "M",
+        "token_id": 44,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 215,
+        "token": "\u0120matrix",
+        "token_id": 12248,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 216,
+        "token": "\u0120of",
+        "token_id": 328,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 217,
+        "token": "\u0120symbols",
+        "token_id": 29502,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 218,
+        "token": "\u0120separated",
+        "token_id": 33930,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 219,
+        "token": "\u0120by",
+        "token_id": 656,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 220,
+        "token": "\u0120whites",
+        "token_id": 45716,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 221,
+        "token": "paces",
+        "token_id": 53176,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 222,
+        "token": ",",
+        "token_id": 11,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 223,
+        "token": "\u0120and",
+        "token_id": 326,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 224,
+        "token": "\u0120with",
+        "token_id": 483,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 225,
+        "token": "\u0120coordinates",
+        "token_id": 27933,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 226,
+        "token": "\u0120for",
+        "token_id": 395,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 227,
+        "token": "\u0120each",
+        "token_id": 2454,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 228,
+        "token": "\u0120row",
+        "token_id": 5225,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 229,
+        "token": "\u0120an",
+        "token_id": 448,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 230,
+        "token": "\u0120column",
+        "token_id": 6000,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 231,
+        "token": ".",
+        "token_id": 13,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 232,
+        "token": "\u0120For",
+        "token_id": 2214,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 233,
+        "token": "\u0120example",
+        "token_id": 4994,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 234,
+        "token": ",",
+        "token_id": 11,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 235,
+        "token": "\u0120given",
+        "token_id": 4335,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 236,
+        "token": "\u0120the",
+        "token_id": 290,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 237,
+        "token": "\u0120",
+        "token_id": 220,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 238,
+        "token": "4",
+        "token_id": 19,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 239,
+        "token": "x",
+        "token_id": 87,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 240,
+        "token": "5",
+        "token_id": 20,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 241,
+        "token": "\u0120grid",
+        "token_id": 10586,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 242,
+        "token": ":\u010a\u010a",
+        "token_id": 1402,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 243,
+        "token": "\u0120",
+        "token_id": 220,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 244,
+        "token": "\u0120",
+        "token_id": 220,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 245,
+        "token": "0",
+        "token_id": 15,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 246,
+        "token": "\u0120",
+        "token_id": 220,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 247,
+        "token": "1",
+        "token_id": 16,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 248,
+        "token": "\u0120",
+        "token_id": 220,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 249,
+        "token": "2",
+        "token_id": 17,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 250,
+        "token": "\u0120",
+        "token_id": 220,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 251,
+        "token": "3",
+        "token_id": 18,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 252,
+        "token": "\u0120",
+        "token_id": 220,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 253,
+        "token": "4",
+        "token_id": 19,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 254,
+        "token": "\u010a",
+        "token_id": 198,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 255,
+        "token": "0",
+        "token_id": 15,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 256,
+        "token": "\u0120#",
+        "token_id": 1069,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 257,
+        "token": "\u0120#",
+        "token_id": 1069,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 258,
+        "token": "\u0120#",
+        "token_id": 1069,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 259,
+        "token": "\u0120#",
+        "token_id": 1069,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 260,
+        "token": "\u0120#\u010a",
+        "token_id": 21888,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 261,
+        "token": "1",
+        "token_id": 16,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 262,
+        "token": "\u0120#",
+        "token_id": 1069,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 263,
+        "token": "\u0120_",
+        "token_id": 1175,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 264,
+        "token": "\u0120_",
+        "token_id": 1175,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 265,
+        "token": "\u0120G",
+        "token_id": 499,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 266,
+        "token": "\u0120#\u010a",
+        "token_id": 21888,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 267,
+        "token": "2",
+        "token_id": 17,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 268,
+        "token": "\u0120#",
+        "token_id": 1069,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 269,
+        "token": "\u0120A",
+        "token_id": 355,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 270,
+        "token": "\u0120_",
+        "token_id": 1175,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 271,
+        "token": "\u0120_",
+        "token_id": 1175,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 272,
+        "token": "\u0120#\u010a",
+        "token_id": 21888,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 273,
+        "token": "3",
+        "token_id": 18,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 274,
+        "token": "\u0120#",
+        "token_id": 1069,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 275,
+        "token": "\u0120#",
+        "token_id": 1069,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 276,
+        "token": "\u0120#",
+        "token_id": 1069,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 277,
+        "token": "\u0120#",
+        "token_id": 1069,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 278,
+        "token": "\u0120#\u010a\u010a",
+        "token_id": 139657,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 279,
+        "token": "The",
+        "token_id": 976,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 280,
+        "token": "\u0120goal",
+        "token_id": 8583,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 281,
+        "token": "\u0120is",
+        "token_id": 382,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 282,
+        "token": "\u0120in",
+        "token_id": 306,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 283,
+        "token": "\u0120position",
+        "token_id": 4010,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 284,
+        "token": "\u0120(",
+        "token_id": 350,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 285,
+        "token": "1",
+        "token_id": 16,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 286,
+        "token": ",",
+        "token_id": 11,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 287,
+        "token": "3",
+        "token_id": 18,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 288,
+        "token": "),",
+        "token_id": 936,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 289,
+        "token": "\u0120while",
+        "token_id": 2049,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 290,
+        "token": "\u0120the",
+        "token_id": 290,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 291,
+        "token": "\u0120agent",
+        "token_id": 11793,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 292,
+        "token": "'s",
+        "token_id": 885,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 293,
+        "token": "\u0120position",
+        "token_id": 4010,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 294,
+        "token": "\u0120A",
+        "token_id": 355,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 295,
+        "token": "\u0120is",
+        "token_id": 382,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 296,
+        "token": "\u0120(",
+        "token_id": 350,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 297,
+        "token": "2",
+        "token_id": 17,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 298,
+        "token": ",",
+        "token_id": 11,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 299,
+        "token": "1",
+        "token_id": 16,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 300,
+        "token": ").\u010a\u010a",
+        "token_id": 3991,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 301,
+        "token": "The",
+        "token_id": 976,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 302,
+        "token": "\u0120agent",
+        "token_id": 11793,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 303,
+        "token": "'s",
+        "token_id": 885,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 304,
+        "token": "\u0120possible",
+        "token_id": 4149,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 305,
+        "token": "\u0120actions",
+        "token_id": 10370,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 306,
+        "token": "\u0120at",
+        "token_id": 540,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 307,
+        "token": "\u0120each",
+        "token_id": 2454,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 308,
+        "token": "\u0120step",
+        "token_id": 5983,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 309,
+        "token": "\u0120are",
+        "token_id": 553,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 310,
+        "token": ":\u010a\u010a",
+        "token_id": 1402,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 311,
+        "token": "Actions",
+        "token_id": 16642,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 312,
+        "token": ":\u010a",
+        "token_id": 734,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 313,
+        "token": "-",
+        "token_id": 12,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 314,
+        "token": "\u0120UP",
+        "token_id": 19153,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 315,
+        "token": ":",
+        "token_id": 25,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 316,
+        "token": "\u0120Move",
+        "token_id": 25485,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 317,
+        "token": "\u0120Up",
+        "token_id": 4686,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 318,
+        "token": "\u010a",
+        "token_id": 198,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 319,
+        "token": "-",
+        "token_id": 12,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 320,
+        "token": "\u0120DOWN",
+        "token_id": 56168,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 321,
+        "token": ":",
+        "token_id": 25,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 322,
+        "token": "\u0120Move",
+        "token_id": 25485,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 323,
+        "token": "\u0120Down",
+        "token_id": 8755,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 324,
+        "token": "\u010a",
+        "token_id": 198,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 325,
+        "token": "-",
+        "token_id": 12,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 326,
+        "token": "\u0120LEFT",
+        "token_id": 48606,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 327,
+        "token": ":",
+        "token_id": 25,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 328,
+        "token": "\u0120Move",
+        "token_id": 25485,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 329,
+        "token": "\u0120Left",
+        "token_id": 26982,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 330,
+        "token": "\u010a",
+        "token_id": 198,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 331,
+        "token": "-",
+        "token_id": 12,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 332,
+        "token": "\u0120RIGHT",
+        "token_id": 51066,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 333,
+        "token": ":",
+        "token_id": 25,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 334,
+        "token": "\u0120Move",
+        "token_id": 25485,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 335,
+        "token": "\u0120Right",
+        "token_id": 16354,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 336,
+        "token": "\u010a\u010a",
+        "token_id": 279,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 337,
+        "token": "Your",
+        "token_id": 9719,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 338,
+        "token": "\u0120final",
+        "token_id": 1721,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 339,
+        "token": "\u0120answer",
+        "token_id": 6052,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 340,
+        "token": "\u0120should",
+        "token_id": 1757,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 341,
+        "token": "\u0120be",
+        "token_id": 413,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 342,
+        "token": "\u0120a",
+        "token_id": 261,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 343,
+        "token": "\u0120valid",
+        "token_id": 4529,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 344,
+        "token": "\u0120JSON",
+        "token_id": 8205,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 345,
+        "token": "\u0120object",
+        "token_id": 2817,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 346,
+        "token": "\u0120provided",
+        "token_id": 5181,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 347,
+        "token": "\u0120in",
+        "token_id": 306,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 348,
+        "token": "\u0120the",
+        "token_id": 290,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 349,
+        "token": "\u0120following",
+        "token_id": 3992,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 350,
+        "token": "\u0120form",
+        "token_id": 1625,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 351,
+        "token": ":\u010a\u010a",
+        "token_id": 1402,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 352,
+        "token": "``",
+        "token_id": 26178,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 353,
+        "token": "`\u010a",
+        "token_id": 7450,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 354,
+        "token": "{\u010a",
+        "token_id": 745,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 355,
+        "token": "\u0120",
+        "token_id": 220,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 356,
+        "token": "\u0120\"",
+        "token_id": 392,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 357,
+        "token": "action",
+        "token_id": 1976,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 358,
+        "token": "\":",
+        "token_id": 1243,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 359,
+        "token": "\u0120\"<",
+        "token_id": 8817,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 360,
+        "token": "UP",
+        "token_id": 5082,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 361,
+        "token": "|",
+        "token_id": 91,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 362,
+        "token": "DOWN",
+        "token_id": 49412,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 363,
+        "token": "|",
+        "token_id": 91,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 364,
+        "token": "LEFT",
+        "token_id": 51729,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 365,
+        "token": "|",
+        "token_id": 91,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 366,
+        "token": "RIGHT",
+        "token_id": 24822,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 367,
+        "token": ">\",\u010a",
+        "token_id": 73539,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 368,
+        "token": "}\u010a",
+        "token_id": 739,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 369,
+        "token": "``",
+        "token_id": 26178,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 370,
+        "token": "`\u010a\u010a",
+        "token_id": 38193,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 371,
+        "token": "DO",
+        "token_id": 11492,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 372,
+        "token": "\u0120NOT",
+        "token_id": 7116,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 373,
+        "token": "\u0120INCLUDE",
+        "token_id": 140768,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 374,
+        "token": "\u0120ANY",
+        "token_id": 7894,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 375,
+        "token": "\u0120`",
+        "token_id": 2700,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 376,
+        "token": "json",
+        "token_id": 4108,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 377,
+        "token": "`",
+        "token_id": 63,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 378,
+        "token": "\u0120or",
+        "token_id": 503,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 379,
+        "token": "\u0120`",
+        "token_id": 2700,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 380,
+        "token": "json",
+        "token_id": 4108,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 381,
+        "token": "b",
+        "token_id": 65,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 382,
+        "token": "`",
+        "token_id": 63,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 383,
+        "token": "\u0120in",
+        "token_id": 306,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 384,
+        "token": "\u0120your",
+        "token_id": 634,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 385,
+        "token": "\u0120response",
+        "token_id": 3322,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 386,
+        "token": "\u0120NOR",
+        "token_id": 95851,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 387,
+        "token": "\u0120T",
+        "token_id": 353,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 388,
+        "token": "ICK",
+        "token_id": 20538,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 389,
+        "token": "\u0120MARK",
+        "token_id": 37273,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 390,
+        "token": "S",
+        "token_id": 50,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 391,
+        "token": "\u0120LIKE",
+        "token_id": 40213,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 392,
+        "token": "\u0120THIS",
+        "token_id": 17683,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 393,
+        "token": ":",
+        "token_id": 25,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 394,
+        "token": "\u0120```",
+        "token_id": 101822,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 395,
+        "token": "json",
+        "token_id": 4108,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 396,
+        "token": "\u0120``",
+        "token_id": 21398,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 397,
+        "token": "`.",
+        "token_id": 62102,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 398,
+        "token": "\u0120Start",
+        "token_id": 7972,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 399,
+        "token": "\u0120with",
+        "token_id": 483,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 400,
+        "token": "\u0120{",
+        "token_id": 354,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 401,
+        "token": "\u0120and",
+        "token_id": 326,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 402,
+        "token": "\u0120end",
+        "token_id": 1268,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 403,
+        "token": "\u0120with",
+        "token_id": 483,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 404,
+        "token": "\u0120}",
+        "token_id": 388,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 405,
+        "token": "\u0120exactly",
+        "token_id": 9707,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 406,
+        "token": ".\u010a\u010a",
+        "token_id": 364,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 407,
+        "token": "#",
+        "token_id": 2,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 408,
+        "token": "\u0120Inputs",
+        "token_id": 107999,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 409,
+        "token": "\u010a\u010a",
+        "token_id": 279,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 410,
+        "token": "Current",
+        "token_id": 6576,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 411,
+        "token": "\u0120grid",
+        "token_id": 10586,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 412,
+        "token": "\u0120state",
+        "token_id": 2608,
+        "token_groups": [
+          "prompt"
+        ]
+      },
+      {
+        "id": 413,
+        "token": ":\u010a\u010a",
+        "token_id": 1402,
+        "token_groups": [
+          "prompt"
+        ]
+      }
+    ],
+    "prompt_prefix_n_tokens": 414,
+    "prompt_placeholder_tokens": [
+      {
+        "id": 0,
+        "token": "{{",
+        "token_id": 5973,
+        "token_groups": [
+          "prompt",
+          "placeholder"
+        ]
+      },
+      {
+        "id": 1,
+        "token": "grid",
+        "token_id": 7886,
+        "token_groups": [
+          "prompt",
+          "placeholder"
+        ]
+      },
+      {
+        "id": 2,
+        "token": "_state",
+        "token_id": 9479,
+        "token_groups": [
+          "prompt",
+          "placeholder"
+        ]
+      },
+      {
+        "id": 3,
+        "token": "}}",
+        "token_id": 6478,
+        "token_groups": [
+          "prompt",
+          "placeholder"
+        ]
+      }
+    ],
+    "prompt_placeholder_n_tokens": 4,
+    "prompt_suffix_tokens": [
+      {
+        "id": 0,
+        "token": "<|end|>",
+        "token_id": 200007,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 1,
+        "token": "<|start|>",
+        "token_id": 200006,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      },
+      {
+        "id": 2,
+        "token": "assistant",
+        "token_id": 173781,
+        "token_groups": [
+          "prompt",
+          "template"
+        ]
+      }
+    ],
+    "prompt_suffix_n_tokens": 3
+  },
+  "steps": [
+    {
+      "step_id": 0,
+      "grid_state": [
+        "  0 1 2 3 4 5 6 ",
+        "0 # # # # # # # ",
+        "1 # _ A _ _ G # ",
+        "2 # _ _ _ _ _ # ",
+        "3 # _ _ _ _ _ # ",
+        "4 # _ _ _ _ _ # ",
+        "5 # _ _ _ _ _ # ",
+        "6 # # # # # # # "
+      ],
+      "grid_state_tokens": [
+        {
+          "id": 0,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 1,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 2,
+          "token": "0",
+          "token_id": 15,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 3,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 4,
+          "token": "1",
+          "token_id": 16,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 5,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 6,
+          "token": "2",
+          "token_id": 17,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 7,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 8,
+          "token": "3",
+          "token_id": 18,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 9,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 10,
+          "token": "4",
+          "token_id": 19,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 11,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 12,
+          "token": "5",
+          "token_id": 20,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 13,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 14,
+          "token": "6",
+          "token_id": 21,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 15,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 16,
+          "token": "0",
+          "token_id": 15,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 17,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 18,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 19,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 20,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 21,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 22,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 23,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 24,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 25,
+          "token": "1",
+          "token_id": 16,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 26,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 27,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 28,
+          "token": "\u0120A",
+          "token_id": 355,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 29,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 30,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 31,
+          "token": "\u0120G",
+          "token_id": 499,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 32,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 33,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 34,
+          "token": "2",
+          "token_id": 17,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 35,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 36,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 37,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 38,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 39,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 40,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 41,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 42,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 43,
+          "token": "3",
+          "token_id": 18,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 44,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 45,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 46,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 47,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 48,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 49,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 50,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 51,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 52,
+          "token": "4",
+          "token_id": 19,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 53,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 54,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 55,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 56,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 57,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 58,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 59,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 60,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 61,
+          "token": "5",
+          "token_id": 20,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 62,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 63,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 64,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 65,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 66,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 67,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 68,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 69,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 70,
+          "token": "6",
+          "token_id": 21,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 71,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 72,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 73,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 74,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 75,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 76,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 77,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 78,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        }
+      ],
+      "grid_state_n_tokens": 79,
+      "prompt_suffix_tokens": [
+        {
+          "id": 0,
+          "token": "<|end|>",
+          "token_id": 200007,
+          "token_groups": [
+            "prompt",
+            "template"
+          ],
+          "probes": {
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c2": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.010000000000000009,
+                "empty": 0.99
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_linear_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            }
+          }
+        },
+        {
+          "id": 1,
+          "token": "<|start|>",
+          "token_id": 200006,
+          "token_groups": [
+            "prompt",
+            "template"
+          ],
+          "probes": {
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c2": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.010000000000000009,
+                "empty": 0.99
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_linear_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            }
+          }
+        },
+        {
+          "id": 2,
+          "token": "assistant",
+          "token_id": 173781,
+          "token_groups": [
+            "prompt",
+            "template"
+          ],
+          "probes": {
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c2": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.010000000000000009,
+                "empty": 0.99
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_linear_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            }
+          }
+        }
+      ],
+      "prompt_suffix_n_tokens": 3,
+      "agent_action": "DOWN",
+      "output_text": "<|channel|>analysis<|message|>We need next move from A at (1,2) to G at (1,5). Path: right twice. So action RIGHT.<|end|><|start|>assistant<|channel|>final<|message|>{\n  \"action\": \"RIGHT\"\n}<|return|>",
+      "output_tokens": [
+        {
+          "id": 0,
+          "token": "<|channel|>",
+          "token_id": 200005,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 1,
+          "token": "analysis",
+          "token_id": 35644,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 2,
+          "token": "<|message|>",
+          "token_id": 200008,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 3,
+          "token": "We",
+          "token_id": 2167,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            "We": 0.7418,
+            "Need": 0.0886,
+            "Compute": 0.0474,
+            "Find": 0.0369,
+            "Grid": 0.0288
+          }
+        },
+        {
+          "id": 4,
+          "token": "\u0120need",
+          "token_id": 1309,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " need": 0.9632,
+            " have": 0.0137,
+            " must": 0.0065,
+            " want": 0.0039,
+            " see": 0.0024
+          }
+        },
+        {
+          "id": 5,
+          "token": "\u0120next",
+          "token_id": 2613,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " next": 0.4228,
+            " shortest": 0.3731,
+            " move": 0.1069,
+            " to": 0.0347,
+            " best": 0.0128
+          }
+        },
+        {
+          "id": 6,
+          "token": "\u0120move",
+          "token_id": 5275,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " move": 0.8929,
+            " action": 0.0733,
+            " best": 0.027,
+            " optimal": 0.0032,
+            " step": 0.0032
+          }
+        },
+        {
+          "id": 7,
+          "token": "\u0120from",
+          "token_id": 591,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " from": 0.4763,
+            ".": 0.255,
+            " shortest": 0.073,
+            " minimal": 0.0443,
+            " towards": 0.0443
+          }
+        },
+        {
+          "id": 8,
+          "token": "\u0120A",
+          "token_id": 355,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " A": 0.9554,
+            " (": 0.0255,
+            " current": 0.0094,
+            " agent": 0.0083,
+            " position": 0.0009
+          }
+        },
+        {
+          "id": 9,
+          "token": "\u0120at",
+          "token_id": 540,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " at": 0.9079,
+            " to": 0.058,
+            " (": 0.013,
+            "(": 0.0101,
+            " position": 0.0033
+          }
+        },
+        {
+          "id": 10,
+          "token": "\u0120(",
+          "token_id": 350,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " (": 0.9748,
+            " row": 0.0202,
+            " position": 0.004,
+            "?": 0.0003,
+            " coordinates": 0.0002
+          }
+        },
+        {
+          "id": 11,
+          "token": "1",
+          "token_id": 16,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            "1": 0.9999,
+            "row": 0.0,
+            "2": 0.0,
+            "??": 0.0,
+            "?": 0.0
+          }
+        },
+        {
+          "id": 12,
+          "token": ",",
+          "token_id": 11,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ",": 0.9999,
+            "?": 0.0001,
+            "?)": 0.0,
+            "?,": 0.0,
+            "??": 0.0
+          }
+        },
+        {
+          "id": 13,
+          "token": "2",
+          "token_id": 17,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            "2": 0.9999,
+            "?": 0.0,
+            "?)": 0.0,
+            "1": 0.0,
+            "3": 0.0
+          }
+        },
+        {
+          "id": 14,
+          "token": ")",
+          "token_id": 8,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ")": 0.6978,
+            ").": 0.2567,
+            "?)": 0.0239,
+            ")?": 0.0186,
+            "?": 0.0009
+          }
+        },
+        {
+          "id": 15,
+          "token": "\u0120to",
+          "token_id": 316,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " to": 0.9328,
+            " towards": 0.0282,
+            " goal": 0.0219,
+            " toward": 0.0091,
+            " (": 0.0023
+          }
+        },
+        {
+          "id": 16,
+          "token": "\u0120G",
+          "token_id": 499,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " G": 0.9395,
+            " goal": 0.0601,
+            " Goal": 0.0003,
+            " reach": 0.0001,
+            " go": 0.0
+          }
+        },
+        {
+          "id": 17,
+          "token": "\u0120at",
+          "token_id": 540,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " at": 0.9964,
+            " (": 0.0032,
+            "(": 0.0004,
+            "?": 0.0,
+            ".": 0.0
+          }
+        },
+        {
+          "id": 18,
+          "token": "\u0120(",
+          "token_id": 350,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " (": 0.9994,
+            "(": 0.0006,
+            " row": 0.0,
+            "?": 0.0,
+            " maybe": 0.0
+          }
+        },
+        {
+          "id": 19,
+          "token": "1",
+          "token_id": 16,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            "1": 1.0,
+            "2": 0.0,
+            "0": 0.0,
+            "??": 0.0,
+            "3": 0.0
+          }
+        },
+        {
+          "id": 20,
+          "token": ",",
+          "token_id": 11,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ",": 1.0,
+            "?": 0.0,
+            "5": 0.0,
+            "-": 0.0,
+            "/": 0.0
+          }
+        },
+        {
+          "id": 21,
+          "token": "5",
+          "token_id": 20,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            "5": 1.0,
+            "4": 0.0,
+            " five": 0.0,
+            "6": 0.0,
+            " fifth": 0.0
+          }
+        },
+        {
+          "id": 22,
+          "token": ").",
+          "token_id": 741,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ").": 0.992,
+            ")": 0.0076,
+            "),": 0.0003,
+            "):": 0.0,
+            ");": 0.0
+          }
+        },
+        {
+          "id": 23,
+          "token": "\u0120Path",
+          "token_id": 14027,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " Path": 0.7494,
+            " Straight": 0.0543,
+            " Open": 0.0423,
+            " Short": 0.0329,
+            " Row": 0.0107
+          }
+        },
+        {
+          "id": 24,
+          "token": ":",
+          "token_id": 25,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ":": 0.7234,
+            " straight": 0.0594,
+            " right": 0.0462,
+            " is": 0.0408,
+            " along": 0.036
+          }
+        },
+        {
+          "id": 25,
+          "token": "\u0120right",
+          "token_id": 1849,
+          "token_groups": [
+            "output",
+            "analysis",
+            "action"
+          ],
+          "probabilities": {
+            " right": 0.7808,
+            " move": 0.0566,
+            " Right": 0.044,
+            " from": 0.0303,
+            " go": 0.0208
+          }
+        },
+        {
+          "id": 26,
+          "token": "\u0120twice",
+          "token_id": 18370,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " twice": 0.1863,
+            ",": 0.1451,
+            " three": 0.113,
+            " ": 0.113,
+            " steps": 0.0997
+          }
+        },
+        {
+          "id": 27,
+          "token": ".",
+          "token_id": 13,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ".": 0.7723,
+            "?": 0.0922,
+            " to": 0.0634,
+            " then": 0.0233,
+            ":": 0.0233
+          }
+        },
+        {
+          "id": 28,
+          "token": "\u0120So",
+          "token_id": 2632,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " So": 0.665,
+            " First": 0.0701,
+            " Check": 0.0482,
+            " But": 0.0482,
+            " No": 0.0331
+          }
+        },
+        {
+          "id": 29,
+          "token": "\u0120action",
+          "token_id": 3736,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " action": 0.7425,
+            " first": 0.2127,
+            " move": 0.012,
+            " choose": 0.012,
+            " RIGHT": 0.005
+          }
+        },
+        {
+          "id": 30,
+          "token": "\u0120RIGHT",
+          "token_id": 51066,
+          "token_groups": [
+            "output",
+            "analysis",
+            "action"
+          ],
+          "probabilities": {
+            " RIGHT": 0.9572,
+            ":": 0.0255,
+            " \"": 0.0094,
+            " is": 0.0027,
+            " Right": 0.0018
+          }
+        },
+        {
+          "id": 31,
+          "token": ".",
+          "token_id": 13,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ".": 0.9924,
+            ".\n\n": 0.0036,
+            "?": 0.0019,
+            " is": 0.0004,
+            " (": 0.0003
+          }
+        },
+        {
+          "id": 32,
+          "token": "<|end|>",
+          "token_id": 200007,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 33,
+          "token": "<|start|>",
+          "token_id": 200006,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 34,
+          "token": "assistant",
+          "token_id": 173781,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 35,
+          "token": "<|channel|>",
+          "token_id": 200005,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 36,
+          "token": "final",
+          "token_id": 17196,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 37,
+          "token": "<|message|>",
+          "token_id": 200008,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 38,
+          "token": "{\u010a",
+          "token_id": 745,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            "{\n": 0.4658,
+            "{": 0.3628,
+            "{\"": 0.1714,
+            "{\n\n": 0.0,
+            "{\\": 0.0
+          }
+        },
+        {
+          "id": 39,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            " ": 1.0,
+            " \"": 0.0,
+            "\u00a0": 0.0,
+            "   ": 0.0,
+            "\"": 0.0
+          }
+        },
+        {
+          "id": 40,
+          "token": "\u0120\"",
+          "token_id": 392,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            " \"": 1.0,
+            " \u201c": 0.0,
+            " \"_": 0.0,
+            " \"$": 0.0,
+            " \\\"": 0.0
+          }
+        },
+        {
+          "id": 41,
+          "token": "action",
+          "token_id": 1976,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            "action": 1.0,
+            "answer": 0.0,
+            "actions": 0.0,
+            "Action": 0.0,
+            "analysis": 0.0
+          }
+        },
+        {
+          "id": 42,
+          "token": "\":",
+          "token_id": 1243,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            "\":": 0.9995,
+            "\":\"": 0.0005,
+            "\"": 0.0,
+            "\":\n": 0.0,
+            "\"\n": 0.0
+          }
+        },
+        {
+          "id": 43,
+          "token": "\u0120\"",
+          "token_id": 392,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            " \"": 1.0,
+            " \"<": 0.0,
+            " \"\\\"": 0.0,
+            " \"[": 0.0,
+            " \"\"\n": 0.0
+          }
+        },
+        {
+          "id": 44,
+          "token": "RIGHT",
+          "token_id": 24822,
+          "token_groups": [
+            "output",
+            "final",
+            "action"
+          ],
+          "probabilities": {
+            "RIGHT": 1.0,
+            "LEFT": 0.0,
+            " RIGHT": 0.0,
+            "DOWN": 0.0,
+            "R": 0.0
+          }
+        },
+        {
+          "id": 45,
+          "token": "\"\u010a",
+          "token_id": 1092,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            "\"\n": 1.0,
+            "\",\n": 0.0,
+            "\"": 0.0,
+            "\"}\n": 0.0,
+            "\")\n": 0.0
+          }
+        },
+        {
+          "id": 46,
+          "token": "}",
+          "token_id": 92,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            "}": 0.9999,
+            "}\n": 0.0001,
+            "}\n\n": 0.0,
+            "}`": 0.0,
+            " }": 0.0
+          }
+        },
+        {
+          "id": 47,
+          "token": "<|return|>",
+          "token_id": 200002,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        }
+      ],
+      "output_n_tokens": 48,
+      "pre_reasoning_prompt_suffix_tokens": [
+        {
+          "id": 0,
+          "token": "<|end|>",
+          "token_id": 200007,
+          "token_groups": [
+            "prompt",
+            "template"
+          ],
+          "probes": {
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c2": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.010000000000000009,
+                "empty": 0.99
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_linear_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            }
+          }
+        },
+        {
+          "id": 1,
+          "token": "<|start|>",
+          "token_id": 200006,
+          "token_groups": [
+            "prompt",
+            "template"
+          ],
+          "probes": {
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c2": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.010000000000000009,
+                "empty": 0.99
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_linear_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            }
+          }
+        },
+        {
+          "id": 2,
+          "token": "assistant",
+          "token_id": 173781,
+          "token_groups": [
+            "prompt",
+            "template"
+          ],
+          "probes": {
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c2": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.010000000000000009,
+                "empty": 0.99
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_linear_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "step_id": 1,
+      "grid_state": [
+        "  0 1 2 3 4 5 6 ",
+        "0 # # # # # # # ",
+        "1 # _ _ A _ G # ",
+        "2 # _ _ _ _ _ # ",
+        "3 # _ _ _ _ _ # ",
+        "4 # _ _ _ _ _ # ",
+        "5 # _ _ _ _ _ # ",
+        "6 # # # # # # # "
+      ],
+      "grid_state_tokens": [
+        {
+          "id": 0,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 1,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 2,
+          "token": "0",
+          "token_id": 15,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 3,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 4,
+          "token": "1",
+          "token_id": 16,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 5,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 6,
+          "token": "2",
+          "token_id": 17,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 7,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 8,
+          "token": "3",
+          "token_id": 18,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 9,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 10,
+          "token": "4",
+          "token_id": 19,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 11,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 12,
+          "token": "5",
+          "token_id": 20,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 13,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 14,
+          "token": "6",
+          "token_id": 21,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 15,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 16,
+          "token": "0",
+          "token_id": 15,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 17,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 18,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 19,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 20,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 21,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 22,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 23,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 24,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 25,
+          "token": "1",
+          "token_id": 16,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 26,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 27,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 28,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 29,
+          "token": "\u0120A",
+          "token_id": 355,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 30,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 31,
+          "token": "\u0120G",
+          "token_id": 499,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 32,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 33,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 34,
+          "token": "2",
+          "token_id": 17,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 35,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 36,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 37,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 38,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 39,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 40,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 41,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 42,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 43,
+          "token": "3",
+          "token_id": 18,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 44,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 45,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 46,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 47,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 48,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 49,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 50,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 51,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 52,
+          "token": "4",
+          "token_id": 19,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 53,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 54,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 55,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 56,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 57,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 58,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 59,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 60,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 61,
+          "token": "5",
+          "token_id": 20,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 62,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 63,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 64,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 65,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 66,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 67,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 68,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 69,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 70,
+          "token": "6",
+          "token_id": 21,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 71,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 72,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 73,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 74,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 75,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 76,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 77,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 78,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        }
+      ],
+      "grid_state_n_tokens": 79,
+      "prompt_suffix_tokens": [
+        {
+          "id": 0,
+          "token": "<|end|>",
+          "token_id": 200007,
+          "token_groups": [
+            "prompt",
+            "template"
+          ],
+          "probes": {
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c2": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.010000000000000009,
+                "empty": 0.99
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_linear_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            }
+          }
+        },
+        {
+          "id": 1,
+          "token": "<|start|>",
+          "token_id": 200006,
+          "token_groups": [
+            "prompt",
+            "template"
+          ],
+          "probes": {
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c2": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.010000000000000009,
+                "empty": 0.99
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_linear_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            }
+          }
+        },
+        {
+          "id": 2,
+          "token": "assistant",
+          "token_id": 173781,
+          "token_groups": [
+            "prompt",
+            "template"
+          ],
+          "probes": {
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c2": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.010000000000000009,
+                "empty": 0.99
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_linear_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            }
+          }
+        }
+      ],
+      "prompt_suffix_n_tokens": 3,
+      "agent_action": "RIGHT",
+      "output_text": "<|channel|>analysis<|message|>We need next move from A at (1,3). Goal at (1,5). Path: right twice. So action RIGHT.<|end|><|start|>assistant<|channel|>final<|message|>{\n  \"action\": \"RIGHT\"\n}<|return|>",
+      "output_tokens": [
+        {
+          "id": 0,
+          "token": "<|channel|>",
+          "token_id": 200005,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 1,
+          "token": "analysis",
+          "token_id": 35644,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 2,
+          "token": "<|message|>",
+          "token_id": 200008,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 3,
+          "token": "We",
+          "token_id": 2167,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            "We": 0.7615,
+            "Need": 0.0803,
+            "Compute": 0.0487,
+            "Find": 0.043,
+            "Grid": 0.0261
+          }
+        },
+        {
+          "id": 4,
+          "token": "\u0120need",
+          "token_id": 1309,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " need": 0.967,
+            " have": 0.0122,
+            " must": 0.0057,
+            " want": 0.0035,
+            " see": 0.0024
+          }
+        },
+        {
+          "id": 5,
+          "token": "\u0120next",
+          "token_id": 2613,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " next": 0.4582,
+            " shortest": 0.3569,
+            " move": 0.0902,
+            " to": 0.0332,
+            " minimal": 0.0138
+          }
+        },
+        {
+          "id": 6,
+          "token": "\u0120move",
+          "token_id": 5275,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " move": 0.8884,
+            " action": 0.0826,
+            " best": 0.0237,
+            " optimal": 0.0025,
+            " step": 0.0025
+          }
+        },
+        {
+          "id": 7,
+          "token": "\u0120from",
+          "token_id": 591,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " from": 0.4801,
+            ".": 0.257,
+            " shortest": 0.065,
+            " minimal": 0.0506,
+            " towards": 0.0348
+          }
+        },
+        {
+          "id": 8,
+          "token": "\u0120A",
+          "token_id": 355,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " A": 0.963,
+            " (": 0.0176,
+            " agent": 0.0107,
+            " current": 0.0074,
+            " position": 0.0007
+          }
+        },
+        {
+          "id": 9,
+          "token": "\u0120at",
+          "token_id": 540,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " at": 0.8791,
+            " to": 0.0818,
+            " (": 0.0142,
+            "(": 0.0098,
+            " towards": 0.0067
+          }
+        },
+        {
+          "id": 10,
+          "token": "\u0120(",
+          "token_id": 350,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " (": 0.9772,
+            " row": 0.0179,
+            " position": 0.004,
+            "?": 0.0003,
+            " coordinates": 0.0002
+          }
+        },
+        {
+          "id": 11,
+          "token": "1",
+          "token_id": 16,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            "1": 1.0,
+            "row": 0.0,
+            "??": 0.0,
+            "2": 0.0,
+            "?": 0.0
+          }
+        },
+        {
+          "id": 12,
+          "token": ",",
+          "token_id": 11,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ",": 0.9998,
+            "?": 0.0002,
+            "?)": 0.0,
+            "?,": 0.0,
+            "??": 0.0
+          }
+        },
+        {
+          "id": 13,
+          "token": "3",
+          "token_id": 18,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            "3": 0.9999,
+            "?": 0.0001,
+            "2": 0.0,
+            "?)": 0.0,
+            "4": 0.0
+          }
+        },
+        {
+          "id": 14,
+          "token": ").",
+          "token_id": 741,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ").": 0.4457,
+            ")": 0.2703,
+            "?)": 0.164,
+            ")?": 0.0994,
+            "?": 0.0105
+          }
+        },
+        {
+          "id": 15,
+          "token": "\u0120Goal",
+          "token_id": 67160,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " Goal": 0.974,
+            " G": 0.0202,
+            " goal": 0.0027,
+            " Need": 0.0006,
+            " Path": 0.0003
+          }
+        },
+        {
+          "id": 16,
+          "token": "\u0120at",
+          "token_id": 540,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " at": 0.9219,
+            " G": 0.0757,
+            " (": 0.0018,
+            " is": 0.0006,
+            " right": 0.0
+          }
+        },
+        {
+          "id": 17,
+          "token": "\u0120(",
+          "token_id": 350,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " (": 0.9997,
+            "(": 0.0003,
+            " row": 0.0,
+            " same": 0.0,
+            "?": 0.0
+          }
+        },
+        {
+          "id": 18,
+          "token": "1",
+          "token_id": 16,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            "1": 1.0,
+            "2": 0.0,
+            "0": 0.0,
+            "??": 0.0,
+            "3": 0.0
+          }
+        },
+        {
+          "id": 19,
+          "token": ",",
+          "token_id": 11,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ",": 1.0,
+            "?": 0.0,
+            "5": 0.0,
+            "-": 0.0,
+            ")": 0.0
+          }
+        },
+        {
+          "id": 20,
+          "token": "5",
+          "token_id": 20,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            "5": 1.0,
+            "4": 0.0,
+            " five": 0.0,
+            "6": 0.0,
+            "?": 0.0
+          }
+        },
+        {
+          "id": 21,
+          "token": ").",
+          "token_id": 741,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ").": 0.998,
+            ")": 0.0019,
+            "),": 0.0001,
+            ")?": 0.0,
+            "):": 0.0
+          }
+        },
+        {
+          "id": 22,
+          "token": "\u0120Path",
+          "token_id": 14027,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " Path": 0.6945,
+            " Open": 0.057,
+            " Straight": 0.0503,
+            " So": 0.0305,
+            " Move": 0.021
+          }
+        },
+        {
+          "id": 23,
+          "token": ":",
+          "token_id": 25,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ":": 0.7565,
+            " right": 0.0621,
+            " is": 0.0548,
+            " straight": 0.0484,
+            " directly": 0.0202
+          }
+        },
+        {
+          "id": 24,
+          "token": "\u0120right",
+          "token_id": 1849,
+          "token_groups": [
+            "output",
+            "analysis",
+            "action"
+          ],
+          "probabilities": {
+            " right": 0.7372,
+            " from": 0.0686,
+            " move": 0.0605,
+            " Right": 0.0534,
+            " RIGHT": 0.0196
+          }
+        },
+        {
+          "id": 25,
+          "token": "\u0120twice",
+          "token_id": 18370,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " to": 0.3136,
+            " twice": 0.3136,
+            " two": 0.1678,
+            ",": 0.0793,
+            " ": 0.02
+          }
+        },
+        {
+          "id": 26,
+          "token": ".",
+          "token_id": 13,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ".": 0.9815,
+            ":": 0.0052,
+            "?": 0.0045,
+            ",": 0.0028,
+            " to": 0.0015
+          }
+        },
+        {
+          "id": 27,
+          "token": "\u0120So",
+          "token_id": 2632,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " So": 0.5461,
+            " Check": 0.1565,
+            " No": 0.0837,
+            " First": 0.0448,
+            " But": 0.0349
+          }
+        },
+        {
+          "id": 28,
+          "token": "\u0120action",
+          "token_id": 3736,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " action": 0.8481,
+            " first": 0.1148,
+            " move": 0.0121,
+            " choose": 0.0073,
+            " RIGHT": 0.005
+          }
+        },
+        {
+          "id": 29,
+          "token": "\u0120RIGHT",
+          "token_id": 51066,
+          "token_groups": [
+            "output",
+            "analysis",
+            "action"
+          ],
+          "probabilities": {
+            " RIGHT": 0.9631,
+            ":": 0.0227,
+            " \"": 0.0083,
+            " is": 0.0019,
+            " Right": 0.0014
+          }
+        },
+        {
+          "id": 30,
+          "token": ".",
+          "token_id": 13,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ".": 0.9921,
+            ".\n\n": 0.0036,
+            "?": 0.0012,
+            " first": 0.0005,
+            ",": 0.0005
+          }
+        },
+        {
+          "id": 31,
+          "token": "<|end|>",
+          "token_id": 200007,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 32,
+          "token": "<|start|>",
+          "token_id": 200006,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 33,
+          "token": "assistant",
+          "token_id": 173781,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 34,
+          "token": "<|channel|>",
+          "token_id": 200005,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 35,
+          "token": "final",
+          "token_id": 17196,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 36,
+          "token": "<|message|>",
+          "token_id": 200008,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 37,
+          "token": "{\u010a",
+          "token_id": 745,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            "{\n": 0.5282,
+            "{": 0.3204,
+            "{\"": 0.1513,
+            "{\n\n": 0.0,
+            "{\\": 0.0
+          }
+        },
+        {
+          "id": 38,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            " ": 1.0,
+            " \"": 0.0,
+            "\u00a0": 0.0,
+            "\"": 0.0,
+            "   ": 0.0
+          }
+        },
+        {
+          "id": 39,
+          "token": "\u0120\"",
+          "token_id": 392,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            " \"": 1.0,
+            " \u201c": 0.0,
+            " \"_": 0.0,
+            " \"$": 0.0,
+            " \\\"": 0.0
+          }
+        },
+        {
+          "id": 40,
+          "token": "action",
+          "token_id": 1976,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            "action": 1.0,
+            "answer": 0.0,
+            "actions": 0.0,
+            "Action": 0.0,
+            "analysis": 0.0
+          }
+        },
+        {
+          "id": 41,
+          "token": "\":",
+          "token_id": 1243,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            "\":": 0.9997,
+            "\":\"": 0.0003,
+            "\"": 0.0,
+            "\":\n": 0.0,
+            "\"\n": 0.0
+          }
+        },
+        {
+          "id": 42,
+          "token": "\u0120\"",
+          "token_id": 392,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            " \"": 1.0,
+            " \"<": 0.0,
+            " \"\\\"": 0.0,
+            " \"[": 0.0,
+            " \"#": 0.0
+          }
+        },
+        {
+          "id": 43,
+          "token": "RIGHT",
+          "token_id": 24822,
+          "token_groups": [
+            "output",
+            "final",
+            "action"
+          ],
+          "probabilities": {
+            "RIGHT": 1.0,
+            "LEFT": 0.0,
+            " RIGHT": 0.0,
+            "R": 0.0,
+            "UP": 0.0
+          }
+        },
+        {
+          "id": 44,
+          "token": "\"\u010a",
+          "token_id": 1092,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            "\"\n": 1.0,
+            "\",\n": 0.0,
+            "\"": 0.0,
+            "\"}\n": 0.0,
+            "\")\n": 0.0
+          }
+        },
+        {
+          "id": 45,
+          "token": "}",
+          "token_id": 92,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            "}": 0.9999,
+            "}\n": 0.0001,
+            "}\n\n": 0.0,
+            "}`": 0.0,
+            " }": 0.0
+          }
+        },
+        {
+          "id": 46,
+          "token": "<|return|>",
+          "token_id": 200002,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        }
+      ],
+      "output_n_tokens": 47,
+      "pre_reasoning_prompt_suffix_tokens": [
+        {
+          "id": 0,
+          "token": "<|end|>",
+          "token_id": 200007,
+          "token_groups": [
+            "prompt",
+            "template"
+          ],
+          "probes": {
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c2": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.010000000000000009,
+                "empty": 0.99
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_linear_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            }
+          }
+        },
+        {
+          "id": 1,
+          "token": "<|start|>",
+          "token_id": 200006,
+          "token_groups": [
+            "prompt",
+            "template"
+          ],
+          "probes": {
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c2": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.010000000000000009,
+                "empty": 0.99
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_linear_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            }
+          }
+        },
+        {
+          "id": 2,
+          "token": "assistant",
+          "token_id": 173781,
+          "token_groups": [
+            "prompt",
+            "template"
+          ],
+          "probes": {
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c2": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.010000000000000009,
+                "empty": 0.99
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_linear_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "step_id": 2,
+      "grid_state": [
+        "  0 1 2 3 4 5 6 ",
+        "0 # # # # # # # ",
+        "1 # _ _ _ A G # ",
+        "2 # _ _ _ _ _ # ",
+        "3 # _ _ _ _ _ # ",
+        "4 # _ _ _ _ _ # ",
+        "5 # _ _ _ _ _ # ",
+        "6 # # # # # # # "
+      ],
+      "grid_state_tokens": [
+        {
+          "id": 0,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 1,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 2,
+          "token": "0",
+          "token_id": 15,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 3,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 4,
+          "token": "1",
+          "token_id": 16,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 5,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 6,
+          "token": "2",
+          "token_id": 17,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 7,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 8,
+          "token": "3",
+          "token_id": 18,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 9,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 10,
+          "token": "4",
+          "token_id": 19,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 11,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 12,
+          "token": "5",
+          "token_id": 20,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 13,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 14,
+          "token": "6",
+          "token_id": 21,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 15,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 16,
+          "token": "0",
+          "token_id": 15,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 17,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 18,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 19,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 20,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 21,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 22,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 23,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 24,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 25,
+          "token": "1",
+          "token_id": 16,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 26,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 27,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 28,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 29,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 30,
+          "token": "\u0120A",
+          "token_id": 355,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 31,
+          "token": "\u0120G",
+          "token_id": 499,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 32,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 33,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 34,
+          "token": "2",
+          "token_id": 17,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 35,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 36,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 37,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 38,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 39,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 40,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 41,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 42,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 43,
+          "token": "3",
+          "token_id": 18,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 44,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 45,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 46,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 47,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 48,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 49,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 50,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 51,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 52,
+          "token": "4",
+          "token_id": 19,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 53,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 54,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 55,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 56,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 57,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 58,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 59,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 60,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 61,
+          "token": "5",
+          "token_id": 20,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 62,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 63,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 64,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 65,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 66,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 67,
+          "token": "\u0120_",
+          "token_id": 1175,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 68,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 69,
+          "token": "\u0120\u010a",
+          "token_id": 793,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 70,
+          "token": "6",
+          "token_id": 21,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        },
+        {
+          "id": 71,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 72,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 73,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 74,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 75,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 76,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 77,
+          "token": "\u0120#",
+          "token_id": 1069,
+          "token_groups": [
+            "prompt",
+            "grid_state",
+            "grid_tile"
+          ]
+        },
+        {
+          "id": 78,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "prompt",
+            "grid_state"
+          ]
+        }
+      ],
+      "grid_state_n_tokens": 79,
+      "prompt_suffix_tokens": [
+        {
+          "id": 0,
+          "token": "<|end|>",
+          "token_id": 200007,
+          "token_groups": [
+            "prompt",
+            "template"
+          ],
+          "probes": {
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c2": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.010000000000000009,
+                "empty": 0.99
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_linear_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            }
+          }
+        },
+        {
+          "id": 1,
+          "token": "<|start|>",
+          "token_id": 200006,
+          "token_groups": [
+            "prompt",
+            "template"
+          ],
+          "probes": {
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c2": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.010000000000000009,
+                "empty": 0.99
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_linear_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            }
+          }
+        },
+        {
+          "id": 2,
+          "token": "assistant",
+          "token_id": 173781,
+          "token_groups": [
+            "prompt",
+            "template"
+          ],
+          "probes": {
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c2": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.010000000000000009,
+                "empty": 0.99
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_linear_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            }
+          }
+        }
+      ],
+      "prompt_suffix_n_tokens": 3,
+      "agent_action": "DOWN",
+      "output_text": "<|channel|>analysis<|message|>We need next move from A at (1,4) to G at (1,5). Right is free. So action RIGHT.<|end|><|start|>assistant<|channel|>final<|message|>{\n  \"action\": \"RIGHT\"\n}<|return|>",
+      "output_tokens": [
+        {
+          "id": 0,
+          "token": "<|channel|>",
+          "token_id": 200005,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 1,
+          "token": "analysis",
+          "token_id": 35644,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 2,
+          "token": "<|message|>",
+          "token_id": 200008,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 3,
+          "token": "We",
+          "token_id": 2167,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            "We": 0.7464,
+            "Need": 0.0613,
+            "Grid": 0.0421,
+            "Find": 0.0372,
+            "Agent": 0.0328
+          }
+        },
+        {
+          "id": 4,
+          "token": "\u0120need",
+          "token_id": 1309,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " need": 0.9483,
+            " have": 0.0253,
+            " must": 0.0072,
+            " see": 0.0056,
+            " want": 0.003
+          }
+        },
+        {
+          "id": 5,
+          "token": "\u0120next",
+          "token_id": 2613,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " next": 0.5211,
+            " shortest": 0.2461,
+            " move": 0.1163,
+            " to": 0.0485,
+            " best": 0.0139
+          }
+        },
+        {
+          "id": 6,
+          "token": "\u0120move",
+          "token_id": 5275,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " move": 0.8963,
+            " action": 0.0834,
+            " best": 0.0164,
+            " step": 0.002,
+            " optimal": 0.0017
+          }
+        },
+        {
+          "id": 7,
+          "token": "\u0120from",
+          "token_id": 591,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " from": 0.473,
+            ".": 0.2869,
+            " minimal": 0.0499,
+            " shortest": 0.0499,
+            " to": 0.0343
+          }
+        },
+        {
+          "id": 8,
+          "token": "\u0120A",
+          "token_id": 355,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " A": 0.974,
+            " agent": 0.0108,
+            " current": 0.0074,
+            " (": 0.0066,
+            " position": 0.0005
+          }
+        },
+        {
+          "id": 9,
+          "token": "\u0120at",
+          "token_id": 540,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " at": 0.6965,
+            " to": 0.2562,
+            " (": 0.0186,
+            " towards": 0.0099,
+            "(": 0.0088
+          }
+        },
+        {
+          "id": 10,
+          "token": "\u0120(",
+          "token_id": 350,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " (": 0.923,
+            " row": 0.0669,
+            " position": 0.008,
+            "?": 0.0007,
+            " coordinates": 0.0004
+          }
+        },
+        {
+          "id": 11,
+          "token": "1",
+          "token_id": 16,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            "1": 0.9999,
+            "row": 0.0,
+            "??": 0.0,
+            "2": 0.0,
+            "?),": 0.0
+          }
+        },
+        {
+          "id": 12,
+          "token": ",",
+          "token_id": 11,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ",": 0.9996,
+            "?": 0.0003,
+            "?)": 0.0,
+            "?,": 0.0,
+            "??": 0.0
+          }
+        },
+        {
+          "id": 13,
+          "token": "4",
+          "token_id": 19,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            "4": 0.9993,
+            "?": 0.0004,
+            "5": 0.0001,
+            "3": 0.0001,
+            "?)": 0.0
+          }
+        },
+        {
+          "id": 14,
+          "token": ")",
+          "token_id": 8,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ")": 0.4782,
+            ").": 0.2259,
+            "?)": 0.1759,
+            ")?": 0.1067,
+            "?": 0.0068
+          }
+        },
+        {
+          "id": 15,
+          "token": "\u0120to",
+          "token_id": 316,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " to": 0.9285,
+            " towards": 0.0247,
+            " goal": 0.0193,
+            " toward": 0.008,
+            " (": 0.0063
+          }
+        },
+        {
+          "id": 16,
+          "token": "\u0120G",
+          "token_id": 499,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " G": 0.9666,
+            " goal": 0.0331,
+            " Goal": 0.0002,
+            " reach": 0.0,
+            " go": 0.0
+          }
+        },
+        {
+          "id": 17,
+          "token": "\u0120at",
+          "token_id": 540,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " at": 0.9987,
+            " (": 0.0012,
+            "(": 0.0002,
+            "?": 0.0,
+            " is": 0.0
+          }
+        },
+        {
+          "id": 18,
+          "token": "\u0120(",
+          "token_id": 350,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " (": 0.9991,
+            "(": 0.0009,
+            "?": 0.0,
+            " same": 0.0,
+            " row": 0.0
+          }
+        },
+        {
+          "id": 19,
+          "token": "1",
+          "token_id": 16,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            "1": 1.0,
+            "0": 0.0,
+            "2": 0.0,
+            "??": 0.0,
+            "3": 0.0
+          }
+        },
+        {
+          "id": 20,
+          "token": ",",
+          "token_id": 11,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ",": 1.0,
+            "?": 0.0,
+            "5": 0.0,
+            "-": 0.0,
+            "/": 0.0
+          }
+        },
+        {
+          "id": 21,
+          "token": "5",
+          "token_id": 20,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            "5": 1.0,
+            "6": 0.0,
+            " five": 0.0,
+            "4": 0.0,
+            " ": 0.0
+          }
+        },
+        {
+          "id": 22,
+          "token": ").",
+          "token_id": 741,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ").": 0.9562,
+            ")": 0.0371,
+            "),": 0.003,
+            "):": 0.003,
+            ");": 0.0005
+          }
+        },
+        {
+          "id": 23,
+          "token": "\u0120Right",
+          "token_id": 16354,
+          "token_groups": [
+            "output",
+            "analysis",
+            "action"
+          ],
+          "probabilities": {
+            " Right": 0.5083,
+            " So": 0.0883,
+            " Move": 0.0688,
+            " Adj": 0.0688,
+            " It's": 0.0536
+          }
+        },
+        {
+          "id": 24,
+          "token": "\u0120is",
+          "token_id": 382,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " is": 0.5819,
+            ".": 0.2426,
+            " move": 0.0613,
+            " step": 0.0372,
+            " moves": 0.0226
+          }
+        },
+        {
+          "id": 25,
+          "token": "\u0120free",
+          "token_id": 2240,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " free": 0.4339,
+            " goal": 0.2049,
+            " immediate": 0.0665,
+            " clear": 0.0518,
+            " possible": 0.0457
+          }
+        },
+        {
+          "id": 26,
+          "token": ".",
+          "token_id": 13,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ".": 0.9201,
+            "?": 0.0357,
+            " underscore": 0.008,
+            ",": 0.008,
+            " '_'": 0.007
+          }
+        },
+        {
+          "id": 27,
+          "token": "\u0120So",
+          "token_id": 2632,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " So": 0.8995,
+            "<|end|>": 0.0507,
+            " Output": 0.0187,
+            " Return": 0.0078,
+            " Answer": 0.0061
+          }
+        },
+        {
+          "id": 28,
+          "token": "\u0120action",
+          "token_id": 3736,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            " action": 0.9593,
+            " output": 0.0155,
+            " answer": 0.0121,
+            " choose": 0.0031,
+            " ACTION": 0.0024
+          }
+        },
+        {
+          "id": 29,
+          "token": "\u0120RIGHT",
+          "token_id": 51066,
+          "token_groups": [
+            "output",
+            "analysis",
+            "action"
+          ],
+          "probabilities": {
+            " RIGHT": 0.9814,
+            ":": 0.0096,
+            " \"": 0.0066,
+            " Right": 0.0008,
+            "=": 0.0007
+          }
+        },
+        {
+          "id": 30,
+          "token": ".",
+          "token_id": 13,
+          "token_groups": [
+            "output",
+            "analysis"
+          ],
+          "probabilities": {
+            ".": 0.9996,
+            ".\n\n": 0.0003,
+            ".L": 0.0,
+            "\u3002": 0.0,
+            "<|end|>": 0.0
+          }
+        },
+        {
+          "id": 31,
+          "token": "<|end|>",
+          "token_id": 200007,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 32,
+          "token": "<|start|>",
+          "token_id": 200006,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 33,
+          "token": "assistant",
+          "token_id": 173781,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 34,
+          "token": "<|channel|>",
+          "token_id": 200005,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 35,
+          "token": "final",
+          "token_id": 17196,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 36,
+          "token": "<|message|>",
+          "token_id": 200008,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        },
+        {
+          "id": 37,
+          "token": "{\u010a",
+          "token_id": 745,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            "{\n": 0.4842,
+            "{": 0.3771,
+            "{\"": 0.1387,
+            "{\n\n": 0.0,
+            "{\\": 0.0
+          }
+        },
+        {
+          "id": 38,
+          "token": "\u0120",
+          "token_id": 220,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            " ": 1.0,
+            " \"": 0.0,
+            "\u00a0": 0.0,
+            "\"": 0.0,
+            "   ": 0.0
+          }
+        },
+        {
+          "id": 39,
+          "token": "\u0120\"",
+          "token_id": 392,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            " \"": 1.0,
+            " \u201c": 0.0,
+            " \"_": 0.0,
+            " \"$": 0.0,
+            " \\\"": 0.0
+          }
+        },
+        {
+          "id": 40,
+          "token": "action",
+          "token_id": 1976,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            "action": 1.0,
+            "Action": 0.0,
+            " action": 0.0,
+            "actions": 0.0,
+            "answer": 0.0
+          }
+        },
+        {
+          "id": 41,
+          "token": "\":",
+          "token_id": 1243,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            "\":": 0.9997,
+            "\":\"": 0.0003,
+            "\"": 0.0,
+            "\":\n": 0.0,
+            "\\\":": 0.0
+          }
+        },
+        {
+          "id": 42,
+          "token": "\u0120\"",
+          "token_id": 392,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            " \"": 1.0,
+            " \"<": 0.0,
+            " \"\\\"": 0.0,
+            " \"[": 0.0,
+            " \"#": 0.0
+          }
+        },
+        {
+          "id": 43,
+          "token": "RIGHT",
+          "token_id": 24822,
+          "token_groups": [
+            "output",
+            "final",
+            "action"
+          ],
+          "probabilities": {
+            "RIGHT": 1.0,
+            " RIGHT": 0.0,
+            "LEFT": 0.0,
+            "Right": 0.0,
+            "R": 0.0
+          }
+        },
+        {
+          "id": 44,
+          "token": "\"\u010a",
+          "token_id": 1092,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            "\"\n": 1.0,
+            "\",\n": 0.0,
+            "\"": 0.0,
+            "\"}\n": 0.0,
+            "'\n": 0.0
+          }
+        },
+        {
+          "id": 45,
+          "token": "}",
+          "token_id": 92,
+          "token_groups": [
+            "output",
+            "final"
+          ],
+          "probabilities": {
+            "}": 0.9999,
+            "}\n": 0.0001,
+            "}\n\n": 0.0,
+            "}`": 0.0,
+            " }": 0.0
+          }
+        },
+        {
+          "id": 46,
+          "token": "<|return|>",
+          "token_id": 200002,
+          "token_groups": [
+            "output",
+            "template"
+          ]
+        }
+      ],
+      "output_n_tokens": 47,
+      "pre_reasoning_prompt_suffix_tokens": [
+        {
+          "id": 0,
+          "token": "<|end|>",
+          "token_id": 200007,
+          "token_groups": [
+            "prompt",
+            "template"
+          ],
+          "probes": {
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c2": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.010000000000000009,
+                "empty": 0.99
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_linear_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            }
+          }
+        },
+        {
+          "id": 1,
+          "token": "<|start|>",
+          "token_id": 200006,
+          "token_groups": [
+            "prompt",
+            "template"
+          ],
+          "probes": {
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c2": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.010000000000000009,
+                "empty": 0.99
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_linear_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            }
+          }
+        },
+        {
+          "id": 2,
+          "token": "assistant",
+          "token_id": 173781,
+          "token_groups": [
+            "prompt",
+            "template"
+          ],
+          "probes": {
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c2": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_mlp_1024_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.010000000000000009,
+                "empty": 0.99
+              }
+            },
+            "cognitive_map_probe_l15_s0_suffix_-3--1_linear_full_upsample_normalize_r1_c4": {
+              "model.layers.15.output": {
+                "goal": 0.99,
+                "empty": 0.010000000000000009
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "patch_metadata": {
+    "pre_reasoning_last_n": 3,
+    "post_reasoning_last_n": 3,
+    "hook_tensor": "model.layers.15.output",
+    "artifact_builder": "in_repo_counterfactual_artifact_builder_v1",
+    "patch_action_source": "b",
+    "linear_target": "orig",
+    "synthetic_goal_prob": 0.99
+  }
+}
