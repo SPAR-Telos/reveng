@@ -1,11 +1,51 @@
-a_new,a_orig,action_label,belief_available,belief_label,belief_linear_new_match,belief_mlp_new_match,disruptive,evaluated_steps,invalid_reason,outcome_cell,pair_id,valid_pair
-1.0,0.75,True,True,True,False,True,False,4,,"[True, True]",pair_000,True
-0.0,0.0,False,True,True,False,True,True,3,,"[True, False]",pair_001,True
-0.6666666666666666,1.0,False,True,True,False,True,False,3,,"[True, False]",pair_002,True
-0.0,0.0,False,True,True,False,True,True,3,,"[True, False]",pair_003,True
-0.0,0.3333333333333333,False,True,True,False,True,True,3,,"[True, False]",pair_004,True
-0.0,0.0,False,True,True,False,True,True,3,,"[True, False]",pair_005,True
-1.0,0.0,True,True,True,False,True,False,1,,"[True, True]",pair_006,True
-0.6666666666666666,0.3333333333333333,False,True,True,False,True,False,3,,"[True, False]",pair_007,True
-0.5,0.5,False,True,True,False,True,False,2,,"[True, False]",pair_008,True
-0.0,0.75,False,True,True,False,True,False,4,,"[True, False]",pair_009,True
+a_base,a_new,a_orig,a_target,action_label,belief_available,belief_available_linear,belief_available_mlp,belief_label,belief_linear_match_target,belief_linear_new_match,belief_mlp_match_target,belief_mlp_new_match,category,disruptive,disruptive_reason,evaluated_steps,invalid_reason,outcome_cell,outcome_cell_linear,outcome_cell_mlp,pair_id,valid_pair
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,goal_move,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,3,,"[True, False]","[False, False]","[True, False]",pair_goal_move_000,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,goal_move,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,1,,"[True, False]","[False, False]","[True, False]",pair_goal_move_001,True
+1.0,1.0,1.0,1.0,False,True,True,True,True,False,False,True,True,goal_move,False,,1,,"[True, False]","[False, False]","[True, False]",pair_goal_move_002,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,goal_move,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,1,,"[True, False]","[False, False]","[True, False]",pair_goal_move_003,True
+0.0,0.0,0.0,0.0,,True,True,True,True,False,False,True,True,goal_move,,,0,,,,,pair_goal_move_004,True
+0.6666666666666666,0.3333333333333333,0.6666666666666666,0.3333333333333333,False,True,True,True,True,False,False,True,True,goal_move,False,,3,,"[True, False]","[False, False]","[True, False]",pair_goal_move_005,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,goal_move,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,1,,"[True, False]","[False, False]","[True, False]",pair_goal_move_006,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,goal_move,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,2,,"[True, False]","[False, False]","[True, False]",pair_goal_move_007,True
+0.0,1.0,0.0,1.0,True,True,True,True,True,False,False,True,True,goal_move,False,,2,,"[True, True]","[False, True]","[True, True]",pair_goal_move_008,True
+0.0,1.0,0.0,1.0,True,True,True,True,True,False,False,True,True,goal_move,False,,1,,"[True, True]","[False, True]","[True, True]",pair_goal_move_009,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,reflect_vertical,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,3,,"[True, False]","[False, False]","[True, False]",pair_reflect_vertical_000,True
+0.5,0.5,0.5,0.5,False,True,True,True,True,False,False,True,True,reflect_vertical,False,,2,,"[True, False]","[False, False]","[True, False]",pair_reflect_vertical_001,True
+0.5,0.5,0.5,0.5,False,True,True,True,True,True,True,True,True,reflect_vertical,False,,2,,"[True, False]","[True, False]","[True, False]",pair_reflect_vertical_002,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,True,True,True,True,reflect_vertical,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,1,,"[True, False]","[True, False]","[True, False]",pair_reflect_vertical_003,True
+0.3333333333333333,0.3333333333333333,0.3333333333333333,0.3333333333333333,False,True,True,True,True,False,False,True,True,reflect_vertical,True,A_target=0.3333 and A_base=0.3333 are both below disruptive_threshold=0.35,3,,"[True, False]","[False, False]","[True, False]",pair_reflect_vertical_004,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,reflect_vertical,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,1,,"[True, False]","[False, False]","[True, False]",pair_reflect_vertical_005,True
+1.0,1.0,1.0,1.0,False,True,True,True,True,True,True,True,True,reflect_vertical,False,,1,,"[True, False]","[True, False]","[True, False]",pair_reflect_vertical_006,True
+1.0,1.0,1.0,1.0,False,True,True,True,True,False,False,True,True,reflect_vertical,False,,2,,"[True, False]","[False, False]","[True, False]",pair_reflect_vertical_007,True
+0.6666666666666666,0.6666666666666666,0.6666666666666666,0.6666666666666666,False,True,True,True,True,False,False,True,True,reflect_vertical,False,,3,,"[True, False]","[False, False]","[True, False]",pair_reflect_vertical_008,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,reflect_vertical,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,2,,"[True, False]","[False, False]","[True, False]",pair_reflect_vertical_009,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,rotate_90,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,1,,"[True, False]","[False, False]","[True, False]",pair_rotate_90_000,True
+0.5,0.5,0.5,0.5,False,True,True,True,True,False,False,True,True,rotate_90,False,,2,,"[True, False]","[False, False]","[True, False]",pair_rotate_90_001,True
+1.0,1.0,1.0,1.0,False,True,True,True,True,False,False,True,True,rotate_90,False,,1,,"[True, False]","[False, False]","[True, False]",pair_rotate_90_002,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,rotate_90,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,2,,"[True, False]","[False, False]","[True, False]",pair_rotate_90_003,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,rotate_90,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,4,,"[True, False]","[False, False]","[True, False]",pair_rotate_90_004,True
+1.0,1.0,1.0,1.0,False,True,True,True,True,False,False,True,True,rotate_90,False,,1,,"[True, False]","[False, False]","[True, False]",pair_rotate_90_005,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,rotate_90,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,1,,"[True, False]","[False, False]","[True, False]",pair_rotate_90_006,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,rotate_90,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,3,,"[True, False]","[False, False]","[True, False]",pair_rotate_90_007,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,rotate_90,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,2,,"[True, False]","[False, False]","[True, False]",pair_rotate_90_008,True
+0.5,0.5,0.5,0.5,False,True,True,True,True,False,False,True,True,rotate_90,False,,2,,"[True, False]","[False, False]","[True, False]",pair_rotate_90_009,True
+1.0,1.0,1.0,1.0,False,True,True,True,True,False,False,True,True,start_goal_swap,False,,1,,"[True, False]","[False, False]","[True, False]",pair_start_goal_swap_000,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,start_goal_swap,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,4,,"[True, False]","[False, False]","[True, False]",pair_start_goal_swap_001,True
+0.0,0.0,0.0,0.0,,True,True,True,True,False,False,True,True,start_goal_swap,,,0,,,,,pair_start_goal_swap_002,True
+0.3333333333333333,0.6666666666666666,0.3333333333333333,0.6666666666666666,False,True,True,True,True,False,False,True,True,start_goal_swap,False,,3,,"[True, False]","[False, False]","[True, False]",pair_start_goal_swap_003,True
+1.0,1.0,1.0,1.0,False,True,True,True,True,False,False,True,True,start_goal_swap,False,,2,,"[True, False]","[False, False]","[True, False]",pair_start_goal_swap_004,True
+1.0,1.0,1.0,1.0,False,True,True,True,True,False,False,True,True,start_goal_swap,False,,1,,"[True, False]","[False, False]","[True, False]",pair_start_goal_swap_005,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,start_goal_swap,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,1,,"[True, False]","[False, False]","[True, False]",pair_start_goal_swap_006,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,start_goal_swap,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,2,,"[True, False]","[False, False]","[True, False]",pair_start_goal_swap_007,True
+0.5,0.5,0.5,0.5,False,True,True,True,True,False,False,True,True,start_goal_swap,False,,2,,"[True, False]","[False, False]","[True, False]",pair_start_goal_swap_008,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,start_goal_swap,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,4,,"[True, False]","[False, False]","[True, False]",pair_start_goal_swap_009,True
+1.0,1.0,1.0,1.0,False,True,True,True,True,True,True,True,True,transpose,False,,2,,"[True, False]","[True, False]","[True, False]",pair_transpose_000,True
+0.5,0.5,0.5,0.5,False,True,True,True,True,False,False,True,True,transpose,False,,2,,"[True, False]","[False, False]","[True, False]",pair_transpose_001,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,transpose,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,1,,"[True, False]","[False, False]","[True, False]",pair_transpose_002,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,transpose,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,3,,"[True, False]","[False, False]","[True, False]",pair_transpose_003,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,True,True,True,True,transpose,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,1,,"[True, False]","[True, False]","[True, False]",pair_transpose_004,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,transpose,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,1,,"[True, False]","[False, False]","[True, False]",pair_transpose_005,True
+0.0,0.0,0.0,0.0,False,True,True,True,True,False,False,True,True,transpose,True,A_target=0.0000 and A_base=0.0000 are both below disruptive_threshold=0.35,1,,"[True, False]","[False, False]","[True, False]",pair_transpose_006,True
+0.5,0.5,0.5,0.5,False,True,True,True,True,False,False,True,True,transpose,False,,2,,"[True, False]","[False, False]","[True, False]",pair_transpose_007,True
+0.5,0.5,0.5,0.5,False,True,True,True,True,False,False,True,True,transpose,False,,2,,"[True, False]","[False, False]","[True, False]",pair_transpose_008,True
+0.3333333333333333,0.3333333333333333,0.3333333333333333,0.3333333333333333,False,True,True,True,True,False,False,True,True,transpose,True,A_target=0.3333 and A_base=0.3333 are both below disruptive_threshold=0.35,3,,"[True, False]","[False, False]","[True, False]",pair_transpose_009,True
