@@ -3,10 +3,22 @@
 \usecolortheme{default}
 \usefonttheme{professionalfonts}
 
-\title{Counterfactual Pipeline Progress Update}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.geometric,shapes.misc}
+
+\title{Counterfactual Pipeline Update}
 \subtitle{Gridworld Belief--Action Evaluation}
-\author{reveng Project}
-\date{\today}
+\author{}
+\date{11th March 2026}
+
+\newcommand{\good}[1]{\textcolor{green!50!black}{#1}}
+\newcommand{\bad}[1]{\textcolor{red!70!black}{#1}}
+\newcommand{\neutral}[1]{\textcolor{blue!60!black}{#1}}
 
 \begin{document}
 
@@ -15,11 +27,11 @@
 \end{frame}
 
 \begin{frame}{What Is Implemented Now}
-\textbf{Pipeline status (implemented end-to-end):}
+\textbf{Pipeline status:}
 \begin{itemize}
   \item Counterfactual categories: \texttt{goal\_move}, \texttt{start\_goal\_swap}, \texttt{rotate\_90}, \texttt{reflect\_vertical}, \texttt{transpose}
   \item Default generation: \textbf{10 pairs per category} (50 total)
-  \item Manifests include \texttt{category}, \texttt{goal\_a}, \texttt{goal\_b} (legacy keys still accepted)
+  \item Manifests include \texttt{category}, \texttt{goal\_a}, \texttt{goal\_b}
   \item Preflight validates category-specific constraints before expensive runs
   \item Evaluator outputs separate MLP vs Linear belief-action metrics
 \end{itemize}
@@ -44,43 +56,371 @@
 \vspace{0.4em}
 \textbf{What the action metrics mean:}
 \begin{itemize}
-  \item \texttt{A\_target} (alias \texttt{A\_new}): fraction of evaluated steps optimal under grid-B policy
-  \item \texttt{A\_base} (alias \texttt{A\_orig}): fraction of evaluated steps optimal under grid-A policy
+  \item Read every metric as \textbf{(behavior being scored, reference used for scoring)}
+  \item \texttt{A\_target} (alias \texttt{A\_new}): \textbf{(same intervened trace, true grid-B optimal policy)}
+  \item \texttt{A\_base} (alias \texttt{A\_orig}): \textbf{(same intervened trace, true grid-A optimal policy)}
+  \item These are scored on the \textbf{actual grids A and B}, not on the decoded map
   \item Non-integers are expected: each value is a ratio \texttt{aligned\_steps / evaluated\_steps}
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{Belief vs action distinction:}
+\begin{itemize}
+  \item Belief readout uses the \textbf{decoded cognitive map / decoded goal from probes}
+  \item Decoded-map information is used for \textbf{belief readout only}, not for \texttt{A\_target} / \texttt{A\_base}
+  \item Paper comparison: \texttt{Acc. GT} in Table 2 is \textbf{(original unpatched behavior, ground-truth grid)}, so it is not directly equivalent to \texttt{A\_base}
 \end{itemize}
 
 \vspace{0.4em}
 \textbf{Disruptive reason now reported per pair:}
 \begin{itemize}
-  \item Triggered when \texttt{A\_target < threshold} and \texttt{A\_base < threshold}
+  \item Triggered when \texttt{A\_target < 0.35} and \texttt{A\_base < 0.35}
   \item Report includes threshold and actual values for interpretability
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Likely Cross-Disciplinary Questions (and How to Respond)}
-\textbf{Likely doubts/comments:}
+\begin{frame}{How Counterfactual Grids Are Created}
+\centering
+\begin{tikzpicture}[
+    font=\small,
+    cell/.style={draw, minimum width=0.34cm, minimum height=0.34cm, inner sep=0pt},
+    lab/.style={font=\scriptsize},
+    box/.style={draw, rounded corners, inner sep=4pt}
+]
+
+% Base grid
+\node[lab] at (0.7,2.8) {\textbf{Base grid A}};
+\foreach \x/\y/\txt in {
+0/0/{\#},1/0/{\#},2/0/{\#},3/0/{\#},
+0/1/{\#},1/1/{A},2/1/{\_},3/1/{\#},
+0/2/{\#},1/2/{\_},2/2/{G},3/2/{\#},
+0/3/{\#},1/3/{\#},2/3/{\#},3/3/{\#}}
+{
+  \node[cell] at (\x*0.34,\y*0.34) {\txt};
+}
+
+% goal move
+\begin{scope}[xshift=3.2cm]
+\node[lab] at (0.7,2.8) {\textbf{Goal move}};
+\foreach \x/\y/\txt in {
+0/0/{\#},1/0/{\#},2/0/{\#},3/0/{\#},
+0/1/{\#},1/1/{A},2/1/{G},3/1/{\#},
+0/2/{\#},1/2/{\_},2/2/{\_},3/2/{\#},
+0/3/{\#},1/3/{\#},2/3/{\#},3/3/{\#}}
+{
+  \node[cell] at (\x*0.34,\y*0.34) {\txt};
+}
+\end{scope}
+
+% reflect
+\begin{scope}[xshift=6.4cm]
+\node[lab] at (0.7,2.8) {\textbf{Reflect vertical}};
+\foreach \x/\y/\txt in {
+0/0/{\#},1/0/{\#},2/0/{\#},3/0/{\#},
+0/1/{\#},1/1/{\_},2/1/{A},3/1/{\#},
+0/2/{\#},1/2/{G},2/2/{\_},3/2/{\#},
+0/3/{\#},1/3/{\#},2/3/{\#},3/3/{\#}}
+{
+  \node[cell] at (\x*0.34,\y*0.34) {\txt};
+}
+\end{scope}
+
+% rotate
+\begin{scope}[xshift=9.7cm]
+\node[lab] at (0.7,2.8) {\textbf{Rotate 90}};
+\foreach \x/\y/\txt in {
+0/0/{\#},1/0/{\#},2/0/{\#},3/0/{\#},
+0/1/{\#},1/1/{\_},2/1/{A},3/1/{\#},
+0/2/{\#},1/2/{G},2/2/{\_},3/2/{\#},
+0/3/{\#},1/3/{\#},2/3/{\#},3/3/{\#}}
+{
+  \node[cell] at (\x*0.34,\y*0.34) {\txt};
+}
+\end{scope}
+
+% transpose
+\begin{scope}[xshift=12.9cm]
+\node[lab] at (0.7,2.8) {\textbf{Transpose}};
+\foreach \x/\y/\txt in {
+0/0/{\#},1/0/{\#},2/0/{\#},3/0/{\#},
+0/1/{\#},1/1/{A},2/1/{\_},3/1/{\#},
+0/2/{\#},1/2/{G},2/2/{\_},3/2/{\#},
+0/3/{\#},1/3/{\#},2/3/{\#},3/3/{\#}}
+{
+  \node[cell] at (\x*0.34,\y*0.34) {\txt};
+}
+\end{scope}
+
+% Arrows and notes
+\draw[-{Latex[length=2mm]}, thick] (1.7,1.0) -- (2.6,1.0);
+\draw[-{Latex[length=2mm]}, thick] (5.0,1.0) -- (5.8,1.0);
+\draw[-{Latex[length=2mm]}, thick] (8.2,1.0) -- (9.1,1.0);
+\draw[-{Latex[length=2mm]}, thick] (11.5,1.0) -- (12.3,1.0);
+
+\node[box, anchor=north west, align=left, text width=15.2cm] at (-0.2,-0.2) {
+\textbf{Invariant intent:} keep a paired comparison $(A \rightarrow B)$ while changing only one controlled factor.\\
+\textbf{Examples:} move goal, swap start or goal, or apply geometry-preserving transforms to test robustness of patched activations.
+};
+
+\end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Counterfactual Activation Patching Flow}
+\centering
+\begin{tikzpicture}[
+  node distance=0.85cm and 0.5cm,
+  every node/.style={font=\small},
+  proc/.style={draw, rounded corners, align=center, minimum width=2.35cm, minimum height=0.9cm, fill=blue!6},
+  io/.style={draw, rounded corners, align=center, minimum width=2.35cm, minimum height=0.9cm, fill=green!6},
+  decision/.style={draw, diamond, aspect=2, align=center, inner sep=1pt, fill=orange!8},
+  arrow/.style={-{Latex[length=2mm]}, thick}
+]
+
+\node[io] (manifest) {Pair manifest\\50 valid pairs};
+\node[proc, right=of manifest] (traceA) {Run base grid A\\collect activations};
+\node[proc, right=of traceA] (traceB) {Run counterfactual B\\collect activations};
+\node[proc, below=of traceA] (patch) {Keep saved trace A as scaffold\\replace last 3 PRE + POST\\layer-15 entries from B};
+\node[proc, right=of patch] (rollout) {Intervened trace\\same trace later scored twice};
+\node[proc, right=of rollout] (eval) {Score same intervened trace\\vs true policy A and true policy B};
+\node[decision, below=of rollout, yshift=-0.05cm] (rule) {Action=True?\\$A_{\text{target}} > A_{\text{base}}$\\and $A_{\text{target}} \ge 0.70$};
+\node[proc, left=of rule] (belief) {Belief probes\\MLP and Linear};
+\node[io, right=of rule] (report) {Per-pair results\\2x2 tables\\category summary};
+
+\draw[arrow] (manifest) -- (traceA);
+\draw[arrow] (traceA) -- (traceB);
+\draw[arrow] (traceA) -- (patch);
+\draw[arrow] (traceB) -- (patch);
+\draw[arrow] (patch) -- (rollout);
+\draw[arrow] (rollout) -- (eval);
+\draw[arrow] (eval) -- (rule);
+\draw[arrow] (belief) -- (rule);
+\draw[arrow] (rule) -- (report);
+
+\node[draw, rounded corners, dashed, fit=(patch)(rollout)(eval)(rule), inner sep=6pt, label=below:\scriptsize \textbf{Core experiment loop}] {};
+\end{tikzpicture}
+
+\vspace{0.5em}
 \begin{itemize}
-  \item \textbf{ML question:} ``Why do MLP and Linear disagree?''
-  \item \textbf{CogSci question:} ``Are action errors belief errors or planning errors?''
-  \item \textbf{Methods question:} ``Are transformed categories still comparable?''
-  \item \textbf{Ops question:} ``Can we reproduce this exactly?''
+  \item Patch site: \texttt{model.layers.15.output} residual output
+  \item We do \textbf{not} rerun the model after the layer-15 intervention; later layers are not recomputed online
+  \item From slide 5: keep the full saved trace from A and replace only the last 3 PRE and last 3 POST layer-15 entries with those from B
+  \item Invalid pairs: \textbf{0/50}; disruptive pairs: \textbf{26/50} (\textbf{52\%})
+  \item Probe tables exclude invalid and disruptive cases
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Key Results by Counterfactual Category}
+\centering
+\small
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Category} & \textbf{Total} & \textbf{Valid} & \textbf{Disruptive} & \textbf{Disruptive rate} & \textbf{Action true rate} \\
+\midrule
+goal\_move         & 10 & 10 & 5 & 0.50 & \good{0.50} \\
+reflect\_vertical  & 10 & 10 & 5 & 0.50 & \bad{0.00} \\
+rotate\_90         & 10 & 10 & 6 & 0.60 & \bad{0.00} \\
+start\_goal\_swap  & 10 & 10 & 4 & 0.40 & \bad{0.00} \\
+transpose          & 10 & 10 & 6 & 0.60 & \bad{0.00} \\
+\midrule
+\textbf{Overall}   & 50 & 50 & 26 & 0.52 & \neutral{0.10} \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.7em}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Readout}
+\begin{itemize}
+  \item Only \texttt{goal\_move} yields any Action=True pairs
+  \item Geometry-preserving transforms are mostly non-transferring under current patch rule
+  \item More than half of all pairs are disruptive
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Implication}
+\begin{itemize}
+  \item Current patch signal is not robustly category-invariant
+  \item Effect seems more compatible with local target shift than with general policy transfer
+  \item Next step: inspect step-level failures within disruptive transform categories
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Belief--Action Summary}
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\textbf{MLP belief vs action} \\
+\vspace{0.3em}
+\begin{tabular}{lcc}
+\toprule
+\textbf{MLP} & \textbf{Action T} & \textbf{Action F} \\
+\midrule
+Belief T & 2 & 20 \\
+Belief F & 0 & 0 \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5em}
+\begin{itemize}
+  \item Denominator: 22
+  \item TT / (TT+TF) = 0.091
+  \item MLP is almost always positive
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Linear belief vs action} \\
+\vspace{0.3em}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Linear} & \textbf{Action T} & \textbf{Action F} \\
+\midrule
+Belief T & 0 & 3 \\
+Belief F & 2 & 17 \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5em}
+\begin{itemize}
+  \item Denominator: 22
+  \item TT / (TT+TF) = 0.000
+  \item Strong disagreement with MLP
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.6em}
+\textbf{Probe agreement:} 3 / 22 agree, 19 / 22 disagree, disagreement rate = \textbf{0.864}
+\end{frame}
+
+\begin{frame}{How to Read the Belief--Action 2x2}
+\textbf{Definitions used in the table:}
+\begin{itemize}
+  \item \textbf{Belief F}: the probe-decoded cognitive map does \textit{not} align with the target counterfactual grid in the prompt.
+  \item \textbf{Action F}: the same intervened trace does not satisfy Action=True, i.e., it fails \($A_{\text{target}} > A_{\text{base}}$ and $A_{\text{target}} \ge 0.70$\), after excluding disruptive pairs.
+\end{itemize}
+
+\vspace{0.3em}
+\textbf{Important distinction:}
+\begin{itemize}
+  \item Belief uses the \textbf{decoded map}; action uses optimality on the \textbf{actual grids A and B}
+  \item For Mario: there is only one intervened trace; ``base'' and ``target'' mean scoring that same trace against true grid A or true grid B, respectively
+\end{itemize}
+
+\vspace{0.3em}
+\textbf{Cell interpretation for this run:}
+\begin{itemize}
+  \item \textbf{Belief T, Action T} (count = 2 in MLP): belief aligns with target and behavior transfers; action matches belief.
+  \item \textbf{Belief T, Action F}: belief aligns with target but behavior does not transfer; this is the belief--action gap.
+  \item \textbf{Belief F, Action T}: present only for Linear here; interpreted as probable probe decoding mismatch (e.g., belief encoded non-linearly).
+  \item \textbf{Belief F, Action F}: neither decoded belief nor behavior transfers to the target.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{A\_target / A\_base Diagnostics}
+\textbf{Threshold-free view (50 valid pairs):}
+\begin{itemize}
+  \item Mean $A_{\text{target}} = 0.3467$, mean $A_{\text{base}} = 0.3067$, mean $\Delta A = A_{\text{target}} - A_{\text{base}} = 0.0400$
+  \item Disruptive pairs: $26 / 50 = 0.52$
+  \item Pairs with both agent and goal moved: $29 / 50$
+  \item Disruptive rate when both moved: $0.5862$ vs $0.4286$ when not both moved
 \end{itemize}
 
 \vspace{0.4em}
-\textbf{Feedback hooks included in current outputs:}
+\centering
+\includegraphics[width=0.35\linewidth]{figs/a_target_vs_a_base_scatter.png}
+\end{frame}
+
+\begin{frame}{Category and Delta Diagnostics}
+\begin{columns}[T]
+\begin{column}{0.52\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figs/category_mean_a_target_a_base.png}
+\end{column}
+\begin{column}{0.46\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figs/delta_a_distribution.png}
+\end{column}
+\end{columns}
+
+\vspace{0.4em}
 \begin{itemize}
-  \item Probe agreement/disagreement section (MLP vs Linear)
-  \item Per-category action + belief summaries
+  \item Moving both agent and goal is associated with higher disruption in this run.
+  \item Reporting raw $A_{\text{target}}$/$A_{\text{base}}$ alongside Action=True avoids threshold-only interpretation.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Disruption Examples (Both A and G Moved)}
+\textbf{Top 10 disruptive examples by movement magnitude were generated.}
+\begin{itemize}
+  \item Source file: \texttt{figs/disruption\_examples\_both\_moved\_top10.png}
+  \item Companion table: \texttt{figs/selected\_disruption\_examples.csv}
+\end{itemize}
+
+\vspace{0.4em}
+\centering
+\includegraphics[width=0.5\linewidth]{figs/disruption_examples_both_moved_top10.png}
+\end{frame}
+
+\begin{frame}{Expansion: Layer Sweep and Threshold Sensitivity}
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figs/layer_threshold_action_true_rate.png}
+\vspace{0.2em}
+
+\scriptsize Action true rate by layer $\times$ threshold
+\end{column}
+\begin{column}{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figs/layer_threshold_disruptive_rate.png}
+\vspace{0.2em}
+
+\scriptsize Disruptive rate by layer $\times$ threshold
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Expansion Readout (Current Run)}
+\textbf{Setup:}
+\begin{itemize}
+  \item Layer sweep: coarse \{9,12,15,18,21\} + local refine around best
+  \item Action-threshold sensitivity: \{0.65, 0.70, 0.75\}, disruptive threshold fixed at 0.35
+  \item Early-stop disabled for comparability across configs
+\end{itemize}
+
+\vspace{0.3em}
+\textbf{Result summary:}
+\begin{itemize}
+  \item At threshold 0.70, tested layers are effectively tied (\texttt{action\_true\_rate}=0.25, \texttt{disruptive\_rate}=0.50).
+  \item Selected ``best'' layer is 7 by ranking tie-break; no clear single-layer advantage in this tested range.
+  \item Conclusion: current effect is not strongly layer-sensitive under these thresholds.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Questions}
+\textbf{Questions not answered:}
+\begin{itemize}
+  \item ``Are action errors belief errors or planning errors?''
+  \item ``Are transformed categories still comparable?''
+  \item ``Can we reproduce this exactly?''
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{What is logged/stored:}
+\begin{itemize}
+  \item Probe agreement and disagreement section (MLP vs Linear)
+  \item Per-category action and belief summaries
   \item Invalid and disruptive summaries with explicit reasons
-  \item Deterministic generation via seeds + manifest-driven execution
+  \item Deterministic generation via seeds and manifest-driven execution
 \end{itemize}
 
 \vspace{0.4em}
-\textbf{What to ask reviewers for:}
+\textbf{Things to justify:}
 \begin{itemize}
-  \item Preferred belief label policy (MLP, Linear, consensus, or separate reporting)
-  \item Acceptable disruptive threshold for your domain interpretation
-  \item Category set to prioritize for final experiment budget
+  \item Disruptive threshold. What's the domain interpretation?
 \end{itemize}
 \end{frame}
 

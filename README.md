@@ -119,12 +119,61 @@ Outputs:
 - `data/cf/eval_results/aggregate_summary.json`
 - `data/cf/eval_results/report.md`
 
+Metric semantics:
+
+- `A_base` / `A_target` score the same patched/intervened trace against the true optimal policies on grid A / grid B, respectively.
+- These are scored on the actual grids A and B, not on the decoded cognitive map.
+- The decoded cognitive map is used for belief readout only.
+- Paper comparison: `Acc. GT` in Table 2 is original unpatched behavior scored against the ground-truth grid, so it is not directly equivalent to `A_base`.
+- Implementation note: the current repo does not rerun the model after patching layer 15; it takes the saved trace from A and replaces the selected last-3 PRE and last-3 POST layer-15 entries with those from B.
+
 Report highlights:
 
 - invalid summary and disruptive summary are separate
 - action summary by category
 - separate MLP and linear belief-action 2x2 tables
 - probe agreement/disagreement section
+
+### 6) Expanded analysis: layer sweep + threshold sensitivity
+
+Runs a balanced sweep (coarse layers around L15 + local refine), evaluates
+action-threshold sensitivity (`0.65`, `0.70`, `0.75`), and writes a consolidated
+dashboard for direct review.
+
+```bash
+reveng-cli run_counterfactual_expansion \
+  --manifest-path data/cf/artifacts/manifest_for_counterfactual_activation_patching.json \
+  --output-root data/cf/eval_results/expansion
+```
+
+If you have per-layer manifests/artifacts, pass a template path:
+
+```bash
+reveng-cli run_counterfactual_expansion \
+  --manifest-path data/cf/layer_{layer}/manifest_for_counterfactual_activation_patching.json \
+  --output-root data/cf/eval_results/expansion
+```
+
+When `--manifest-path` contains `{layer}` and a layer manifest is missing, the
+command now auto-generates per-layer artifacts/manifests by default using:
+
+- `--pair-manifest-path` (default: `data/cf/pair_manifest.json`)
+- `--base-artifacts-dir` (default: `data/cf/artifacts`, must contain `A.json`/`B.json` per pair)
+
+You can override patch construction settings with:
+
+- `--patch-action-source` (default: `b`)
+- `--linear-target` (default: `a`)
+- `--synthetic-goal-prob` (default: `0.99`)
+
+Key outputs:
+
+- `data/cf/eval_results/expansion/summary.md` (single dashboard)
+- `data/cf/eval_results/expansion/layer_threshold_metrics.csv`
+- `data/cf/eval_results/expansion/per_config_aggregate.jsonl`
+- `data/cf/eval_results/expansion/figs/layer_threshold_action_true_rate.png`
+- `data/cf/eval_results/expansion/figs/layer_threshold_disruptive_rate.png`
+- `data/cf/eval_results/expansion/selected_best/` (best config copied outputs)
 
 ## Common Errors
 

@@ -81,6 +81,9 @@ class AggregateMetrics:
     total_pairs_invalid: int
     total_pairs_disruptive: int
     disruptive_rate: float
+    total_pairs_action_evaluable: int
+    total_pairs_action_true: int
+    action_true_rate: Optional[float]
     table_rows_mlp: int
     table_rows_linear: int
     total_pairs_belief_available: int  # Deprecated alias for table_rows_mlp
@@ -660,6 +663,10 @@ def aggregate_results(
     invalid_pairs = [p for p in pair_metrics if not p.valid_pair]
 
     disruptive_count = sum(1 for p in valid_pairs if p.disruptive is True)
+    action_rows = [
+        p for p in valid_pairs if p.action_label is not None and p.disruptive is False
+    ]
+    action_true_count = sum(1 for p in action_rows if p.action_label is True)
 
     mlp_rows = [
         p
@@ -696,6 +703,9 @@ def aggregate_results(
         total_pairs_invalid=len(invalid_pairs),
         total_pairs_disruptive=disruptive_count,
         disruptive_rate=_safe_ratio(disruptive_count, len(valid_pairs)) or 0.0,
+        total_pairs_action_evaluable=len(action_rows),
+        total_pairs_action_true=action_true_count,
+        action_true_rate=_safe_ratio(action_true_count, len(action_rows)),
         table_rows_mlp=len(mlp_rows),
         table_rows_linear=len(linear_rows),
         total_pairs_belief_available=len(mlp_rows),
@@ -770,12 +780,18 @@ def _write_markdown_report(
         f"- layer_key: `{layer_key}`",
         "- hook tensor: residual output",
         "- patch token set: last 3 pre-reasoning + last 3 post-reasoning",
+        "- implementation note: we do not rerun the model after patching layer 15; instead, we take the saved trace from A and replace the selected last-3 PRE and last-3 POST layer-15 entries with those from B",
+        "- implementation note: the saved trace from A is the scaffold for the intervened trace, so later layers are not recomputed online after intervention",
         f"- Action=True rule: A_target > A_base and A_target >= {action_true_threshold:.2f}",
         f"- Disruptive rule: A_target < {disruptive_threshold:.2f} and A_base < {disruptive_threshold:.2f}",
         "",
         "## Metric Glossary",
-        "- `A_target` (alias `A_new`): per-pair fraction of evaluated steps where the patched action is optimal under grid B policy.",
-        "- `A_base` (alias `A_orig`): per-pair fraction of evaluated steps where the patched action is optimal under grid A policy.",
+        "- Use this reading rule everywhere: each metric is `(behavior being scored, reference used for scoring)`.",
+        "- `A_target` (alias `A_new`): `(patched/intervened trace, true grid B optimal policy)`; this tests whether the intervened trace is optimal on the actual target grid B, not on the decoded map.",
+        "- `A_base` (alias `A_orig`): `(patched/intervened trace, true grid A optimal policy)`; this tests whether the same intervened trace is optimal on the actual base grid A, not on the decoded map.",
+        "- Base vs target: there is only one intervened trace; `base` and `target` mean scoring that same intervened trace against true grid A vs true grid B, respectively.",
+        "- Belief readout: probe-decoded cognitive map / decoded goal from probes; decoded-map information is used for belief readout only, not for `A_target` or `A_base`.",
+        "- Paper comparison: `Acc. GT` in Table 2 is `(original unpatched model behavior, ground-truth grid)`; it is not directly equivalent to `A_base`, which is `(patched/intervened behavior, true grid A)`.",
         "- Why these are non-integers: each value is a ratio `aligned_steps / evaluated_steps`, not a raw count.",
         "- `evaluated_steps` excludes steps where action parsing or position mapping is invalid for that pair.",
         "",
@@ -786,6 +802,8 @@ def _write_markdown_report(
         f"- total_pairs_invalid: {aggregate.total_pairs_invalid}",
         f"- stopped_early: {aggregate.stopped_early}",
         f"- early_stop_reason: {aggregate.early_stop_reason or 'NA'}",
+        f"- action_true_count: {aggregate.total_pairs_action_true}",
+        f"- action_true_rate: {aggregate.action_true_rate if aggregate.action_true_rate is not None else 'NA'}",
         "",
         "## Invalid Summary",
     ]
@@ -889,6 +907,7 @@ def counterfactual_activation_patching(
     expected_k: int = EXPECTED_K,
     action_true_threshold: float = ACTION_TRUE_THRESHOLD,
     disruptive_threshold: float = DISRUPTIVE_THRESHOLD,
+    enable_early_stop: bool = True,
 ) -> None:
     """Run counterfactual activation-patching evaluation from artifacts.
 
@@ -939,7 +958,7 @@ def counterfactual_activation_patching(
         ):
             evaluated_for_early_stop.append(metric)
 
-        if len(evaluated_for_early_stop) >= 3 and not stopped_early:
+        if enable_early_stop and len(evaluated_for_early_stop) >= 3 and not stopped_early:
             first_three = evaluated_for_early_stop[:3]
             should_stop = all(
                 (m.action_label is False)

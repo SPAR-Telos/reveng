@@ -279,6 +279,9 @@ def test_aggregate_reports_separate_probe_tables_and_disagreement():
     assert agg.probe_disagree_count == 1
     assert agg.table_rows_mlp == 2
     assert agg.table_rows_linear == 2
+    assert agg.total_pairs_action_evaluable == 2
+    assert agg.total_pairs_action_true == 1
+    assert agg.action_true_rate == 0.5
 
 
 def test_integration_outputs_written(tmp_path: Path):
@@ -323,6 +326,14 @@ def test_integration_outputs_written(tmp_path: Path):
     assert summary["total_pairs_processed"] == 3
     assert "mlp_tt_count" in summary
     assert "linear_tt_count" in summary
+
+    report = (output_dir / "report.md").read_text()
+    assert "true grid B optimal policy" in report
+    assert "true grid A optimal policy" in report
+    assert "decoded-map information is used for belief readout only" in report
+    assert "Acc. GT" in report
+    assert "saved trace from A" in report
+    assert "later layers are not recomputed online" in report
 
 
 def test_failure_missing_trace_path(tmp_path: Path):
@@ -393,6 +404,43 @@ def test_early_stop_after_first_three_non_disruptive_action_false(tmp_path: Path
     summary = json.loads((output_dir / "aggregate_summary.json").read_text())
     assert summary["stopped_early"] is True
     assert "first 3 evaluated pairs" in (summary["early_stop_reason"] or "")
+
+
+def test_disable_early_stop_processes_all_pairs(tmp_path: Path):
+    records = [
+        _create_pair_record(tmp_path, f"pair_no_stop_{i}", [_build_step("LEFT") for _ in range(10)])
+        for i in range(4)
+    ]
+
+    manifest_path = tmp_path / "manifest_no_stop.json"
+    manifest_rows = []
+    for record in records:
+        manifest_rows.append(
+            {
+                "pair_id": record.spec.pair_id,
+                "category": record.spec.category,
+                "grid_a_path": str(record.spec.grid_a_path),
+                "grid_b_path": str(record.spec.grid_b_path),
+                "goal_a": list(record.spec.goal_a),
+                "goal_b": list(record.spec.goal_b),
+                "a_trace_path": str(record.artifacts.a_trace_path),
+                "b_trace_path": str(record.artifacts.b_trace_path),
+                "patched_trace_path": str(record.artifacts.patched_trace_path),
+            }
+        )
+    manifest_path.write_text(json.dumps(manifest_rows, indent=2))
+
+    output_dir = tmp_path / "results_no_stop"
+    counterfactual_activation_patching(
+        manifest_path=str(manifest_path),
+        output_dir=str(output_dir),
+        expected_k=4,
+        enable_early_stop=False,
+    )
+
+    summary = json.loads((output_dir / "aggregate_summary.json").read_text())
+    assert summary["stopped_early"] is False
+    assert summary["total_pairs_processed"] == 4
 
 
 def test_manifest_legacy_goal_keys_still_supported(tmp_path: Path):

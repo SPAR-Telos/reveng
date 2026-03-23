@@ -41,6 +41,9 @@ from reveng.experiments.counterfactual_artifact_builder import (
 from reveng.experiments.counterfactual_activation_patching import (
     counterfactual_activation_patching,
 )
+from reveng.experiments.counterfactual_expansion import (
+    run_counterfactual_expansion,
+)
 from reveng.experiments.counterfactual_preflight import (
     validate_counterfactual_preflight,
 )
@@ -68,6 +71,7 @@ def main():
     - generate_counterfactual_eval_manifest: Auto-generate eval manifest from pair manifest + artifacts
     - validate_counterfactual_preflight: Validate manifests/grids/runtime prerequisites before long runs
     - counterfactual_activation_patching: Evaluate belief/action counterfactual outcomes from artifacts
+    - run_counterfactual_expansion: Layer sweep + threshold sensitivity with consolidated dashboard outputs
     """
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
     tyro.extras.subcommand_cli_from_dict(
@@ -84,6 +88,7 @@ def main():
             "generate_counterfactual_eval_manifest": generate_counterfactual_eval_manifest,
             "validate_counterfactual_preflight": validate_counterfactual_preflight,
             "counterfactual_activation_patching": counterfactual_activation_patching,
+            "run_counterfactual_expansion": run_counterfactual_expansion,
         }
     )
 
