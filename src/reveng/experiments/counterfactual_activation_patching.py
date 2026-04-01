@@ -774,12 +774,13 @@ def _write_markdown_report(
     disruptive_rows = [p for p in pair_metrics if p.disruptive is True]
 
     lines = [
-        "# Counterfactual Activation Patching Report",
+        "# Counterfactual Surrogate Patching Report",
         "",
         "## Configuration",
         f"- layer_key: `{layer_key}`",
         "- hook tensor: residual output",
         "- patch token set: last 3 pre-reasoning + last 3 post-reasoning",
+        "- method status: this is the saved-trace substitution baseline, not the new live hidden-state patching path",
         "- implementation note: we do not rerun the model after patching layer 15; instead, we take the saved trace from A and replace the selected last-3 PRE and last-3 POST layer-15 entries with those from B",
         "- implementation note: the saved trace from A is the scaffold for the intervened trace, so later layers are not recomputed online after intervention",
         f"- Action=True rule: A_target > A_base and A_target >= {action_true_threshold:.2f}",

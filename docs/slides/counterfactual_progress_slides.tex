@@ -29,6 +29,7 @@
 \begin{frame}{What Is Implemented Now}
 \textbf{Pipeline status:}
 \begin{itemize}
+  \item Current evaluator is the \textbf{surrogate trace-substitution baseline}
   \item Counterfactual categories: \texttt{goal\_move}, \texttt{start\_goal\_swap}, \texttt{rotate\_90}, \texttt{reflect\_vertical}, \texttt{transpose}
   \item Default generation: \textbf{10 pairs per category} (50 total)
   \item Manifests include \texttt{category}, \texttt{goal\_a}, \texttt{goal\_b}
@@ -165,7 +166,7 @@
 \end{tikzpicture}
 \end{frame}
 
-\begin{frame}{Counterfactual Activation Patching Flow}
+\begin{frame}{Current Surrogate Patching Flow}
 \centering
 \begin{tikzpicture}[
   node distance=0.85cm and 0.5cm,
@@ -201,11 +202,30 @@
 
 \vspace{0.5em}
 \begin{itemize}
+  \item This slide describes the \textbf{saved-trace substitution baseline}, not the new live hidden-state patching path
   \item Patch site: \texttt{model.layers.15.output} residual output
   \item We do \textbf{not} rerun the model after the layer-15 intervention; later layers are not recomputed online
   \item From slide 5: keep the full saved trace from A and replace only the last 3 PRE and last 3 POST layer-15 entries with those from B
   \item Invalid pairs: \textbf{0/50}; disruptive pairs: \textbf{26/50} (\textbf{52\%})
   \item Probe tables exclude invalid and disruptive cases
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Next Method: True Activation Patching}
+\textbf{Motivation:}
+\begin{itemize}
+  \item Reduce disruption with \textbf{in-reasoning} interventions
+  \item Produce a Mario-style \textbf{probability by layer} figure
+  \item Reassess the belief-action gap after a more local intervention
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Planned live path:}
+\begin{itemize}
+  \item Use a \textbf{local hookable Hugging Face model}, not the Together API path
+  \item Patch hidden states on the \textbf{final 3 reasoning tokens} before the final action JSON
+  \item Sweep \textbf{all layers} and measure probabilities for \texttt{UP}, \texttt{DOWN}, \texttt{LEFT}, \texttt{RIGHT}
+  \item Output \texttt{probability\_by\_layer.(csv,png)} and \texttt{probability\_delta\_by\_layer.png}
 \end{itemize}
 \end{frame}
 

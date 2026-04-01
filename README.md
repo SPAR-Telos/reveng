@@ -121,6 +121,7 @@ Outputs:
 
 Metric semantics:
 
+- The current evaluator is the **surrogate trace-substitution baseline**. It is useful as a baseline, but it is not live activation patching.
 - `A_base` / `A_target` score the same patched/intervened trace against the true optimal policies on grid A / grid B, respectively.
 - These are scored on the actual grids A and B, not on the decoded cognitive map.
 - The decoded cognitive map is used for belief readout only.
@@ -174,6 +175,48 @@ Key outputs:
 - `data/cf/eval_results/expansion/figs/layer_threshold_action_true_rate.png`
 - `data/cf/eval_results/expansion/figs/layer_threshold_disruptive_rate.png`
 - `data/cf/eval_results/expansion/selected_best/` (best config copied outputs)
+
+### 7) Diagnose why the surrogate signal is weak
+
+```bash
+reveng-cli diagnose_counterfactual_signal \
+  --eval-dir data/cf/eval_results \
+  --expansion-dir data/cf/eval_results/expansion \
+  --eval-manifest-path data/cf/artifacts/manifest_for_counterfactual_activation_patching.json \
+  --output-dir data/cf/eval_results/signal_diagnostics
+```
+
+Key outputs:
+
+- `data/cf/eval_results/signal_diagnostics/summary.json`
+- `data/cf/eval_results/signal_diagnostics/summary.md`
+
+### 8) Run true live hidden-state patching on a local model
+
+This is a separate path from the surrogate baseline above. It requires a local
+hookable Hugging Face causal LM with `torch` installed; it does **not** use the
+Together API.
+
+```bash
+reveng-cli run_live_patch_curve \
+  --model-name-or-path meta-llama/Llama-3.2-1B-Instruct \
+  --pair-id pair_goal_move_009 \
+  --step-index 0 \
+  --output-dir data/cf/live_patch_curve
+```
+
+Defaults:
+
+- patch window: final 3 reasoning tokens immediately before the final action JSON
+- layer sweep: all layers unless `--layer-end` is set
+- tracked actions: `UP`, `DOWN`, `LEFT`, `RIGHT`
+
+Key outputs:
+
+- `data/cf/live_patch_curve/probability_by_layer.csv`
+- `data/cf/live_patch_curve/probability_by_layer.png`
+- `data/cf/live_patch_curve/probability_delta_by_layer.png`
+- `data/cf/live_patch_curve/metadata.json`
 
 ## Common Errors
 

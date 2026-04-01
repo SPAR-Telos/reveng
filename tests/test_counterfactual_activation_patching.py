@@ -328,6 +328,7 @@ def test_integration_outputs_written(tmp_path: Path):
     assert "linear_tt_count" in summary
 
     report = (output_dir / "report.md").read_text()
+    assert "saved-trace substitution baseline" in report
     assert "true grid B optimal policy" in report
     assert "true grid A optimal policy" in report
     assert "decoded-map information is used for belief readout only" in report

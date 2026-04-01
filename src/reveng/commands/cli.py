@@ -44,6 +44,12 @@ from reveng.experiments.counterfactual_activation_patching import (
 from reveng.experiments.counterfactual_expansion import (
     run_counterfactual_expansion,
 )
+from reveng.experiments.counterfactual_signal_diagnostics import (
+    diagnose_counterfactual_signal,
+)
+from reveng.experiments.live_patch_curve import (
+    run_live_patch_curve,
+)
 from reveng.experiments.counterfactual_preflight import (
     validate_counterfactual_preflight,
 )
@@ -72,6 +78,8 @@ def main():
     - validate_counterfactual_preflight: Validate manifests/grids/runtime prerequisites before long runs
     - counterfactual_activation_patching: Evaluate belief/action counterfactual outcomes from artifacts
     - run_counterfactual_expansion: Layer sweep + threshold sensitivity with consolidated dashboard outputs
+    - diagnose_counterfactual_signal: Summarize why the surrogate counterfactual signal looks weak
+    - run_live_patch_curve: Run live hidden-state patching on a local hookable model and write Mario-style layer curves
     """
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
     tyro.extras.subcommand_cli_from_dict(
@@ -89,6 +97,8 @@ def main():
             "validate_counterfactual_preflight": validate_counterfactual_preflight,
             "counterfactual_activation_patching": counterfactual_activation_patching,
             "run_counterfactual_expansion": run_counterfactual_expansion,
+            "diagnose_counterfactual_signal": diagnose_counterfactual_signal,
+            "run_live_patch_curve": run_live_patch_curve,
         }
     )
 
