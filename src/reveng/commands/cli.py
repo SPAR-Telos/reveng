@@ -47,6 +47,17 @@ from reveng.experiments.counterfactual_expansion import (
 from reveng.experiments.counterfactual_signal_diagnostics import (
     diagnose_counterfactual_signal,
 )
+from reveng.experiments.behavioral_probe_runner import (
+    run_behavioral_probe_door_semantics_ablation,
+    run_behavioral_probe_prompt_ablation,
+    run_behavioral_probe_smoke_test,
+)
+from reveng.experiments.behavioral_probe_trajectory_data import (
+    run_behavioral_probe_trajectory_eval,
+)
+from reveng.experiments.behavioral_probe_case_studies import (
+    run_behavioral_probe_case_studies,
+)
 from reveng.experiments.live_patch_curve import (
     run_live_patch_curve,
 )
@@ -80,6 +91,11 @@ def main():
     - run_counterfactual_expansion: Layer sweep + threshold sensitivity with consolidated dashboard outputs
     - diagnose_counterfactual_signal: Summarize why the surrogate counterfactual signal looks weak
     - run_live_patch_curve: Run live hidden-state patching on a local hookable model and write Mario-style layer curves
+    - run_behavioral_probe_smoke_test: Run a black-box DoorKey behavioral-probe smoke test on manual 9x9 states
+    - run_behavioral_probe_door_semantics_ablation: Run a focused semantics ablation for the door_open_after_right behavioral probe
+    - run_behavioral_probe_prompt_ablation: Compare prompt presets on a chosen behavioral-probe subset
+    - run_behavioral_probe_trajectory_eval: Mine trajectory-derived single-step probe instances from trace-viewer JSONs
+    - run_behavioral_probe_case_studies: Run probe families on mined wall-hit / non-optimal trajectory slices
     """
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
     tyro.extras.subcommand_cli_from_dict(
@@ -99,6 +115,11 @@ def main():
             "run_counterfactual_expansion": run_counterfactual_expansion,
             "diagnose_counterfactual_signal": diagnose_counterfactual_signal,
             "run_live_patch_curve": run_live_patch_curve,
+            "run_behavioral_probe_smoke_test": run_behavioral_probe_smoke_test,
+            "run_behavioral_probe_door_semantics_ablation": run_behavioral_probe_door_semantics_ablation,
+            "run_behavioral_probe_prompt_ablation": run_behavioral_probe_prompt_ablation,
+            "run_behavioral_probe_trajectory_eval": run_behavioral_probe_trajectory_eval,
+            "run_behavioral_probe_case_studies": run_behavioral_probe_case_studies,
         }
     )
 

@@ -8,6 +8,115 @@ uv sync
 uv pip install torch --index-url https://download.pytorch.org/whl/cpu
 ```
 
+## Behavioral Probes
+
+Behavioral probes are black-box, single-turn DoorKey queries over rendered grid
+states. The current pipeline supports:
+
+- `label3` probes with constrained `A/B/C -> yes/no/unknown`
+- `coord_json` probes with exact `{"row": <int>, "col": <int>}` outputs
+- readouts:
+  - greedy visible answer
+  - logprob diagnostics at `T=0.0`, `T=0.7`, `T=1.0`
+  - Monte Carlo sampling at `T=0.7`
+
+Important logprob semantics:
+
+- the main logprob diagnostic now explicitly records whether `p(yes) > p(no)`
+  rather than relying only on the semantic argmax label
+- outputs therefore include both:
+  - semantic distributions over `yes/no/unknown`
+  - pairwise `yes_gt_no_*` checks for direct comparison with greedy and MC
+
+### Smoke test
+
+Run the expanded smoke test on the manual 9x9 DoorKey states:
+
+```bash
+reveng-cli run_behavioral_probe_smoke_test \
+  --model-name together_ai/openai/gpt-oss-20b \
+  --output-dir data/behavioral_probes/smoke_test \
+  --prompt-preset default_observable_state \
+  --question-family all \
+  --logprob-temperatures 0.0 0.7 1.0
+```
+
+Useful smaller slices:
+
+```bash
+reveng-cli run_behavioral_probe_smoke_test \
+  --model-name together_ai/openai/gpt-oss-20b \
+  --output-dir data/behavioral_probes/smoke_test_label3 \
+  --prompt-preset cardinal_action_explicit \
+  --question-family all_label3 \
+  --answer-space label3 \
+  --logprob-temperatures 0.0 0.7 1.0
+```
+
+```bash
+reveng-cli run_behavioral_probe_smoke_test \
+  --model-name together_ai/openai/gpt-oss-20b \
+  --output-dir data/behavioral_probes/smoke_test_coords \
+  --prompt-preset coordinate_output_explicit \
+  --question-family coordinates \
+  --answer-space coord_json
+```
+
+Key outputs:
+
+- `behavioral_probe_rows.csv`
+- `behavioral_probe_summary.csv`
+- `behavioral_probe_probability_diagnostics.csv`
+- `behavioral_probe_raw.json`
+- `figs/behavioral_probe_summary.png`
+- `figs/behavioral_probe_directional_heatmap.png`
+- `figs/behavioral_probe_coordinate_summary.png`
+
+### Prompt ablation
+
+```bash
+reveng-cli run_behavioral_probe_prompt_ablation \
+  --model-name together_ai/openai/gpt-oss-20b \
+  --output-dir data/behavioral_probes/prompt_ablation \
+  --question-family all_label3 \
+  --answer-space label3
+```
+
+### Door semantics ablation
+
+```bash
+reveng-cli run_behavioral_probe_door_semantics_ablation \
+  --model-name together_ai/openai/gpt-oss-20b \
+  --output-dir data/behavioral_probes/door_semantics_ablation
+```
+
+### Mine trajectory-derived probe instances
+
+This expects trace-viewer JSONs produced by `get_trajectory_key_door_env`.
+
+```bash
+reveng-cli run_behavioral_probe_trajectory_eval \
+  --trajectory-dir path/to/key_door_trajectories \
+  --output-dir data/behavioral_probes/trajectory_instances \
+  --slice-type all_steps
+```
+
+Slice options:
+
+- `all_steps`
+- `wall_hit`
+- `non_optimal_action`
+
+### Failure-case case studies
+
+```bash
+reveng-cli run_behavioral_probe_case_studies \
+  --trajectory-dir path/to/key_door_trajectories \
+  --model-name together_ai/openai/gpt-oss-20b \
+  --output-dir data/behavioral_probes/case_studies \
+  --slice-type non_optimal_action
+```
+
 ## Counterfactual Pipeline
 
 Scope:
