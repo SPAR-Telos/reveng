@@ -1,0 +1,37 @@
+{
+  "model_name": "together_ai/openai/gpt-oss-20b",
+  "by_phase": {
+    "observed_action": {
+      "requests": 10,
+      "cost_usd": 0.0015228000000000002,
+      "prompt_tokens": 4270,
+      "completion_tokens": 806,
+      "total_tokens": 5076,
+      "reasoning_tokens": 0
+    },
+    "coord_greedy_t0": {
+      "requests": 80,
+      "cost_usd": 0.010859700000000002,
+      "prompt_tokens": 32740,
+      "completion_tokens": 3459,
+      "total_tokens": 36199,
+      "reasoning_tokens": 0
+    },
+    "coord_mc": {
+      "requests": 800,
+      "cost_usd": 0.10983390000000008,
+      "prompt_tokens": 327400,
+      "completion_tokens": 38713,
+      "total_tokens": 366113,
+      "reasoning_tokens": 0
+    }
+  },
+  "total": {
+    "requests": 890,
+    "cost_usd": 0.12221640000000011,
+    "prompt_tokens": 364410,
+    "completion_tokens": 42978,
+    "total_tokens": 407388,
+    "reasoning_tokens": 0
+  }
+}

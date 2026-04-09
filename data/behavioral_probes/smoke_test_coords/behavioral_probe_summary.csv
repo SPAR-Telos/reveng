@@ -1,0 +1,9 @@
+question_id,target_variable,question_family,answer_space,n_rows,greedy_exact_match_accuracy,mc_modal_exact_match_accuracy,greedy_invalid_rate,mc_invalid_rate,mean_greedy_manhattan_distance,mean_mc_modal_manhattan_distance,mean_mc_sample_manhattan_distance,mean_mc_unique_coordinate_count
+agent_location,agent_location,coordinates,coord_json,10,1.0,1.0,0.0,0.0,0.0,0.0,0.0,1.0
+agent_location_after_down,agent_location_after_down,coordinates,coord_json,10,1.0,1.0,0.0,0.0,0.0,0.0,0.0,1.0
+agent_location_after_left,agent_location_after_left,coordinates,coord_json,10,1.0,1.0,0.0,0.0,0.0,0.0,0.0,1.0
+agent_location_after_right,agent_location_after_right,coordinates,coord_json,10,0.7,0.7,0.0,0.0,0.3,0.3,0.27,1.3
+agent_location_after_up,agent_location_after_up,coordinates,coord_json,10,1.0,1.0,0.0,0.0,0.0,0.0,0.0,1.0
+door_location,door_location,coordinates,coord_json,10,1.0,0.9,0.0,0.0,0.0,0.5,1.01,1.4
+goal_location,goal_location,coordinates,coord_json,10,1.0,1.0,0.0,0.0,0.0,0.0,0.01,1.1
+key_location,key_location,coordinates,coord_json,10,1.0,1.0,0.0,0.0,0.0,0.0,0.0,1.0

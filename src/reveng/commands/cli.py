@@ -52,6 +52,9 @@ from reveng.experiments.behavioral_probe_runner import (
     run_behavioral_probe_prompt_ablation,
     run_behavioral_probe_smoke_test,
 )
+from reveng.experiments.behavioral_probe_merge import (
+    merge_behavioral_probe_outputs,
+)
 from reveng.experiments.behavioral_probe_trajectory_data import (
     run_behavioral_probe_trajectory_eval,
 )
@@ -94,6 +97,7 @@ def main():
     - run_behavioral_probe_smoke_test: Run a black-box DoorKey behavioral-probe smoke test on manual 9x9 states
     - run_behavioral_probe_door_semantics_ablation: Run a focused semantics ablation for the door_open_after_right behavioral probe
     - run_behavioral_probe_prompt_ablation: Compare prompt presets on a chosen behavioral-probe subset
+    - merge_behavioral_probe_outputs: Merge multiple behavioral-probe output dirs into one combined report
     - run_behavioral_probe_trajectory_eval: Mine trajectory-derived single-step probe instances from trace-viewer JSONs
     - run_behavioral_probe_case_studies: Run probe families on mined wall-hit / non-optimal trajectory slices
     """
@@ -118,6 +122,7 @@ def main():
             "run_behavioral_probe_smoke_test": run_behavioral_probe_smoke_test,
             "run_behavioral_probe_door_semantics_ablation": run_behavioral_probe_door_semantics_ablation,
             "run_behavioral_probe_prompt_ablation": run_behavioral_probe_prompt_ablation,
+            "merge_behavioral_probe_outputs": merge_behavioral_probe_outputs,
             "run_behavioral_probe_trajectory_eval": run_behavioral_probe_trajectory_eval,
             "run_behavioral_probe_case_studies": run_behavioral_probe_case_studies,
         }

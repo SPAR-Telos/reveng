@@ -50,13 +50,15 @@ def plot_behavioral_probe_summary(
     ax.bar([idx - width for idx in x], logprob_t0, width, color=LOGPROB_T0_BLUE, label="Logprob yes>no (T=0.0)")
     ax.bar([idx for idx in x], logprob_t07, width, color=LOGPROB_T07_AMBER, label="Logprob yes>no (T=0.7)")
     ax.bar([idx + width for idx in x], logprob_t1, width, color=LOGPROB_T1_ORANGE, label="Logprob yes>no (T=1.0)")
-    ax.bar([idx + 2 * width for idx in x], mc, width, color=MC_GREY, label="MC yes>no")
+    ax.bar([idx + 2 * width for idx in x], mc, width, color=MC_GREY, label="MC sampled yes/no")
     ax.set_ylim(0.0, 1.05)
     ax.set_ylabel("Accuracy", color=TEXT_COLOR)
     ax.set_title("Behavioral Probe Accuracy by Readout", color=TEXT_COLOR, fontsize=14)
     ax.set_xticks(x)
     ax.set_xticklabels(question_ids, rotation=30, ha="right")
     ax.grid(axis="y", color=LIGHT_GRID, linewidth=0.8, alpha=0.9)
+    for boundary in range(1, len(question_ids)):
+        ax.axvline(boundary - 0.5, color=LIGHT_GRID, linestyle="--", linewidth=0.8, alpha=0.8)
     ax.set_axisbelow(True)
     ax.legend(frameon=False, loc="lower left", ncols=2)
 
@@ -64,12 +66,14 @@ def plot_behavioral_probe_summary(
     ax.bar([idx - 1.5 * width for idx in x], entropy_t0, width, color=LOGPROB_T0_BLUE, label="Logprob entropy (T=0.0)")
     ax.bar([idx - 0.5 * width for idx in x], entropy_t07, width, color=LOGPROB_T07_AMBER, label="Logprob entropy (T=0.7)")
     ax.bar([idx + 0.5 * width for idx in x], entropy_t1, width, color=LOGPROB_T1_ORANGE, label="Logprob entropy (T=1.0)")
-    ax.bar([idx + 1.5 * width for idx in x], mc_entropy, width, color=MC_GREY, label="MC entropy")
+    ax.bar([idx + 1.5 * width for idx in x], mc_entropy, width, color=MC_GREY, label="MC sampled entropy")
     ax.set_ylabel("Mean entropy (bits)", color=TEXT_COLOR)
     ax.set_xlabel("Question", color=TEXT_COLOR)
     ax.set_xticks(x)
     ax.set_xticklabels(question_ids, rotation=30, ha="right")
     ax.grid(axis="y", color=LIGHT_GRID, linewidth=0.8, alpha=0.9)
+    for boundary in range(1, len(question_ids)):
+        ax.axvline(boundary - 0.5, color=LIGHT_GRID, linestyle="--", linewidth=0.8, alpha=0.8)
     ax.set_axisbelow(True)
     ax.legend(frameon=False, loc="upper left", ncols=2)
 
@@ -115,10 +119,11 @@ def plot_directional_probe_heatmap(
 
     panels = [
         ("greedy_accuracy", "Greedy", GREEDY_BLUE),
-        ("mc_yes_no_accuracy", "MC yes>no", MC_GREY),
+        ("mc_yes_no_accuracy", "MC sampled yes/no", MC_GREY),
         ("logprob_yes_no_accuracy_t0", "Logprob yes>no (T=0.0)", LOGPROB_T0_BLUE),
+        ("logprob_yes_no_accuracy_t1", "Logprob yes>no (T=1.0)", LOGPROB_T1_ORANGE),
     ]
-    fig, axes = plt.subplots(1, 3, figsize=(13.5, 5), constrained_layout=True)
+    fig, axes = plt.subplots(1, 4, figsize=(17.5, 5), constrained_layout=True)
     fig.patch.set_facecolor("white")
 
     for ax, (metric_key, title, _) in zip(axes, panels, strict=True):
@@ -145,6 +150,10 @@ def plot_directional_probe_heatmap(
         ax.set_xticklabels(action_order)
         ax.set_yticks(range(len(row_labels)))
         ax.set_yticklabels(row_labels)
+        for y in range(1, len(row_labels)):
+            ax.axhline(y - 0.5, color=LIGHT_GRID, linestyle="--", linewidth=0.9, alpha=0.9)
+        for x in range(1, len(action_order)):
+            ax.axvline(x - 0.5, color=LIGHT_GRID, linestyle="--", linewidth=0.7, alpha=0.6)
         for y, row in enumerate(matrix):
             for x, value in enumerate(row):
                 ax.text(x, y, f"{value:.2f}", ha="center", va="center", color=TEXT_COLOR, fontsize=8)

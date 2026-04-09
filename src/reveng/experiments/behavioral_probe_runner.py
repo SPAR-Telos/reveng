@@ -79,12 +79,60 @@ def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     if not rows:
         path.write_text("")
         return
-    fieldnames = list(rows[0].keys())
+    fieldnames: list[str] = []
+    seen: set[str] = set()
+    for row in rows:
+        for key in row.keys():
+            if key not in seen:
+                seen.add(key)
+                fieldnames.append(key)
     with open(path, "w", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()
         for row in rows:
             writer.writerow(row)
+
+
+def _append_jsonl(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "a") as handle:
+        handle.write(json.dumps(payload, sort_keys=True) + "\n")
+
+
+class _CheckpointWriter:
+    def __init__(self, checkpoint_dir: str | Path | None, config: dict[str, Any]) -> None:
+        self.base_dir = Path(checkpoint_dir) if checkpoint_dir is not None else None
+        self.rows_path = self.base_dir / "checkpoint_rows.jsonl" if self.base_dir else None
+        self.raw_rows_path = self.base_dir / "checkpoint_raw_rows.jsonl" if self.base_dir else None
+        self.status_path = self.base_dir / "checkpoint_status.json" if self.base_dir else None
+        if self.base_dir is not None:
+            self.base_dir.mkdir(parents=True, exist_ok=True)
+            (self.base_dir / "checkpoint_config.json").write_text(json.dumps(config, indent=2))
+
+    def append(
+        self,
+        *,
+        row: dict[str, Any],
+        raw_row: dict[str, Any],
+        progress: dict[str, Any],
+        usage_summary: dict[str, Any],
+    ) -> None:
+        if self.base_dir is None:
+            return
+        assert self.rows_path is not None
+        assert self.raw_rows_path is not None
+        assert self.status_path is not None
+        _append_jsonl(self.rows_path, row)
+        _append_jsonl(self.raw_rows_path, raw_row)
+        self.status_path.write_text(
+            json.dumps(
+                {
+                    **progress,
+                    "usage_summary": usage_summary,
+                },
+                indent=2,
+            )
+        )
 
 
 def _behavioral_probe_preamble(prompt_preset: str) -> str:
@@ -210,6 +258,17 @@ class BehavioralProbeLLM(BaseLLMInterface):
         assert isinstance(response, str)
         return response
 
+    def ask_text_with_metadata(self, prompt: str, *, seed: int) -> tuple[str, dict[str, Any]]:
+        response, cost, raw_response = self._make_completion_request(
+            prompt,
+            response_format=None,
+            seed=seed,
+            reasoning_effort="low",
+            allowed_openai_params=["seed", "reasoning_effort"],
+        )
+        assert isinstance(response, str)
+        return response, _extract_usage_metadata(raw_response, cost)
+
     def ask_text_with_logprobs(
         self,
         prompt: str,
@@ -229,9 +288,108 @@ class BehavioralProbeLLM(BaseLLMInterface):
         assert isinstance(response, str)
         return response, raw_response
 
+    def ask_text_with_logprobs_and_metadata(
+        self,
+        prompt: str,
+        *,
+        seed: int,
+        top_logprobs: int = 20,
+    ) -> tuple[str, Any, dict[str, Any]]:
+        response, cost, raw_response = self._make_completion_request(
+            prompt,
+            response_format=None,
+            seed=seed,
+            reasoning_effort="low",
+            logprobs=True,
+            top_logprobs=top_logprobs,
+            allowed_openai_params=["seed", "reasoning_effort", "logprobs", "top_logprobs"],
+        )
+        assert isinstance(response, str)
+        return response, raw_response, _extract_usage_metadata(raw_response, cost)
+
     def ask_action(self, prompt: str, *, seed: int) -> tuple[str, str]:
         raw_text = self.ask_text(prompt, seed=seed)
         return _extract_action_label(raw_text), raw_text
+
+    def ask_action_with_metadata(self, prompt: str, *, seed: int) -> tuple[str, str, dict[str, Any]]:
+        raw_text, metadata = self.ask_text_with_metadata(prompt, seed=seed)
+        return _extract_action_label(raw_text), raw_text, metadata
+
+
+def _extract_usage_metadata(raw_response: Any, cost_usd: float) -> dict[str, Any]:
+    usage = getattr(raw_response, "usage", None)
+    if usage is None and isinstance(raw_response, dict):
+        usage = raw_response.get("usage")
+
+    def _usage_get(key: str, default: int = 0) -> int:
+        if usage is None:
+            return default
+        value = getattr(usage, key, None)
+        if value is None and isinstance(usage, dict):
+            value = usage.get(key, default)
+        return int(value or 0)
+
+    return {
+        "cost_usd": float(cost_usd or 0.0),
+        "prompt_tokens": _usage_get("prompt_tokens"),
+        "completion_tokens": _usage_get("completion_tokens"),
+        "total_tokens": _usage_get("total_tokens"),
+        "reasoning_tokens": _usage_get("reasoning_tokens"),
+    }
+
+
+def _empty_usage_bucket() -> dict[str, Any]:
+    return {
+        "requests": 0,
+        "cost_usd": 0.0,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0,
+        "reasoning_tokens": 0,
+    }
+
+
+def _add_usage(usage_summary: dict[str, Any], bucket_name: str, metadata: dict[str, Any] | None) -> None:
+    bucket = usage_summary["by_phase"].setdefault(bucket_name, _empty_usage_bucket())
+    total = usage_summary["total"]
+    bucket["requests"] += 1
+    total["requests"] += 1
+    if not metadata:
+        return
+    for key in ("cost_usd", "prompt_tokens", "completion_tokens", "total_tokens", "reasoning_tokens"):
+        value = metadata.get(key, 0.0 if key == "cost_usd" else 0)
+        bucket[key] += value
+        total[key] += value
+
+
+def _query_text(client: Any, prompt: str, *, seed: int) -> tuple[str, dict[str, Any]]:
+    if hasattr(client, "ask_text_with_metadata"):
+        return client.ask_text_with_metadata(prompt, seed=seed)
+    return client.ask_text(prompt, seed=seed), _empty_usage_bucket()
+
+
+def _query_text_with_logprobs(
+    client: Any,
+    prompt: str,
+    *,
+    seed: int,
+    top_logprobs: int,
+) -> tuple[str, Any, dict[str, Any]]:
+    if hasattr(client, "ask_text_with_logprobs_and_metadata"):
+        return client.ask_text_with_logprobs_and_metadata(
+            prompt,
+            seed=seed,
+            top_logprobs=top_logprobs,
+        )
+    raw_text, raw_response = client.ask_text_with_logprobs(prompt, seed=seed, top_logprobs=top_logprobs)
+    return raw_text, raw_response, _empty_usage_bucket()
+
+
+def _query_action(client: Any, prompt: str, *, seed: int) -> tuple[str, str, dict[str, Any]]:
+    if hasattr(client, "ask_action_with_metadata"):
+        return client.ask_action_with_metadata(prompt, seed=seed)
+    action, raw_text = client.ask_action(prompt, seed=seed)
+    return action, raw_text, _empty_usage_bucket()
 
 
 def _normalize_raw_answer_token(token_text: str | None) -> str | None:
@@ -369,6 +527,17 @@ def _build_probability_diagnostics_rows(rows: list[dict[str, Any]]) -> list[dict
     for row in rows:
         if row["answer_space"] != "label3":
             continue
+        required_keys = {
+            "raw_answer_probs_t0_json",
+            "raw_answer_probs_t07_json",
+            "raw_answer_probs_t1_json",
+            "answer_probs_t0_json",
+            "answer_probs_t07_json",
+            "answer_probs_t1_json",
+            "mc_answer_probs_json",
+        }
+        if not required_keys.issubset(row):
+            continue
         raw_probs_t0 = json.loads(row["raw_answer_probs_t0_json"])
         raw_probs_t07 = json.loads(row["raw_answer_probs_t07_json"])
         raw_probs_t1 = json.loads(row["raw_answer_probs_t1_json"])
@@ -442,7 +611,12 @@ def _collect_label3_logprob_readout(
     seed: int,
     top_logprobs: int,
 ) -> dict[str, Any]:
-    raw_text, raw_response = client.ask_text_with_logprobs(prompt, seed=seed, top_logprobs=top_logprobs)
+    raw_text, raw_response, usage = _query_text_with_logprobs(
+        client,
+        prompt,
+        seed=seed,
+        top_logprobs=top_logprobs,
+    )
     logprobs = raw_response.choices[0].logprobs if raw_response is not None else None
     raw_probs = extract_raw_answer_candidates_from_logprobs(logprobs)
     semantic_probs = map_raw_candidates_to_semantic_probs(raw_probs)
@@ -454,6 +628,7 @@ def _collect_label3_logprob_readout(
         "answer": sampled_answer_from_probabilities(semantic_probs),
         "entropy": shannon_entropy(semantic_probs),
         "answer_token_logprobs": _extract_answer_token_logprobs(logprobs),
+        "usage": usage,
     }
 
 
@@ -471,6 +646,7 @@ def _run_probe_rows(
     mc_client: BehavioralProbeLLM | None = None,
     top_logprobs: int = 20,
     verbose: bool = True,
+    checkpoint_dir: str | Path | None = None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     if prompt_preset not in PROMPT_PRESETS:
         raise ValueError(f"Unknown prompt preset: {prompt_preset}")
@@ -484,6 +660,20 @@ def _run_probe_rows(
     }
     mc_client = mc_client or BehavioralProbeLLM(model_name, temperature=mc_temperature)
 
+    usage_summary: dict[str, Any] = {
+        "model_name": model_name,
+        "by_phase": {},
+        "total": _empty_usage_bucket(),
+    }
+    config = {
+        "model_name": model_name,
+        "prompt_preset": prompt_preset,
+        "logprob_temperatures": list(logprob_temperatures),
+        "mc_temperature": mc_temperature,
+        "mc_sample_repeats": mc_sample_repeats,
+        "top_logprobs": top_logprobs,
+    }
+    checkpoint_writer = _CheckpointWriter(checkpoint_dir, config)
     rows: list[dict[str, Any]] = []
     raw_rows: list[dict[str, Any]] = []
     total_examples = len(examples)
@@ -503,8 +693,13 @@ def _run_probe_rows(
             observed_action_source = "dataset"
         else:
             try:
-                observed_action, observed_action_raw = action_client.ask_action(observed_action_prompt, seed=0)
+                observed_action, observed_action_raw, observed_action_usage = _query_action(
+                    action_client,
+                    observed_action_prompt,
+                    seed=0,
+                )
                 observed_action_source = "model_query"
+                _add_usage(usage_summary, "observed_action", observed_action_usage)
             except Exception as exc:
                 observed_action = "INVALID"
                 observed_action_raw = f"ERROR: {exc}"
@@ -531,8 +726,9 @@ def _run_probe_rows(
                 greedy_raw = ""
                 greedy_coord: dict[str, int] | None = None
                 try:
-                    greedy_raw = logprob_clients["t0"].ask_text(prompt, seed=0)
+                    greedy_raw, greedy_usage = _query_text(logprob_clients["t0"], prompt, seed=0)
                     greedy_coord = parse_coordinate_answer(greedy_raw)
+                    _add_usage(usage_summary, "coord_greedy_t0", greedy_usage)
                 except Exception as exc:
                     greedy_raw = f"ERROR: {exc}"
                     logger.error(
@@ -547,7 +743,8 @@ def _run_probe_rows(
                 mc_coords: list[dict[str, int] | None] = []
                 for seed in range(1, mc_sample_repeats + 1):
                     try:
-                        mc_raw = mc_client.ask_text(prompt, seed=seed)
+                        mc_raw, mc_usage = _query_text(mc_client, prompt, seed=seed)
+                        _add_usage(usage_summary, "coord_mc", mc_usage)
                     except Exception as exc:
                         mc_raw = f"ERROR: {exc}"
                     mc_raw_outputs.append(mc_raw)
@@ -598,6 +795,18 @@ def _run_probe_rows(
                         "parsed_row": row,
                     }
                 )
+                checkpoint_writer.append(
+                    row=row,
+                    raw_row=raw_rows[-1],
+                    progress={
+                        "completed_rows": len(rows),
+                        "total_examples": total_examples,
+                        "total_questions": total_questions,
+                        "current_example_id": example["example_id"],
+                        "current_question_id": question.question_id,
+                    },
+                    usage_summary=usage_summary,
+                )
                 continue
 
             readouts: dict[str, dict[str, Any]] = {}
@@ -610,6 +819,7 @@ def _run_probe_rows(
                         seed=0,
                         top_logprobs=top_logprobs,
                     )
+                    _add_usage(usage_summary, f"logprob_{suffix}", readouts[suffix].get("usage"))
                 except Exception as exc:
                     logger.error(
                         "Logprob belief query failed for %s/%s at %s: %s\n%s",
@@ -630,6 +840,7 @@ def _run_probe_rows(
                         "answer": "invalid",
                         "entropy": 0.0,
                         "answer_token_logprobs": None,
+                        "usage": None,
                     }
 
             greedy_raw = readouts["t0"]["raw_output"]
@@ -639,7 +850,8 @@ def _run_probe_rows(
             mc_answers: list[str] = []
             for seed in range(1, mc_sample_repeats + 1):
                 try:
-                    mc_raw = mc_client.ask_text(prompt, seed=seed)
+                    mc_raw, mc_usage = _query_text(mc_client, prompt, seed=seed)
+                    _add_usage(usage_summary, "mc", mc_usage)
                 except Exception as exc:
                     mc_raw = f"ERROR: {exc}"
                 mc_raw_outputs.append(mc_raw)
@@ -708,16 +920,19 @@ def _run_probe_rows(
                     "parsed_row": row,
                 }
             )
-
-    config = {
-        "model_name": model_name,
-        "prompt_preset": prompt_preset,
-        "logprob_temperatures": list(logprob_temperatures),
-        "mc_temperature": mc_temperature,
-        "mc_sample_repeats": mc_sample_repeats,
-        "top_logprobs": top_logprobs,
-    }
-    return rows, raw_rows, config
+            checkpoint_writer.append(
+                row=row,
+                raw_row=raw_rows[-1],
+                progress={
+                    "completed_rows": len(rows),
+                    "total_examples": total_examples,
+                    "total_questions": total_questions,
+                    "current_example_id": example["example_id"],
+                    "current_question_id": question.question_id,
+                },
+                usage_summary=usage_summary,
+            )
+    return rows, raw_rows, {**config, "usage_summary": usage_summary}
 
 
 def _write_behavioral_outputs(
@@ -733,6 +948,7 @@ def _write_behavioral_outputs(
     out_dir.mkdir(parents=True, exist_ok=True)
     summary_rows = summarize_probe_rows(rows)
     probability_diagnostics_rows = _build_probability_diagnostics_rows(rows)
+    usage_summary = config.get("usage_summary")
     raw_payload = {
         "config": {**config, "min_valid_parse_rate": min_valid_parse_rate},
         "dataset_validation": dataset_validation,
@@ -740,12 +956,15 @@ def _write_behavioral_outputs(
         "rows": raw_rows,
         "summary": summary_rows,
         "probability_diagnostics": probability_diagnostics_rows,
+        "usage_summary": usage_summary,
     }
 
     _write_csv(out_dir / "behavioral_probe_rows.csv", rows)
     _write_csv(out_dir / "behavioral_probe_summary.csv", summary_rows)
     _write_csv(out_dir / "behavioral_probe_probability_diagnostics.csv", probability_diagnostics_rows)
     (out_dir / "behavioral_probe_raw.json").write_text(json.dumps(raw_payload, indent=2))
+    if usage_summary is not None:
+        (out_dir / "usage_summary.json").write_text(json.dumps(usage_summary, indent=2))
 
     figs_dir = out_dir / "figs"
     figs_dir.mkdir(parents=True, exist_ok=True)
@@ -788,6 +1007,7 @@ def run_behavioral_probe_on_instances(
     top_logprobs: int = 20,
     logprob_temperatures: tuple[float, ...] = (0.0, 0.7, 1.0),
     verbose: bool = True,
+    checkpoint_dir: str | None = None,
 ) -> None:
     rows, raw_rows, config = _run_probe_rows(
         model_name=model_name,
@@ -799,6 +1019,7 @@ def run_behavioral_probe_on_instances(
         logprob_temperatures=logprob_temperatures,
         top_logprobs=top_logprobs,
         verbose=verbose,
+        checkpoint_dir=checkpoint_dir or str(Path(output_dir) / "checkpoints"),
     )
     _write_behavioral_outputs(
         out_dir=Path(output_dir),
@@ -824,6 +1045,7 @@ def run_behavioral_probe_smoke_test(
     door_open_after_action_variant: str = "observed",
     logprob_temperatures: tuple[float, ...] = (0.0, 0.7, 1.0),
     verbose: bool = True,
+    checkpoint_dir: str | None = None,
 ) -> None:
     """Run the manual DoorKey behavioral-probe smoke test."""
     if answer_space != "coord_json" and any(
@@ -846,6 +1068,7 @@ def run_behavioral_probe_smoke_test(
         logprob_temperatures=logprob_temperatures,
         top_logprobs=top_logprobs,
         verbose=verbose,
+        checkpoint_dir=checkpoint_dir or str(Path(output_dir) / "checkpoints"),
     )
     _write_behavioral_outputs(
         out_dir=Path(output_dir),
@@ -867,6 +1090,7 @@ def run_behavioral_probe_door_semantics_ablation(
     top_logprobs: int = 20,
     prompt_preset: str = "default_observable_state",
     verbose: bool = True,
+    checkpoint_dir: str | None = None,
 ) -> None:
     """Run a focused semantics ablation for door_open_after_right, then rerun the winner on full smoke."""
     out_dir = Path(output_dir)
@@ -902,6 +1126,9 @@ def run_behavioral_probe_door_semantics_ablation(
             logprob_temperatures=SUPPORTED_LOGPROB_TEMPS,
             top_logprobs=top_logprobs,
             verbose=verbose,
+            checkpoint_dir=(
+                str(Path(checkpoint_dir) / f"focused_{variant_id}") if checkpoint_dir else str(out_dir / "checkpoints" / f"focused_{variant_id}")
+            ),
         )
         focused_rows.extend(rows)
         summary = summarize_probe_rows(rows)[0]
@@ -935,6 +1162,9 @@ def run_behavioral_probe_door_semantics_ablation(
         door_open_after_action_variant=winner_variant,
         logprob_temperatures=SUPPORTED_LOGPROB_TEMPS,
         verbose=verbose,
+        checkpoint_dir=(
+            str(Path(checkpoint_dir) / "winning_full_smoke") if checkpoint_dir else str(out_dir / "winning_full_smoke" / "checkpoints")
+        ),
     )
 
 
@@ -952,6 +1182,7 @@ def run_behavioral_probe_prompt_ablation(
     mc_temperature: float = 0.7,
     top_logprobs: int = 20,
     verbose: bool = True,
+    checkpoint_dir: str | None = None,
 ) -> None:
     """Compare prompt presets on the smoke dataset for a chosen question subset."""
     out_dir = Path(output_dir)
@@ -970,6 +1201,9 @@ def run_behavioral_probe_prompt_ablation(
             question_family=question_family,
             answer_space=answer_space,
             verbose=verbose,
+            checkpoint_dir=(
+                str(Path(checkpoint_dir) / preset) if checkpoint_dir else str(preset_dir / "checkpoints")
+            ),
         )
         summary_path = preset_dir / "behavioral_probe_summary.csv"
         with open(summary_path, newline="") as handle:

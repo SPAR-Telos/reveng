@@ -8,6 +8,9 @@ import pytest
 from reveng.experiments.behavioral_probe_case_studies import (
     run_behavioral_probe_case_studies,
 )
+from reveng.experiments.behavioral_probe_merge import (
+    merge_behavioral_probe_outputs,
+)
 from reveng.experiments.behavioral_probe_metrics import (
     belief_action_consistency,
     sampled_answer_from_probabilities,
@@ -33,6 +36,8 @@ from reveng.experiments.behavioral_probe_runner import (
     _build_probability_diagnostics_rows,
     _probabilities_from_choice_logprobs,
     _run_probe_rows,
+    _write_csv,
+    _write_behavioral_outputs,
     extract_raw_answer_candidates_from_logprobs,
     map_raw_candidates_to_semantic_probs,
     run_behavioral_probe_door_semantics_ablation,
@@ -97,6 +102,56 @@ class FakeBehavioralProbeClient:
     def ask_action(self, prompt: str, *, seed: int):
         self.ask_action_calls.append((prompt, seed))
         return self.action_text, json.dumps({"action": self.action_text})
+
+
+class FakeBehavioralProbeClientWithUsage(FakeBehavioralProbeClient):
+    def ask_text_with_metadata(self, prompt: str, *, seed: int):
+        self.ask_text_calls.append((prompt, seed))
+        return self.response_text, {
+            "cost_usd": 0.25,
+            "prompt_tokens": 10,
+            "completion_tokens": 2,
+            "total_tokens": 12,
+            "reasoning_tokens": 1,
+        }
+
+    def ask_text_with_logprobs_and_metadata(self, prompt: str, *, seed: int, top_logprobs: int = 20):
+        self.ask_text_with_logprobs_calls.append((prompt, seed, top_logprobs))
+        raw = SimpleNamespace(
+            choices=[
+                SimpleNamespace(
+                    logprobs=SimpleNamespace(
+                        content=[
+                            SimpleNamespace(
+                                token=self.logprob_primary,
+                                logprob=-0.1,
+                                top_logprobs=[
+                                    SimpleNamespace(token=token, logprob=logprob)
+                                    for token, logprob in self.top_candidates
+                                ],
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        return self.response_text, raw, {
+            "cost_usd": 0.5,
+            "prompt_tokens": 20,
+            "completion_tokens": 3,
+            "total_tokens": 23,
+            "reasoning_tokens": 2,
+        }
+
+    def ask_action_with_metadata(self, prompt: str, *, seed: int):
+        self.ask_action_calls.append((prompt, seed))
+        return self.action_text, json.dumps({"action": self.action_text}), {
+            "cost_usd": 1.0,
+            "prompt_tokens": 30,
+            "completion_tokens": 4,
+            "total_tokens": 34,
+            "reasoning_tokens": 3,
+        }
 
 
 def _single_instance() -> list[dict]:
@@ -331,6 +386,145 @@ def test_run_probe_rows_uses_t0_baseline_and_writes_probability_diagnostics():
     prompts_seen = {call[0] for client in logprob_clients.values() for call in client.ask_text_with_logprobs_calls}
     prompts_seen.update(call[0] for call in mc_client.ask_text_calls)
     assert len(prompts_seen) == len(questions)
+
+
+def test_run_probe_rows_accumulates_usage_and_writes_usage_summary(tmp_path: Path):
+    action_client = FakeBehavioralProbeClientWithUsage('{"action": "RIGHT"}', action_text="RIGHT")
+    logprob_clients = {
+        "t0": FakeBehavioralProbeClientWithUsage("A", logprob_primary="A", temperature=0.0),
+        "t07": FakeBehavioralProbeClientWithUsage("B", logprob_primary="B", temperature=0.7),
+        "t1": FakeBehavioralProbeClientWithUsage("A", logprob_primary="A", temperature=1.0),
+    }
+    mc_client = FakeBehavioralProbeClientWithUsage("no", temperature=0.7)
+    questions = get_behavioral_probe_questions(question_family="core", answer_space="label3")
+    rows, raw_rows, config = _run_probe_rows(
+        model_name="together_ai/openai/gpt-oss-20b",
+        examples=_single_instance(),
+        questions=questions,
+        mc_sample_repeats=2,
+        mc_temperature=0.7,
+        prompt_preset="default_observable_state",
+        logprob_temperatures=(0.0, 0.7, 1.0),
+        action_client=action_client,
+        logprob_clients=logprob_clients,
+        mc_client=mc_client,
+        verbose=False,
+        checkpoint_dir=tmp_path / "checkpoints",
+    )
+    usage_summary = config["usage_summary"]
+    assert usage_summary["total"]["requests"] == len(questions) * (3 + 2)
+    assert "observed_action" not in usage_summary["by_phase"]
+    assert usage_summary["by_phase"]["logprob_t0"]["requests"] == len(questions)
+    assert usage_summary["by_phase"]["mc"]["requests"] == len(questions) * 2
+
+    _write_behavioral_outputs(
+        out_dir=tmp_path,
+        rows=rows,
+        raw_rows=raw_rows,
+        config=config,
+        dataset_validation=None,
+        smoke_examples=None,
+        min_valid_parse_rate=0.0,
+    )
+    usage_path = tmp_path / "usage_summary.json"
+    assert usage_path.exists()
+    usage_payload = json.loads(usage_path.read_text())
+    assert usage_payload["total"]["requests"] == usage_summary["total"]["requests"]
+    assert (tmp_path / "checkpoints" / "checkpoint_rows.jsonl").exists()
+    assert (tmp_path / "checkpoints" / "checkpoint_raw_rows.jsonl").exists()
+    assert (tmp_path / "checkpoints" / "checkpoint_status.json").exists()
+
+
+def test_write_csv_supports_mixed_row_schemas(tmp_path: Path):
+    out_path = tmp_path / "mixed.csv"
+    _write_csv(
+        out_path,
+        [
+            {"a": 1, "b": 2},
+            {"a": 3, "c": 4},
+        ],
+    )
+    with open(out_path, newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    assert rows[0]["a"] == "1"
+    assert rows[0]["b"] == "2"
+    assert rows[0]["c"] == ""
+    assert rows[1]["a"] == "3"
+    assert rows[1]["b"] == ""
+    assert rows[1]["c"] == "4"
+
+
+def test_merge_behavioral_probe_outputs_repairs_rows_and_merges(tmp_path: Path):
+    source_a = tmp_path / "a"
+    source_b = tmp_path / "b"
+    source_a.mkdir()
+    source_b.mkdir()
+    payload_a = {
+        "rows": [
+            {
+                "parsed_row": {
+                    "question_id": "wall_right",
+                    "target_variable": "wall_right",
+                    "question_family": "wall_directional",
+                    "answer_space": "label3",
+                    "greedy_answer": "yes",
+                    "logprob_answer_t0": "yes",
+                    "logprob_answer_t07": "yes",
+                    "logprob_answer_t1": "yes",
+                    "mc_answer": "yes",
+                    "entropy_t0": 0.0,
+                    "entropy_t07": 0.0,
+                    "entropy_t1": 0.0,
+                    "mc_entropy": 0.0,
+                    "valid_parse_rate_t0_for_row": 1.0,
+                    "valid_parse_rate_t07_for_row": 1.0,
+                    "valid_parse_rate_t1_for_row": 1.0,
+                    "mc_valid_parse_rate_for_row": 1.0,
+                    "ground_truth_label": "yes",
+                    "belief_action_consistency": "not_applicable",
+                    "mc_belief_action_consistency": "not_applicable",
+                }
+            }
+        ],
+        "usage_summary": {"source": "a"},
+    }
+    payload_b = {
+        "rows": [
+            {
+                "parsed_row": {
+                    "question_id": "agent_location",
+                    "target_variable": "agent_location",
+                    "question_family": "coordinates",
+                    "answer_space": "coord_json",
+                    "greedy_coordinate_key": "1,2",
+                    "greedy_exact_match": 1.0,
+                    "greedy_manhattan_distance": 0.0,
+                    "mc_modal_exact_match": 1.0,
+                    "mc_modal_manhattan_distance": 0.0,
+                    "mc_mean_manhattan_distance": 0.0,
+                    "mc_unique_coordinate_count": 1.0,
+                    "mc_valid_parse_rate_for_row": 1.0,
+                }
+            }
+        ],
+        "usage_summary": {"source": "b"},
+    }
+    (source_a / "behavioral_probe_raw.json").write_text(json.dumps(payload_a))
+    (source_b / "behavioral_probe_raw.json").write_text(json.dumps(payload_b))
+    out_dir = tmp_path / "merged"
+    merge_behavioral_probe_outputs(
+        input_dirs=(str(source_a), str(source_b)),
+        output_dir=str(out_dir),
+        repair_source_rows_csv=True,
+    )
+    assert (source_a / "behavioral_probe_rows.csv").exists()
+    assert (source_b / "behavioral_probe_rows.csv").exists()
+    assert (out_dir / "behavioral_probe_rows.csv").exists()
+    assert (out_dir / "behavioral_probe_summary.csv").exists()
+    assert (out_dir / "behavioral_probe_raw.json").exists()
+    usage = json.loads((out_dir / "usage_summary.json").read_text())
+    assert str(source_a) in usage["per_source"]
+    assert str(source_b) in usage["per_source"]
 
 
 def test_mine_behavioral_probe_instances_from_trace_viewer_json(tmp_path: Path):

@@ -1,0 +1,801 @@
+example_id,question_id,target_variable,question_family,answer_space,prompt_preset,grid_text,carrying_key,observed_action,greedy_raw_output,greedy_coordinate_json,greedy_coordinate_key,ground_truth_coordinate_json,ground_truth_coordinate_key,greedy_exact_match,greedy_manhattan_distance,mc_modal_coordinate_json,mc_coordinates_json,mc_modal_exact_match,mc_modal_manhattan_distance,mc_mean_manhattan_distance,mc_unique_coordinate_count,mc_valid_parse_rate_for_row
+smoke_001_basic_open_right,agent_location,agent_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ K _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_001_basic_open_right,goal_location,goal_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ K _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 4, ""col"": 4}","{""col"": 4, ""row"": 4}","4,4","{""col"": 4, ""row"": 4}","4,4",1.0,0,"{""col"": 4, ""row"": 4}","[{""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}]",1.0,0,0.0,1,1.0
+smoke_001_basic_open_right,key_location,key_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ K _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 4}","{""col"": 4, ""row"": 1}","1,4","{""col"": 4, ""row"": 1}","1,4",1.0,0,"{""col"": 4, ""row"": 1}","[{""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_001_basic_open_right,door_location,door_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ K _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 3, ""col"": 4}","{""col"": 4, ""row"": 3}","3,4","{""col"": 4, ""row"": 3}","3,4",1.0,0,"{""col"": 4, ""row"": 3}","[{""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}]",1.0,0,0.0,1,1.0
+smoke_001_basic_open_right,agent_location_after_right,agent_location_after_right,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ K _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 2}","{""col"": 2, ""row"": 1}","1,2","{""col"": 2, ""row"": 1}","1,2",1.0,0,"{""col"": 2, ""row"": 1}","[{""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_001_basic_open_right,agent_location_after_left,agent_location_after_left,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ K _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_001_basic_open_right,agent_location_after_up,agent_location_after_up,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ K _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_001_basic_open_right,agent_location_after_down,agent_location_after_down,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ K _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 2, ""col"": 1}","{""col"": 1, ""row"": 2}","2,1","{""col"": 1, ""row"": 2}","2,1",1.0,0,"{""col"": 1, ""row"": 2}","[{""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}]",1.0,0,0.0,1,1.0
+smoke_002_wall_right,agent_location,agent_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # K _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_002_wall_right,goal_location,goal_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # K _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 4, ""col"": 4}","{""col"": 4, ""row"": 4}","4,4","{""col"": 4, ""row"": 4}","4,4",1.0,0,"{""col"": 4, ""row"": 4}","[{""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}]",1.0,0,0.0,1,1.0
+smoke_002_wall_right,key_location,key_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # K _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 3}","{""col"": 3, ""row"": 1}","1,3","{""col"": 3, ""row"": 1}","1,3",1.0,0,"{""col"": 3, ""row"": 1}","[{""col"": 3, ""row"": 1}, {""col"": 3, ""row"": 1}, {""col"": 3, ""row"": 1}, {""col"": 3, ""row"": 1}, {""col"": 3, ""row"": 1}, {""col"": 3, ""row"": 1}, {""col"": 3, ""row"": 1}, {""col"": 3, ""row"": 1}, {""col"": 3, ""row"": 1}, {""col"": 3, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_002_wall_right,door_location,door_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # K _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 3, ""col"": 4}","{""col"": 4, ""row"": 3}","3,4","{""col"": 4, ""row"": 3}","3,4",1.0,0,"{""col"": 4, ""row"": 3}","[{""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}]",1.0,0,0.0,1,1.0
+smoke_002_wall_right,agent_location_after_right,agent_location_after_right,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # K _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 2}","{""col"": 2, ""row"": 1}","1,2","{""col"": 1, ""row"": 1}","1,1",0.0,1,"{""col"": 2, ""row"": 1}","[{""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 1, ""row"": 1}]",0.0,1,0.9,2,1.0
+smoke_002_wall_right,agent_location_after_left,agent_location_after_left,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # K _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_002_wall_right,agent_location_after_up,agent_location_after_up,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # K _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_002_wall_right,agent_location_after_down,agent_location_after_down,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # K _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 2, ""col"": 1}","{""col"": 1, ""row"": 2}","2,1","{""col"": 1, ""row"": 2}","2,1",1.0,0,"{""col"": 1, ""row"": 2}","[{""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}]",1.0,0,0.0,1,1.0
+smoke_003_pick_key_right,agent_location,agent_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A K _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_003_pick_key_right,goal_location,goal_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A K _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 4, ""col"": 4}","{""col"": 4, ""row"": 4}","4,4","{""col"": 4, ""row"": 4}","4,4",1.0,0,"{""col"": 4, ""row"": 4}","[{""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}]",1.0,0,0.0,1,1.0
+smoke_003_pick_key_right,key_location,key_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A K _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 2}","{""col"": 2, ""row"": 1}","1,2","{""col"": 2, ""row"": 1}","1,2",1.0,0,"{""col"": 2, ""row"": 1}","[{""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_003_pick_key_right,door_location,door_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A K _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"":3,""col"":4}","{""col"": 4, ""row"": 3}","3,4","{""col"": 4, ""row"": 3}","3,4",1.0,0,"{""col"": 4, ""row"": 3}","[{""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}]",1.0,0,0.0,1,1.0
+smoke_003_pick_key_right,agent_location_after_right,agent_location_after_right,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A K _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 2}","{""col"": 2, ""row"": 1}","1,2","{""col"": 2, ""row"": 1}","1,2",1.0,0,"{""col"": 2, ""row"": 1}","[{""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_003_pick_key_right,agent_location_after_left,agent_location_after_left,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A K _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_003_pick_key_right,agent_location_after_up,agent_location_after_up,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A K _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_003_pick_key_right,agent_location_after_down,agent_location_after_down,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A K _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 2, ""col"": 1}","{""col"": 1, ""row"": 2}","2,1","{""col"": 1, ""row"": 2}","2,1",1.0,0,"{""col"": 1, ""row"": 2}","[{""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}]",1.0,0,0.0,1,1.0
+smoke_004_carrying_open_door_visible,agent_location,agent_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ O _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ G _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_004_carrying_open_door_visible,goal_location,goal_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ O _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ G _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,RIGHT,"{""row"": 3, ""col"": 4}","{""col"": 4, ""row"": 3}","3,4","{""col"": 4, ""row"": 3}","3,4",1.0,0,"{""col"": 4, ""row"": 3}","[{""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}]",1.0,0,0.0,1,1.0
+smoke_004_carrying_open_door_visible,key_location,key_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ O _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ G _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,RIGHT,"{""row"": -1, ""col"": -1}","{""col"": -1, ""row"": -1}","-1,-1","{""col"": -1, ""row"": -1}","-1,-1",1.0,0,"{""col"": -1, ""row"": -1}","[{""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}]",1.0,0,0.0,1,1.0
+smoke_004_carrying_open_door_visible,door_location,door_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ O _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ G _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,RIGHT,"{""row"": 1, ""col"": 3}","{""col"": 3, ""row"": 1}","1,3","{""col"": 3, ""row"": 1}","1,3",1.0,0,"{""col"": 3, ""row"": 1}","[{""col"": -1, ""row"": -1}, {""col"": 3, ""row"": 1}, {""col"": 3, ""row"": 1}, {""col"": 3, ""row"": 1}, {""col"": 3, ""row"": 1}, {""col"": 3, ""row"": 1}, {""col"": -1, ""row"": -1}, {""col"": 3, ""row"": 1}, {""col"": -1, ""row"": -1}, {""col"": 3, ""row"": 1}]",1.0,0,1.8,2,1.0
+smoke_004_carrying_open_door_visible,agent_location_after_right,agent_location_after_right,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ O _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ G _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,RIGHT,"{""row"": 1, ""col"": 2}","{""col"": 2, ""row"": 1}","1,2","{""col"": 2, ""row"": 1}","1,2",1.0,0,"{""col"": 2, ""row"": 1}","[{""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_004_carrying_open_door_visible,agent_location_after_left,agent_location_after_left,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ O _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ G _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_004_carrying_open_door_visible,agent_location_after_up,agent_location_after_up,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ O _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ G _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_004_carrying_open_door_visible,agent_location_after_down,agent_location_after_down,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ O _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ G _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,RIGHT,"{""row"": 2, ""col"": 1}","{""col"": 1, ""row"": 2}","2,1","{""col"": 1, ""row"": 2}","2,1",1.0,0,"{""col"": 1, ""row"": 2}","[{""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}]",1.0,0,0.0,1,1.0
+smoke_005_carrying_wall_right_open_door,agent_location,agent_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # O _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ G _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,DOWN,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_005_carrying_wall_right_open_door,goal_location,goal_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # O _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ G _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,DOWN,"{""row"": 3, ""col"": 4}","{""col"": 4, ""row"": 3}","3,4","{""col"": 4, ""row"": 3}","3,4",1.0,0,"{""col"": 4, ""row"": 3}","[{""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}]",1.0,0,0.0,1,1.0
+smoke_005_carrying_wall_right_open_door,key_location,key_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # O _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ G _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,DOWN,"{""row"": -1, ""col"": -1}","{""col"": -1, ""row"": -1}","-1,-1","{""col"": -1, ""row"": -1}","-1,-1",1.0,0,"{""col"": -1, ""row"": -1}","[{""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}]",1.0,0,0.0,1,1.0
+smoke_005_carrying_wall_right_open_door,door_location,door_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # O _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ G _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,DOWN,"{""row"": 1, ""col"": 3}","{""col"": 3, ""row"": 1}","1,3","{""col"": 3, ""row"": 1}","1,3",1.0,0,"{""col"": 3, ""row"": 1}","[{""col"": 3, ""row"": 1}, {""col"": 3, ""row"": 1}, {""col"": -1, ""row"": -1}, {""col"": 3, ""row"": 1}, {""col"": 3, ""row"": 1}, {""col"": 3, ""row"": 1}, {""col"": -1, ""row"": -1}, {""col"": 3, ""row"": 1}, {""col"": 3, ""row"": 1}, {""col"": 3, ""row"": 1}]",1.0,0,1.2,2,1.0
+smoke_005_carrying_wall_right_open_door,agent_location_after_right,agent_location_after_right,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # O _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ G _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,DOWN,"{""row"": 1, ""col"": 2}","{""col"": 2, ""row"": 1}","1,2","{""col"": 1, ""row"": 1}","1,1",0.0,1,"{""col"": 2, ""row"": 1}","[{""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}]",0.0,1,0.9,2,1.0
+smoke_005_carrying_wall_right_open_door,agent_location_after_left,agent_location_after_left,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # O _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ G _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,DOWN,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_005_carrying_wall_right_open_door,agent_location_after_up,agent_location_after_up,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # O _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ G _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,DOWN,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_005_carrying_wall_right_open_door,agent_location_after_down,agent_location_after_down,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # O _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ G _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,DOWN,"{""row"": 2, ""col"": 1}","{""col"": 1, ""row"": 2}","2,1","{""col"": 1, ""row"": 2}","2,1",1.0,0,"{""col"": 1, ""row"": 2}","[{""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}]",1.0,0,0.0,1,1.0
+smoke_006_goal_right,agent_location,agent_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A G _ D _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ K _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_006_goal_right,goal_location,goal_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A G _ D _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ K _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 2}","{""col"": 2, ""row"": 1}","1,2","{""col"": 2, ""row"": 1}","1,2",1.0,0,"{""col"": 2, ""row"": 1}","[{""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 0}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}]",1.0,0,0.1,2,1.0
+smoke_006_goal_right,key_location,key_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A G _ D _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ K _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 3, ""col"": 4}","{""col"": 4, ""row"": 3}","3,4","{""col"": 4, ""row"": 3}","3,4",1.0,0,"{""col"": 4, ""row"": 3}","[{""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}]",1.0,0,0.0,1,1.0
+smoke_006_goal_right,door_location,door_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A G _ D _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ K _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 4}","{""col"": 4, ""row"": 1}","1,4","{""col"": 4, ""row"": 1}","1,4",1.0,0,"{""col"": 4, ""row"": 1}","[{""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_006_goal_right,agent_location_after_right,agent_location_after_right,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A G _ D _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ K _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 2}","{""col"": 2, ""row"": 1}","1,2","{""col"": 2, ""row"": 1}","1,2",1.0,0,"{""col"": 2, ""row"": 1}","[{""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_006_goal_right,agent_location_after_left,agent_location_after_left,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A G _ D _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ K _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_006_goal_right,agent_location_after_up,agent_location_after_up,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A G _ D _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ K _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_006_goal_right,agent_location_after_down,agent_location_after_down,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A G _ D _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ K _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 2, ""col"": 1}","{""col"": 1, ""row"": 2}","2,1","{""col"": 1, ""row"": 2}","2,1",1.0,0,"{""col"": 1, ""row"": 2}","[{""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}]",1.0,0,0.0,1,1.0
+smoke_007_open_door_right,agent_location,agent_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A O _ G _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ K _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_007_open_door_right,goal_location,goal_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A O _ G _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ K _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 4}","{""col"": 4, ""row"": 1}","1,4","{""col"": 4, ""row"": 1}","1,4",1.0,0,"{""col"": 4, ""row"": 1}","[{""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}, {""col"": 4, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_007_open_door_right,key_location,key_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A O _ G _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ K _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 5, ""col"": 4}","{""col"": 4, ""row"": 5}","5,4","{""col"": 4, ""row"": 5}","5,4",1.0,0,"{""col"": 4, ""row"": 5}","[{""col"": 4, ""row"": 5}, {""col"": 4, ""row"": 5}, {""col"": 4, ""row"": 5}, {""col"": 4, ""row"": 5}, {""col"": 4, ""row"": 5}, {""col"": 4, ""row"": 5}, {""col"": 4, ""row"": 5}, {""col"": 4, ""row"": 5}, {""col"": 4, ""row"": 5}, {""col"": 4, ""row"": 5}]",1.0,0,0.0,1,1.0
+smoke_007_open_door_right,door_location,door_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A O _ G _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ K _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 2}","{""col"": 2, ""row"": 1}","1,2","{""col"": 2, ""row"": 1}","1,2",1.0,0,"{""col"": -1, ""row"": -1}","[{""col"": 2, ""row"": 1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}]",0.0,5,3.5,2,1.0
+smoke_007_open_door_right,agent_location_after_right,agent_location_after_right,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A O _ G _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ K _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 2}","{""col"": 2, ""row"": 1}","1,2","{""col"": 2, ""row"": 1}","1,2",1.0,0,"{""col"": 2, ""row"": 1}","[{""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_007_open_door_right,agent_location_after_left,agent_location_after_left,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A O _ G _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ K _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_007_open_door_right,agent_location_after_up,agent_location_after_up,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A O _ G _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ K _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_007_open_door_right,agent_location_after_down,agent_location_after_down,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A O _ G _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ _ _ _ _ _ _ #
+5 # _ _ _ K _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 2, ""col"": 1}","{""col"": 1, ""row"": 2}","2,1","{""col"": 1, ""row"": 2}","2,1",1.0,0,"{""col"": 1, ""row"": 2}","[{""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}]",1.0,0,0.0,1,1.0
+smoke_008_carrying_closed_door_elsewhere,agent_location,agent_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_008_carrying_closed_door_elsewhere,goal_location,goal_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,RIGHT,"{""row"": 4, ""col"": 4}","{""col"": 4, ""row"": 4}","4,4","{""col"": 4, ""row"": 4}","4,4",1.0,0,"{""col"": 4, ""row"": 4}","[{""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}]",1.0,0,0.0,1,1.0
+smoke_008_carrying_closed_door_elsewhere,key_location,key_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,RIGHT,"{""row"": -1, ""col"": -1}","{""col"": -1, ""row"": -1}","-1,-1","{""col"": -1, ""row"": -1}","-1,-1",1.0,0,"{""col"": -1, ""row"": -1}","[{""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}]",1.0,0,0.0,1,1.0
+smoke_008_carrying_closed_door_elsewhere,door_location,door_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,RIGHT,"{""row"":3,""col"":4}","{""col"": 4, ""row"": 3}","3,4","{""col"": 4, ""row"": 3}","3,4",1.0,0,"{""col"": 4, ""row"": 3}","[{""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}]",1.0,0,0.0,1,1.0
+smoke_008_carrying_closed_door_elsewhere,agent_location_after_right,agent_location_after_right,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,RIGHT,"{""row"": 1, ""col"": 2}","{""col"": 2, ""row"": 1}","1,2","{""col"": 2, ""row"": 1}","1,2",1.0,0,"{""col"": 2, ""row"": 1}","[{""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_008_carrying_closed_door_elsewhere,agent_location_after_left,agent_location_after_left,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_008_carrying_closed_door_elsewhere,agent_location_after_up,agent_location_after_up,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_008_carrying_closed_door_elsewhere,agent_location_after_down,agent_location_after_down,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",True,RIGHT,"{""row"": 2, ""col"": 1}","{""col"": 1, ""row"": 2}","2,1","{""col"": 1, ""row"": 2}","2,1",1.0,0,"{""col"": 1, ""row"": 2}","[{""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}]",1.0,0,0.0,1,1.0
+smoke_009_wall_right_no_door,agent_location,agent_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ K _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,DOWN,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_009_wall_right_no_door,goal_location,goal_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ K _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,DOWN,"{""row"": 4, ""col"": 4}","{""col"": 4, ""row"": 4}","4,4","{""col"": 4, ""row"": 4}","4,4",1.0,0,"{""col"": 4, ""row"": 4}","[{""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}]",1.0,0,0.0,1,1.0
+smoke_009_wall_right_no_door,key_location,key_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ K _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,DOWN,"{""row"": 5, ""col"": 4}","{""col"": 4, ""row"": 5}","5,4","{""col"": 4, ""row"": 5}","5,4",1.0,0,"{""col"": 4, ""row"": 5}","[{""col"": 4, ""row"": 5}, {""col"": 4, ""row"": 5}, {""col"": 4, ""row"": 5}, {""col"": 4, ""row"": 5}, {""col"": 4, ""row"": 5}, {""col"": 4, ""row"": 5}, {""col"": 4, ""row"": 5}, {""col"": 4, ""row"": 5}, {""col"": 4, ""row"": 5}, {""col"": 4, ""row"": 5}]",1.0,0,0.0,1,1.0
+smoke_009_wall_right_no_door,door_location,door_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ K _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,DOWN,"{""row"": -1, ""col"": -1}","{""col"": -1, ""row"": -1}","-1,-1","{""col"": -1, ""row"": -1}","-1,-1",1.0,0,"{""col"": -1, ""row"": -1}","[{""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}]",1.0,0,0.0,1,1.0
+smoke_009_wall_right_no_door,agent_location_after_right,agent_location_after_right,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ K _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,DOWN,"{""row"": 1, ""col"": 2}","{""col"": 2, ""row"": 1}","1,2","{""col"": 1, ""row"": 1}","1,1",0.0,1,"{""col"": 2, ""row"": 1}","[{""col"": 2, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}]",0.0,1,0.9,2,1.0
+smoke_009_wall_right_no_door,agent_location_after_left,agent_location_after_left,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ K _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,DOWN,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_009_wall_right_no_door,agent_location_after_up,agent_location_after_up,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ K _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,DOWN,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_009_wall_right_no_door,agent_location_after_down,agent_location_after_down,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A # _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ K _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,DOWN,"{""row"": 2, ""col"": 1}","{""col"": 1, ""row"": 2}","2,1","{""col"": 1, ""row"": 2}","2,1",1.0,0,"{""col"": 1, ""row"": 2}","[{""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}]",1.0,0,0.0,1,1.0
+smoke_010_open_door_elsewhere,agent_location,agent_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ O _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ K _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_010_open_door_elsewhere,goal_location,goal_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ O _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ K _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 4, ""col"": 4}","{""col"": 4, ""row"": 4}","4,4","{""col"": 4, ""row"": 4}","4,4",1.0,0,"{""col"": 4, ""row"": 4}","[{""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}, {""col"": 4, ""row"": 4}]",1.0,0,0.0,1,1.0
+smoke_010_open_door_elsewhere,key_location,key_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ O _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ K _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 5, ""col"": 6}","{""col"": 6, ""row"": 5}","5,6","{""col"": 6, ""row"": 5}","5,6",1.0,0,"{""col"": 6, ""row"": 5}","[{""col"": 6, ""row"": 5}, {""col"": 6, ""row"": 5}, {""col"": 6, ""row"": 5}, {""col"": 6, ""row"": 5}, {""col"": 6, ""row"": 5}, {""col"": 6, ""row"": 5}, {""col"": 6, ""row"": 5}, {""col"": 6, ""row"": 5}, {""col"": 6, ""row"": 5}, {""col"": 6, ""row"": 5}]",1.0,0,0.0,1,1.0
+smoke_010_open_door_elsewhere,door_location,door_location,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ O _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ K _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 3, ""col"": 4}","{""col"": 4, ""row"": 3}","3,4","{""col"": 4, ""row"": 3}","3,4",1.0,0,"{""col"": 4, ""row"": 3}","[{""col"": 4, ""row"": 3}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": 4, ""row"": 3}, {""col"": -1, ""row"": -1}, {""col"": -1, ""row"": -1}]",1.0,0,3.6,2,1.0
+smoke_010_open_door_elsewhere,agent_location_after_right,agent_location_after_right,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ O _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ K _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 2}","{""col"": 2, ""row"": 1}","1,2","{""col"": 2, ""row"": 1}","1,2",1.0,0,"{""col"": 2, ""row"": 1}","[{""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}, {""col"": 2, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_010_open_door_elsewhere,agent_location_after_left,agent_location_after_left,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ O _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ K _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_010_open_door_elsewhere,agent_location_after_up,agent_location_after_up,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ O _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ K _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 1, ""col"": 1}","{""col"": 1, ""row"": 1}","1,1","{""col"": 1, ""row"": 1}","1,1",1.0,0,"{""col"": 1, ""row"": 1}","[{""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}, {""col"": 1, ""row"": 1}]",1.0,0,0.0,1,1.0
+smoke_010_open_door_elsewhere,agent_location_after_down,agent_location_after_down,coordinates,coord_json,coordinate_output_explicit,"  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ _ _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ O _ _ _ #
+4 # _ _ _ G _ _ _ #
+5 # _ _ _ _ _ K _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",False,RIGHT,"{""row"": 2, ""col"": 1}","{""col"": 1, ""row"": 2}","2,1","{""col"": 1, ""row"": 2}","2,1",1.0,0,"{""col"": 1, ""row"": 2}","[{""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}, {""col"": 1, ""row"": 2}]",1.0,0,0.0,1,1.0

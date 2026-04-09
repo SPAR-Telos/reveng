@@ -230,7 +230,11 @@ data/cf/artifacts/*
 # Keep heavy generated outputs ignored
 data/cf/artifacts/pair_*/
 data/cf/eval_results/
+!data/behavioral_probes
+data/behavioral_probes/**/checkpoints/
+data/behavioral_probes/smoke_test_wall_check/
 counterfactual_artifacts/
 counterfactual_activation_patching_results/
+.codex/
 
 *.pdf

@@ -68,9 +68,22 @@ Key outputs:
 - `behavioral_probe_summary.csv`
 - `behavioral_probe_probability_diagnostics.csv`
 - `behavioral_probe_raw.json`
+- `usage_summary.json`
+- `checkpoints/checkpoint_rows.jsonl`
+- `checkpoints/checkpoint_raw_rows.jsonl`
+- `checkpoints/checkpoint_status.json`
 - `figs/behavioral_probe_summary.png`
 - `figs/behavioral_probe_directional_heatmap.png`
 - `figs/behavioral_probe_coordinate_summary.png`
+
+`usage_summary.json` aggregates Together/LiteLLM request counts, prompt tokens,
+completion tokens, total tokens, reasoning tokens (when exposed), and estimated
+USD cost by phase (`observed_action`, `logprob_t0`, `logprob_t07`,
+`logprob_t1`, `mc`, and coordinate variants when relevant).
+
+Checkpoint files are written incrementally during long runs so a late write
+failure does not lose completed rows. `checkpoint_status.json` gives the latest
+completed row count plus the current aggregated usage summary.
 
 ### Prompt ablation
 
@@ -80,6 +93,19 @@ reveng-cli run_behavioral_probe_prompt_ablation \
   --output-dir data/behavioral_probes/prompt_ablation \
   --question-family all_label3 \
   --answer-space label3
+```
+
+### Merge split behavioral outputs
+
+Useful when a mixed `all` run was split into separate `label3` and `coord_json`
+passes, or when you need to repair `behavioral_probe_rows.csv` from the raw
+payloads:
+
+```bash
+reveng-cli merge_behavioral_probe_outputs \
+  --input-dirs data/behavioral_probes/smoke_test data/behavioral_probes/smoke_test_coords \
+  --output-dir data/behavioral_probes/smoke_test_all \
+  --repair-source-rows-csv True
 ```
 
 ### Door semantics ablation
