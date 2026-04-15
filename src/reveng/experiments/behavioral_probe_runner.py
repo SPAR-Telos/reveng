@@ -184,6 +184,14 @@ def _belief_prompt(
     question: BehavioralProbeQuestion,
     prompt_preset: str,
 ) -> str:
+    prompt_text = question.prompt_text
+    if question.answer_space == "label3":
+        prompt_text = re.sub(
+            r"\s*Answer with exactly one of:\s*yes,\s*no,\s*unknown\.\s*$",
+            "",
+            prompt_text,
+            flags=re.IGNORECASE,
+        ).rstrip()
     prompt = (
         _behavioral_probe_preamble(prompt_preset)
         + "\n"
@@ -194,7 +202,7 @@ def _belief_prompt(
     )
     if question.show_carrying_key:
         prompt += f"Agent status:\n- Carrying key: {str(carrying_key).lower()}\n\n"
-    prompt += question.prompt_text + "\n\n"
+    prompt += prompt_text + "\n\n"
     if question.answer_space == "coord_json":
         prompt += (
             'Return exactly one JSON object of the form {"row": <int>, "col": <int>} and nothing else.\n'
@@ -267,7 +275,9 @@ class BehavioralProbeLLM(BaseLLMInterface):
             allowed_openai_params=["seed", "reasoning_effort"],
         )
         assert isinstance(response, str)
-        return response, _extract_usage_metadata(raw_response, cost)
+        metadata = _extract_usage_metadata(raw_response, cost)
+        metadata.update(self._get_last_retry_info())
+        return response, metadata
 
     def ask_text_with_logprobs(
         self,
@@ -305,7 +315,9 @@ class BehavioralProbeLLM(BaseLLMInterface):
             allowed_openai_params=["seed", "reasoning_effort", "logprobs", "top_logprobs"],
         )
         assert isinstance(response, str)
-        return response, raw_response, _extract_usage_metadata(raw_response, cost)
+        metadata = _extract_usage_metadata(raw_response, cost)
+        metadata.update(self._get_last_retry_info())
+        return response, raw_response, metadata
 
     def ask_action(self, prompt: str, *, seed: int) -> tuple[str, str]:
         raw_text = self.ask_text(prompt, seed=seed)
@@ -335,6 +347,9 @@ def _extract_usage_metadata(raw_response: Any, cost_usd: float) -> dict[str, Any
         "completion_tokens": _usage_get("completion_tokens"),
         "total_tokens": _usage_get("total_tokens"),
         "reasoning_tokens": _usage_get("reasoning_tokens"),
+        "retry_count": 0,
+        "requests_with_retry": 0,
+        "retry_sleep_seconds": 0.0,
     }
 
 
@@ -346,6 +361,9 @@ def _empty_usage_bucket() -> dict[str, Any]:
         "completion_tokens": 0,
         "total_tokens": 0,
         "reasoning_tokens": 0,
+        "retry_count": 0,
+        "requests_with_retry": 0,
+        "retry_sleep_seconds": 0.0,
     }
 
 
@@ -356,7 +374,16 @@ def _add_usage(usage_summary: dict[str, Any], bucket_name: str, metadata: dict[s
     total["requests"] += 1
     if not metadata:
         return
-    for key in ("cost_usd", "prompt_tokens", "completion_tokens", "total_tokens", "reasoning_tokens"):
+    for key in (
+        "cost_usd",
+        "prompt_tokens",
+        "completion_tokens",
+        "total_tokens",
+        "reasoning_tokens",
+        "retry_count",
+        "requests_with_retry",
+        "retry_sleep_seconds",
+    ):
         value = metadata.get(key, 0.0 if key == "cost_usd" else 0)
         bucket[key] += value
         total[key] += value
@@ -419,17 +446,35 @@ def _semantic_answer_from_raw_token(raw_token: str | None) -> str:
     return "invalid"
 
 
-def extract_raw_answer_candidates_from_logprobs(logprobs: Any) -> dict[str, float]:
-    probabilities = {token: 0.0 for token in [*RAW_LABEL_TOKENS, *DIRECT_SEMANTIC_TOKENS]}
+def _select_answer_logprob_entry(logprobs: Any, surfaced_answer: str | None = None) -> Any | None:
     if logprobs is None or getattr(logprobs, "content", None) is None:
-        return probabilities
+        return None
 
-    answer_entry = None
+    answer_like_entries = []
     for entry in logprobs.content:
         token_text = _normalize_raw_answer_token(getattr(entry, "token", None))
-        if token_text is not None:
-            answer_entry = entry
-            break
+        if token_text is None:
+            continue
+        answer_like_entries.append(entry)
+
+    if not answer_like_entries:
+        return None
+
+    if surfaced_answer in {"yes", "no", "unknown"}:
+        for entry in reversed(answer_like_entries):
+            token_text = _normalize_raw_answer_token(getattr(entry, "token", None))
+            if _semantic_answer_from_raw_token(token_text) == surfaced_answer:
+                return entry
+
+    return answer_like_entries[-1]
+
+
+def extract_raw_answer_candidates_from_logprobs(
+    logprobs: Any,
+    surfaced_answer: str | None = None,
+) -> dict[str, float]:
+    probabilities = {token: 0.0 for token in [*RAW_LABEL_TOKENS, *DIRECT_SEMANTIC_TOKENS]}
+    answer_entry = _select_answer_logprob_entry(logprobs, surfaced_answer)
 
     if answer_entry is None:
         return probabilities
@@ -478,17 +523,13 @@ def map_raw_candidates_to_semantic_probs(raw_probs: dict[str, float]) -> dict[st
     return probabilities
 
 
-def _probabilities_from_choice_logprobs(logprobs: Any) -> dict[str, float]:
-    return map_raw_candidates_to_semantic_probs(extract_raw_answer_candidates_from_logprobs(logprobs))
+def _probabilities_from_choice_logprobs(logprobs: Any, surfaced_answer: str | None = None) -> dict[str, float]:
+    return map_raw_candidates_to_semantic_probs(extract_raw_answer_candidates_from_logprobs(logprobs, surfaced_answer))
 
 
-def _extract_answer_token_logprobs(logprobs: Any) -> list[dict[str, Any]] | None:
-    if logprobs is None or getattr(logprobs, "content", None) is None:
-        return None
-    for entry in logprobs.content:
-        token_text = _normalize_raw_answer_token(getattr(entry, "token", None))
-        if token_text is None:
-            continue
+def _extract_answer_token_logprobs(logprobs: Any, surfaced_answer: str | None = None) -> list[dict[str, Any]] | None:
+    entry = _select_answer_logprob_entry(logprobs, surfaced_answer)
+    if entry is not None:
         return [
             {
                 "token": getattr(entry, "token", None),
@@ -514,6 +555,26 @@ def _probabilities_from_mc_answers(sampled_answers: list[str]) -> dict[str, floa
     for answer in sampled_answers:
         probabilities[answer] = probabilities.get(answer, 0.0) + 1.0 / total
     return probabilities
+
+
+def _greedy_repeat_answers(
+    *,
+    client: BehavioralProbeLLM,
+    prompt: str,
+    repeats: int,
+    usage_summary: dict[str, Any],
+) -> tuple[list[str], list[str]]:
+    raw_outputs: list[str] = []
+    parsed_answers: list[str] = []
+    for _ in range(max(0, repeats)):
+        try:
+            raw_text, usage = _query_text(client, prompt, seed=0)
+            _add_usage(usage_summary, "greedy_repeated_t0", usage)
+        except Exception as exc:
+            raw_text = f"ERROR: {exc}"
+        raw_outputs.append(raw_text)
+        parsed_answers.append(parse_behavioral_probe_answer(raw_text))
+    return raw_outputs, parsed_answers
 
 
 def _argmax_label(probabilities: dict[str, float]) -> str:
@@ -618,16 +679,17 @@ def _collect_label3_logprob_readout(
         top_logprobs=top_logprobs,
     )
     logprobs = raw_response.choices[0].logprobs if raw_response is not None else None
-    raw_probs = extract_raw_answer_candidates_from_logprobs(logprobs)
+    visible_answer = parse_behavioral_probe_answer(raw_text)
+    raw_probs = extract_raw_answer_candidates_from_logprobs(logprobs, visible_answer)
     semantic_probs = map_raw_candidates_to_semantic_probs(raw_probs)
     return {
         "raw_output": raw_text,
-        "visible_answer": parse_behavioral_probe_answer(raw_text),
+        "visible_answer": visible_answer,
         "raw_probs": raw_probs,
         "semantic_probs": semantic_probs,
         "answer": sampled_answer_from_probabilities(semantic_probs),
         "entropy": shannon_entropy(semantic_probs),
-        "answer_token_logprobs": _extract_answer_token_logprobs(logprobs),
+        "answer_token_logprobs": _extract_answer_token_logprobs(logprobs, visible_answer),
         "usage": usage,
     }
 
@@ -647,6 +709,7 @@ def _run_probe_rows(
     top_logprobs: int = 20,
     verbose: bool = True,
     checkpoint_dir: str | Path | None = None,
+    greedy_repeats: int = 10,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     if prompt_preset not in PROMPT_PRESETS:
         raise ValueError(f"Unknown prompt preset: {prompt_preset}")
@@ -671,6 +734,7 @@ def _run_probe_rows(
         "logprob_temperatures": list(logprob_temperatures),
         "mc_temperature": mc_temperature,
         "mc_sample_repeats": mc_sample_repeats,
+        "greedy_repeats": greedy_repeats,
         "top_logprobs": top_logprobs,
     }
     checkpoint_writer = _CheckpointWriter(checkpoint_dir, config)
@@ -845,6 +909,15 @@ def _run_probe_rows(
 
             greedy_raw = readouts["t0"]["raw_output"]
             greedy_answer = readouts["t0"]["visible_answer"]
+            greedy_repeat_raw_outputs, greedy_repeat_answers = _greedy_repeat_answers(
+                client=logprob_clients["t0"],
+                prompt=prompt,
+                repeats=max(0, greedy_repeats - 1),
+                usage_summary=usage_summary,
+            )
+            greedy_answers = [greedy_answer, *greedy_repeat_answers]
+            greedy_probs = _probabilities_from_mc_answers(greedy_answers)
+            greedy_modal_answer = sampled_answer_from_probabilities(greedy_probs)
 
             mc_raw_outputs: list[str] = []
             mc_answers: list[str] = []
@@ -872,6 +945,16 @@ def _run_probe_rows(
                 "carrying_key": example["carrying_key"],
                 "observed_action": observed_action,
                 "greedy_answer": greedy_answer,
+                "greedy_answers_json": json.dumps(greedy_answers),
+                "greedy_modal_answer": greedy_modal_answer,
+                "greedy_answer_probs_json": json.dumps(greedy_probs, sort_keys=True),
+                "greedy_entropy": shannon_entropy(greedy_probs),
+                "greedy_valid_parse_rate_for_row": valid_parse_rate_from_answers(greedy_answers),
+                "greedy_repeated_agreement_rate_for_row": (
+                    sum(answer == greedy_answer for answer in greedy_answers) / len(greedy_answers)
+                    if greedy_answers
+                    else 0.0
+                ),
                 "ground_truth_label": ground_truth,
                 "belief_action_consistency": belief_action_consistency(
                     readouts["t0"]["answer"], observed_action, question.question_id
@@ -913,6 +996,7 @@ def _run_probe_rows(
                     "observed_action_raw": observed_action_raw,
                     "observed_action_source": observed_action_source,
                     "greedy_raw_output": greedy_raw,
+                    "greedy_repeated_raw_outputs": greedy_repeat_raw_outputs,
                     "mc_raw_outputs": mc_raw_outputs,
                     "logprob_t0_answer_token_logprobs": readouts["t0"]["answer_token_logprobs"],
                     "logprob_t07_answer_token_logprobs": readouts["t07"]["answer_token_logprobs"],
@@ -971,9 +1055,19 @@ def _write_behavioral_outputs(
     label_rows = [row for row in summary_rows if row.get("answer_space") == "label3"]
     coord_rows = [row for row in summary_rows if row.get("answer_space") == "coord_json"]
     if label_rows:
-        plot_behavioral_probe_summary(label_rows, figs_dir / "behavioral_probe_summary.png")
+        plot_behavioral_probe_summary(
+            label_rows,
+            figs_dir / "behavioral_probe_summary.png",
+            mc_sample_repeats=int(config.get("mc_sample_repeats", 0) or 0) or None,
+            mc_temperature=float(config.get("mc_temperature", 0.0)) if "mc_temperature" in config else None,
+        )
         try:
-            plot_directional_probe_heatmap(label_rows, figs_dir / "behavioral_probe_directional_heatmap.png")
+            plot_directional_probe_heatmap(
+                label_rows,
+                figs_dir / "behavioral_probe_directional_heatmap.png",
+                mc_sample_repeats=int(config.get("mc_sample_repeats", 0) or 0) or None,
+                mc_temperature=float(config.get("mc_temperature", 0.0)) if "mc_temperature" in config else None,
+            )
         except ValueError:
             pass
     if coord_rows:
@@ -1008,6 +1102,7 @@ def run_behavioral_probe_on_instances(
     logprob_temperatures: tuple[float, ...] = (0.0, 0.7, 1.0),
     verbose: bool = True,
     checkpoint_dir: str | None = None,
+    greedy_repeats: int = 10,
 ) -> None:
     rows, raw_rows, config = _run_probe_rows(
         model_name=model_name,
@@ -1020,6 +1115,7 @@ def run_behavioral_probe_on_instances(
         top_logprobs=top_logprobs,
         verbose=verbose,
         checkpoint_dir=checkpoint_dir or str(Path(output_dir) / "checkpoints"),
+        greedy_repeats=greedy_repeats,
     )
     _write_behavioral_outputs(
         out_dir=Path(output_dir),
@@ -1046,6 +1142,7 @@ def run_behavioral_probe_smoke_test(
     logprob_temperatures: tuple[float, ...] = (0.0, 0.7, 1.0),
     verbose: bool = True,
     checkpoint_dir: str | None = None,
+    greedy_repeats: int = 10,
 ) -> None:
     """Run the manual DoorKey behavioral-probe smoke test."""
     if answer_space != "coord_json" and any(
@@ -1069,6 +1166,7 @@ def run_behavioral_probe_smoke_test(
         top_logprobs=top_logprobs,
         verbose=verbose,
         checkpoint_dir=checkpoint_dir or str(Path(output_dir) / "checkpoints"),
+        greedy_repeats=greedy_repeats,
     )
     _write_behavioral_outputs(
         out_dir=Path(output_dir),
@@ -1091,6 +1189,7 @@ def run_behavioral_probe_door_semantics_ablation(
     prompt_preset: str = "default_observable_state",
     verbose: bool = True,
     checkpoint_dir: str | None = None,
+    greedy_repeats: int = 10,
 ) -> None:
     """Run a focused semantics ablation for door_open_after_right, then rerun the winner on full smoke."""
     out_dir = Path(output_dir)
@@ -1129,6 +1228,7 @@ def run_behavioral_probe_door_semantics_ablation(
             checkpoint_dir=(
                 str(Path(checkpoint_dir) / f"focused_{variant_id}") if checkpoint_dir else str(out_dir / "checkpoints" / f"focused_{variant_id}")
             ),
+            greedy_repeats=greedy_repeats,
         )
         focused_rows.extend(rows)
         summary = summarize_probe_rows(rows)[0]
@@ -1165,6 +1265,7 @@ def run_behavioral_probe_door_semantics_ablation(
         checkpoint_dir=(
             str(Path(checkpoint_dir) / "winning_full_smoke") if checkpoint_dir else str(out_dir / "winning_full_smoke" / "checkpoints")
         ),
+        greedy_repeats=greedy_repeats,
     )
 
 
@@ -1183,6 +1284,7 @@ def run_behavioral_probe_prompt_ablation(
     top_logprobs: int = 20,
     verbose: bool = True,
     checkpoint_dir: str | None = None,
+    greedy_repeats: int = 10,
 ) -> None:
     """Compare prompt presets on the smoke dataset for a chosen question subset."""
     out_dir = Path(output_dir)
@@ -1204,6 +1306,7 @@ def run_behavioral_probe_prompt_ablation(
             checkpoint_dir=(
                 str(Path(checkpoint_dir) / preset) if checkpoint_dir else str(preset_dir / "checkpoints")
             ),
+            greedy_repeats=greedy_repeats,
         )
         summary_path = preset_dir / "behavioral_probe_summary.csv"
         with open(summary_path, newline="") as handle:

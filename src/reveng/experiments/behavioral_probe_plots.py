@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 
 
 GREEDY_BLUE = "#7DB7E8"
@@ -20,6 +21,9 @@ TEXT_COLOR = "#243447"
 def plot_behavioral_probe_summary(
     summary_rows: list[dict[str, Any]],
     output_path: str | Path,
+    *,
+    mc_sample_repeats: int | None = None,
+    mc_temperature: float | None = None,
 ) -> Path:
     label_rows = [row for row in summary_rows if row.get("answer_space") == "label3"]
     if not label_rows:
@@ -41,6 +45,11 @@ def plot_behavioral_probe_summary(
 
     x = list(range(len(question_ids)))
     width = 0.16
+    mc_label = "MC sampled yes/no"
+    mc_entropy_label = "MC sampled entropy"
+    if mc_sample_repeats is not None and mc_temperature is not None:
+        mc_label = f"MC sampled yes/no (n={mc_sample_repeats}, T={mc_temperature})"
+        mc_entropy_label = f"MC sampled entropy (n={mc_sample_repeats}, T={mc_temperature})"
 
     fig, axes = plt.subplots(2, 1, figsize=(13, 8.5), constrained_layout=True)
     fig.patch.set_facecolor("white")
@@ -50,7 +59,7 @@ def plot_behavioral_probe_summary(
     ax.bar([idx - width for idx in x], logprob_t0, width, color=LOGPROB_T0_BLUE, label="Logprob yes>no (T=0.0)")
     ax.bar([idx for idx in x], logprob_t07, width, color=LOGPROB_T07_AMBER, label="Logprob yes>no (T=0.7)")
     ax.bar([idx + width for idx in x], logprob_t1, width, color=LOGPROB_T1_ORANGE, label="Logprob yes>no (T=1.0)")
-    ax.bar([idx + 2 * width for idx in x], mc, width, color=MC_GREY, label="MC sampled yes/no")
+    ax.bar([idx + 2 * width for idx in x], mc, width, color=MC_GREY, label=mc_label)
     ax.set_ylim(0.0, 1.05)
     ax.set_ylabel("Accuracy", color=TEXT_COLOR)
     ax.set_title("Behavioral Probe Accuracy by Readout", color=TEXT_COLOR, fontsize=14)
@@ -66,7 +75,7 @@ def plot_behavioral_probe_summary(
     ax.bar([idx - 1.5 * width for idx in x], entropy_t0, width, color=LOGPROB_T0_BLUE, label="Logprob entropy (T=0.0)")
     ax.bar([idx - 0.5 * width for idx in x], entropy_t07, width, color=LOGPROB_T07_AMBER, label="Logprob entropy (T=0.7)")
     ax.bar([idx + 0.5 * width for idx in x], entropy_t1, width, color=LOGPROB_T1_ORANGE, label="Logprob entropy (T=1.0)")
-    ax.bar([idx + 1.5 * width for idx in x], mc_entropy, width, color=MC_GREY, label="MC sampled entropy")
+    ax.bar([idx + 1.5 * width for idx in x], mc_entropy, width, color=MC_GREY, label=mc_entropy_label)
     ax.set_ylabel("Mean entropy (bits)", color=TEXT_COLOR)
     ax.set_xlabel("Question", color=TEXT_COLOR)
     ax.set_xticks(x)
@@ -92,6 +101,9 @@ def plot_behavioral_probe_summary(
 def plot_directional_probe_heatmap(
     summary_rows: list[dict[str, Any]],
     output_path: str | Path,
+    *,
+    mc_sample_repeats: int | None = None,
+    mc_temperature: float | None = None,
 ) -> Path:
     directional_rows = [
         row
@@ -117,9 +129,12 @@ def plot_directional_probe_heatmap(
         "is_door": "Door adjacent",
     }
 
+    mc_title = "MC sampled yes/no"
+    if mc_sample_repeats is not None and mc_temperature is not None:
+        mc_title = f"MC sampled yes/no (n={mc_sample_repeats}, T={mc_temperature})"
     panels = [
         ("greedy_accuracy", "Greedy", GREEDY_BLUE),
-        ("mc_yes_no_accuracy", "MC sampled yes/no", MC_GREY),
+        ("mc_yes_no_accuracy", mc_title, MC_GREY),
         ("logprob_yes_no_accuracy_t0", "Logprob yes>no (T=0.0)", LOGPROB_T0_BLUE),
         ("logprob_yes_no_accuracy_t1", "Logprob yes>no (T=1.0)", LOGPROB_T1_ORANGE),
     ]
@@ -224,3 +239,132 @@ __all__ = [
     "plot_coordinate_probe_summary",
     "plot_directional_probe_heatmap",
 ]
+
+
+def plot_wall_hit_suboptimality(
+    case_rows: list[dict[str, Any]],
+    output_path: str | Path,
+) -> Path:
+    if not case_rows:
+        raise ValueError("Cannot plot wall-hit sub-optimality: no case rows provided.")
+
+    output = Path(output_path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+
+    row_spacing = 2.25
+    top_margin = 1.9
+    fig, ax = plt.subplots(figsize=(15.5, max(5.6, 2.1 * len(case_rows) + 2.4)), constrained_layout=True)
+    fig.patch.set_facecolor("white")
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, len(case_rows) * row_spacing + top_margin)
+    ax.axis("off")
+
+    include_source = any("source" in row for row in case_rows)
+    headers = [("Case", 0.03)]
+    if include_source:
+        headers.append(("Source", 0.23))
+        observed_x = 0.34
+        optimal_x = 0.45
+        subopt_x = 0.58
+        directional_x = 0.72
+        action_x = 0.90
+        grid_x = 1.13
+        x_max = 1.29
+    else:
+        observed_x = 0.28
+        optimal_x = 0.39
+        subopt_x = 0.53
+        directional_x = 0.66
+        action_x = 0.83
+        grid_x = 1.04
+        x_max = 1.21
+    headers.extend(
+        [
+            ("Observed", observed_x),
+            ("Optimal", optimal_x),
+            ("Non-opt", subopt_x),
+            ("Wall in\nobserved\ndir.?", directional_x),
+            ("Observed\naction\nhits wall?", action_x),
+            ("Full grid", grid_x),
+        ]
+    )
+    for label, xpos in headers:
+        ax.text(
+            xpos,
+            len(case_rows) * row_spacing + 1.28,
+            label,
+            fontsize=10,
+            fontweight="bold",
+            color=TEXT_COLOR,
+            ha="center" if xpos > 0.1 else "left",
+            va="center",
+        )
+    ax.hlines(len(case_rows) * row_spacing + 0.82, 0.02, x_max - 0.02, color=LIGHT_GRID, linewidth=1.2)
+    ax.set_xlim(0, x_max)
+
+    def _status_color(value: str) -> str:
+        return {"yes": "#D8F0DA", "no": "#F7D6D6"}.get(value.lower(), "#E9EDF2")
+
+    def _draw_status_cell(x_center: float, y_center: float, text: str) -> None:
+        width = 0.085
+        height = 0.58
+        ax.add_patch(
+            Rectangle(
+                (x_center - width / 2, y_center - height / 2),
+                width,
+                height,
+                facecolor=_status_color(text),
+                edgecolor=LIGHT_GRID,
+                linewidth=1.0,
+            )
+        )
+        ax.text(x_center, y_center, text, ha="center", va="center", fontsize=10, color=TEXT_COLOR)
+
+    for idx, row in enumerate(case_rows):
+        y = len(case_rows) * row_spacing - idx * row_spacing
+        ax.hlines(y - 1.12, 0.02, x_max - 0.02, color=LIGHT_GRID, linestyle="--", linewidth=0.8, alpha=0.9)
+        ax.text(0.03, y, str(row["example_id"]).replace("together_ai_openai_gpt-oss-20b_", ""), fontsize=9, color=TEXT_COLOR, va="center")
+        if include_source:
+            ax.text(0.23, y, str(row["source"]), fontsize=9, color=TEXT_COLOR, va="center", ha="center")
+        ax.text(observed_x, y, str(row["observed_action"]), fontsize=10, color=TEXT_COLOR, va="center", ha="center")
+        ax.text(optimal_x, y, str(row["optimal_actions"]), fontsize=10, color=TEXT_COLOR, va="center", ha="center")
+        ax.text(subopt_x, y, "yes" if row["is_suboptimal"] else "no", fontsize=10, color=TEXT_COLOR, va="center", ha="center")
+        _draw_status_cell(directional_x, y, str(row["directional_probe"]))
+        _draw_status_cell(action_x, y, str(row["action_probe"]))
+        grid_text = str(row["grid_text"])
+        ax.text(
+            grid_x,
+            y,
+            grid_text,
+            fontsize=7.0,
+            family="monospace",
+            color=TEXT_COLOR,
+            va="center",
+            ha="center",
+        )
+
+    directional_hits = sum(1 for row in case_rows if str(row["directional_probe"]).lower() == "yes")
+    action_hits = sum(1 for row in case_rows if str(row["action_probe"]).lower() == "yes")
+    subtitle = (
+        f"Wall-hit steps: {len(case_rows)} | non-optimal: "
+        f"{sum(1 for row in case_rows if row['is_suboptimal'])}/{len(case_rows)} | "
+        f"wall-in-direction probe: {directional_hits}/{len(case_rows)} | "
+        f"action-hits-wall probe: {action_hits}/{len(case_rows)}"
+    )
+    ax.text(
+        0.03,
+        len(case_rows) * row_spacing + 1.55,
+        "Wall-Hit Sub-Optimality Cases",
+        fontsize=14,
+        fontweight="bold",
+        color=TEXT_COLOR,
+        va="center",
+    )
+    ax.text(0.03, len(case_rows) * row_spacing + 1.22, subtitle, fontsize=10, color=TEXT_COLOR, va="center")
+
+    fig.savefig(output, dpi=200, bbox_inches="tight")
+    plt.close(fig)
+    return output
+
+
+__all__.append("plot_wall_hit_suboptimality")

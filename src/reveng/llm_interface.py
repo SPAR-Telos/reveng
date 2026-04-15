@@ -3,14 +3,14 @@ import os
 import traceback
 from importlib.util import find_spec
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Any, Optional, Tuple
 
 import litellm
 from dotenv import load_dotenv
 from jinja2 import Environment, FileSystemLoader, Template
 from litellm import completion, completion_cost
 from pydantic import BaseModel
-from tenacity import retry, stop_after_attempt, wait_random_exponential
+from tenacity import Retrying, RetryCallState, stop_after_attempt, wait_random_exponential
 
 logger = logging.getLogger(__name__)
 
@@ -68,6 +68,7 @@ class BaseLLMInterface:
         self._template = (
             self._load_template(resolved_template) if resolved_template else None
         )
+        self._last_retry_info: dict[str, Any] = self._new_retry_info()
 
         # Load environment variables
         if ENV_FILE.exists():
@@ -94,12 +95,43 @@ class BaseLLMInterface:
             raise ValueError("No template provided")
         return self._template.render(**kwargs)
 
-    @retry(
-        stop=stop_after_attempt(5),
-        # 5-120 seconds between attempts, to help avoid rate limiting
-        wait=wait_random_exponential(multiplier=1, min=5, max=120),
-        reraise=True,
-    )
+    @staticmethod
+    def _new_retry_info() -> dict[str, Any]:
+        return {
+            "attempts": 0,
+            "had_retry": False,
+            "retry_count": 0,
+            "retry_sleep_seconds": 0.0,
+            "failure_messages": [],
+        }
+
+    def _record_retry_before_sleep(self, retry_state: RetryCallState) -> None:
+        exc = retry_state.outcome.exception() if retry_state.outcome else None
+        sleep_seconds = 0.0
+        if retry_state.next_action is not None:
+            sleep_seconds = float(retry_state.next_action.sleep or 0.0)
+        self._last_retry_info["retry_count"] += 1
+        self._last_retry_info["had_retry"] = True
+        self._last_retry_info["retry_sleep_seconds"] += sleep_seconds
+        if exc is not None:
+            self._last_retry_info["failure_messages"].append(str(exc))
+        logger.warning(
+            "Retrying model request for %s after attempt %s failed; sleep %.2fs; error=%s",
+            self.model_name,
+            retry_state.attempt_number,
+            sleep_seconds,
+            exc,
+        )
+
+    def _get_last_retry_info(self) -> dict[str, Any]:
+        return {
+            "attempts": int(self._last_retry_info.get("attempts", 0)),
+            "had_retry": bool(self._last_retry_info.get("had_retry", False)),
+            "retry_count": int(self._last_retry_info.get("retry_count", 0)),
+            "retry_sleep_seconds": float(self._last_retry_info.get("retry_sleep_seconds", 0.0)),
+            "failure_messages": list(self._last_retry_info.get("failure_messages", [])),
+        }
+
     def _completion_with_retry(
         self,
         response_format: Optional[BaseModel] = None,
@@ -110,19 +142,31 @@ class BaseLLMInterface:
         Returns:
             Tuple of (response_object, cost_in_usd)
         """
-        try:
-            if "cohere" in self.model_name or "fireworks" in self.model_name:
-                max_tokens = 4096
-            else:
-                max_tokens = 10000
-            response = completion(
-                **kwargs,
-                response_format=response_format,
-                max_tokens=max_tokens,
-            )
-        except Exception as e:
-            logger.error(f"Model request failed: {e}\n{traceback.format_exc()}")
-            raise
+        self._last_retry_info = self._new_retry_info()
+        retryer = Retrying(
+            stop=stop_after_attempt(5),
+            wait=wait_random_exponential(multiplier=1, min=5, max=120),
+            reraise=True,
+            before_sleep=self._record_retry_before_sleep,
+        )
+        response = None
+        for attempt in retryer:
+            with attempt:
+                self._last_retry_info["attempts"] = attempt.retry_state.attempt_number
+                try:
+                    if "cohere" in self.model_name or "fireworks" in self.model_name:
+                        max_tokens = 4096
+                    else:
+                        max_tokens = 10000
+                    response = completion(
+                        **kwargs,
+                        response_format=response_format,
+                        max_tokens=max_tokens,
+                    )
+                except Exception as e:
+                    logger.error(f"Model request failed: {e}\n{traceback.format_exc()}")
+                    raise
+        assert response is not None
 
         # Calculate cost using litellm's completion_cost function
         try:

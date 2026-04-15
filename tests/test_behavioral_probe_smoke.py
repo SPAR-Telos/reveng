@@ -34,6 +34,7 @@ from reveng.experiments.behavioral_probe_questions import (
 from reveng.experiments.behavioral_probe_runner import (
     _belief_prompt,
     _build_probability_diagnostics_rows,
+    _extract_answer_token_logprobs,
     _probabilities_from_choice_logprobs,
     _run_probe_rows,
     _write_csv,
@@ -176,6 +177,7 @@ def test_question_registry_expands_actions_and_coordinates():
     assert "coordinates" in PROMPT_FAMILIES
     assert len(set(QUESTION_IDS)) == len(QUESTION_IDS)
     assert "door_open_after_right" in QUESTION_IDS
+    assert all("Answer with exactly one of: yes, no, unknown." not in q.prompt_text for q in label3_questions)
 
 
 def test_door_variants_keep_same_question_ids():
@@ -288,6 +290,54 @@ def test_raw_probability_extraction_preserves_label_space():
     assert semantic_probs["yes"] > semantic_probs["no"]
 
 
+def test_probability_extraction_anchors_to_surfaced_answer():
+    logprobs = SimpleNamespace(
+        content=[
+            SimpleNamespace(
+                token="A",
+                logprob=-0.1,
+                top_logprobs=[
+                    SimpleNamespace(token="A", logprob=-0.1),
+                    SimpleNamespace(token="B", logprob=-2.0),
+                ],
+            ),
+            SimpleNamespace(
+                token="B",
+                logprob=-0.2,
+                top_logprobs=[
+                    SimpleNamespace(token="B", logprob=-0.2),
+                    SimpleNamespace(token="A", logprob=-3.0),
+                ],
+            ),
+        ]
+    )
+    raw_probs = extract_raw_answer_candidates_from_logprobs(logprobs, surfaced_answer="no")
+    assert raw_probs["B"] > raw_probs["A"]
+    token_logprobs = _extract_answer_token_logprobs(logprobs, surfaced_answer="no")
+    assert token_logprobs is not None
+    assert token_logprobs[0]["token"] == "B"
+
+
+def test_probability_extraction_falls_back_to_last_answer_like_token():
+    logprobs = SimpleNamespace(
+        content=[
+            SimpleNamespace(
+                token="A",
+                logprob=-0.1,
+                top_logprobs=[SimpleNamespace(token="A", logprob=-0.1)],
+            ),
+            SimpleNamespace(
+                token="B",
+                logprob=-0.2,
+                top_logprobs=[SimpleNamespace(token="B", logprob=-0.2)],
+            ),
+        ]
+    )
+    raw_probs = extract_raw_answer_candidates_from_logprobs(logprobs, surfaced_answer="invalid")
+    assert raw_probs["B"] > 0.0
+    assert raw_probs["A"] == 0.0
+
+
 def test_prompt_preset_selection_changes_preamble_not_question_label():
     question = next(q for q in BEHAVIORAL_PROBE_QUESTIONS if q.question_id == "wall_right")
     prompt_default = _belief_prompt(
@@ -302,8 +352,10 @@ def test_prompt_preset_selection_changes_preamble_not_question_label():
         question=question,
         prompt_preset="cardinal_action_explicit",
     )
-    assert question.prompt_text in prompt_default
-    assert question.prompt_text in prompt_cardinal
+    assert "Answer with exactly one of: yes, no, unknown." not in prompt_default
+    assert "Answer with exactly one of: yes, no, unknown." not in prompt_cardinal
+    assert "Return exactly one label and nothing else:" in prompt_default
+    assert "Return exactly one label and nothing else:" in prompt_cardinal
     assert prompt_default != prompt_cardinal
 
 
@@ -315,6 +367,10 @@ def test_summarize_probe_rows_for_label3_and_coord():
             "question_family": "wall_directional",
             "answer_space": "label3",
             "greedy_answer": "yes",
+            "greedy_modal_answer": "yes",
+            "greedy_valid_parse_rate_for_row": 1.0,
+            "greedy_repeated_agreement_rate_for_row": 1.0,
+            "greedy_entropy": 0.0,
             "logprob_answer_t0": "yes",
             "logprob_answer_t07": "yes",
             "logprob_answer_t1": "no",
@@ -351,6 +407,7 @@ def test_summarize_probe_rows_for_label3_and_coord():
     label_row = next(row for row in summary if row["answer_space"] == "label3")
     coord_row = next(row for row in summary if row["answer_space"] == "coord_json")
     assert label_row["logprob_t0_accuracy"] == 1.0
+    assert label_row["greedy_repeated_modal_accuracy"] == 1.0
     assert coord_row["greedy_exact_match_accuracy"] == 1.0
 
 
@@ -375,12 +432,16 @@ def test_run_probe_rows_uses_t0_baseline_and_writes_probability_diagnostics():
         logprob_clients=logprob_clients,
         mc_client=mc_client,
         verbose=False,
+        greedy_repeats=3,
     )
     assert len(rows) == len(questions)
     assert rows[0]["greedy_answer"] == "yes"
+    assert rows[0]["greedy_modal_answer"] == "yes"
     assert rows[0]["logprob_answer_t0"] == "yes"
     assert rows[0]["logprob_answer_t07"] == "no"
+    assert json.loads(rows[0]["greedy_answers_json"]) == ["yes", "yes", "yes"]
     assert config["logprob_temperatures"] == [0.0, 0.7, 1.0]
+    assert config["greedy_repeats"] == 3
     diagnostics = _build_probability_diagnostics_rows(rows)
     assert diagnostics
     prompts_seen = {call[0] for client in logprob_clients.values() for call in client.ask_text_with_logprobs_calls}
@@ -410,11 +471,13 @@ def test_run_probe_rows_accumulates_usage_and_writes_usage_summary(tmp_path: Pat
         mc_client=mc_client,
         verbose=False,
         checkpoint_dir=tmp_path / "checkpoints",
+        greedy_repeats=3,
     )
     usage_summary = config["usage_summary"]
-    assert usage_summary["total"]["requests"] == len(questions) * (3 + 2)
+    assert usage_summary["total"]["requests"] == len(questions) * (3 + 2 + 2)
     assert "observed_action" not in usage_summary["by_phase"]
     assert usage_summary["by_phase"]["logprob_t0"]["requests"] == len(questions)
+    assert usage_summary["by_phase"]["greedy_repeated_t0"]["requests"] == len(questions) * 2
     assert usage_summary["by_phase"]["mc"]["requests"] == len(questions) * 2
 
     _write_behavioral_outputs(

@@ -132,6 +132,16 @@ def _summarize_label3_rows(question_rows: list[dict[str, Any]]) -> dict[str, Any
         "greedy_accuracy": _mean(
             [1.0 if row["greedy_answer"] == row["ground_truth_label"] else 0.0 for row in question_rows]
         ),
+        "greedy_repeated_modal_accuracy": _mean(
+            [1.0 if row.get("greedy_modal_answer", row["greedy_answer"]) == row["ground_truth_label"] else 0.0 for row in question_rows]
+        ),
+        "greedy_repeated_valid_parse_rate": _mean(
+            [float(row.get("greedy_valid_parse_rate_for_row", 1.0)) for row in question_rows]
+        ),
+        "greedy_repeated_agreement_rate": _mean(
+            [float(row.get("greedy_repeated_agreement_rate_for_row", 1.0)) for row in question_rows]
+        ),
+        "mean_greedy_entropy": _mean([float(row.get("greedy_entropy", 0.0)) for row in question_rows]),
         "logprob_yes_no_accuracy_t0": _mean(
             [1.0 if _row_value(row, "logprob_yes_no_answer_t0", "logprob_answer_t0") == row["ground_truth_label"] else 0.0 for row in question_rows]
         ),
@@ -174,6 +184,9 @@ def _summarize_label3_rows(question_rows: list[dict[str, Any]]) -> dict[str, Any
         ),
         "greedy_logprob_t0_agreement": _mean(
             [1.0 if row["greedy_answer"] == row["logprob_answer_t0"] else 0.0 for row in question_rows]
+        ),
+        "greedy_vs_greedy_repeated_modal_agreement": _mean(
+            [1.0 if row["greedy_answer"] == row.get("greedy_modal_answer", row["greedy_answer"]) else 0.0 for row in question_rows]
         ),
         "greedy_logprob_yes_no_t0_agreement": _mean(
             [1.0 if row["greedy_answer"] == _row_value(row, "logprob_yes_no_answer_t0", "logprob_answer_t0") else 0.0 for row in question_rows]

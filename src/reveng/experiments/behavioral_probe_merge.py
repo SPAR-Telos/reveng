@@ -32,6 +32,7 @@ def merge_behavioral_probe_outputs(
         "source_dirs": list(input_dirs),
         "per_source": {},
     }
+    plot_meta: dict[str, Any] = {}
 
     for input_dir in input_dirs:
         base = Path(input_dir)
@@ -39,11 +40,15 @@ def merge_behavioral_probe_outputs(
         if not raw_path.exists():
             raise FileNotFoundError(f"Missing behavioral_probe_raw.json in {base}")
         raw_payload = json.loads(raw_path.read_text())
+        source_config = raw_payload.get("config", {})
         source_raw_rows = raw_payload.get("rows", [])
         source_rows = [item["parsed_row"] for item in source_raw_rows]
         merged_raw_rows.extend(source_raw_rows)
         merged_rows.extend(source_rows)
         merged_usage["per_source"][str(base)] = raw_payload.get("usage_summary")
+        for key in ("mc_sample_repeats", "mc_temperature"):
+            if key in source_config and key not in plot_meta:
+                plot_meta[key] = source_config[key]
 
         if repair_source_rows_csv:
             _write_csv(base / "behavioral_probe_rows.csv", source_rows)
@@ -54,6 +59,7 @@ def merge_behavioral_probe_outputs(
         "config": {
             "merge_source_dirs": list(input_dirs),
             "repair_source_rows_csv": repair_source_rows_csv,
+            **plot_meta,
         },
         "rows": merged_raw_rows,
         "summary": merged_summary,
@@ -70,9 +76,19 @@ def merge_behavioral_probe_outputs(
     label_rows = [row for row in merged_summary if row.get("answer_space") == "label3"]
     coord_rows = [row for row in merged_summary if row.get("answer_space") == "coord_json"]
     if label_rows:
-        plot_behavioral_probe_summary(label_rows, out_dir / "figs" / "behavioral_probe_summary.png")
+        plot_behavioral_probe_summary(
+            label_rows,
+            out_dir / "figs" / "behavioral_probe_summary.png",
+            mc_sample_repeats=plot_meta.get("mc_sample_repeats"),
+            mc_temperature=plot_meta.get("mc_temperature"),
+        )
         try:
-            plot_directional_probe_heatmap(label_rows, out_dir / "figs" / "behavioral_probe_directional_heatmap.png")
+            plot_directional_probe_heatmap(
+                label_rows,
+                out_dir / "figs" / "behavioral_probe_directional_heatmap.png",
+                mc_sample_repeats=plot_meta.get("mc_sample_repeats"),
+                mc_temperature=plot_meta.get("mc_temperature"),
+            )
         except ValueError:
             pass
     if coord_rows:

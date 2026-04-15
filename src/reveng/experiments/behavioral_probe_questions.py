@@ -40,16 +40,15 @@ class BehavioralProbeQuestion:
 DOOR_OPEN_AFTER_ACTION_VARIANTS: dict[str, str] = {
     "observed": (
         "Given the current grid only, if you move {action} now, will the grid still show an "
-        "open door (O) after that move? Answer with exactly one of: yes, no, unknown."
+        "open door (O) after that move?"
     ),
     "global": (
         "Given the current grid only, if you move {action} now, will there be any open door "
-        "anywhere in the grid after that move? Answer with exactly one of: yes, no, unknown."
+        "anywhere in the grid after that move?"
     ),
     "relevant": (
         "Given the current grid only, if you move {action} now, will the door relevant to your "
-        "move or immediate interaction be open after that move? Answer with exactly one of: yes, "
-        "no, unknown."
+        "move or immediate interaction be open after that move?"
     ),
 }
 
@@ -90,8 +89,7 @@ def _core_questions() -> list[BehavioralProbeQuestion]:
             target_variable="has_key",
             mode="current_state",
             prompt_text=(
-                "Given the current grid only, do you currently have the key? "
-                "Answer with exactly one of: yes, no, unknown."
+                "Given the current grid only, do you currently have the key?"
             ),
             show_carrying_key=True,
             consistency_applies=False,
@@ -102,8 +100,7 @@ def _core_questions() -> list[BehavioralProbeQuestion]:
             target_variable="door_open",
             mode="current_state",
             prompt_text=(
-                "Given the current grid only, is any door currently open? "
-                "Answer with exactly one of: yes, no, unknown."
+                "Given the current grid only, is any door currently open?"
             ),
             show_carrying_key=False,
             consistency_applies=False,
@@ -121,8 +118,7 @@ def _directional_wall_questions() -> list[BehavioralProbeQuestion]:
                 target_variable=f"wall_{direction}",
                 mode="current_state",
                 prompt_text=(
-                    f"Given the current grid only, is there a wall immediately to your {direction.upper()}? "
-                    "Answer with exactly one of: yes, no, unknown."
+                    f"Given the current grid only, is the cell immediately {direction.upper()} of the agent a wall (#)?"
                 ),
                 show_carrying_key=False,
                 consistency_applies=True,
@@ -149,8 +145,7 @@ def _action_effect_questions(
                     target_variable=f"hit_wall_after_{action_lower}",
                     mode="action_conditioned",
                     prompt_text=(
-                        f"Given the current grid only, if you move {action} now, will you hit a wall? "
-                        "Answer with exactly one of: yes, no, unknown."
+                        f"Given the current grid only, if you move {action} now, will you hit a wall?"
                     ),
                     show_carrying_key=False,
                     consistency_applies=True,
@@ -163,7 +158,7 @@ def _action_effect_questions(
                     mode="action_conditioned",
                     prompt_text=(
                         f"Given the current grid only, if you move {action} now, will you have the key "
-                        "after that move? Answer with exactly one of: yes, no, unknown."
+                        "after that move?"
                     ),
                     show_carrying_key=True,
                     consistency_applies=False,
@@ -196,8 +191,7 @@ def _object_direction_questions() -> list[BehavioralProbeQuestion]:
                     target_variable=f"is_{subject}_{direction}",
                     mode="current_state",
                     prompt_text=(
-                        f"Given the current grid only, is the {object_name} immediately to your {direction.upper()}? "
-                        "Answer with exactly one of: yes, no, unknown."
+                        f"Given the current grid only, is the {object_name} immediately to your {direction.upper()}?"
                     ),
                     show_carrying_key=(subject == "key"),
                     consistency_applies=False,

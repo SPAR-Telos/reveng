@@ -4,7 +4,9 @@
       "data/behavioral_probes/smoke_test",
       "data/behavioral_probes/smoke_test_coords"
     ],
-    "repair_source_rows_csv": true
+    "repair_source_rows_csv": true,
+    "mc_sample_repeats": 10,
+    "mc_temperature": 0.7
   },
   "rows": [
     {

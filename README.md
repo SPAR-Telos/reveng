@@ -20,6 +20,11 @@ states. The current pipeline supports:
   - logprob diagnostics at `T=0.0`, `T=0.7`, `T=1.0`
   - Monte Carlo sampling at `T=0.7`
 
+Default behavioral runs now keep `greedy_repeats=10`, so each behavioral run
+records both the first visible greedy answer and a repeated-`T=0` stability
+check. If you want a cheaper debugging run, reduce `greedy_repeats` explicitly
+for that slice.
+
 Important logprob semantics:
 
 - the main logprob diagnostic now explicitly records whether `p(yes) > p(no)`
@@ -79,11 +84,46 @@ Key outputs:
 `usage_summary.json` aggregates Together/LiteLLM request counts, prompt tokens,
 completion tokens, total tokens, reasoning tokens (when exposed), and estimated
 USD cost by phase (`observed_action`, `logprob_t0`, `logprob_t07`,
-`logprob_t1`, `mc`, and coordinate variants when relevant).
+`logprob_t1`, `mc`, and coordinate variants when relevant). It also records
+retry telemetry from the shared LLM interface:
+
+- `retry_count`
+- `requests_with_retry`
+- `retry_sleep_seconds`
 
 Checkpoint files are written incrementally during long runs so a late write
 failure does not lose completed rows. `checkpoint_status.json` gives the latest
 completed row count plus the current aggregated usage summary.
+
+Known behavioral-probe failure modes and logprob extraction caveats are tracked
+in [docs/behavioral_probe_pathologies.md](/root/reveng/docs/behavioral_probe_pathologies.md).
+
+Example of a targeted repeated-greedy stability slice:
+
+```bash
+uv run python - <<'PY'
+from reveng.experiments.behavioral_probe_runner import run_behavioral_probe_on_instances, _smoke_instances
+from reveng.experiments.behavioral_probe_questions import get_behavioral_probe_questions
+
+instances = [ex for ex in _smoke_instances() if ex["example_id"] in {
+    "smoke_009_wall_right_no_door",
+    "smoke_010_open_door_elsewhere",
+}]
+questions = [
+    q for q in get_behavioral_probe_questions(question_family="all_label3", answer_space="label3")
+    if q.question_id in {"wall_right", "hit_wall_after_right", "has_key_after_right", "is_door_right"}
+]
+run_behavioral_probe_on_instances(
+    model_name="together_ai/openai/gpt-oss-20b",
+    instances=instances,
+    questions=questions,
+    output_dir="data/behavioral_probes/greedy_repeated_slice",
+    mc_sample_repeats=3,
+    greedy_repeats=10,
+    logprob_temperatures=(0.0, 0.7, 1.0),
+)
+PY
+```
 
 ### Prompt ablation
 
