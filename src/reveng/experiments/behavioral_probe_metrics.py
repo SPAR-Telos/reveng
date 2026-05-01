@@ -106,6 +106,88 @@ def _row_value(row: dict[str, Any], key: str, fallback_key: str | None = None) -
     raise KeyError(key)
 
 
+def _rate(numerator: int, denominator: int) -> float:
+    return numerator / denominator if denominator else 0.0
+
+
+def _as_bool(value: Any) -> bool | None:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        lowered = value.strip().lower()
+        if lowered == "true":
+            return True
+        if lowered == "false":
+            return False
+    return None
+
+
+def _local_gap_fields(prefix: str, counts: Counter[str]) -> dict[str, Any]:
+    gap = counts.get("inconsistent", 0)
+    consistent = counts.get("potentially_consistent", 0)
+    denominator = gap + consistent
+    return {
+        f"{prefix}_belief_action_gap_count": gap,
+        f"{prefix}_belief_action_consistent_count": consistent,
+        f"{prefix}_belief_action_gap_denominator": denominator,
+        f"{prefix}_belief_action_gap_rate": _rate(gap, denominator),
+    }
+
+
+def _optimality_conditioned_gap_fields(
+    prefix: str,
+    question_rows: list[dict[str, Any]],
+    answer_key: str,
+    fallback_answer_key: str | None = None,
+) -> dict[str, Any]:
+    """Count gaps after restricting to correct beliefs about the observed action.
+
+    This is intentionally stricter than local wall/action consistency. A row is
+    included only when the question targets the observed action, the probe
+    answer is valid and correct against the environment label, and A* optimality
+    metadata is available.
+    """
+    gap = 0
+    consistent = 0
+    skipped_unknown = 0
+    skipped_incorrect = 0
+    skipped_missing_optimality = 0
+
+    for row in question_rows:
+        target_action = _consistency_target_action(row["question_id"])
+        if target_action is None or row.get("observed_action") != target_action:
+            continue
+
+        is_optimal = _as_bool(row.get("is_optimal_action"))
+        if is_optimal is None:
+            skipped_missing_optimality += 1
+            continue
+
+        answer = _row_value(row, answer_key, fallback_answer_key)
+        if answer in {"unknown", "invalid"}:
+            skipped_unknown += 1
+            continue
+        if answer != row["ground_truth_label"]:
+            skipped_incorrect += 1
+            continue
+
+        if is_optimal:
+            consistent += 1
+        else:
+            gap += 1
+
+    denominator = gap + consistent
+    return {
+        f"{prefix}_optimality_conditioned_gap_count": gap,
+        f"{prefix}_optimality_conditioned_consistent_count": consistent,
+        f"{prefix}_optimality_conditioned_gap_denominator": denominator,
+        f"{prefix}_optimality_conditioned_gap_rate": _rate(gap, denominator),
+        f"{prefix}_optimality_conditioned_skipped_unknown": skipped_unknown,
+        f"{prefix}_optimality_conditioned_skipped_incorrect": skipped_incorrect,
+        f"{prefix}_optimality_conditioned_skipped_missing_optimality": skipped_missing_optimality,
+    }
+
+
 def _summarize_label3_rows(question_rows: list[dict[str, Any]]) -> dict[str, Any]:
     n_rows = len(question_rows)
     consistency_counts = Counter(
@@ -119,7 +201,7 @@ def _summarize_label3_rows(question_rows: list[dict[str, Any]]) -> dict[str, Any
         if row["mc_belief_action_consistency"] != "not_applicable"
     )
 
-    return {
+    summary = {
         "question_id": question_rows[0]["question_id"],
         "target_variable": question_rows[0]["target_variable"],
         "question_family": question_rows[0]["question_family"],
@@ -227,6 +309,24 @@ def _summarize_label3_rows(question_rows: list[dict[str, Any]]) -> dict[str, Any
             [1.0 if row["greedy_answer"] == row["logprob_answer_t1"] else 0.0 for row in question_rows]
         ),
     }
+    summary.update(_local_gap_fields("local", consistency_counts))
+    summary.update(_local_gap_fields("mc_local", mc_consistency_counts))
+    summary.update(
+        _optimality_conditioned_gap_fields(
+            "greedy",
+            question_rows,
+            "greedy_answer",
+        )
+    )
+    summary.update(
+        _optimality_conditioned_gap_fields(
+            "mc",
+            question_rows,
+            "mc_yes_no_answer",
+            "mc_answer",
+        )
+    )
+    return summary
 
 
 def _summarize_coord_rows(question_rows: list[dict[str, Any]]) -> dict[str, Any]:
@@ -288,6 +388,135 @@ def summarize_probe_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return summary_rows
 
 
+def build_belief_action_gap_summary_rows(summary_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Build a compact wall-probe table for local and A*-conditioned gaps."""
+    direction_order = {"left": 0, "right": 1, "up": 2, "down": 3}
+    wall_rows = [
+        row
+        for row in summary_rows
+        if row.get("answer_space") == "label3"
+        and row.get("question_family") == "wall_directional"
+        and str(row.get("question_id", "")).startswith("wall_")
+    ]
+
+    def _direction(row: dict[str, Any]) -> str:
+        return str(row["question_id"]).removeprefix("wall_")
+
+    def _value(row: dict[str, Any], key: str, default: Any = 0) -> Any:
+        value = row.get(key, default)
+        return default if value == "" else value
+
+    gap_rows: list[dict[str, Any]] = []
+    for row in sorted(wall_rows, key=lambda item: direction_order.get(_direction(item), 99)):
+        gap_rows.append(
+            {
+                "question_id": row["question_id"],
+                "direction": _direction(row).upper(),
+                "n_rows": _value(row, "n_rows"),
+                "greedy_accuracy": _value(row, "greedy_accuracy"),
+                "greedy_repeated_modal_accuracy": _value(row, "greedy_repeated_modal_accuracy"),
+                "mc_yes_no_accuracy": _value(row, "mc_yes_no_accuracy", row.get("mc_accuracy", 0)),
+                "local_gap_count": _value(row, "local_belief_action_gap_count"),
+                "local_consistent_count": _value(row, "local_belief_action_consistent_count"),
+                "local_gap_denominator": _value(row, "local_belief_action_gap_denominator"),
+                "local_belief_action_gap_rate": _value(row, "local_belief_action_gap_rate"),
+                "mc_local_gap_count": _value(row, "mc_local_belief_action_gap_count"),
+                "mc_local_consistent_count": _value(row, "mc_local_belief_action_consistent_count"),
+                "mc_local_gap_denominator": _value(row, "mc_local_belief_action_gap_denominator"),
+                "mc_local_belief_action_gap_rate": _value(row, "mc_local_belief_action_gap_rate"),
+                "greedy_astar_gap_count": _value(row, "greedy_optimality_conditioned_gap_count"),
+                "greedy_astar_consistent_count": _value(row, "greedy_optimality_conditioned_consistent_count"),
+                "greedy_astar_gap_denominator": _value(row, "greedy_optimality_conditioned_gap_denominator"),
+                "greedy_astar_gap_rate": _value(row, "greedy_optimality_conditioned_gap_rate"),
+                "mc_astar_gap_count": _value(row, "mc_optimality_conditioned_gap_count"),
+                "mc_astar_consistent_count": _value(row, "mc_optimality_conditioned_consistent_count"),
+                "mc_astar_gap_denominator": _value(row, "mc_optimality_conditioned_gap_denominator"),
+                "mc_astar_gap_rate": _value(row, "mc_optimality_conditioned_gap_rate"),
+            }
+        )
+    return gap_rows
+
+
+def build_failure_mode_gap_summary_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Aggregate action-relevant wall-probe gaps by failure mode.
+
+    This uses only tagged failure states, not comparison/context rows.
+    """
+    pretty_mode = {
+        "wall_hit": "Wall hit",
+        "backtrack": "Backtrack",
+        "oscillation_2cycle": "2-cycle oscillation",
+        "short_loop": "Short loop",
+        "freeze_repeat": "Freeze repeat",
+        "avoidable_detour": "Avoidable detour",
+    }
+    mode_order = {
+        "wall_hit": 0,
+        "backtrack": 1,
+        "oscillation_2cycle": 2,
+        "short_loop": 3,
+        "freeze_repeat": 4,
+        "avoidable_detour": 5,
+    }
+    filtered = [
+        row
+        for row in rows
+        if row.get("answer_space") == "label3"
+        and row.get("question_family") == "wall_directional"
+        and row.get("selection_stage") == "failure"
+        and row.get("primary_step_failure_mode") not in {"", "none"}
+    ]
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in filtered:
+        grouped[str(row["primary_step_failure_mode"])].append(row)
+
+    summary_rows: list[dict[str, Any]] = []
+    for mode, mode_rows in sorted(grouped.items(), key=lambda item: mode_order.get(item[0], 99)):
+        action_rows = [
+            row
+            for row in mode_rows
+            if _consistency_target_action(str(row["question_id"])) == row.get("observed_action")
+        ]
+        state_count = len({str(row["example_id"]) for row in mode_rows})
+        action_state_count = len({str(row["example_id"]) for row in action_rows})
+
+        greedy_accuracy = _mean(
+            [1.0 if row["greedy_answer"] == row["ground_truth_label"] else 0.0 for row in action_rows]
+        )
+        mc_accuracy = _mean(
+            [1.0 if _row_value(row, "mc_yes_no_answer", "mc_answer") == row["ground_truth_label"] else 0.0 for row in action_rows]
+        )
+
+        local_counts = Counter(
+            row["belief_action_consistency"]
+            for row in action_rows
+            if row["belief_action_consistency"] != "not_applicable"
+        )
+        mc_local_counts = Counter(
+            row["mc_belief_action_consistency"]
+            for row in action_rows
+            if row["mc_belief_action_consistency"] != "not_applicable"
+        )
+
+        greedy_astar = _optimality_conditioned_gap_fields("greedy", action_rows, "greedy_answer")
+        mc_astar = _optimality_conditioned_gap_fields("mc", action_rows, "mc_yes_no_answer", "mc_answer")
+
+        row = {
+            "failure_mode": mode,
+            "failure_mode_label": pretty_mode.get(mode, mode),
+            "n_failure_states": state_count,
+            "n_action_relevant_states": action_state_count,
+            "greedy_observed_action_wall_accuracy": greedy_accuracy,
+            "mc_observed_action_wall_accuracy": mc_accuracy,
+        }
+        row.update(_local_gap_fields("local", local_counts))
+        row.update(_local_gap_fields("mc_local", mc_local_counts))
+        row.update(greedy_astar)
+        row.update(mc_astar)
+        summary_rows.append(row)
+    return summary_rows
+
+
 def summarize_coordinate_samples(
     predictions: list[dict[str, int] | None],
     ground_truth: dict[str, int],
@@ -318,6 +547,8 @@ def summarize_coordinate_samples(
 
 __all__ = [
     "belief_action_consistency",
+    "build_belief_action_gap_summary_rows",
+    "build_failure_mode_gap_summary_rows",
     "yes_no_answer_from_probabilities",
     "sampled_answer_from_probabilities",
     "shannon_entropy",

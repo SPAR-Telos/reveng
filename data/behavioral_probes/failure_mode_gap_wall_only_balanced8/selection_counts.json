@@ -1,0 +1,17 @@
+{
+  "n_instances": 33,
+  "per_mode_counts": {
+    "backtrack": 8,
+    "short_loop": 8,
+    "avoidable_detour": 8,
+    "oscillation_2cycle": 4,
+    "wall_hit": 3,
+    "freeze_repeat": 2
+  },
+  "questions": [
+    "wall_left",
+    "wall_right",
+    "wall_up",
+    "wall_down"
+  ]
+}

@@ -1,0 +1,161 @@
+example_id,trajectory_id,step_index,observed_action,optimal_actions_json,is_optimal_action,wall_hit,failure_modes_json,primary_step_failure_mode,is_failure_onset,is_terminal_failure_tail,is_pre_failure_context,pre_failure_for_step_index,selection_stage,selected_for_probe,selection_reason,grid_text
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0,1,UP,"[""UP""]",True,False,[],none,False,False,True,2,context,True,pre_failure_context,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ K _ # 
+3 # _ _ _ # _ A _ # 
+4 # _ # # # D # # # 
+5 # _ _ _ _ _ _ G # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_002,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0,2,DOWN,"[""DOWN"", ""LEFT""]",True,False,"[""backtrack""]",backtrack,True,False,False,,failure,True,backtrack,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ A _ # 
+3 # _ _ _ # _ _ _ # 
+4 # _ # # # D # # # 
+5 # _ _ _ _ _ _ G # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_003,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0,3,LEFT,"[""LEFT""]",True,False,"[""short_loop""]",short_loop,False,False,False,,failure,True,short_loop_onset,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ A _ # 
+4 # _ # # # D # # # 
+5 # _ _ _ _ _ _ G # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_001,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10,1,LEFT,"[""LEFT""]",True,False,[],none,False,False,True,2,context,True,pre_failure_context,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ _ _ _ _ # 
+2 # _ _ _ # _ G _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # D # # # _ # # 
+5 # K A _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_002,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10,2,RIGHT,"[""RIGHT""]",True,False,"[""backtrack""]",backtrack,True,False,False,,failure,True,backtrack,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ _ _ _ _ # 
+2 # _ _ _ # _ G _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # D # # # _ # # 
+5 # A _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_006,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11,6,LEFT,"[""LEFT""]",True,False,"[""short_loop""]",short_loop,False,False,False,,failure,True,short_loop_onset,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ _ _ A _ # 
+3 # _ _ _ # _ _ _ # 
+4 # D # # # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # G _ _ _ _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_000,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15,0,DOWN,"[""RIGHT""]",False,False,"[""avoidable_detour""]",avoidable_detour,True,False,False,,failure,True,"avoidable_detour,suboptimal_success_failure_step","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # A _ K # _ _ G # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # # D # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ _ _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_006,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15,6,DOWN,"[""DOWN""]",True,False,[],none,False,False,True,7,context,True,pre_failure_context,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ G # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ A # _ _ _ # 
+4 # # # _ # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ _ _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_007,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15,7,UP,"[""DOWN""]",False,False,"[""backtrack"", ""avoidable_detour""]",backtrack,False,False,False,,failure,True,"avoidable_detour,backtrack,suboptimal_success_failure_step","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ G # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # # A # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ _ _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_012,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16,12,DOWN,"[""DOWN""]",True,False,"[""oscillation_2cycle"", ""backtrack""]",oscillation_2cycle,False,False,False,,failure,True,"backtrack,oscillation_2cycle_onset,suboptimal_success_failure_step","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # A # # # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ D _ _ G # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_016,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16,16,RIGHT,"[""DOWN""]",False,True,"[""wall_hit""]",wall_hit,False,False,False,,failure,True,"suboptimal_success_failure_step,wall_hit","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # _ # # # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ A # _ _ _ # 
+7 # _ _ _ D _ _ G # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_008,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20,8,UP,"[""LEFT"", ""UP""]",True,False,[],none,False,False,True,9,context,True,pre_failure_context,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # D # # # # _ # # 
+5 # G _ _ # _ _ _ # 
+6 # _ _ _ # _ _ A # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_009,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20,9,UP,"[""LEFT""]",False,True,"[""wall_hit""]",wall_hit,True,False,False,,failure,True,"suboptimal_success_failure_step,wall_hit","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # D # # # # _ # # 
+5 # G _ _ # _ _ A # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_010,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20,10,LEFT,"[""LEFT""]",True,False,"[""freeze_repeat"", ""short_loop""]",freeze_repeat,False,False,False,,failure,True,"freeze_repeat_onset,short_loop_onset,suboptimal_success_failure_step","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # D # # # # _ # # 
+5 # G _ _ # _ _ A # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_003,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33,3,RIGHT,"[""DOWN"", ""RIGHT""]",True,False,"[""oscillation_2cycle"", ""backtrack""]",oscillation_2cycle,False,False,False,,failure,True,"backtrack,oscillation_2cycle_onset,suboptimal_success_failure_step","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ A _ # 
+3 # _ _ _ # _ _ K # 
+4 # # # _ # # # D # 
+5 # _ _ G # _ _ _ # 
+6 # _ _ _ _ _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_003,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57,3,LEFT,"[""LEFT""]",True,False,"[""freeze_repeat""]",freeze_repeat,False,False,False,,failure,True,"freeze_repeat_onset,suboptimal_success_failure_step","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ G D _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # # _ # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ K A # 
+8 # # # # # # # # # "

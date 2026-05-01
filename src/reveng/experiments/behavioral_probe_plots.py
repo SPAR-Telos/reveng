@@ -179,6 +179,195 @@ def plot_directional_probe_heatmap(
     return output
 
 
+def plot_belief_action_gap_summary(
+    gap_rows: list[dict[str, Any]],
+    output_path: str | Path,
+) -> Path:
+    if not gap_rows:
+        raise ValueError("Cannot plot belief-action gap summary: no gap rows provided.")
+
+    output = Path(output_path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+
+    labels = [str(row["direction"]) for row in gap_rows]
+    greedy_accuracy = [float(row["greedy_accuracy"]) for row in gap_rows]
+    mc_accuracy = [float(row["mc_yes_no_accuracy"]) for row in gap_rows]
+    local_gap = [float(row["local_belief_action_gap_rate"]) for row in gap_rows]
+    mc_local_gap = [float(row["mc_local_belief_action_gap_rate"]) for row in gap_rows]
+    astar_gap = [float(row["greedy_astar_gap_rate"]) for row in gap_rows]
+    mc_astar_gap = [float(row["mc_astar_gap_rate"]) for row in gap_rows]
+
+    x = list(range(len(labels)))
+    width = 0.18
+    fig, axes = plt.subplots(2, 1, figsize=(10.5, 7.2), constrained_layout=True)
+    fig.patch.set_facecolor("white")
+
+    ax = axes[0]
+    ax.bar([idx - width / 2 for idx in x], greedy_accuracy, width, color=GREEDY_BLUE, label="Greedy probe accuracy")
+    ax.bar([idx + width / 2 for idx in x], mc_accuracy, width, color=MC_GREY, label="MC probe accuracy")
+    ax.set_ylim(0.0, 1.08)
+    ax.set_ylabel("Accuracy", color=TEXT_COLOR)
+    ax.set_title("Can the Model Correctly Report Walls in Each Direction?", color=TEXT_COLOR, fontsize=13)
+    for xpos, value in zip([idx - width / 2 for idx in x], greedy_accuracy, strict=True):
+        ax.text(xpos, value + 0.025, f"{value:.2f}", ha="center", va="bottom", fontsize=8.5, color=TEXT_COLOR)
+    for xpos, value in zip([idx + width / 2 for idx in x], mc_accuracy, strict=True):
+        ax.text(xpos, value + 0.025, f"{value:.2f}", ha="center", va="bottom", fontsize=8.5, color=TEXT_COLOR)
+    ax.legend(frameon=False, loc="lower left")
+
+    ax = axes[1]
+    positions = {
+        "local": [idx - 1.5 * width for idx in x],
+        "mc_local": [idx - 0.5 * width for idx in x],
+        "astar": [idx + 0.5 * width for idx in x],
+        "mc_astar": [idx + 1.5 * width for idx in x],
+    }
+    bars = [
+        (positions["local"], local_gap, GREEDY_BLUE, "Moves into a wall it reports, greedy"),
+        (positions["mc_local"], mc_local_gap, MC_GREY, "Moves into a wall it reports, MC"),
+        (positions["astar"], astar_gap, LOGPROB_T0_BLUE, "Non-A* move despite correct wall report, greedy"),
+        (positions["mc_astar"], mc_astar_gap, "#6F747D", "Non-A* move despite correct wall report, MC"),
+    ]
+    for xpos, values, color, label in bars:
+        ax.bar(xpos, values, width, color=color, label=label)
+    ax.set_ylim(0.0, 1.08)
+    ax.set_ylabel("Gap rate", color=TEXT_COLOR)
+    ax.set_xlabel("Observed-action direction", color=TEXT_COLOR)
+    ax.set_title("Does the Model Act Against Correctly Reported Wall Information?", color=TEXT_COLOR, fontsize=13)
+    ax.text(
+        0.0,
+        1.03,
+        "Fractions above bars = gap cases / eligible single-step states in this subset, not trajectories.",
+        transform=ax.transAxes,
+        fontsize=8.5,
+        color=TEXT_COLOR,
+        va="bottom",
+    )
+
+    annotations = [
+        ("local", "local_gap_count", "local_gap_denominator", "local_belief_action_gap_rate"),
+        ("mc_local", "mc_local_gap_count", "mc_local_gap_denominator", "mc_local_belief_action_gap_rate"),
+        ("astar", "greedy_astar_gap_count", "greedy_astar_gap_denominator", "greedy_astar_gap_rate"),
+        ("mc_astar", "mc_astar_gap_count", "mc_astar_gap_denominator", "mc_astar_gap_rate"),
+    ]
+    for key, count_key, denom_key, rate_key in annotations:
+        for xpos, row in zip(positions[key], gap_rows, strict=True):
+            value = float(row[rate_key])
+            label = f"{int(float(row[count_key]))}/{int(float(row[denom_key]))}"
+            ax.text(xpos, value + 0.025, label, ha="center", va="bottom", fontsize=8.0, color=TEXT_COLOR)
+    ax.legend(frameon=False, loc="upper left", ncols=2)
+
+    for ax in axes:
+        ax.set_xticks(x)
+        ax.set_xticklabels(labels)
+        ax.grid(axis="y", color=LIGHT_GRID, linewidth=0.8, alpha=0.9)
+        for boundary in range(1, len(labels)):
+            ax.axvline(boundary - 0.5, color=LIGHT_GRID, linestyle="--", linewidth=0.8, alpha=0.8)
+        ax.set_axisbelow(True)
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.spines["left"].set_color(LIGHT_GRID)
+        ax.spines["bottom"].set_color(LIGHT_GRID)
+        ax.tick_params(colors=TEXT_COLOR)
+
+    fig.savefig(output, dpi=200, bbox_inches="tight")
+    plt.close(fig)
+    return output
+
+
+def plot_failure_mode_gap_summary(
+    gap_rows: list[dict[str, Any]],
+    output_path: str | Path,
+) -> Path:
+    if not gap_rows:
+        raise ValueError("Cannot plot failure-mode gap summary: no gap rows provided.")
+
+    output = Path(output_path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+
+    labels = [str(row["failure_mode_label"]) for row in gap_rows]
+    counts = [int(float(row["n_action_relevant_states"])) for row in gap_rows]
+    greedy_acc = [float(row["greedy_observed_action_wall_accuracy"]) for row in gap_rows]
+    mc_acc = [float(row["mc_observed_action_wall_accuracy"]) for row in gap_rows]
+    local_gap = [float(row["local_belief_action_gap_rate"]) for row in gap_rows]
+    mc_local_gap = [float(row["mc_local_belief_action_gap_rate"]) for row in gap_rows]
+    astar_gap = [float(row["greedy_optimality_conditioned_gap_rate"]) for row in gap_rows]
+    mc_astar_gap = [float(row["mc_optimality_conditioned_gap_rate"]) for row in gap_rows]
+
+    x = list(range(len(labels)))
+    width = 0.18
+    fig, axes = plt.subplots(2, 1, figsize=(12.5, 7.6), constrained_layout=True)
+    fig.patch.set_facecolor("white")
+
+    ax = axes[0]
+    ax.bar([idx - width / 2 for idx in x], greedy_acc, width, color=GREEDY_BLUE, label="Greedy observed-action wall accuracy")
+    ax.bar([idx + width / 2 for idx in x], mc_acc, width, color=MC_GREY, label="MC observed-action wall accuracy")
+    ax.set_ylim(0.0, 1.08)
+    ax.set_ylabel("Accuracy", color=TEXT_COLOR)
+    ax.set_title("How Accurate Is the Observed-Action Wall Probe Within Each Failure Mode?", color=TEXT_COLOR, fontsize=13)
+    for idx, count in enumerate(counts):
+        ax.text(idx, 1.04, f"n={count}", ha="center", va="bottom", fontsize=8.5, color=TEXT_COLOR)
+    ax.legend(frameon=False, loc="lower left")
+
+    ax = axes[1]
+    positions = {
+        "local": [idx - 1.5 * width for idx in x],
+        "mc_local": [idx - 0.5 * width for idx in x],
+        "astar": [idx + 0.5 * width for idx in x],
+        "mc_astar": [idx + 1.5 * width for idx in x],
+    }
+    bars = [
+        (positions["local"], local_gap, GREEDY_BLUE, "Moves into a wall it reports, greedy"),
+        (positions["mc_local"], mc_local_gap, MC_GREY, "Moves into a wall it reports, MC"),
+        (positions["astar"], astar_gap, LOGPROB_T0_BLUE, "Non-A* move despite correct wall report, greedy"),
+        (positions["mc_astar"], mc_astar_gap, "#6F747D", "Non-A* move despite correct wall report, MC"),
+    ]
+    for xpos, values, color, label in bars:
+        ax.bar(xpos, values, width, color=color, label=label)
+    ax.set_ylim(0.0, 1.08)
+    ax.set_ylabel("Gap rate", color=TEXT_COLOR)
+    ax.set_xlabel("Failure mode", color=TEXT_COLOR)
+    ax.set_title("Which Failure Modes Contain Belief-Action Mismatches?", color=TEXT_COLOR, fontsize=13)
+    ax.text(
+        0.0,
+        1.03,
+        "Fractions above bars = gap cases / eligible tagged failure states in this subset, not trajectories.",
+        transform=ax.transAxes,
+        fontsize=8.5,
+        color=TEXT_COLOR,
+        va="bottom",
+    )
+
+    annotations = [
+        ("local", "local_belief_action_gap_count", "local_belief_action_gap_denominator", "local_belief_action_gap_rate"),
+        ("mc_local", "mc_local_belief_action_gap_count", "mc_local_belief_action_gap_denominator", "mc_local_belief_action_gap_rate"),
+        ("astar", "greedy_optimality_conditioned_gap_count", "greedy_optimality_conditioned_gap_denominator", "greedy_optimality_conditioned_gap_rate"),
+        ("mc_astar", "mc_optimality_conditioned_gap_count", "mc_optimality_conditioned_gap_denominator", "mc_optimality_conditioned_gap_rate"),
+    ]
+    for key, count_key, denom_key, rate_key in annotations:
+        for xpos, row in zip(positions[key], gap_rows, strict=True):
+            value = float(row[rate_key])
+            label = f"{int(float(row[count_key]))}/{int(float(row[denom_key]))}"
+            ax.text(xpos, value + 0.025, label, ha="center", va="bottom", fontsize=8.0, color=TEXT_COLOR)
+    ax.legend(frameon=False, loc="upper left", ncols=2)
+
+    for ax in axes:
+        ax.set_xticks(x)
+        ax.set_xticklabels(labels, rotation=20, ha="right")
+        ax.grid(axis="y", color=LIGHT_GRID, linewidth=0.8, alpha=0.9)
+        for boundary in range(1, len(labels)):
+            ax.axvline(boundary - 0.5, color=LIGHT_GRID, linestyle="--", linewidth=0.8, alpha=0.8)
+        ax.set_axisbelow(True)
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.spines["left"].set_color(LIGHT_GRID)
+        ax.spines["bottom"].set_color(LIGHT_GRID)
+        ax.tick_params(colors=TEXT_COLOR)
+
+    fig.savefig(output, dpi=200, bbox_inches="tight")
+    plt.close(fig)
+    return output
+
+
 def plot_coordinate_probe_summary(
     summary_rows: list[dict[str, Any]],
     output_path: str | Path,
@@ -235,9 +424,11 @@ def plot_coordinate_probe_summary(
 
 
 __all__ = [
+    "plot_belief_action_gap_summary",
     "plot_behavioral_probe_summary",
     "plot_coordinate_probe_summary",
     "plot_directional_probe_heatmap",
+    "plot_failure_mode_gap_summary",
 ]
 
 
@@ -252,7 +443,7 @@ def plot_wall_hit_suboptimality(
     output.parent.mkdir(parents=True, exist_ok=True)
 
     row_spacing = 2.25
-    top_margin = 1.9
+    top_margin = 2.45
     fig, ax = plt.subplots(figsize=(15.5, max(5.6, 2.1 * len(case_rows) + 2.4)), constrained_layout=True)
     fig.patch.set_facecolor("white")
     ax.set_xlim(0, 1)
@@ -291,7 +482,7 @@ def plot_wall_hit_suboptimality(
     for label, xpos in headers:
         ax.text(
             xpos,
-            len(case_rows) * row_spacing + 1.28,
+            len(case_rows) * row_spacing + 1.02,
             label,
             fontsize=10,
             fontweight="bold",
@@ -368,3 +559,162 @@ def plot_wall_hit_suboptimality(
 
 
 __all__.append("plot_wall_hit_suboptimality")
+
+
+def plot_failure_mode_summary(
+    manifest_rows: list[dict[str, Any]],
+    output_path: str | Path,
+) -> Path:
+    if not manifest_rows:
+        raise ValueError("Cannot plot failure-mode summary: no manifest rows provided.")
+
+    output = Path(output_path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+
+    mode_order = [
+        "wall_hit",
+        "backtrack",
+        "oscillation_2cycle",
+        "short_loop",
+        "freeze_repeat",
+        "avoidable_detour",
+    ]
+    mode_labels = {
+        "wall_hit": "Wall hit",
+        "backtrack": "Backtrack",
+        "oscillation_2cycle": "2-cycle",
+        "short_loop": "Short loop",
+        "freeze_repeat": "Freeze repeat",
+        "avoidable_detour": "Avoidable detour",
+    }
+
+    suboptimal_rows = [row for row in manifest_rows if row.get("trajectory_class") == "suboptimal_success"]
+    failed_rows = [row for row in manifest_rows if row.get("trajectory_class") == "failed"]
+    suboptimal_counts = [sum(1 for row in suboptimal_rows if row.get(f"contains_{mode}")) for mode in mode_order]
+    failed_counts = [sum(1 for row in failed_rows if row.get(f"contains_{mode}")) for mode in mode_order]
+
+    x = list(range(len(mode_order)))
+    width = 0.35
+    fig, ax = plt.subplots(figsize=(10.5, 4.8), constrained_layout=True)
+    fig.patch.set_facecolor("white")
+    ax.bar([idx - width / 2 for idx in x], suboptimal_counts, width, color=LOGPROB_T0_BLUE, label="Suboptimal success")
+    ax.bar([idx + width / 2 for idx in x], failed_counts, width, color=MC_GREY, label="Failed")
+    ax.set_xticks(x)
+    ax.set_xticklabels([mode_labels[mode] for mode in mode_order], rotation=20, ha="right")
+    ax.set_ylabel("Trajectory count", color=TEXT_COLOR)
+    ax.set_title("Failure Modes by Trajectory Outcome", color=TEXT_COLOR, fontsize=14)
+    ax.grid(axis="y", color=LIGHT_GRID, linewidth=0.8, alpha=0.9)
+    ax.set_axisbelow(True)
+    ax.legend(frameon=False)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_color(LIGHT_GRID)
+    ax.spines["bottom"].set_color(LIGHT_GRID)
+    ax.tick_params(colors=TEXT_COLOR)
+
+    for idx, value in enumerate(suboptimal_counts):
+        ax.text(idx - width / 2, value + 0.05, str(value), ha="center", va="bottom", fontsize=9, color=TEXT_COLOR)
+    for idx, value in enumerate(failed_counts):
+        ax.text(idx + width / 2, value + 0.05, str(value), ha="center", va="bottom", fontsize=9, color=TEXT_COLOR)
+
+    fig.savefig(output, dpi=200, bbox_inches="tight")
+    plt.close(fig)
+    return output
+
+
+def plot_failure_mode_case_selection(
+    case_rows: list[dict[str, Any]],
+    output_path: str | Path,
+) -> Path:
+    if not case_rows:
+        raise ValueError("Cannot plot failure-mode case selection: no case rows provided.")
+
+    output = Path(output_path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+
+    row_spacing = 2.35
+    top_margin = 1.9
+    fig, ax = plt.subplots(figsize=(16.5, max(5.6, 2.15 * len(case_rows) + 2.4)), constrained_layout=True)
+    fig.patch.set_facecolor("white")
+    ax.set_xlim(0, 1.42)
+    ax.set_ylim(0, len(case_rows) * row_spacing + top_margin)
+    ax.axis("off")
+
+    headers = [
+        ("Trajectory", 0.03),
+        ("Step", 0.30),
+        ("What this\nrow is", 0.39),
+        ("Failure mode", 0.49),
+        ("Observed", 0.63),
+        ("Optimal", 0.76),
+        ("Linked\nfailure\nstep", 0.91),
+        ("Selected", 1.02),
+        ("Reason", 1.14),
+        ("Full grid", 1.33),
+    ]
+    for label, xpos in headers:
+        ax.text(
+            xpos,
+            len(case_rows) * row_spacing + 1.28,
+            label,
+            fontsize=10,
+            fontweight="bold",
+            color=TEXT_COLOR,
+            ha="center" if xpos > 0.1 else "left",
+            va="center",
+        )
+    ax.hlines(len(case_rows) * row_spacing + 0.58, 0.02, 1.39, color=LIGHT_GRID, linewidth=1.2)
+
+    for idx, row in enumerate(case_rows):
+        y = len(case_rows) * row_spacing - idx * row_spacing
+        ax.hlines(y - 1.12, 0.02, 1.39, color=LIGHT_GRID, linestyle="--", linewidth=0.8, alpha=0.9)
+        ax.text(0.03, y, str(row["trajectory_id"]).replace("together_ai_openai_gpt-oss-20b_", ""), fontsize=8.5, color=TEXT_COLOR, va="center")
+        ax.text(0.30, y, str(row["step_index"]), fontsize=10, color=TEXT_COLOR, va="center", ha="center")
+        role = "state just\nbefore failure" if row.get("is_pre_failure_context") else "tagged\nfailure state"
+        ax.text(0.39, y, role, fontsize=8.5, color=TEXT_COLOR, va="center", ha="center")
+        ax.text(0.49, y, str(row.get("primary_step_failure_mode", "none")), fontsize=9.5, color=TEXT_COLOR, va="center", ha="center")
+        ax.text(0.63, y, str(row.get("observed_action", "")), fontsize=10, color=TEXT_COLOR, va="center", ha="center")
+        ax.text(0.76, y, str(row.get("optimal_actions", "")), fontsize=9.5, color=TEXT_COLOR, va="center", ha="center")
+        pair_value = ""
+        if row.get("is_pre_failure_context"):
+            pair_value = f"failure\nstep {row.get('pre_failure_for_step_index', '')}"
+        elif row.get("selection_stage") == "failure":
+            pair_value = ""
+        ax.text(0.91, y, pair_value, fontsize=8.0, color=TEXT_COLOR, va="center", ha="center")
+        ax.text(1.02, y, "yes" if row.get("selected_for_probe") else "no", fontsize=10, color=TEXT_COLOR, va="center", ha="center")
+        reason = str(row.get("selection_reason", "")).replace("pre_failure_context", "previous_state")
+        ax.text(1.14, y, reason, fontsize=8.0, color=TEXT_COLOR, va="center", ha="center")
+        ax.text(
+            1.33,
+            y,
+            str(row["grid_text"]),
+            fontsize=7.0,
+            family="monospace",
+            color=TEXT_COLOR,
+            va="center",
+            ha="center",
+        )
+
+    ax.text(
+        0.03,
+        len(case_rows) * row_spacing + 1.95,
+        "Trajectory States Selected for Behavioral-Probe Case Studies",
+        fontsize=14,
+        fontweight="bold",
+        color=TEXT_COLOR,
+        va="center",
+    )
+    ax.text(
+        0.03,
+        len(case_rows) * row_spacing + 1.62,
+        "Rows labeled 'state just before failure' are comparison states immediately before the linked tagged failure state; probes still see one state at a time.",
+        fontsize=9.5,
+        color=TEXT_COLOR,
+        va="center",
+    )
+    fig.savefig(output, dpi=200, bbox_inches="tight")
+    plt.close(fig)
+    return output
+
+
+__all__.extend(["plot_failure_mode_summary", "plot_failure_mode_case_selection"])

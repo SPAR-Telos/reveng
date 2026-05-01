@@ -1,0 +1,1792 @@
+{
+  "config": {
+    "model_name": "together_ai/openai/gpt-oss-20b",
+    "prompt_preset": "cardinal_action_explicit",
+    "logprob_temperatures": [
+      0.0,
+      0.7,
+      1.0
+    ],
+    "mc_temperature": 0.7,
+    "mc_sample_repeats": 10,
+    "greedy_repeats": 10,
+    "top_logprobs": 20,
+    "usage_summary": {
+      "model_name": "together_ai/openai/gpt-oss-20b",
+      "by_phase": {
+        "logprob_t0": {
+          "requests": 4,
+          "cost_usd": 0.0005517,
+          "prompt_tokens": 1514,
+          "completion_tokens": 325,
+          "total_tokens": 1839,
+          "reasoning_tokens": 0,
+          "retry_count": 0,
+          "requests_with_retry": 0,
+          "retry_sleep_seconds": 0.0
+        },
+        "logprob_t07": {
+          "requests": 4,
+          "cost_usd": 0.0005343,
+          "prompt_tokens": 1514,
+          "completion_tokens": 267,
+          "total_tokens": 1781,
+          "reasoning_tokens": 0,
+          "retry_count": 0,
+          "requests_with_retry": 0,
+          "retry_sleep_seconds": 0.0
+        },
+        "logprob_t1": {
+          "requests": 4,
+          "cost_usd": 0.0005487,
+          "prompt_tokens": 1514,
+          "completion_tokens": 315,
+          "total_tokens": 1829,
+          "reasoning_tokens": 0,
+          "retry_count": 0,
+          "requests_with_retry": 0,
+          "retry_sleep_seconds": 0.0
+        },
+        "greedy_repeated_t0": {
+          "requests": 36,
+          "cost_usd": 0.0048783,
+          "prompt_tokens": 13626,
+          "completion_tokens": 2635,
+          "total_tokens": 16261,
+          "reasoning_tokens": 0,
+          "retry_count": 0,
+          "requests_with_retry": 0,
+          "retry_sleep_seconds": 0.0
+        },
+        "mc": {
+          "requests": 40,
+          "cost_usd": 0.0052604999999999996,
+          "prompt_tokens": 15140,
+          "completion_tokens": 2395,
+          "total_tokens": 17535,
+          "reasoning_tokens": 0,
+          "retry_count": 0,
+          "requests_with_retry": 0,
+          "retry_sleep_seconds": 0.0
+        }
+      },
+      "total": {
+        "requests": 88,
+        "cost_usd": 0.011773499999999989,
+        "prompt_tokens": 33308,
+        "completion_tokens": 5937,
+        "total_tokens": 39245,
+        "reasoning_tokens": 0,
+        "retry_count": 0,
+        "requests_with_retry": 0,
+        "retry_sleep_seconds": 0.0
+      }
+    },
+    "min_valid_parse_rate": 0.9
+  },
+  "dataset_validation": null,
+  "smoke_examples": null,
+  "rows": [
+    {
+      "example_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_016",
+      "question_id": "wall_right",
+      "prompt": "# Instructions\n\nYou are controlling an agent in a 9x9 fully observable DoorKey GridWorld. The environment contains walls, open spaces, a goal, a key, and doors.\n\nLegend:\n---------------\n#: Wall\n_: Open Space\nG: Goal\nA: Current agent position\nD: Door (closed/locked)\nO: Door (open)\nK: Key\n---------------\n\nInterpret RIGHT as the cell one column to the right (east), LEFT as one column to the left (west), UP as one row up (north), and DOWN as one row down (south) in the rendered grid.\nAnswer using only the current observable state shown below. Interpret RIGHT/LEFT/UP/DOWN as cardinal directions in the rendered grid.\n\n# Inputs\n\nCurrent grid state:\n\n  0 1 2 3 4 5 6 7 8 \n0 # # # # # # # # # \n1 # _ _ _ # _ _ _ # \n2 # _ _ _ # _ _ _ # \n3 # _ _ _ _ _ _ _ # \n4 # _ # # # # # # # \n5 # _ _ _ # _ _ _ # \n6 # _ _ A # _ _ _ # \n7 # _ _ _ D _ _ G # \n8 # # # # # # # # # \n\nGiven the current grid only, is there a wall immediately to your RIGHT?\n\nReturn exactly one label and nothing else:\nA = yes\nB = no\nC = unknown\n",
+      "observed_action_prompt": "# Instructions\n\nYou are controlling an agent in a 9x9 fully observable DoorKey GridWorld. The environment contains walls, open spaces, a goal, a key, and doors.\n\nLegend:\n---------------\n#: Wall\n_: Open Space\nG: Goal\nA: Current agent position\nD: Door (closed/locked)\nO: Door (open)\nK: Key\n---------------\n\nInterpret RIGHT as the cell one column to the right (east), LEFT as one column to the left (west), UP as one row up (north), and DOWN as one row down (south) in the rendered grid.\nAnswer using only the current observable state shown below. Interpret RIGHT/LEFT/UP/DOWN as cardinal directions in the rendered grid.\n\nChoose the next move that best advances toward the goal while respecting the DoorKey mechanics in the current state.\n\nThe key is automatically picked up when the agent moves onto K. A closed door D can only be opened if the agent already has the key.\n\n# Inputs\n\nCurrent grid state:\n\n  0 1 2 3 4 5 6 7 8 \n0 # # # # # # # # # \n1 # _ _ _ # _ _ _ # \n2 # _ _ _ # _ _ _ # \n3 # _ _ _ _ _ _ _ # \n4 # _ # # # # # # # \n5 # _ _ _ # _ _ _ # \n6 # _ _ A # _ _ _ # \n7 # _ _ _ D _ _ G # \n8 # # # # # # # # # \n\nAgent status:\n- Carrying key: true\n\nRespond with exactly a JSON object of the form {\"action\": \"<UP|DOWN|LEFT|RIGHT>\"}.\nDo not include any extra text before or after the JSON.",
+      "observed_action_raw": null,
+      "observed_action_source": "dataset",
+      "greedy_raw_output": "A",
+      "greedy_repeated_raw_outputs": [
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A"
+      ],
+      "mc_raw_outputs": [
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A"
+      ],
+      "logprob_t0_answer_token_logprobs": [
+        {
+          "token": "A",
+          "logprob": -2.3841860752327193e-07,
+          "top_logprobs": [
+            {
+              "token": "A",
+              "logprob": -2.3841860752327193e-07
+            },
+            {
+              "token": "**",
+              "logprob": -16.375
+            },
+            {
+              "token": " A",
+              "logprob": -16.75
+            },
+            {
+              "token": "\u0410",
+              "logprob": -17.375
+            },
+            {
+              "token": "Answer",
+              "logprob": -17.75
+            },
+            {
+              "token": "\tA",
+              "logprob": -18.125
+            },
+            {
+              "token": "a",
+              "logprob": -18.5
+            },
+            {
+              "token": "I",
+              "logprob": -18.75
+            },
+            {
+              "token": "C",
+              "logprob": -19.0
+            },
+            {
+              "token": "The",
+              "logprob": -19.125
+            },
+            {
+              "token": "B",
+              "logprob": -19.375
+            },
+            {
+              "token": "Yes",
+              "logprob": -19.375
+            },
+            {
+              "token": "\"A",
+              "logprob": -20.125
+            },
+            {
+              "token": "\uff21",
+              "logprob": -20.125
+            },
+            {
+              "token": "##",
+              "logprob": -20.125
+            },
+            {
+              "token": "E",
+              "logprob": -20.25
+            },
+            {
+              "token": "*A",
+              "logprob": -20.375
+            },
+            {
+              "token": "(A",
+              "logprob": -20.375
+            },
+            {
+              "token": "``",
+              "logprob": -20.625
+            },
+            {
+              "token": "\n",
+              "logprob": -20.875
+            }
+          ]
+        }
+      ],
+      "logprob_t07_answer_token_logprobs": [
+        {
+          "token": "A",
+          "logprob": 0.0,
+          "top_logprobs": [
+            {
+              "token": "A",
+              "logprob": 0.0
+            },
+            {
+              "token": "**",
+              "logprob": -23.39285659790039
+            },
+            {
+              "token": " A",
+              "logprob": -23.75
+            },
+            {
+              "token": "\u0410",
+              "logprob": -24.464284896850586
+            },
+            {
+              "token": "Answer",
+              "logprob": -25.178571701049805
+            },
+            {
+              "token": "\tA",
+              "logprob": -25.89285659790039
+            },
+            {
+              "token": "a",
+              "logprob": -26.428571701049805
+            },
+            {
+              "token": "I",
+              "logprob": -26.60714340209961
+            },
+            {
+              "token": "The",
+              "logprob": -26.964284896850586
+            },
+            {
+              "token": "Yes",
+              "logprob": -27.14285659790039
+            },
+            {
+              "token": "C",
+              "logprob": -27.321428298950195
+            },
+            {
+              "token": "B",
+              "logprob": -27.85714340209961
+            },
+            {
+              "token": "\uff21",
+              "logprob": -28.39285659790039
+            },
+            {
+              "token": "``",
+              "logprob": -28.571428298950195
+            },
+            {
+              "token": "##",
+              "logprob": -28.571428298950195
+            },
+            {
+              "token": "E",
+              "logprob": -28.571428298950195
+            },
+            {
+              "token": "\"A",
+              "logprob": -28.75
+            },
+            {
+              "token": "(A",
+              "logprob": -28.928571701049805
+            },
+            {
+              "token": "*A",
+              "logprob": -29.10714340209961
+            },
+            {
+              "token": "\n",
+              "logprob": -29.285715103149414
+            }
+          ]
+        }
+      ],
+      "logprob_t1_answer_token_logprobs": [
+        {
+          "token": "A",
+          "logprob": -3.576279254957626e-07,
+          "top_logprobs": [
+            {
+              "token": "A",
+              "logprob": -3.576279254957626e-07
+            },
+            {
+              "token": "**",
+              "logprob": -16.375
+            },
+            {
+              "token": " A",
+              "logprob": -16.625
+            },
+            {
+              "token": "\u0410",
+              "logprob": -16.625
+            },
+            {
+              "token": "\tA",
+              "logprob": -18.125
+            },
+            {
+              "token": "Answer",
+              "logprob": -18.25
+            },
+            {
+              "token": "a",
+              "logprob": -19.0
+            },
+            {
+              "token": "The",
+              "logprob": -19.125
+            },
+            {
+              "token": "I",
+              "logprob": -19.125
+            },
+            {
+              "token": "C",
+              "logprob": -19.375
+            },
+            {
+              "token": "Yes",
+              "logprob": -19.75
+            },
+            {
+              "token": "B",
+              "logprob": -19.875
+            },
+            {
+              "token": "\uff21",
+              "logprob": -20.125
+            },
+            {
+              "token": "``",
+              "logprob": -20.25
+            },
+            {
+              "token": "*A",
+              "logprob": -20.375
+            },
+            {
+              "token": "##",
+              "logprob": -20.375
+            },
+            {
+              "token": "\"A",
+              "logprob": -20.5
+            },
+            {
+              "token": "\n",
+              "logprob": -20.625
+            },
+            {
+              "token": "\u0391",
+              "logprob": -20.625
+            },
+            {
+              "token": "(A",
+              "logprob": -20.625
+            }
+          ]
+        }
+      ],
+      "parsed_row": {
+        "example_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_016",
+        "question_id": "wall_right",
+        "target_variable": "wall_right",
+        "question_family": "wall_directional",
+        "answer_space": "label3",
+        "variant_id": "",
+        "prompt_preset": "cardinal_action_explicit",
+        "grid_text": "  0 1 2 3 4 5 6 7 8 \n0 # # # # # # # # # \n1 # _ _ _ # _ _ _ # \n2 # _ _ _ # _ _ _ # \n3 # _ _ _ _ _ _ _ # \n4 # _ # # # # # # # \n5 # _ _ _ # _ _ _ # \n6 # _ _ A # _ _ _ # \n7 # _ _ _ D _ _ G # \n8 # # # # # # # # # ",
+        "carrying_key": true,
+        "observed_action": "RIGHT",
+        "greedy_answer": "yes",
+        "greedy_answers_json": "[\"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\"]",
+        "greedy_modal_answer": "yes",
+        "greedy_answer_probs_json": "{\"invalid\": 0.0, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 0.9999999999999999}",
+        "greedy_entropy": 1.6017132519074586e-16,
+        "greedy_valid_parse_rate_for_row": 1.0,
+        "greedy_repeated_agreement_rate_for_row": 1.0,
+        "ground_truth_label": "yes",
+        "belief_action_consistency": "inconsistent",
+        "mc_belief_action_consistency": "inconsistent",
+        "mc_answer": "yes",
+        "mc_yes_no_answer": "yes",
+        "mc_answers_json": "[\"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\"]",
+        "mc_answer_probs_json": "{\"invalid\": 0.0, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 0.9999999999999999}",
+        "mc_entropy": 1.6017132519074586e-16,
+        "mc_valid_parse_rate_for_row": 1.0,
+        "sampled_answer": "yes",
+        "answer_probs_json": "{\"invalid\": 0.0, \"no\": 1.167796884858035e-09, \"unknown\": 1.9253715639227906e-09, \"yes\": 0.9999999969068316}",
+        "entropy": 9.485896702201193e-08,
+        "logprob_t0_raw_output": "A",
+        "raw_answer_probs_t0_json": "{\"A\": 0.9999999933478585, \"B\": 1.9253713328632243e-09, \"C\": 2.801398759267995e-09, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 1.9253713328632243e-09}",
+        "answer_probs_t0_json": "{\"invalid\": 0.0, \"no\": 1.9253713328632248e-09, \"unknown\": 2.8013987592679953e-09, \"yes\": 0.9999999952732299}",
+        "logprob_answer_t0": "yes",
+        "logprob_yes_no_answer_t0": "yes",
+        "entropy_t0": 1.4215417055658167e-07,
+        "valid_parse_rate_t0_for_row": 1.0,
+        "logprob_t07_raw_output": "A",
+        "raw_answer_probs_t07_json": "{\"A\": 0.9999999999981051, \"B\": 3.9881027885656244e-13, \"C\": 6.81435031771842e-13, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 8.146614404307105e-13}",
+        "answer_probs_t07_json": "{\"invalid\": 0.0, \"no\": 3.9881027885656244e-13, \"unknown\": 6.81435031771842e-13, \"yes\": 0.9999999999989198}",
+        "logprob_answer_t07": "yes",
+        "logprob_yes_no_answer_t07": "yes",
+        "entropy_t07": 4.5526419739833136e-11,
+        "valid_parse_rate_t07_for_row": 1.0,
+        "logprob_t1_raw_output": "A",
+        "raw_answer_probs_t1_json": "{\"A\": 0.9999999955835444, \"B\": 1.167796884858035e-09, \"C\": 1.9253715639227906e-09, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 1.323287233573141e-09}",
+        "answer_probs_t1_json": "{\"invalid\": 0.0, \"no\": 1.167796884858035e-09, \"unknown\": 1.9253715639227906e-09, \"yes\": 0.9999999969068316}",
+        "logprob_answer_t1": "yes",
+        "logprob_yes_no_answer_t1": "yes",
+        "entropy_t1": 9.485896702201193e-08,
+        "valid_parse_rate_t1_for_row": 1.0
+      }
+    },
+    {
+      "example_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_016",
+      "question_id": "hit_wall_after_right",
+      "prompt": "# Instructions\n\nYou are controlling an agent in a 9x9 fully observable DoorKey GridWorld. The environment contains walls, open spaces, a goal, a key, and doors.\n\nLegend:\n---------------\n#: Wall\n_: Open Space\nG: Goal\nA: Current agent position\nD: Door (closed/locked)\nO: Door (open)\nK: Key\n---------------\n\nInterpret RIGHT as the cell one column to the right (east), LEFT as one column to the left (west), UP as one row up (north), and DOWN as one row down (south) in the rendered grid.\nAnswer using only the current observable state shown below. Interpret RIGHT/LEFT/UP/DOWN as cardinal directions in the rendered grid.\n\n# Inputs\n\nCurrent grid state:\n\n  0 1 2 3 4 5 6 7 8 \n0 # # # # # # # # # \n1 # _ _ _ # _ _ _ # \n2 # _ _ _ # _ _ _ # \n3 # _ _ _ _ _ _ _ # \n4 # _ # # # # # # # \n5 # _ _ _ # _ _ _ # \n6 # _ _ A # _ _ _ # \n7 # _ _ _ D _ _ G # \n8 # # # # # # # # # \n\nGiven the current grid only, if you move RIGHT now, will you hit a wall?\n\nReturn exactly one label and nothing else:\nA = yes\nB = no\nC = unknown\n",
+      "observed_action_prompt": "# Instructions\n\nYou are controlling an agent in a 9x9 fully observable DoorKey GridWorld. The environment contains walls, open spaces, a goal, a key, and doors.\n\nLegend:\n---------------\n#: Wall\n_: Open Space\nG: Goal\nA: Current agent position\nD: Door (closed/locked)\nO: Door (open)\nK: Key\n---------------\n\nInterpret RIGHT as the cell one column to the right (east), LEFT as one column to the left (west), UP as one row up (north), and DOWN as one row down (south) in the rendered grid.\nAnswer using only the current observable state shown below. Interpret RIGHT/LEFT/UP/DOWN as cardinal directions in the rendered grid.\n\nChoose the next move that best advances toward the goal while respecting the DoorKey mechanics in the current state.\n\nThe key is automatically picked up when the agent moves onto K. A closed door D can only be opened if the agent already has the key.\n\n# Inputs\n\nCurrent grid state:\n\n  0 1 2 3 4 5 6 7 8 \n0 # # # # # # # # # \n1 # _ _ _ # _ _ _ # \n2 # _ _ _ # _ _ _ # \n3 # _ _ _ _ _ _ _ # \n4 # _ # # # # # # # \n5 # _ _ _ # _ _ _ # \n6 # _ _ A # _ _ _ # \n7 # _ _ _ D _ _ G # \n8 # # # # # # # # # \n\nAgent status:\n- Carrying key: true\n\nRespond with exactly a JSON object of the form {\"action\": \"<UP|DOWN|LEFT|RIGHT>\"}.\nDo not include any extra text before or after the JSON.",
+      "observed_action_raw": null,
+      "observed_action_source": "dataset",
+      "greedy_raw_output": "A",
+      "greedy_repeated_raw_outputs": [
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A"
+      ],
+      "mc_raw_outputs": [
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A"
+      ],
+      "logprob_t0_answer_token_logprobs": [
+        {
+          "token": "A",
+          "logprob": -1.1920935776288388e-06,
+          "top_logprobs": [
+            {
+              "token": "A",
+              "logprob": -1.1920935776288388e-06
+            },
+            {
+              "token": "B",
+              "logprob": -15.250000953674316
+            },
+            {
+              "token": "Yes",
+              "logprob": -15.625000953674316
+            },
+            {
+              "token": "\u0410",
+              "logprob": -15.750000953674316
+            },
+            {
+              "token": " A",
+              "logprob": -16.250001907348633
+            },
+            {
+              "token": "C",
+              "logprob": -16.500001907348633
+            },
+            {
+              "token": "a",
+              "logprob": -16.500001907348633
+            },
+            {
+              "token": "I",
+              "logprob": -17.000001907348633
+            },
+            {
+              "token": "Answer",
+              "logprob": -17.125001907348633
+            },
+            {
+              "token": "**",
+              "logprob": -17.250001907348633
+            },
+            {
+              "token": "The",
+              "logprob": -17.375001907348633
+            },
+            {
+              "token": "YES",
+              "logprob": -17.750001907348633
+            },
+            {
+              "token": "\tA",
+              "logprob": -18.125001907348633
+            },
+            {
+              "token": "Y",
+              "logprob": -18.375001907348633
+            },
+            {
+              "token": "S",
+              "logprob": -18.875001907348633
+            },
+            {
+              "token": "E",
+              "logprob": -18.875001907348633
+            },
+            {
+              "token": "yes",
+              "logprob": -18.875001907348633
+            },
+            {
+              "token": "K",
+              "logprob": -19.000001907348633
+            },
+            {
+              "token": "M",
+              "logprob": -19.125001907348633
+            },
+            {
+              "token": "H",
+              "logprob": -19.125001907348633
+            }
+          ]
+        }
+      ],
+      "logprob_t07_answer_token_logprobs": [
+        {
+          "token": "A",
+          "logprob": 0.0,
+          "top_logprobs": [
+            {
+              "token": "A",
+              "logprob": 0.0
+            },
+            {
+              "token": " A",
+              "logprob": -23.571430206298828
+            },
+            {
+              "token": "**",
+              "logprob": -24.285717010498047
+            },
+            {
+              "token": "\u0410",
+              "logprob": -24.821430206298828
+            },
+            {
+              "token": "Answer",
+              "logprob": -25.892858505249023
+            },
+            {
+              "token": "Yes",
+              "logprob": -26.250001907348633
+            },
+            {
+              "token": "a",
+              "logprob": -26.785715103149414
+            },
+            {
+              "token": "\tA",
+              "logprob": -27.500001907348633
+            },
+            {
+              "token": "I",
+              "logprob": -27.500001907348633
+            },
+            {
+              "token": "The",
+              "logprob": -27.678573608398438
+            },
+            {
+              "token": "C",
+              "logprob": -28.392858505249023
+            },
+            {
+              "token": "``",
+              "logprob": -29.107145309448242
+            },
+            {
+              "token": "*A",
+              "logprob": -29.285715103149414
+            },
+            {
+              "token": "##",
+              "logprob": -29.285715103149414
+            },
+            {
+              "token": "B",
+              "logprob": -29.46428680419922
+            },
+            {
+              "token": "\"A",
+              "logprob": -29.642858505249023
+            },
+            {
+              "token": "YES",
+              "logprob": -29.642858505249023
+            },
+            {
+              "token": "_A",
+              "logprob": -29.642858505249023
+            },
+            {
+              "token": "\n",
+              "logprob": -29.821430206298828
+            },
+            {
+              "token": "E",
+              "logprob": -29.821430206298828
+            }
+          ]
+        }
+      ],
+      "logprob_t1_answer_token_logprobs": [
+        {
+          "token": "A",
+          "logprob": -2.3841887468734058e-06,
+          "top_logprobs": [
+            {
+              "token": "A",
+              "logprob": -2.3841887468734058e-06
+            },
+            {
+              "token": "B",
+              "logprob": -14.50000286102295
+            },
+            {
+              "token": "\u0410",
+              "logprob": -15.00000286102295
+            },
+            {
+              "token": "Yes",
+              "logprob": -15.25000286102295
+            },
+            {
+              "token": " A",
+              "logprob": -15.25000286102295
+            },
+            {
+              "token": "C",
+              "logprob": -15.25000286102295
+            },
+            {
+              "token": "**",
+              "logprob": -15.750001907348633
+            },
+            {
+              "token": "Answer",
+              "logprob": -15.87500286102295
+            },
+            {
+              "token": "a",
+              "logprob": -16.250001907348633
+            },
+            {
+              "token": "The",
+              "logprob": -16.375001907348633
+            },
+            {
+              "token": "\tA",
+              "logprob": -16.750001907348633
+            },
+            {
+              "token": "I",
+              "logprob": -17.125001907348633
+            },
+            {
+              "token": "YES",
+              "logprob": -17.500001907348633
+            },
+            {
+              "token": "(A",
+              "logprob": -17.625001907348633
+            },
+            {
+              "token": "Y",
+              "logprob": -18.000001907348633
+            },
+            {
+              "token": "##",
+              "logprob": -18.000001907348633
+            },
+            {
+              "token": "yes",
+              "logprob": -18.250001907348633
+            },
+            {
+              "token": "\n",
+              "logprob": -18.250001907348633
+            },
+            {
+              "token": "*A",
+              "logprob": -18.250001907348633
+            },
+            {
+              "token": "S",
+              "logprob": -18.500001907348633
+            }
+          ]
+        }
+      ],
+      "parsed_row": {
+        "example_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_016",
+        "question_id": "hit_wall_after_right",
+        "target_variable": "hit_wall_after_right",
+        "question_family": "action_effects",
+        "answer_space": "label3",
+        "variant_id": "",
+        "prompt_preset": "cardinal_action_explicit",
+        "grid_text": "  0 1 2 3 4 5 6 7 8 \n0 # # # # # # # # # \n1 # _ _ _ # _ _ _ # \n2 # _ _ _ # _ _ _ # \n3 # _ _ _ _ _ _ _ # \n4 # _ # # # # # # # \n5 # _ _ _ # _ _ _ # \n6 # _ _ A # _ _ _ # \n7 # _ _ _ D _ _ G # \n8 # # # # # # # # # ",
+        "carrying_key": true,
+        "observed_action": "RIGHT",
+        "greedy_answer": "yes",
+        "greedy_answers_json": "[\"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\"]",
+        "greedy_modal_answer": "yes",
+        "greedy_answer_probs_json": "{\"invalid\": 0.0, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 0.9999999999999999}",
+        "greedy_entropy": 1.6017132519074586e-16,
+        "greedy_valid_parse_rate_for_row": 1.0,
+        "greedy_repeated_agreement_rate_for_row": 1.0,
+        "ground_truth_label": "yes",
+        "belief_action_consistency": "inconsistent",
+        "mc_belief_action_consistency": "inconsistent",
+        "mc_answer": "yes",
+        "mc_yes_no_answer": "yes",
+        "mc_answers_json": "[\"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\"]",
+        "mc_answer_probs_json": "{\"invalid\": 0.0, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 0.9999999999999999}",
+        "mc_entropy": 1.6017132519074586e-16,
+        "mc_valid_parse_rate_for_row": 1.0,
+        "sampled_answer": "yes",
+        "answer_probs_json": "{\"invalid\": 0.0, \"no\": 2.5217353491714713e-07, \"unknown\": 1.1911834338132867e-07, \"yes\": 0.9999996287081218}",
+        "entropy": 8.802925739691254e-06,
+        "logprob_t0_raw_output": "A",
+        "raw_answer_probs_t0_json": "{\"A\": 0.9999997519324709, \"B\": 1.1911847214011035e-07, \"C\": 3.412798111580395e-08, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 9.482107583596845e-08}",
+        "answer_probs_t0_json": "{\"invalid\": 0.0, \"no\": 1.1911847214011035e-07, \"unknown\": 3.412798111580395e-08, \"yes\": 0.9999998467535468}",
+        "logprob_answer_t0": "yes",
+        "logprob_yes_no_answer_t0": "yes",
+        "entropy_t0": 3.8074701852976416e-06,
+        "valid_parse_rate_t0_for_row": 1.0,
+        "logprob_t07_raw_output": "A",
+        "raw_answer_probs_t07_json": "{\"A\": 0.9999999999976303, \"B\": 7.994528075781884e-14, \"C\": 2.334039653167249e-13, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 2.05634882889135e-12}",
+        "answer_probs_t07_json": "{\"invalid\": 0.0, \"no\": 7.994528075781884e-14, \"unknown\": 2.334039653167249e-13, \"yes\": 0.9999999999996867}",
+        "logprob_answer_t07": "yes",
+        "logprob_yes_no_answer_t07": "yes",
+        "entropy_t07": 1.3724413506254491e-11,
+        "valid_parse_rate_t07_for_row": 1.0,
+        "logprob_t1_raw_output": "A",
+        "raw_answer_probs_t1_json": "{\"A\": 0.9999994911042266, \"B\": 2.5217353491714713e-07, \"C\": 1.1911834338132867e-07, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 1.3760389513979504e-07}",
+        "answer_probs_t1_json": "{\"invalid\": 0.0, \"no\": 2.5217353491714713e-07, \"unknown\": 1.1911834338132867e-07, \"yes\": 0.9999996287081218}",
+        "logprob_answer_t1": "yes",
+        "logprob_yes_no_answer_t1": "yes",
+        "entropy_t1": 8.802925739691254e-06,
+        "valid_parse_rate_t1_for_row": 1.0
+      }
+    },
+    {
+      "example_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_002",
+      "question_id": "wall_right",
+      "prompt": "# Instructions\n\nYou are controlling an agent in a 9x9 fully observable DoorKey GridWorld. The environment contains walls, open spaces, a goal, a key, and doors.\n\nLegend:\n---------------\n#: Wall\n_: Open Space\nG: Goal\nA: Current agent position\nD: Door (closed/locked)\nO: Door (open)\nK: Key\n---------------\n\nInterpret RIGHT as the cell one column to the right (east), LEFT as one column to the left (west), UP as one row up (north), and DOWN as one row down (south) in the rendered grid.\nAnswer using only the current observable state shown below. Interpret RIGHT/LEFT/UP/DOWN as cardinal directions in the rendered grid.\n\n# Inputs\n\nCurrent grid state:\n\n  0 1 2 3 4 5 6 7 8 \n0 # # # # # # # # # \n1 # _ _ G D _ _ _ # \n2 # _ _ _ # _ _ _ # \n3 # _ _ _ # _ _ _ # \n4 # # # _ # # # _ # \n5 # _ _ _ # _ _ _ # \n6 # _ _ _ # _ _ _ # \n7 # _ _ _ # _ K A # \n8 # # # # # # # # # \n\nGiven the current grid only, is there a wall immediately to your RIGHT?\n\nReturn exactly one label and nothing else:\nA = yes\nB = no\nC = unknown\n",
+      "observed_action_prompt": "# Instructions\n\nYou are controlling an agent in a 9x9 fully observable DoorKey GridWorld. The environment contains walls, open spaces, a goal, a key, and doors.\n\nLegend:\n---------------\n#: Wall\n_: Open Space\nG: Goal\nA: Current agent position\nD: Door (closed/locked)\nO: Door (open)\nK: Key\n---------------\n\nInterpret RIGHT as the cell one column to the right (east), LEFT as one column to the left (west), UP as one row up (north), and DOWN as one row down (south) in the rendered grid.\nAnswer using only the current observable state shown below. Interpret RIGHT/LEFT/UP/DOWN as cardinal directions in the rendered grid.\n\nChoose the next move that best advances toward the goal while respecting the DoorKey mechanics in the current state.\n\nThe key is automatically picked up when the agent moves onto K. A closed door D can only be opened if the agent already has the key.\n\n# Inputs\n\nCurrent grid state:\n\n  0 1 2 3 4 5 6 7 8 \n0 # # # # # # # # # \n1 # _ _ G D _ _ _ # \n2 # _ _ _ # _ _ _ # \n3 # _ _ _ # _ _ _ # \n4 # # # _ # # # _ # \n5 # _ _ _ # _ _ _ # \n6 # _ _ _ # _ _ _ # \n7 # _ _ _ # _ K A # \n8 # # # # # # # # # \n\nAgent status:\n- Carrying key: false\n\nRespond with exactly a JSON object of the form {\"action\": \"<UP|DOWN|LEFT|RIGHT>\"}.\nDo not include any extra text before or after the JSON.",
+      "observed_action_raw": null,
+      "observed_action_source": "dataset",
+      "greedy_raw_output": "A",
+      "greedy_repeated_raw_outputs": [
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A"
+      ],
+      "mc_raw_outputs": [
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A"
+      ],
+      "logprob_t0_answer_token_logprobs": [
+        {
+          "token": "A",
+          "logprob": -8.344653679159819e-07,
+          "top_logprobs": [
+            {
+              "token": "A",
+              "logprob": -8.344653679159819e-07
+            },
+            {
+              "token": "**",
+              "logprob": -14.625000953674316
+            },
+            {
+              "token": " A",
+              "logprob": -16.0
+            },
+            {
+              "token": "\u0410",
+              "logprob": -16.5
+            },
+            {
+              "token": "Answer",
+              "logprob": -16.875
+            },
+            {
+              "token": "\tA",
+              "logprob": -17.125
+            },
+            {
+              "token": "The",
+              "logprob": -17.625
+            },
+            {
+              "token": "I",
+              "logprob": -18.0
+            },
+            {
+              "token": "a",
+              "logprob": -18.125
+            },
+            {
+              "token": "Yes",
+              "logprob": -18.125
+            },
+            {
+              "token": "##",
+              "logprob": -18.625001907348633
+            },
+            {
+              "token": "*A",
+              "logprob": -18.875
+            },
+            {
+              "token": "C",
+              "logprob": -18.875
+            },
+            {
+              "token": "``",
+              "logprob": -18.875
+            },
+            {
+              "token": "\"A",
+              "logprob": -19.125
+            },
+            {
+              "token": "\uff21",
+              "logprob": -19.375
+            },
+            {
+              "token": "(A",
+              "logprob": -19.375
+            },
+            {
+              "token": "E",
+              "logprob": -19.375
+            },
+            {
+              "token": "###",
+              "logprob": -19.5
+            },
+            {
+              "token": "B",
+              "logprob": -19.5
+            }
+          ]
+        }
+      ],
+      "logprob_t07_answer_token_logprobs": [
+        {
+          "token": "A",
+          "logprob": 0.0,
+          "top_logprobs": [
+            {
+              "token": "A",
+              "logprob": 0.0
+            },
+            {
+              "token": "\u0410",
+              "logprob": -23.928569793701172
+            },
+            {
+              "token": " A",
+              "logprob": -24.64285659790039
+            },
+            {
+              "token": "**",
+              "logprob": -25.35714340209961
+            },
+            {
+              "token": "\tA",
+              "logprob": -27.14285659790039
+            },
+            {
+              "token": "Answer",
+              "logprob": -27.14285659790039
+            },
+            {
+              "token": "I",
+              "logprob": -27.85714340209961
+            },
+            {
+              "token": "Yes",
+              "logprob": -28.035715103149414
+            },
+            {
+              "token": "a",
+              "logprob": -28.035715103149414
+            },
+            {
+              "token": "The",
+              "logprob": -28.214284896850586
+            },
+            {
+              "token": "C",
+              "logprob": -28.39285659790039
+            },
+            {
+              "token": "B",
+              "logprob": -28.928571701049805
+            },
+            {
+              "token": "##",
+              "logprob": -29.10714340209961
+            },
+            {
+              "token": "E",
+              "logprob": -29.64285659790039
+            },
+            {
+              "token": "\u0391",
+              "logprob": -29.64285659790039
+            },
+            {
+              "token": "\uff21",
+              "logprob": -29.821428298950195
+            },
+            {
+              "token": "\"A",
+              "logprob": -30.0
+            },
+            {
+              "token": "``",
+              "logprob": -30.178571701049805
+            },
+            {
+              "token": "*A",
+              "logprob": -30.35714340209961
+            },
+            {
+              "token": "(A",
+              "logprob": -30.535715103149414
+            }
+          ]
+        }
+      ],
+      "logprob_t1_answer_token_logprobs": [
+        {
+          "token": "A",
+          "logprob": -4.768372718899627e-07,
+          "top_logprobs": [
+            {
+              "token": "A",
+              "logprob": -4.768372718899627e-07
+            },
+            {
+              "token": "\u0410",
+              "logprob": -15.875000953674316
+            },
+            {
+              "token": " A",
+              "logprob": -16.0
+            },
+            {
+              "token": "**",
+              "logprob": -16.25
+            },
+            {
+              "token": "Answer",
+              "logprob": -17.25
+            },
+            {
+              "token": "a",
+              "logprob": -17.375
+            },
+            {
+              "token": "\tA",
+              "logprob": -17.75
+            },
+            {
+              "token": "Yes",
+              "logprob": -18.0
+            },
+            {
+              "token": "I",
+              "logprob": -18.25
+            },
+            {
+              "token": "The",
+              "logprob": -18.25
+            },
+            {
+              "token": "C",
+              "logprob": -18.5
+            },
+            {
+              "token": "B",
+              "logprob": -18.625
+            },
+            {
+              "token": "##",
+              "logprob": -19.25
+            },
+            {
+              "token": "*A",
+              "logprob": -19.5
+            },
+            {
+              "token": "``",
+              "logprob": -19.625
+            },
+            {
+              "token": "\"A",
+              "logprob": -19.625
+            },
+            {
+              "token": "(A",
+              "logprob": -19.75
+            },
+            {
+              "token": "\u0391",
+              "logprob": -19.75
+            },
+            {
+              "token": "\uff21",
+              "logprob": -19.875
+            },
+            {
+              "token": "###",
+              "logprob": -19.875
+            }
+          ]
+        }
+      ],
+      "parsed_row": {
+        "example_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_002",
+        "question_id": "wall_right",
+        "target_variable": "wall_right",
+        "question_family": "wall_directional",
+        "answer_space": "label3",
+        "variant_id": "",
+        "prompt_preset": "cardinal_action_explicit",
+        "grid_text": "  0 1 2 3 4 5 6 7 8 \n0 # # # # # # # # # \n1 # _ _ G D _ _ _ # \n2 # _ _ _ # _ _ _ # \n3 # _ _ _ # _ _ _ # \n4 # # # _ # # # _ # \n5 # _ _ _ # _ _ _ # \n6 # _ _ _ # _ _ _ # \n7 # _ _ _ # _ K A # \n8 # # # # # # # # # ",
+        "carrying_key": false,
+        "observed_action": "RIGHT",
+        "greedy_answer": "yes",
+        "greedy_answers_json": "[\"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\"]",
+        "greedy_modal_answer": "yes",
+        "greedy_answer_probs_json": "{\"invalid\": 0.0, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 0.9999999999999999}",
+        "greedy_entropy": 1.6017132519074586e-16,
+        "greedy_valid_parse_rate_for_row": 1.0,
+        "greedy_repeated_agreement_rate_for_row": 1.0,
+        "ground_truth_label": "yes",
+        "belief_action_consistency": "inconsistent",
+        "mc_belief_action_consistency": "inconsistent",
+        "mc_answer": "yes",
+        "mc_yes_no_answer": "yes",
+        "mc_answers_json": "[\"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\"]",
+        "mc_answer_probs_json": "{\"invalid\": 0.0, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 0.9999999999999999}",
+        "mc_entropy": 1.6017132519074586e-16,
+        "mc_valid_parse_rate_for_row": 1.0,
+        "sampled_answer": "yes",
+        "answer_probs_json": "{\"invalid\": 0.0, \"no\": 4.076011901048439e-09, \"unknown\": 4.6187265803550126e-09, \"yes\": 0.9999999913052615}",
+        "entropy": 2.5403498268463886e-07,
+        "logprob_t0_raw_output": "A",
+        "raw_answer_probs_t0_json": "{\"A\": 0.9999999884062525, \"B\": 1.6991351656528474e-09, \"C\": 3.174402404361862e-09, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 6.720209942769376e-09}",
+        "answer_probs_t0_json": "{\"invalid\": 0.0, \"no\": 1.6991351656528474e-09, \"unknown\": 3.174402404361862e-09, \"yes\": 0.9999999951264624}",
+        "logprob_answer_t0": "yes",
+        "logprob_yes_no_answer_t0": "yes",
+        "entropy_t0": 1.4614730715071876e-07,
+        "valid_parse_rate_t0_for_row": 1.0,
+        "logprob_t07_raw_output": "A",
+        "raw_answer_probs_t07_json": "{\"A\": 0.9999999999992963, \"B\": 1.366000773364428e-13, \"C\": 2.3340441050486047e-13, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 3.3359047275520465e-13}",
+        "answer_probs_t07_json": "{\"invalid\": 0.0, \"no\": 1.366000773364428e-13, \"unknown\": 2.3340441050486047e-13, \"yes\": 0.99999999999963}",
+        "logprob_answer_t07": "yes",
+        "logprob_yes_no_answer_t07": "yes",
+        "entropy_t07": 1.6165640291546645e-11,
+        "valid_parse_rate_t07_for_row": 1.0,
+        "logprob_t1_raw_output": "A",
+        "raw_answer_probs_t1_json": "{\"A\": 0.9999999836902688, \"B\": 4.076011901048439e-09, \"C\": 4.6187265803550126e-09, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 7.614992756579376e-09}",
+        "answer_probs_t1_json": "{\"invalid\": 0.0, \"no\": 4.076011901048439e-09, \"unknown\": 4.6187265803550126e-09, \"yes\": 0.9999999913052615}",
+        "logprob_answer_t1": "yes",
+        "logprob_yes_no_answer_t1": "yes",
+        "entropy_t1": 2.5403498268463886e-07,
+        "valid_parse_rate_t1_for_row": 1.0
+      }
+    },
+    {
+      "example_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_002",
+      "question_id": "hit_wall_after_right",
+      "prompt": "# Instructions\n\nYou are controlling an agent in a 9x9 fully observable DoorKey GridWorld. The environment contains walls, open spaces, a goal, a key, and doors.\n\nLegend:\n---------------\n#: Wall\n_: Open Space\nG: Goal\nA: Current agent position\nD: Door (closed/locked)\nO: Door (open)\nK: Key\n---------------\n\nInterpret RIGHT as the cell one column to the right (east), LEFT as one column to the left (west), UP as one row up (north), and DOWN as one row down (south) in the rendered grid.\nAnswer using only the current observable state shown below. Interpret RIGHT/LEFT/UP/DOWN as cardinal directions in the rendered grid.\n\n# Inputs\n\nCurrent grid state:\n\n  0 1 2 3 4 5 6 7 8 \n0 # # # # # # # # # \n1 # _ _ G D _ _ _ # \n2 # _ _ _ # _ _ _ # \n3 # _ _ _ # _ _ _ # \n4 # # # _ # # # _ # \n5 # _ _ _ # _ _ _ # \n6 # _ _ _ # _ _ _ # \n7 # _ _ _ # _ K A # \n8 # # # # # # # # # \n\nGiven the current grid only, if you move RIGHT now, will you hit a wall?\n\nReturn exactly one label and nothing else:\nA = yes\nB = no\nC = unknown\n",
+      "observed_action_prompt": "# Instructions\n\nYou are controlling an agent in a 9x9 fully observable DoorKey GridWorld. The environment contains walls, open spaces, a goal, a key, and doors.\n\nLegend:\n---------------\n#: Wall\n_: Open Space\nG: Goal\nA: Current agent position\nD: Door (closed/locked)\nO: Door (open)\nK: Key\n---------------\n\nInterpret RIGHT as the cell one column to the right (east), LEFT as one column to the left (west), UP as one row up (north), and DOWN as one row down (south) in the rendered grid.\nAnswer using only the current observable state shown below. Interpret RIGHT/LEFT/UP/DOWN as cardinal directions in the rendered grid.\n\nChoose the next move that best advances toward the goal while respecting the DoorKey mechanics in the current state.\n\nThe key is automatically picked up when the agent moves onto K. A closed door D can only be opened if the agent already has the key.\n\n# Inputs\n\nCurrent grid state:\n\n  0 1 2 3 4 5 6 7 8 \n0 # # # # # # # # # \n1 # _ _ G D _ _ _ # \n2 # _ _ _ # _ _ _ # \n3 # _ _ _ # _ _ _ # \n4 # # # _ # # # _ # \n5 # _ _ _ # _ _ _ # \n6 # _ _ _ # _ _ _ # \n7 # _ _ _ # _ K A # \n8 # # # # # # # # # \n\nAgent status:\n- Carrying key: false\n\nRespond with exactly a JSON object of the form {\"action\": \"<UP|DOWN|LEFT|RIGHT>\"}.\nDo not include any extra text before or after the JSON.",
+      "observed_action_raw": null,
+      "observed_action_source": "dataset",
+      "greedy_raw_output": "A",
+      "greedy_repeated_raw_outputs": [
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A"
+      ],
+      "mc_raw_outputs": [
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A"
+      ],
+      "logprob_t0_answer_token_logprobs": [
+        {
+          "token": "A",
+          "logprob": -2.3841860752327193e-07,
+          "top_logprobs": [
+            {
+              "token": "A",
+              "logprob": -2.3841860752327193e-07
+            },
+            {
+              "token": " A",
+              "logprob": -16.375
+            },
+            {
+              "token": "\u0410",
+              "logprob": -16.875
+            },
+            {
+              "token": "**",
+              "logprob": -17.25
+            },
+            {
+              "token": "Answer",
+              "logprob": -17.625
+            },
+            {
+              "token": "Yes",
+              "logprob": -17.75
+            },
+            {
+              "token": "a",
+              "logprob": -18.75
+            },
+            {
+              "token": "\tA",
+              "logprob": -18.875
+            },
+            {
+              "token": "The",
+              "logprob": -19.25
+            },
+            {
+              "token": "I",
+              "logprob": -19.25
+            },
+            {
+              "token": "C",
+              "logprob": -19.375
+            },
+            {
+              "token": "B",
+              "logprob": -19.625
+            },
+            {
+              "token": "YES",
+              "logprob": -20.125
+            },
+            {
+              "token": "*A",
+              "logprob": -20.375
+            },
+            {
+              "token": "(A",
+              "logprob": -20.5
+            },
+            {
+              "token": "##",
+              "logprob": -20.5
+            },
+            {
+              "token": "\u0391",
+              "logprob": -20.75
+            },
+            {
+              "token": "_A",
+              "logprob": -20.75
+            },
+            {
+              "token": "\"A",
+              "logprob": -20.75
+            },
+            {
+              "token": "E",
+              "logprob": -20.875
+            }
+          ]
+        }
+      ],
+      "logprob_t07_answer_token_logprobs": [
+        {
+          "token": "A",
+          "logprob": 0.0,
+          "top_logprobs": [
+            {
+              "token": "A",
+              "logprob": 0.0
+            },
+            {
+              "token": " A",
+              "logprob": -23.75
+            },
+            {
+              "token": "**",
+              "logprob": -24.46428680419922
+            },
+            {
+              "token": "\u0410",
+              "logprob": -25.000001907348633
+            },
+            {
+              "token": "a",
+              "logprob": -26.60714340209961
+            },
+            {
+              "token": "I",
+              "logprob": -26.785715103149414
+            },
+            {
+              "token": "\tA",
+              "logprob": -26.785715103149414
+            },
+            {
+              "token": "Answer",
+              "logprob": -26.785715103149414
+            },
+            {
+              "token": "Yes",
+              "logprob": -27.500001907348633
+            },
+            {
+              "token": "C",
+              "logprob": -27.678571701049805
+            },
+            {
+              "token": "The",
+              "logprob": -28.035715103149414
+            },
+            {
+              "token": "E",
+              "logprob": -28.392858505249023
+            },
+            {
+              "token": "##",
+              "logprob": -28.928571701049805
+            },
+            {
+              "token": "B",
+              "logprob": -29.10714340209961
+            },
+            {
+              "token": "\"A",
+              "logprob": -29.285715103149414
+            },
+            {
+              "token": "``",
+              "logprob": -29.285715103149414
+            },
+            {
+              "token": "(A",
+              "logprob": -29.821430206298828
+            },
+            {
+              "token": "*A",
+              "logprob": -29.821430206298828
+            },
+            {
+              "token": "\uff21",
+              "logprob": -29.821430206298828
+            },
+            {
+              "token": "S",
+              "logprob": -30.178571701049805
+            }
+          ]
+        }
+      ],
+      "logprob_t1_answer_token_logprobs": [
+        {
+          "token": "A",
+          "logprob": -1.1920930376163597e-07,
+          "top_logprobs": [
+            {
+              "token": "A",
+              "logprob": -1.1920930376163597e-07
+            },
+            {
+              "token": " A",
+              "logprob": -16.75
+            },
+            {
+              "token": "\u0410",
+              "logprob": -17.75
+            },
+            {
+              "token": "**",
+              "logprob": -18.25
+            },
+            {
+              "token": "\tA",
+              "logprob": -18.875
+            },
+            {
+              "token": "Answer",
+              "logprob": -19.375
+            },
+            {
+              "token": "I",
+              "logprob": -19.625
+            },
+            {
+              "token": "a",
+              "logprob": -19.875
+            },
+            {
+              "token": "C",
+              "logprob": -20.25
+            },
+            {
+              "token": "Yes",
+              "logprob": -20.375
+            },
+            {
+              "token": "The",
+              "logprob": -20.375
+            },
+            {
+              "token": "B",
+              "logprob": -20.5
+            },
+            {
+              "token": "E",
+              "logprob": -20.625
+            },
+            {
+              "token": "\"A",
+              "logprob": -20.875
+            },
+            {
+              "token": "##",
+              "logprob": -21.125
+            },
+            {
+              "token": "*A",
+              "logprob": -21.5
+            },
+            {
+              "token": "``",
+              "logprob": -21.5
+            },
+            {
+              "token": "(A",
+              "logprob": -21.5
+            },
+            {
+              "token": "\uff21",
+              "logprob": -21.5
+            },
+            {
+              "token": "_A",
+              "logprob": -21.75
+            }
+          ]
+        }
+      ],
+      "parsed_row": {
+        "example_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_002",
+        "question_id": "hit_wall_after_right",
+        "target_variable": "hit_wall_after_right",
+        "question_family": "action_effects",
+        "answer_space": "label3",
+        "variant_id": "",
+        "prompt_preset": "cardinal_action_explicit",
+        "grid_text": "  0 1 2 3 4 5 6 7 8 \n0 # # # # # # # # # \n1 # _ _ G D _ _ _ # \n2 # _ _ _ # _ _ _ # \n3 # _ _ _ # _ _ _ # \n4 # # # _ # # # _ # \n5 # _ _ _ # _ _ _ # \n6 # _ _ _ # _ _ _ # \n7 # _ _ _ # _ K A # \n8 # # # # # # # # # ",
+        "carrying_key": false,
+        "observed_action": "RIGHT",
+        "greedy_answer": "yes",
+        "greedy_answers_json": "[\"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\"]",
+        "greedy_modal_answer": "yes",
+        "greedy_answer_probs_json": "{\"invalid\": 0.0, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 0.9999999999999999}",
+        "greedy_entropy": 1.6017132519074586e-16,
+        "greedy_valid_parse_rate_for_row": 1.0,
+        "greedy_repeated_agreement_rate_for_row": 1.0,
+        "ground_truth_label": "yes",
+        "belief_action_consistency": "inconsistent",
+        "mc_belief_action_consistency": "inconsistent",
+        "mc_answer": "yes",
+        "mc_yes_no_answer": "yes",
+        "mc_answers_json": "[\"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\", \"yes\"]",
+        "mc_answer_probs_json": "{\"invalid\": 0.0, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 0.9999999999999999}",
+        "mc_entropy": 1.6017132519074586e-16,
+        "mc_valid_parse_rate_for_row": 1.0,
+        "sampled_answer": "yes",
+        "answer_probs_json": "{\"invalid\": 0.0, \"no\": 6.250764867765346e-10, \"unknown\": 8.026140963949493e-10, \"yes\": 0.9999999985723094}",
+        "entropy": 4.5422234303684906e-08,
+        "logprob_t0_raw_output": "A",
+        "raw_answer_probs_t0_json": "{\"A\": 0.9999999858878247, \"B\": 1.4994806799000497e-09, \"C\": 1.925371304823879e-09, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 1.0687323294063967e-08}",
+        "answer_probs_t0_json": "{\"invalid\": 0.0, \"no\": 1.49948067990005e-09, \"unknown\": 1.9253713048238795e-09, \"yes\": 0.999999996575148}",
+        "logprob_answer_t0": "yes",
+        "logprob_yes_no_answer_t0": "yes",
+        "entropy_t0": 1.046388952390587e-07,
+        "valid_parse_rate_t0_for_row": 1.0,
+        "logprob_t07_raw_output": "A",
+        "raw_answer_probs_t07_json": "{\"A\": 0.9999999999988389, \"B\": 1.1426105792986974e-13, \"C\": 4.767811179122595e-13, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 5.699948393262751e-13}",
+        "answer_probs_t07_json": "{\"invalid\": 0.0, \"no\": 1.1426105792986974e-13, \"unknown\": 4.767811179122595e-13, \"yes\": 0.9999999999994089}",
+        "logprob_answer_t07": "yes",
+        "logprob_yes_no_answer_t07": "yes",
+        "entropy_t07": 2.5280626977707013e-11,
+        "valid_parse_rate_t07_for_row": 1.0,
+        "logprob_t1_raw_output": "A",
+        "raw_answer_probs_t1_json": "{\"A\": 0.999999997864005, \"B\": 6.250764867765346e-10, \"C\": 8.026140963949493e-10, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 7.083044540392767e-10}",
+        "answer_probs_t1_json": "{\"invalid\": 0.0, \"no\": 6.250764867765346e-10, \"unknown\": 8.026140963949493e-10, \"yes\": 0.9999999985723094}",
+        "logprob_answer_t1": "yes",
+        "logprob_yes_no_answer_t1": "yes",
+        "entropy_t1": 4.5422234303684906e-08,
+        "valid_parse_rate_t1_for_row": 1.0
+      }
+    }
+  ],
+  "summary": [
+    {
+      "question_id": "hit_wall_after_right",
+      "target_variable": "hit_wall_after_right",
+      "question_family": "action_effects",
+      "answer_space": "label3",
+      "n_rows": 2,
+      "valid_parse_rate": 1.0,
+      "valid_parse_rate_t07": 1.0,
+      "valid_parse_rate_t1": 1.0,
+      "mc_valid_parse_rate": 1.0,
+      "greedy_accuracy": 1.0,
+      "greedy_repeated_modal_accuracy": 1.0,
+      "greedy_repeated_valid_parse_rate": 1.0,
+      "greedy_repeated_agreement_rate": 1.0,
+      "mean_greedy_entropy": 1.6017132519074586e-16,
+      "logprob_yes_no_accuracy_t0": 1.0,
+      "logprob_yes_no_accuracy_t07": 1.0,
+      "logprob_yes_no_accuracy_t1": 1.0,
+      "mc_yes_no_accuracy": 1.0,
+      "logprob_t0_accuracy": 1.0,
+      "logprob_t07_accuracy": 1.0,
+      "logprob_t1_accuracy": 1.0,
+      "mc_accuracy": 1.0,
+      "mean_entropy_t0": 1.9560545402683503e-06,
+      "mean_entropy_t07": 1.9502520241980752e-11,
+      "mean_entropy_t1": 4.42417398699747e-06,
+      "mean_mc_entropy": 1.6017132519074586e-16,
+      "fraction_unknown_t0": 0.0,
+      "fraction_unknown_t07": 0.0,
+      "fraction_unknown_t1": 0.0,
+      "mc_fraction_unknown": 0.0,
+      "greedy_logprob_t0_agreement": 1.0,
+      "greedy_vs_greedy_repeated_modal_agreement": 1.0,
+      "greedy_logprob_yes_no_t0_agreement": 1.0,
+      "greedy_logprob_yes_no_t07_agreement": 1.0,
+      "greedy_logprob_yes_no_t1_agreement": 1.0,
+      "greedy_mc_yes_no_agreement": 1.0,
+      "greedy_logprob_t07_agreement": 1.0,
+      "greedy_logprob_t1_agreement": 1.0,
+      "greedy_mc_agreement": 1.0,
+      "consistency_inconsistent": 2,
+      "consistency_potentially_consistent": 0,
+      "consistency_unknown_based": 0,
+      "mc_consistency_inconsistent": 2,
+      "mc_consistency_potentially_consistent": 0,
+      "mc_consistency_unknown_based": 0,
+      "sampled_accuracy": 1.0,
+      "mean_entropy": 4.42417398699747e-06,
+      "fraction_unknown": 0.0,
+      "greedy_sampled_agreement": 1.0
+    },
+    {
+      "question_id": "wall_right",
+      "target_variable": "wall_right",
+      "question_family": "wall_directional",
+      "answer_space": "label3",
+      "n_rows": 2,
+      "valid_parse_rate": 1.0,
+      "valid_parse_rate_t07": 1.0,
+      "valid_parse_rate_t1": 1.0,
+      "mc_valid_parse_rate": 1.0,
+      "greedy_accuracy": 1.0,
+      "greedy_repeated_modal_accuracy": 1.0,
+      "greedy_repeated_valid_parse_rate": 1.0,
+      "greedy_repeated_agreement_rate": 1.0,
+      "mean_greedy_entropy": 1.6017132519074586e-16,
+      "logprob_yes_no_accuracy_t0": 1.0,
+      "logprob_yes_no_accuracy_t07": 1.0,
+      "logprob_yes_no_accuracy_t1": 1.0,
+      "mc_yes_no_accuracy": 1.0,
+      "logprob_t0_accuracy": 1.0,
+      "logprob_t07_accuracy": 1.0,
+      "logprob_t1_accuracy": 1.0,
+      "mc_accuracy": 1.0,
+      "mean_entropy_t0": 1.4415073885365021e-07,
+      "mean_entropy_t07": 3.084603001568989e-11,
+      "mean_entropy_t1": 1.744469748533254e-07,
+      "mean_mc_entropy": 1.6017132519074586e-16,
+      "fraction_unknown_t0": 0.0,
+      "fraction_unknown_t07": 0.0,
+      "fraction_unknown_t1": 0.0,
+      "mc_fraction_unknown": 0.0,
+      "greedy_logprob_t0_agreement": 1.0,
+      "greedy_vs_greedy_repeated_modal_agreement": 1.0,
+      "greedy_logprob_yes_no_t0_agreement": 1.0,
+      "greedy_logprob_yes_no_t07_agreement": 1.0,
+      "greedy_logprob_yes_no_t1_agreement": 1.0,
+      "greedy_mc_yes_no_agreement": 1.0,
+      "greedy_logprob_t07_agreement": 1.0,
+      "greedy_logprob_t1_agreement": 1.0,
+      "greedy_mc_agreement": 1.0,
+      "consistency_inconsistent": 2,
+      "consistency_potentially_consistent": 0,
+      "consistency_unknown_based": 0,
+      "mc_consistency_inconsistent": 2,
+      "mc_consistency_potentially_consistent": 0,
+      "mc_consistency_unknown_based": 0,
+      "sampled_accuracy": 1.0,
+      "mean_entropy": 1.744469748533254e-07,
+      "fraction_unknown": 0.0,
+      "greedy_sampled_agreement": 1.0
+    }
+  ],
+  "probability_diagnostics": [
+    {
+      "example_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_016",
+      "question_id": "wall_right",
+      "ground_truth_label": "yes",
+      "greedy_answer": "yes",
+      "raw_argmax_t0": "A",
+      "raw_argmax_t07": "A",
+      "raw_argmax_t1": "A",
+      "semantic_argmax_t0": "yes",
+      "semantic_argmax_t07": "yes",
+      "semantic_argmax_t1": "yes",
+      "p_yes_t0": 0.9999999952732299,
+      "p_no_t0": 1.9253713328632248e-09,
+      "yes_gt_no_t0": true,
+      "p_yes_t07": 0.9999999999989198,
+      "p_no_t07": 3.9881027885656244e-13,
+      "yes_gt_no_t07": true,
+      "p_yes_t1": 0.9999999969068316,
+      "p_no_t1": 1.167796884858035e-09,
+      "yes_gt_no_t1": true,
+      "mc_answer": "yes",
+      "mc_yes_no_answer": "yes",
+      "mc_p_yes": 0.9999999999999999,
+      "mc_p_no": 0.0,
+      "mc_yes_gt_no": true,
+      "raw_answer_probs_t0_json": "{\"A\": 0.9999999933478585, \"B\": 1.9253713328632243e-09, \"C\": 2.801398759267995e-09, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 1.9253713328632243e-09}",
+      "raw_answer_probs_t07_json": "{\"A\": 0.9999999999981051, \"B\": 3.9881027885656244e-13, \"C\": 6.81435031771842e-13, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 8.146614404307105e-13}",
+      "raw_answer_probs_t1_json": "{\"A\": 0.9999999955835444, \"B\": 1.167796884858035e-09, \"C\": 1.9253715639227906e-09, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 1.323287233573141e-09}",
+      "answer_probs_t0_json": "{\"invalid\": 0.0, \"no\": 1.9253713328632248e-09, \"unknown\": 2.8013987592679953e-09, \"yes\": 0.9999999952732299}",
+      "answer_probs_t07_json": "{\"invalid\": 0.0, \"no\": 3.9881027885656244e-13, \"unknown\": 6.81435031771842e-13, \"yes\": 0.9999999999989198}",
+      "answer_probs_t1_json": "{\"invalid\": 0.0, \"no\": 1.167796884858035e-09, \"unknown\": 1.9253715639227906e-09, \"yes\": 0.9999999969068316}",
+      "mc_answer_probs_json": "{\"invalid\": 0.0, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 0.9999999999999999}"
+    },
+    {
+      "example_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_016",
+      "question_id": "hit_wall_after_right",
+      "ground_truth_label": "yes",
+      "greedy_answer": "yes",
+      "raw_argmax_t0": "A",
+      "raw_argmax_t07": "A",
+      "raw_argmax_t1": "A",
+      "semantic_argmax_t0": "yes",
+      "semantic_argmax_t07": "yes",
+      "semantic_argmax_t1": "yes",
+      "p_yes_t0": 0.9999998467535468,
+      "p_no_t0": 1.1911847214011035e-07,
+      "yes_gt_no_t0": true,
+      "p_yes_t07": 0.9999999999996867,
+      "p_no_t07": 7.994528075781884e-14,
+      "yes_gt_no_t07": true,
+      "p_yes_t1": 0.9999996287081218,
+      "p_no_t1": 2.5217353491714713e-07,
+      "yes_gt_no_t1": true,
+      "mc_answer": "yes",
+      "mc_yes_no_answer": "yes",
+      "mc_p_yes": 0.9999999999999999,
+      "mc_p_no": 0.0,
+      "mc_yes_gt_no": true,
+      "raw_answer_probs_t0_json": "{\"A\": 0.9999997519324709, \"B\": 1.1911847214011035e-07, \"C\": 3.412798111580395e-08, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 9.482107583596845e-08}",
+      "raw_answer_probs_t07_json": "{\"A\": 0.9999999999976303, \"B\": 7.994528075781884e-14, \"C\": 2.334039653167249e-13, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 2.05634882889135e-12}",
+      "raw_answer_probs_t1_json": "{\"A\": 0.9999994911042266, \"B\": 2.5217353491714713e-07, \"C\": 1.1911834338132867e-07, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 1.3760389513979504e-07}",
+      "answer_probs_t0_json": "{\"invalid\": 0.0, \"no\": 1.1911847214011035e-07, \"unknown\": 3.412798111580395e-08, \"yes\": 0.9999998467535468}",
+      "answer_probs_t07_json": "{\"invalid\": 0.0, \"no\": 7.994528075781884e-14, \"unknown\": 2.334039653167249e-13, \"yes\": 0.9999999999996867}",
+      "answer_probs_t1_json": "{\"invalid\": 0.0, \"no\": 2.5217353491714713e-07, \"unknown\": 1.1911834338132867e-07, \"yes\": 0.9999996287081218}",
+      "mc_answer_probs_json": "{\"invalid\": 0.0, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 0.9999999999999999}"
+    },
+    {
+      "example_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_002",
+      "question_id": "wall_right",
+      "ground_truth_label": "yes",
+      "greedy_answer": "yes",
+      "raw_argmax_t0": "A",
+      "raw_argmax_t07": "A",
+      "raw_argmax_t1": "A",
+      "semantic_argmax_t0": "yes",
+      "semantic_argmax_t07": "yes",
+      "semantic_argmax_t1": "yes",
+      "p_yes_t0": 0.9999999951264624,
+      "p_no_t0": 1.6991351656528474e-09,
+      "yes_gt_no_t0": true,
+      "p_yes_t07": 0.99999999999963,
+      "p_no_t07": 1.366000773364428e-13,
+      "yes_gt_no_t07": true,
+      "p_yes_t1": 0.9999999913052615,
+      "p_no_t1": 4.076011901048439e-09,
+      "yes_gt_no_t1": true,
+      "mc_answer": "yes",
+      "mc_yes_no_answer": "yes",
+      "mc_p_yes": 0.9999999999999999,
+      "mc_p_no": 0.0,
+      "mc_yes_gt_no": true,
+      "raw_answer_probs_t0_json": "{\"A\": 0.9999999884062525, \"B\": 1.6991351656528474e-09, \"C\": 3.174402404361862e-09, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 6.720209942769376e-09}",
+      "raw_answer_probs_t07_json": "{\"A\": 0.9999999999992963, \"B\": 1.366000773364428e-13, \"C\": 2.3340441050486047e-13, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 3.3359047275520465e-13}",
+      "raw_answer_probs_t1_json": "{\"A\": 0.9999999836902688, \"B\": 4.076011901048439e-09, \"C\": 4.6187265803550126e-09, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 7.614992756579376e-09}",
+      "answer_probs_t0_json": "{\"invalid\": 0.0, \"no\": 1.6991351656528474e-09, \"unknown\": 3.174402404361862e-09, \"yes\": 0.9999999951264624}",
+      "answer_probs_t07_json": "{\"invalid\": 0.0, \"no\": 1.366000773364428e-13, \"unknown\": 2.3340441050486047e-13, \"yes\": 0.99999999999963}",
+      "answer_probs_t1_json": "{\"invalid\": 0.0, \"no\": 4.076011901048439e-09, \"unknown\": 4.6187265803550126e-09, \"yes\": 0.9999999913052615}",
+      "mc_answer_probs_json": "{\"invalid\": 0.0, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 0.9999999999999999}"
+    },
+    {
+      "example_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_002",
+      "question_id": "hit_wall_after_right",
+      "ground_truth_label": "yes",
+      "greedy_answer": "yes",
+      "raw_argmax_t0": "A",
+      "raw_argmax_t07": "A",
+      "raw_argmax_t1": "A",
+      "semantic_argmax_t0": "yes",
+      "semantic_argmax_t07": "yes",
+      "semantic_argmax_t1": "yes",
+      "p_yes_t0": 0.999999996575148,
+      "p_no_t0": 1.49948067990005e-09,
+      "yes_gt_no_t0": true,
+      "p_yes_t07": 0.9999999999994089,
+      "p_no_t07": 1.1426105792986974e-13,
+      "yes_gt_no_t07": true,
+      "p_yes_t1": 0.9999999985723094,
+      "p_no_t1": 6.250764867765346e-10,
+      "yes_gt_no_t1": true,
+      "mc_answer": "yes",
+      "mc_yes_no_answer": "yes",
+      "mc_p_yes": 0.9999999999999999,
+      "mc_p_no": 0.0,
+      "mc_yes_gt_no": true,
+      "raw_answer_probs_t0_json": "{\"A\": 0.9999999858878247, \"B\": 1.4994806799000497e-09, \"C\": 1.925371304823879e-09, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 1.0687323294063967e-08}",
+      "raw_answer_probs_t07_json": "{\"A\": 0.9999999999988389, \"B\": 1.1426105792986974e-13, \"C\": 4.767811179122595e-13, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 5.699948393262751e-13}",
+      "raw_answer_probs_t1_json": "{\"A\": 0.999999997864005, \"B\": 6.250764867765346e-10, \"C\": 8.026140963949493e-10, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 7.083044540392767e-10}",
+      "answer_probs_t0_json": "{\"invalid\": 0.0, \"no\": 1.49948067990005e-09, \"unknown\": 1.9253713048238795e-09, \"yes\": 0.999999996575148}",
+      "answer_probs_t07_json": "{\"invalid\": 0.0, \"no\": 1.1426105792986974e-13, \"unknown\": 4.767811179122595e-13, \"yes\": 0.9999999999994089}",
+      "answer_probs_t1_json": "{\"invalid\": 0.0, \"no\": 6.250764867765346e-10, \"unknown\": 8.026140963949493e-10, \"yes\": 0.9999999985723094}",
+      "mc_answer_probs_json": "{\"invalid\": 0.0, \"no\": 0.0, \"unknown\": 0.0, \"yes\": 0.9999999999999999}"
+    }
+  ],
+  "usage_summary": {
+    "model_name": "together_ai/openai/gpt-oss-20b",
+    "by_phase": {
+      "logprob_t0": {
+        "requests": 4,
+        "cost_usd": 0.0005517,
+        "prompt_tokens": 1514,
+        "completion_tokens": 325,
+        "total_tokens": 1839,
+        "reasoning_tokens": 0,
+        "retry_count": 0,
+        "requests_with_retry": 0,
+        "retry_sleep_seconds": 0.0
+      },
+      "logprob_t07": {
+        "requests": 4,
+        "cost_usd": 0.0005343,
+        "prompt_tokens": 1514,
+        "completion_tokens": 267,
+        "total_tokens": 1781,
+        "reasoning_tokens": 0,
+        "retry_count": 0,
+        "requests_with_retry": 0,
+        "retry_sleep_seconds": 0.0
+      },
+      "logprob_t1": {
+        "requests": 4,
+        "cost_usd": 0.0005487,
+        "prompt_tokens": 1514,
+        "completion_tokens": 315,
+        "total_tokens": 1829,
+        "reasoning_tokens": 0,
+        "retry_count": 0,
+        "requests_with_retry": 0,
+        "retry_sleep_seconds": 0.0
+      },
+      "greedy_repeated_t0": {
+        "requests": 36,
+        "cost_usd": 0.0048783,
+        "prompt_tokens": 13626,
+        "completion_tokens": 2635,
+        "total_tokens": 16261,
+        "reasoning_tokens": 0,
+        "retry_count": 0,
+        "requests_with_retry": 0,
+        "retry_sleep_seconds": 0.0
+      },
+      "mc": {
+        "requests": 40,
+        "cost_usd": 0.0052604999999999996,
+        "prompt_tokens": 15140,
+        "completion_tokens": 2395,
+        "total_tokens": 17535,
+        "reasoning_tokens": 0,
+        "retry_count": 0,
+        "requests_with_retry": 0,
+        "retry_sleep_seconds": 0.0
+      }
+    },
+    "total": {
+      "requests": 88,
+      "cost_usd": 0.011773499999999989,
+      "prompt_tokens": 33308,
+      "completion_tokens": 5937,
+      "total_tokens": 39245,
+      "reasoning_tokens": 0,
+      "retry_count": 0,
+      "requests_with_retry": 0,
+      "retry_sleep_seconds": 0.0
+    }
+  }
+}

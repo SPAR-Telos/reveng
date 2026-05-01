@@ -1,0 +1,331 @@
+example_id,trajectory_id,step_index,observed_action,primary_step_failure_mode,selection_reason,optimal_actions_json,grid_text
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_002,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0,2,DOWN,backtrack,backtrack,"[""DOWN"", ""LEFT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ A _ # 
+3 # _ _ _ # _ _ _ # 
+4 # _ # # # D # # # 
+5 # _ _ _ _ _ _ G # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_003,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0,3,LEFT,short_loop,short_loop_onset,"[""LEFT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ A _ # 
+4 # _ # # # D # # # 
+5 # _ _ _ _ _ _ G # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_002,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10,2,RIGHT,backtrack,backtrack,"[""RIGHT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ _ _ _ _ # 
+2 # _ _ _ # _ G _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # D # # # _ # # 
+5 # A _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_005,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11,5,UP,backtrack,backtrack,"[""LEFT"", ""UP""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ _ _ _ _ # 
+3 # _ _ _ # _ A _ # 
+4 # D # # # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # G _ _ _ _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_006,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11,6,LEFT,short_loop,short_loop_onset,"[""LEFT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ _ _ A _ # 
+3 # _ _ _ # _ _ _ # 
+4 # D # # # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # G _ _ _ _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_007,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11,7,LEFT,short_loop,short_loop_representative,"[""LEFT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ _ A _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # D # # # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # G _ _ _ _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_12_step_004,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_12,4,LEFT,backtrack,backtrack,"[""LEFT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ D _ G _ # 
+3 # _ _ _ # _ _ _ # 
+4 # _ # # # # # # # 
+5 # _ A _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ _ _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_12_step_005,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_12,5,UP,short_loop,short_loop_onset,"[""UP""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ D _ G _ # 
+3 # _ _ _ # _ _ _ # 
+4 # _ # # # # # # # 
+5 # A _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ _ _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_12_step_006,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_12,6,UP,short_loop,short_loop_representative,"[""UP""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ D _ G _ # 
+3 # _ _ _ # _ _ _ # 
+4 # A # # # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ _ _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_13_step_001,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_13,1,LEFT,backtrack,backtrack,"[""LEFT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ _ _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # G _ _ # _ _ _ # 
+4 # D # # # # # _ # 
+5 # _ A _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_000,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15,0,DOWN,avoidable_detour,"avoidable_detour,suboptimal_success_failure_step","[""RIGHT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # A _ K # _ _ G # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # # D # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ _ _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_001,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15,1,UP,backtrack,"backtrack,suboptimal_success_failure_step","[""RIGHT"", ""UP""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ K # _ _ G # 
+2 # A _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # # D # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ _ _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_007,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15,7,UP,backtrack,"avoidable_detour,backtrack,suboptimal_success_failure_step","[""DOWN""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ G # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # # A # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ _ _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_011,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16,11,UP,backtrack,"avoidable_detour,backtrack,suboptimal_success_failure_step","[""DOWN"", ""RIGHT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # _ # # # # # # # 
+5 # A _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ D _ _ G # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_012,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16,12,DOWN,oscillation_2cycle,"backtrack,oscillation_2cycle_onset,suboptimal_success_failure_step","[""DOWN""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # A # # # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ D _ _ G # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_016,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16,16,RIGHT,wall_hit,"suboptimal_success_failure_step,wall_hit","[""DOWN""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # _ # # # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ A # _ _ _ # 
+7 # _ _ _ D _ _ G # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_009,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20,9,UP,wall_hit,"suboptimal_success_failure_step,wall_hit","[""LEFT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # D # # # # _ # # 
+5 # G _ _ # _ _ A # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_010,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20,10,LEFT,freeze_repeat,"freeze_repeat_onset,short_loop_onset,suboptimal_success_failure_step","[""LEFT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # D # # # # _ # # 
+5 # G _ _ # _ _ A # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_011,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20,11,UP,short_loop,"short_loop_representative,suboptimal_success_failure_step","[""UP""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # D # # # # _ # # 
+5 # G _ _ # _ A _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_21_step_011,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_21,11,DOWN,short_loop,short_loop_onset,"[""DOWN""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # A _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # _ # # # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ D _ G _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_21_step_012,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_21,12,LEFT,short_loop,short_loop_representative,"[""LEFT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ _ A _ _ # 
+4 # _ # # # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ D _ G _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_003,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33,3,RIGHT,oscillation_2cycle,"backtrack,oscillation_2cycle_onset,suboptimal_success_failure_step","[""DOWN"", ""RIGHT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ A _ # 
+3 # _ _ _ # _ _ K # 
+4 # # # _ # # # D # 
+5 # _ _ G # _ _ _ # 
+6 # _ _ _ _ _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_34_step_006,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_34,6,LEFT,avoidable_detour,"avoidable_detour,suboptimal_success_failure_step","[""DOWN""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ G # _ _ _ # 
+3 # _ _ _ D _ _ _ # 
+4 # # # # # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ A # 
+7 # _ _ _ _ _ _ K # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_41_step_000,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_41,0,DOWN,avoidable_detour,"avoidable_detour,suboptimal_success_failure_step","[""LEFT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # K A _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # D # # # # # _ # 
+5 # _ _ _ # G _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ _ _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_42_step_017,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_42,17,DOWN,oscillation_2cycle,"backtrack,oscillation_2cycle_onset,suboptimal_success_failure_step","[""DOWN""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ _ _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ A # 
+4 # # # # # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # G _ _ _ _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_002,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57,2,RIGHT,wall_hit,"suboptimal_success_failure_step,wall_hit","[""LEFT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ G D _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # # _ # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ K A # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_003,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57,3,LEFT,freeze_repeat,"freeze_repeat_onset,suboptimal_success_failure_step","[""LEFT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ G D _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # # _ # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ K A # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_59_step_002,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_59,2,RIGHT,avoidable_detour,"avoidable_detour,suboptimal_success_failure_step","[""DOWN""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ A _ # _ _ _ # 
+3 # _ K _ # _ _ _ # 
+4 # # D # # _ # # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ _ _ _ _ # 
+7 # _ _ G # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_74_step_009,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_74,9,LEFT,avoidable_detour,"avoidable_detour,suboptimal_success_failure_step","[""RIGHT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ _ _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ A _ # 
+4 # # # # # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ G # _ _ _ # 
+7 # _ _ _ _ _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_74_step_011,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_74,11,LEFT,oscillation_2cycle,"avoidable_detour,backtrack,oscillation_2cycle_onset,suboptimal_success_failure_step","[""RIGHT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ _ _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ A _ # 
+4 # # # # # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ G # _ _ _ # 
+7 # _ _ _ _ _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_75_step_003,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_75,3,RIGHT,avoidable_detour,"avoidable_detour,suboptimal_success_failure_step","[""LEFT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ _ _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # _ # # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ _ A _ _ # 
+7 # _ _ G # _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_79_step_005,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_79,5,UP,avoidable_detour,"avoidable_detour,suboptimal_success_failure_step","[""DOWN""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ A _ # _ G _ # 
+4 # # _ # # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ D _ _ _ # 
+8 # # # # # # # # # "
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_81_step_010,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_81,10,UP,avoidable_detour,"avoidable_detour,suboptimal_success_failure_step","[""RIGHT""]","  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # # _ # # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ A _ _ _ G # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # "

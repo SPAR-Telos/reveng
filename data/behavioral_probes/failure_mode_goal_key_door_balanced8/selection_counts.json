@@ -1,0 +1,25 @@
+{
+  "n_instances": 33,
+  "per_mode_counts": {
+    "backtrack": 8,
+    "short_loop": 8,
+    "avoidable_detour": 8,
+    "oscillation_2cycle": 4,
+    "wall_hit": 3,
+    "freeze_repeat": 2
+  },
+  "questions": [
+    "is_goal_right",
+    "is_goal_left",
+    "is_goal_up",
+    "is_goal_down",
+    "is_key_right",
+    "is_key_left",
+    "is_key_up",
+    "is_key_down",
+    "is_door_right",
+    "is_door_left",
+    "is_door_up",
+    "is_door_down"
+  ]
+}

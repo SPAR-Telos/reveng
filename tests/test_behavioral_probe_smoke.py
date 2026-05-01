@@ -13,6 +13,8 @@ from reveng.experiments.behavioral_probe_merge import (
 )
 from reveng.experiments.behavioral_probe_metrics import (
     belief_action_consistency,
+    build_belief_action_gap_summary_rows,
+    build_failure_mode_gap_summary_rows,
     sampled_answer_from_probabilities,
     shannon_entropy,
     summarize_coordinate_samples,
@@ -51,7 +53,11 @@ from reveng.experiments.behavioral_probe_smoke_data import (
     validate_smoke_examples,
 )
 from reveng.experiments.behavioral_probe_trajectory_data import (
+    DoorKeyStateSolver,
+    build_trajectory_failure_mode_rows,
+    build_trajectory_manifest,
     mine_behavioral_probe_instances,
+    run_behavioral_probe_trajectory_eval,
 )
 
 
@@ -166,6 +172,47 @@ def _single_instance() -> list[dict]:
             "probe_truths": derive_probe_truths_from_state(example.grid_text, example.carrying_key),
         }
     ]
+
+
+def _render_test_grid(rows: tuple[str, ...]) -> str:
+    header = "  " + " ".join(str(i) for i in range(len(rows[0])))
+    return "\n".join([header] + [f"{idx} " + " ".join(row) for idx, row in enumerate(rows)])
+
+
+def _write_synthetic_trajectory(
+    path: Path,
+    *,
+    initial_state: tuple[str, bool],
+    actions: list[str],
+    stored_astar_distance: int = 30,
+    model_max_steps: int = 30,
+) -> None:
+    solver = DoorKeyStateSolver()
+    current_state = initial_state
+    steps = []
+    for action in actions:
+        grid_text, carrying_key = current_state
+        steps.append(
+            {
+                "grid_state": grid_text.splitlines(),
+                "carrying_key": carrying_key,
+                "agent_action": action,
+            }
+        )
+        current_state = solver.step(current_state, action)["next_state"]
+    path.write_text(
+        json.dumps(
+            {
+                "grid_params": {"astar_distance": stored_astar_distance},
+                "model_params": {
+                    "provider": "together_ai",
+                    "model_id": "openai/gpt-oss-20b",
+                    "max_steps_per_trajectory": model_max_steps,
+                },
+                "steps": steps,
+            }
+        )
+    )
 
 
 def test_question_registry_expands_actions_and_coordinates():
@@ -366,6 +413,8 @@ def test_summarize_probe_rows_for_label3_and_coord():
             "target_variable": "wall_right",
             "question_family": "wall_directional",
             "answer_space": "label3",
+            "observed_action": "RIGHT",
+            "is_optimal_action": False,
             "greedy_answer": "yes",
             "greedy_modal_answer": "yes",
             "greedy_valid_parse_rate_for_row": 1.0,
@@ -388,6 +437,35 @@ def test_summarize_probe_rows_for_label3_and_coord():
             "mc_belief_action_consistency": "inconsistent",
         },
         {
+            "question_id": "wall_right",
+            "target_variable": "wall_right",
+            "question_family": "wall_directional",
+            "answer_space": "label3",
+            "observed_action": "RIGHT",
+            "is_optimal_action": True,
+            "greedy_answer": "no",
+            "greedy_modal_answer": "no",
+            "greedy_valid_parse_rate_for_row": 1.0,
+            "greedy_repeated_agreement_rate_for_row": 1.0,
+            "greedy_entropy": 0.0,
+            "logprob_answer_t0": "no",
+            "logprob_answer_t07": "no",
+            "logprob_answer_t1": "no",
+            "mc_answer": "no",
+            "mc_yes_no_answer": "no",
+            "entropy_t0": 0.0,
+            "entropy_t07": 0.0,
+            "entropy_t1": 0.0,
+            "mc_entropy": 0.0,
+            "valid_parse_rate_t0_for_row": 1.0,
+            "valid_parse_rate_t07_for_row": 1.0,
+            "valid_parse_rate_t1_for_row": 1.0,
+            "mc_valid_parse_rate_for_row": 1.0,
+            "ground_truth_label": "no",
+            "belief_action_consistency": "potentially_consistent",
+            "mc_belief_action_consistency": "potentially_consistent",
+        },
+        {
             "question_id": "agent_location",
             "target_variable": "agent_location",
             "question_family": "coordinates",
@@ -408,6 +486,56 @@ def test_summarize_probe_rows_for_label3_and_coord():
     coord_row = next(row for row in summary if row["answer_space"] == "coord_json")
     assert label_row["logprob_t0_accuracy"] == 1.0
     assert label_row["greedy_repeated_modal_accuracy"] == 1.0
+    assert label_row["local_belief_action_gap_rate"] == 0.5
+    assert label_row["local_belief_action_gap_denominator"] == 2
+    assert label_row["greedy_optimality_conditioned_gap_rate"] == 0.5
+    assert label_row["greedy_optimality_conditioned_gap_denominator"] == 2
+    assert label_row["mc_optimality_conditioned_gap_rate"] == 0.5
+    gap_rows = build_belief_action_gap_summary_rows(summary)
+    assert len(gap_rows) == 1
+    assert gap_rows[0]["question_id"] == "wall_right"
+    assert gap_rows[0]["local_belief_action_gap_rate"] == 0.5
+    assert gap_rows[0]["greedy_astar_gap_rate"] == 0.5
+    failure_gap_rows = build_failure_mode_gap_summary_rows(
+        [
+            {
+                "example_id": "ex1",
+                "answer_space": "label3",
+                "question_family": "wall_directional",
+                "question_id": "wall_right",
+                "selection_stage": "failure",
+                "primary_step_failure_mode": "wall_hit",
+                "observed_action": "RIGHT",
+                "greedy_answer": "yes",
+                "ground_truth_label": "yes",
+                "mc_yes_no_answer": "yes",
+                "mc_answer": "yes",
+                "belief_action_consistency": "inconsistent",
+                "mc_belief_action_consistency": "inconsistent",
+                "is_optimal_action": False,
+            },
+            {
+                "example_id": "ctx1",
+                "answer_space": "label3",
+                "question_family": "wall_directional",
+                "question_id": "wall_right",
+                "selection_stage": "context",
+                "primary_step_failure_mode": "none",
+                "observed_action": "RIGHT",
+                "greedy_answer": "yes",
+                "ground_truth_label": "yes",
+                "mc_yes_no_answer": "yes",
+                "mc_answer": "yes",
+                "belief_action_consistency": "inconsistent",
+                "mc_belief_action_consistency": "inconsistent",
+                "is_optimal_action": False,
+            },
+        ]
+    )
+    assert len(failure_gap_rows) == 1
+    assert failure_gap_rows[0]["failure_mode"] == "wall_hit"
+    assert failure_gap_rows[0]["n_failure_states"] == 1
+    assert failure_gap_rows[0]["local_belief_action_gap_rate"] == 1.0
     assert coord_row["greedy_exact_match_accuracy"] == 1.0
 
 
@@ -616,6 +744,315 @@ def test_mine_behavioral_probe_instances_from_trace_viewer_json(tmp_path: Path):
     assert "probe_truths" in rows[0]
 
 
+def test_failure_mode_wall_hit_and_freeze_repeat(tmp_path: Path):
+    state = (SMOKE_TEST_STATES[1].grid_text, False)
+    _write_synthetic_trajectory(tmp_path / "traj.json", initial_state=state, actions=["RIGHT", "RIGHT"])
+    rows = build_trajectory_failure_mode_rows(str(tmp_path))
+    assert "wall_hit" in rows[0]["failure_modes"]
+    assert "wall_hit" in rows[1]["failure_modes"]
+    assert "freeze_repeat" in rows[1]["failure_modes"]
+
+
+def test_failure_mode_backtrack_and_oscillation(tmp_path: Path):
+    state = (
+        _render_test_grid(
+            (
+                "#########",
+                "#A__G___#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#########",
+            )
+        ),
+        False,
+    )
+    _write_synthetic_trajectory(
+        tmp_path / "traj.json",
+        initial_state=state,
+        actions=["RIGHT", "LEFT", "RIGHT", "LEFT"],
+    )
+    rows = build_trajectory_failure_mode_rows(str(tmp_path))
+    assert "backtrack" in rows[1]["failure_modes"]
+    assert any("oscillation_2cycle" in row["failure_modes"] for row in rows)
+
+
+def test_failure_mode_short_loop(tmp_path: Path):
+    state = (
+        _render_test_grid(
+            (
+                "#########",
+                "#A_____G#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#########",
+            )
+        ),
+        False,
+    )
+    _write_synthetic_trajectory(
+        tmp_path / "traj.json",
+        initial_state=state,
+        actions=["RIGHT", "DOWN", "LEFT", "UP"],
+    )
+    rows = build_trajectory_failure_mode_rows(str(tmp_path))
+    assert any("short_loop" in row["failure_modes"] for row in rows)
+
+
+def test_failure_mode_avoidable_detour(tmp_path: Path):
+    state = (
+        _render_test_grid(
+            (
+                "#########",
+                "#A_G____#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#########",
+            )
+        ),
+        False,
+    )
+    _write_synthetic_trajectory(
+        tmp_path / "traj.json",
+        initial_state=state,
+        actions=["DOWN", "RIGHT", "RIGHT", "UP"],
+    )
+    rows = build_trajectory_failure_mode_rows(str(tmp_path))
+    assert "avoidable_detour" in rows[0]["failure_modes"]
+
+
+def test_failure_mode_selection_candidates_dedup_and_cap(tmp_path: Path):
+    state = (
+        _render_test_grid(
+            (
+                "#########",
+                "#A__G___#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#########",
+            )
+        ),
+        False,
+    )
+    _write_synthetic_trajectory(
+        tmp_path / "traj.json",
+        initial_state=state,
+        actions=["RIGHT", "LEFT", "RIGHT", "LEFT", "RIGHT"],
+    )
+    rows = mine_behavioral_probe_instances(str(tmp_path), slice_type="selection_candidates")
+    assert 1 <= len(rows) <= 4
+    assert all(row["selected_for_probe"] is True for row in rows)
+    assert all("grid_text" in row and "step_index" in row for row in rows)
+
+
+def test_selection_candidates_add_pre_failure_context_once(tmp_path: Path):
+    state = (
+        _render_test_grid(
+            (
+                "#########",
+                "#A__G___#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#########",
+            )
+        ),
+        False,
+    )
+    _write_synthetic_trajectory(
+        tmp_path / "traj.json",
+        initial_state=state,
+        actions=["RIGHT", "LEFT", "RIGHT", "LEFT", "RIGHT"],
+    )
+    rows = mine_behavioral_probe_instances(str(tmp_path), slice_type="selection_candidates")
+    context_rows = [row for row in rows if row["is_pre_failure_context"]]
+    assert len(context_rows) <= 1
+    if context_rows:
+        context = context_rows[0]
+        assert context["selection_stage"] == "context"
+        assert context["pre_failure_for_step_index"] is not None
+        assert "pre_failure_context" in context["selection_reason"]
+
+
+def test_pre_failure_context_not_added_for_first_step(tmp_path: Path):
+    state = (SMOKE_TEST_STATES[1].grid_text, False)
+    _write_synthetic_trajectory(tmp_path / "traj.json", initial_state=state, actions=["RIGHT"])
+    rows = mine_behavioral_probe_instances(str(tmp_path), slice_type="selection_candidates")
+    assert all(not row["is_pre_failure_context"] for row in rows)
+
+
+def test_failure_mode_failed_trajectory_adds_onset_and_terminal_tail(tmp_path: Path):
+    state = (SMOKE_TEST_STATES[1].grid_text, False)
+    _write_synthetic_trajectory(
+        tmp_path / "traj.json",
+        initial_state=state,
+        actions=["RIGHT", "RIGHT", "RIGHT", "RIGHT"],
+        model_max_steps=4,
+    )
+    manifest = build_trajectory_manifest(str(tmp_path))
+    assert manifest[0]["trajectory_class"] == "failed"
+    rows = build_trajectory_failure_mode_rows(str(tmp_path))
+    terminal_rows = [row for row in rows if row["is_terminal_failure_tail"]]
+    assert len(terminal_rows) == 3
+    assert any(row["is_failure_onset"] for row in rows)
+    selected = [row for row in rows if row["selected_for_probe"]]
+    assert selected
+
+
+def test_trajectory_manifest_recomputes_optimal_length_and_flags_stored_astar(tmp_path: Path):
+    optimal_state = (SMOKE_TEST_STATES[5].grid_text, False)
+    suboptimal_state = (
+        _render_test_grid(
+            (
+                "#########",
+                "#A_G____#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#########",
+            )
+        ),
+        False,
+    )
+    _write_synthetic_trajectory(tmp_path / "optimal.json", initial_state=optimal_state, actions=["RIGHT"])
+    _write_synthetic_trajectory(
+        tmp_path / "suboptimal.json",
+        initial_state=suboptimal_state,
+        actions=["DOWN", "RIGHT", "RIGHT", "UP"],
+    )
+
+    manifest = build_trajectory_manifest(str(tmp_path))
+    assert len(manifest) == 2
+    optimal_row = next(row for row in manifest if row["trajectory_id"] == "optimal")
+    suboptimal_row = next(row for row in manifest if row["trajectory_id"] == "suboptimal")
+    assert optimal_row["recomputed_optimal_length"] == 1
+    assert optimal_row["trajectory_class"] == "optimal_success"
+    assert optimal_row["stored_astar_suspicious"] is True
+    assert suboptimal_row["recomputed_optimal_length"] == 2
+    assert suboptimal_row["actual_length"] == 4
+    assert suboptimal_row["trajectory_class"] == "suboptimal_success"
+    assert suboptimal_row["length_delta"] == 2
+
+
+def test_mine_behavioral_probe_instances_supports_suboptimal_trajectory_slice(tmp_path: Path):
+    suboptimal_state = (
+        _render_test_grid(
+            (
+                "#########",
+                "#A_G____#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#########",
+            )
+        ),
+        False,
+    )
+    _write_synthetic_trajectory(
+        tmp_path / "suboptimal.json",
+        initial_state=suboptimal_state,
+        actions=["DOWN", "RIGHT", "RIGHT", "UP"],
+    )
+    rows = mine_behavioral_probe_instances(str(tmp_path), slice_type="suboptimal_trajectory")
+    assert len(rows) == 4
+    assert all(row["trajectory_length_delta"] == 2 for row in rows)
+    assert all(row["trajectory_reached_goal"] is True for row in rows)
+    assert all("legacy_optimal_actions" in row for row in rows)
+
+
+def test_mine_behavioral_probe_instances_supports_tagged_failure_states_slice(tmp_path: Path):
+    state = (
+        _render_test_grid(
+            (
+                "#########",
+                "#A__G___#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#########",
+            )
+        ),
+        False,
+    )
+    _write_synthetic_trajectory(
+        tmp_path / "traj.json",
+        initial_state=state,
+        actions=["RIGHT", "LEFT", "RIGHT", "LEFT", "RIGHT"],
+    )
+    rows = mine_behavioral_probe_instances(str(tmp_path), slice_type="tagged_failure_states")
+    assert rows
+    assert all(row["selected_for_probe"] is True for row in rows)
+    assert all(row["selection_stage"] == "failure" for row in rows)
+
+
+def test_run_behavioral_probe_trajectory_eval_writes_manifest_outputs(tmp_path: Path):
+    suboptimal_state = (
+        _render_test_grid(
+            (
+                "#########",
+                "#A_G____#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#########",
+            )
+        ),
+        False,
+    )
+    _write_synthetic_trajectory(
+        tmp_path / "suboptimal.json",
+        initial_state=suboptimal_state,
+        actions=["DOWN", "RIGHT", "RIGHT", "UP"],
+    )
+    out_dir = tmp_path / "out"
+    run_behavioral_probe_trajectory_eval(
+        trajectory_dir=str(tmp_path),
+        output_dir=str(out_dir),
+        slice_type="all_steps",
+    )
+    assert (out_dir / "trajectory_manifest.csv").exists()
+    assert (out_dir / "trajectory_manifest_summary.csv").exists()
+    assert (out_dir / "trajectory_probe_instances.csv").exists()
+    assert (out_dir / "trajectory_failure_modes.csv").exists()
+    assert (out_dir / "trajectory_selection_candidates.csv").exists()
+    assert (out_dir / "figs" / "failure_mode_summary.png").exists()
+    with open(out_dir / "trajectory_selection_candidates.csv", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    assert "is_pre_failure_context" in rows[0]
+    assert "pre_failure_for_step_index" in rows[0]
+    assert "selection_stage" in rows[0]
+
+
 def test_case_studies_write_outputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     trajectory_path = tmp_path / "traj.json"
     trajectory_path.write_text(
@@ -653,6 +1090,15 @@ def test_case_studies_write_outputs(tmp_path: Path, monkeypatch: pytest.MonkeyPa
     assert called["count"] == 1
     assert (tmp_path / "out" / "case_study_rows.csv").exists()
     assert (tmp_path / "out" / "case_study.md").exists()
+    assert (tmp_path / "out" / "figs" / "failure_mode_case_selection.png").exists()
+    with open(tmp_path / "out" / "case_study_rows.csv", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    assert "is_pre_failure_context" in rows[0]
+    assert "pre_failure_for_step_index" in rows[0]
+    assert "selection_stage" in rows[0]
+    has_context = any(str(row["is_pre_failure_context"]).lower() == "true" for row in rows)
+    appendix_path = tmp_path / "out" / "figs" / "failure_mode_case_selection_with_context.png"
+    assert appendix_path.exists() == has_context
 
 
 def test_door_semantics_ablation_writes_focused_outputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):

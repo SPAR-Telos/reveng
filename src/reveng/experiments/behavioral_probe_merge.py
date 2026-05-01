@@ -6,11 +6,17 @@ import json
 from pathlib import Path
 from typing import Any
 
-from reveng.experiments.behavioral_probe_metrics import summarize_probe_rows
+from reveng.experiments.behavioral_probe_metrics import (
+    build_belief_action_gap_summary_rows,
+    build_failure_mode_gap_summary_rows,
+    summarize_probe_rows,
+)
 from reveng.experiments.behavioral_probe_plots import (
+    plot_belief_action_gap_summary,
     plot_behavioral_probe_summary,
     plot_coordinate_probe_summary,
     plot_directional_probe_heatmap,
+    plot_failure_mode_gap_summary,
 )
 from reveng.experiments.behavioral_probe_runner import _build_probability_diagnostics_rows, _write_csv
 
@@ -54,6 +60,8 @@ def merge_behavioral_probe_outputs(
             _write_csv(base / "behavioral_probe_rows.csv", source_rows)
 
     merged_summary = summarize_probe_rows(merged_rows)
+    merged_gap_summary = build_belief_action_gap_summary_rows(merged_summary)
+    merged_failure_mode_gap = build_failure_mode_gap_summary_rows(merged_rows)
     merged_probability_diagnostics = _build_probability_diagnostics_rows(merged_rows)
     merged_payload = {
         "config": {
@@ -63,12 +71,16 @@ def merge_behavioral_probe_outputs(
         },
         "rows": merged_raw_rows,
         "summary": merged_summary,
+        "gap_summary": merged_gap_summary,
+        "failure_mode_gap_summary": merged_failure_mode_gap,
         "probability_diagnostics": merged_probability_diagnostics,
         "usage_summary": merged_usage,
     }
 
     _write_csv(out_dir / "behavioral_probe_rows.csv", merged_rows)
     _write_csv(out_dir / "behavioral_probe_summary.csv", merged_summary)
+    _write_csv(out_dir / "belief_action_gap_summary.csv", merged_gap_summary)
+    _write_csv(out_dir / "failure_mode_by_gap.csv", merged_failure_mode_gap)
     _write_csv(out_dir / "behavioral_probe_probability_diagnostics.csv", merged_probability_diagnostics)
     (out_dir / "behavioral_probe_raw.json").write_text(json.dumps(merged_payload, indent=2))
     (out_dir / "usage_summary.json").write_text(json.dumps(merged_usage, indent=2))
@@ -91,6 +103,16 @@ def merge_behavioral_probe_outputs(
             )
         except ValueError:
             pass
+        if merged_gap_summary:
+            plot_belief_action_gap_summary(
+                merged_gap_summary,
+                out_dir / "figs" / "belief_action_gap_summary.png",
+            )
+        if merged_failure_mode_gap:
+            plot_failure_mode_gap_summary(
+                merged_failure_mode_gap,
+                out_dir / "figs" / "failure_mode_by_gap.png",
+            )
     if coord_rows:
         plot_coordinate_probe_summary(coord_rows, out_dir / "figs" / "behavioral_probe_coordinate_summary.png")
 

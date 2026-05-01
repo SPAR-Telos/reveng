@@ -1,0 +1,2 @@
+n_instances,slice_type,wall_hit_count,non_optimal_count,selected_for_probe_count,failure_onset_count,pre_failure_context_count
+2,selection_candidates,0,0,2,1,1

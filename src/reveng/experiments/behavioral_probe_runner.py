@@ -15,6 +15,8 @@ from typing import Any, Optional
 from reveng.agents.llm_templates import ActionResponse
 from reveng.experiments.behavioral_probe_metrics import (
     belief_action_consistency,
+    build_belief_action_gap_summary_rows,
+    build_failure_mode_gap_summary_rows,
     sampled_answer_from_probabilities,
     shannon_entropy,
     summarize_coordinate_samples,
@@ -31,9 +33,11 @@ from reveng.experiments.behavioral_probe_parse import (
     parse_coordinate_answer,
 )
 from reveng.experiments.behavioral_probe_plots import (
+    plot_belief_action_gap_summary,
     plot_behavioral_probe_summary,
     plot_coordinate_probe_summary,
     plot_directional_probe_heatmap,
+    plot_failure_mode_gap_summary,
 )
 from reveng.experiments.behavioral_probe_questions import (
     BehavioralProbeQuestion,
@@ -935,6 +939,8 @@ def _run_probe_rows(
 
             row = {
                 "example_id": example["example_id"],
+                "trajectory_id": example.get("trajectory_id", ""),
+                "step_index": example.get("step_index", ""),
                 "question_id": question.question_id,
                 "target_variable": question.target_variable,
                 "question_family": question.family,
@@ -944,6 +950,11 @@ def _run_probe_rows(
                 "grid_text": example["grid_text"],
                 "carrying_key": example["carrying_key"],
                 "observed_action": observed_action,
+                "optimal_actions_json": json.dumps(example.get("optimal_actions", [])),
+                "is_optimal_action": example.get("is_optimal_action", ""),
+                "primary_step_failure_mode": example.get("primary_step_failure_mode", ""),
+                "selection_stage": example.get("selection_stage", ""),
+                "selection_reason": example.get("selection_reason", ""),
                 "greedy_answer": greedy_answer,
                 "greedy_answers_json": json.dumps(greedy_answers),
                 "greedy_modal_answer": greedy_modal_answer,
@@ -1031,6 +1042,8 @@ def _write_behavioral_outputs(
 ) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     summary_rows = summarize_probe_rows(rows)
+    gap_summary_rows = build_belief_action_gap_summary_rows(summary_rows)
+    failure_mode_gap_rows = build_failure_mode_gap_summary_rows(rows)
     probability_diagnostics_rows = _build_probability_diagnostics_rows(rows)
     usage_summary = config.get("usage_summary")
     raw_payload = {
@@ -1039,12 +1052,16 @@ def _write_behavioral_outputs(
         "smoke_examples": smoke_examples,
         "rows": raw_rows,
         "summary": summary_rows,
+        "gap_summary": gap_summary_rows,
+        "failure_mode_gap_summary": failure_mode_gap_rows,
         "probability_diagnostics": probability_diagnostics_rows,
         "usage_summary": usage_summary,
     }
 
     _write_csv(out_dir / "behavioral_probe_rows.csv", rows)
     _write_csv(out_dir / "behavioral_probe_summary.csv", summary_rows)
+    _write_csv(out_dir / "belief_action_gap_summary.csv", gap_summary_rows)
+    _write_csv(out_dir / "failure_mode_by_gap.csv", failure_mode_gap_rows)
     _write_csv(out_dir / "behavioral_probe_probability_diagnostics.csv", probability_diagnostics_rows)
     (out_dir / "behavioral_probe_raw.json").write_text(json.dumps(raw_payload, indent=2))
     if usage_summary is not None:
@@ -1070,6 +1087,16 @@ def _write_behavioral_outputs(
             )
         except ValueError:
             pass
+        if gap_summary_rows:
+            plot_belief_action_gap_summary(
+                gap_summary_rows,
+                figs_dir / "belief_action_gap_summary.png",
+            )
+        if failure_mode_gap_rows:
+            plot_failure_mode_gap_summary(
+                failure_mode_gap_rows,
+                figs_dir / "failure_mode_by_gap.png",
+            )
     if coord_rows:
         plot_coordinate_probe_summary(coord_rows, figs_dir / "behavioral_probe_coordinate_summary.png")
 
