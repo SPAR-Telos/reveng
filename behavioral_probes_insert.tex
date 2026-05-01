@@ -1,0 +1,125 @@
+% Behavioural probes: standalone insert for belief_action_gap.tex
+%
+% Recommended placement in the main draft:
+% 1. Keep the short bridge paragraph in Section 3 ("Component 1: Belief Representation")
+%    to distinguish white-box activation probes from black-box behavioural elicitation.
+% 2. Insert this text directly under:
+%       \section{Empirical Results Summary}
+%       \subsection{Belief Probes}
+
+\paragraph{Behavioural probes as a complementary belief measure.}
+Alongside the linear probes on activations, we ran a black-box behavioural-probe pipeline in
+the same DoorKey domain. Its purpose was not to replace the activation probes, but to add a
+conservative behavioural test of what the model can state explicitly about the current state.
+This gives an intermediate layer between raw behaviour and latent-state decoding: if an
+action is suboptimal, does the model also fail when asked directly about the relevant local
+fact, or does it state that fact correctly and still act against it?
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{p{3.0cm} p{2.1cm} p{3.7cm} p{5.0cm}}
+\toprule
+Readout & Settings & Returned object & Purpose \\
+\midrule
+Greedy & $T=0$, one call & Single parsed answer & Primary explicit behavioural answer. \\
+Repeated greedy & $T=0$, 10 calls & Modal parsed answer & Measures provider-level non-determinism under nominally greedy decoding. \\
+Logprob diagnostic & Exposed answer-token logprobs at $T \in \{0, 0.7, 1.0\}$ & Yes-vs-no label derived from exposed answer-token probabilities & Diagnostic only; checks whether exposed token probabilities agree with the surfaced answer. \\
+Monte Carlo & $T=0.7$, 10 calls & Empirical sampled answer distribution & Tests robustness of the explicit answer under stochastic decoding. \\
+\bottomrule
+\end{tabular}
+\caption{Behavioural-probe readouts used for label-space queries. All answers are parsed into
+$\{\texttt{yes}, \texttt{no}, \texttt{unknown}, \texttt{invalid}\}$ after normalisation and
+answer extraction.}
+\label{tab:bp-readouts}
+\end{table}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{p{3.3cm} p{1.4cm} p{4.3cm} p{5.0cm}}
+\toprule
+Evaluation set & Size & Role & Composition \\
+\midrule
+Manual smoke test & 10 states & Prompt and parser validation & Hand-built 9$\times$9 DoorKey states with simulator-verified labels. \\
+Balanced failure-mode subset & 16 states & Main trajectory-derived case-study set & 12 tagged failure states plus 4 immediately preceding comparison states. \\
+Expanded wall-focused slice & 33 states & Larger-denominator wall-gap analysis & Tagged failure states only; used for wall-probe contradiction rates. \\
+\bottomrule
+\end{tabular}
+\caption{Behavioural-probe evaluation sets used in the current draft.}
+\label{tab:bp-datasets}
+\end{table}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lr}
+\toprule
+Balanced failure-mode subset category & Count \\
+\midrule
+State just before tagged failure & 4 \\
+Backtrack & 3 \\
+Short loop & 2 \\
+2-cycle oscillation & 2 \\
+Wall hit & 2 \\
+Freeze repeat & 2 \\
+Avoidable detour & 1 \\
+\bottomrule
+\end{tabular}
+\caption{Composition of the balanced trajectory-derived case-study set. The first row is
+comparison context, not a failure label. All other rows are deterministic step-level
+failure-mode categories.}
+\label{tab:bp-failure-categories}
+\end{table}
+
+\paragraph{Setup and metrics.}
+Each behavioural probe is a \emph{single-step, history-free} query. The prompt contains only
+the current rendered grid and, when relevant, the agent's carrying-key status; no previous
+observations, answers, or trajectory history are included. We used three probe families:
+directional wall probes, asking whether the neighbouring cell in a cardinal direction is
+blocked; object-direction probes, asking whether the goal, key, or door is immediately left,
+right, up, or down of the agent; and action-conditioned probes, asking about the immediate
+consequence of a proposed move. For every probe we report accuracy against environment ground
+truth and valid parse rate. For wall probes we additionally report two narrower
+action-facing diagnostics: a \emph{local contradiction rate}, which asks how often the model
+moves into a direction it explicitly reports as blocked, and an \emph{A$^*$-conditioned gap
+rate}, which asks how often the observed action is still non-optimal under the DoorKey-aware
+A$^*$ baseline despite a correct wall judgment. The denominators in these rates are eligible
+\emph{single-step states}, not trajectories.
+For goal, key, and door probes we treat the results as belief-accuracy measures only, since
+these probes do not by themselves define a unique one-step action contradiction.
+
+\paragraph{Results.}
+The smoke-test stage showed that, once prompt ambiguity and answer-extraction issues were
+removed, the interface itself was stable: parse rates were essentially perfect and the
+remaining errors were local rather than global. On the balanced trajectory-derived
+failure-mode subset, directional wall probes remained highly accurate (mean greedy accuracy
+$0.922$, Monte Carlo accuracy $0.969$). Object-direction probes were also strong overall
+(mean greedy accuracy $0.880$, Monte Carlo accuracy $0.979$), but less uniform across probe
+types: goal-direction probes were perfect on this subset, door-direction probes were
+near-perfect, and key-direction probes were clearly harder, with greedy accuracies between
+$0.50$ and $0.81$ depending on direction. On the expanded wall-focused slice of 33 tagged
+failure states, directional wall accuracy remained high (greedy accuracy between $0.91$ and
+$0.97$ by direction), yet the action-facing contradiction metrics were non-zero.
+
+\begin{result}
+The clearest behavioural belief-action gap appears on wall-hit states. On the expanded
+wall-focused slice, the model correctly reported that the chosen direction was blocked and
+nevertheless took that move in $3/3$ eligible wall-hit cases. More broadly, the
+A$^*$-conditioned wall-gap rate remained substantial for \texttt{RIGHT} ($4/6$ eligible
+states) and \texttt{UP} ($5/10$ eligible states), showing that many suboptimal actions are
+not explained by a failure to state the relevant local wall fact.
+\end{result}
+
+\paragraph{Interpretation and role in the paper.}
+These behavioural probes do \emph{not} establish the full belief-action gap on their own.
+They do not recover the full latent distribution $\hat{q}(s\mid h_t)$, and for non-wall
+facts such as key or goal direction they do not by themselves determine what action the model
+ought to take. Their value is narrower and more conservative: before appealing to latent
+activations, they already identify states where the model explicitly states an action-relevant
+fact correctly and still acts against it. Methodologically, this validates that the textual
+environment serialisation supports reliable elicitation of local beliefs. Substantively, it
+strengthens the motivation for the white-box analysis that follows: if even explicit
+state-conditional judgements can diverge from behaviour, then activation-level probes and IRL
+are needed to determine whether the deeper internal objects $\hat{q}$, $\hat{p}$, and
+$C_\theta$ are also misaligned.
