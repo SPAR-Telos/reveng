@@ -52,6 +52,9 @@ from reveng.experiments.behavioral_probe_runner import (
     run_behavioral_probe_prompt_ablation,
     run_behavioral_probe_smoke_test,
 )
+from reveng.experiments.behavioral_probe_alignment import (
+    run_behavioral_probe_matched_eval,
+)
 from reveng.experiments.behavioral_probe_merge import (
     merge_behavioral_probe_outputs,
 )
@@ -60,6 +63,15 @@ from reveng.experiments.behavioral_probe_trajectory_data import (
 )
 from reveng.experiments.behavioral_probe_case_studies import (
     run_behavioral_probe_case_studies,
+)
+from reveng.experiments.wall_feature_patch_experiment import (
+    run_behavioral_probe_wall_feature_patch,
+)
+from reveng.experiments.cognitive_map_probe_reasoning_eval import (
+    run_cognitive_map_probe_reasoning_eval,
+)
+from reveng.experiments.plan_decoder_reasoning_eval import (
+    run_plan_decoder_reasoning_eval,
 )
 from reveng.experiments.live_patch_curve import (
     run_live_patch_curve,
@@ -97,9 +109,13 @@ def main():
     - run_behavioral_probe_smoke_test: Run a black-box DoorKey behavioral-probe smoke test on manual 9x9 states
     - run_behavioral_probe_door_semantics_ablation: Run a focused semantics ablation for the door_open_after_right behavioral probe
     - run_behavioral_probe_prompt_ablation: Compare prompt presets on a chosen behavioral-probe subset
+    - run_behavioral_probe_matched_eval: Run black-box probes on white-box matched state snapshots and write a unified comparison table
     - merge_behavioral_probe_outputs: Merge multiple behavioral-probe output dirs into one combined report
     - run_behavioral_probe_trajectory_eval: Mine trajectory-derived single-step probe instances from trace-viewer JSONs
     - run_behavioral_probe_case_studies: Run probe families on mined wall-hit / non-optimal trajectory slices
+    - run_behavioral_probe_wall_feature_patch: Build the minimal wall-feature patch experiment scaffold and join patched outputs when available
+    - run_cognitive_map_probe_reasoning_eval: Download released public cognitive probes, verify probe/activation/trajectory compatibility, and evaluate a released pre/post slice
+    - run_plan_decoder_reasoning_eval: Download published plan decoders, validate activation rows, and evaluate pre/post plan decodability when real activations are available
     """
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
     tyro.extras.subcommand_cli_from_dict(
@@ -122,9 +138,13 @@ def main():
             "run_behavioral_probe_smoke_test": run_behavioral_probe_smoke_test,
             "run_behavioral_probe_door_semantics_ablation": run_behavioral_probe_door_semantics_ablation,
             "run_behavioral_probe_prompt_ablation": run_behavioral_probe_prompt_ablation,
+            "run_behavioral_probe_matched_eval": run_behavioral_probe_matched_eval,
             "merge_behavioral_probe_outputs": merge_behavioral_probe_outputs,
             "run_behavioral_probe_trajectory_eval": run_behavioral_probe_trajectory_eval,
             "run_behavioral_probe_case_studies": run_behavioral_probe_case_studies,
+            "run_behavioral_probe_wall_feature_patch": run_behavioral_probe_wall_feature_patch,
+            "run_cognitive_map_probe_reasoning_eval": run_cognitive_map_probe_reasoning_eval,
+            "run_plan_decoder_reasoning_eval": run_plan_decoder_reasoning_eval,
         }
     )
 
