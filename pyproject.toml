@@ -23,6 +23,7 @@ dependencies = [
     "tenacity>=9.1.2",
     "pandas>=2.3.3",
     "pip>=25.2",
+    "peft>=0.17.1",
     "tqdm>=4.67.1",
     "scipy>=1.16.2",
     "ipykernel>=7.0.1",
@@ -33,6 +34,7 @@ dependencies = [
     "tyro>=0.10.0a6",
     "transformers>=4.57.3",
     "huggingface_hub>=0.25.0",
+    "bitsandbytes>=0.48.1",
 ]
 
 [tool.setuptools]

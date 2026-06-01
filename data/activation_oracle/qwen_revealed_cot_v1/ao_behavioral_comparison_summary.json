@@ -1,0 +1,10 @@
+{
+  "results_path": "data/activation_oracle/qwen_revealed_cot_v1/results.jsonl",
+  "rows": 5,
+  "rows_with_behavioral_label": 0,
+  "rows_with_ground_truth": 5,
+  "segment_matches_behavioral": 0,
+  "full_sequence_matches_behavioral": 0,
+  "segment_matches_ground_truth": 4,
+  "full_sequence_matches_ground_truth": 4
+}

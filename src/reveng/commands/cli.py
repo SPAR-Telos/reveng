@@ -73,6 +73,22 @@ from reveng.experiments.cognitive_map_probe_reasoning_eval import (
 from reveng.experiments.plan_decoder_reasoning_eval import (
     run_plan_decoder_reasoning_eval,
 )
+from reveng.experiments.plan_reasoning_alignment import (
+    run_plan_reasoning_alignment_eval,
+)
+from reveng.experiments.gradual_cot_blackbox_alignment import (
+    run_gradual_cot_blackbox_alignment,
+)
+from reveng.experiments.activation_oracle_batch import (
+    preview_activation_oracle_tokens,
+    run_activation_oracle_batch,
+)
+from reveng.experiments.activation_oracle_compare import (
+    compare_activation_oracle_results,
+)
+from reveng.experiments.activation_oracle_paper_batches import (
+    build_activation_oracle_paper_batches,
+)
 from reveng.experiments.live_patch_curve import (
     run_live_patch_curve,
 )
@@ -116,6 +132,12 @@ def main():
     - run_behavioral_probe_wall_feature_patch: Build the minimal wall-feature patch experiment scaffold and join patched outputs when available
     - run_cognitive_map_probe_reasoning_eval: Download released public cognitive probes, verify probe/activation/trajectory compatibility, and evaluate a released pre/post slice
     - run_plan_decoder_reasoning_eval: Download published plan decoders, validate activation rows, and evaluate pre/post plan decodability when real activations are available
+    - run_plan_reasoning_alignment_eval: Run the activation-side plan decoder and a textual planning counterpart on the same state x split keys
+    - run_gradual_cot_blackbox_alignment: Replace BB_pre/BB_post with a revealed-CoT black-box axis on the released clean white-box slice
+    - preview_activation_oracle_tokens: Preview one activation-oracle batch row with explicit token/segment ranges
+    - run_activation_oracle_batch: Run Qwen3-8B activation-oracle batch queries over DoorKey-style prompts
+    - compare_activation_oracle_results: Flatten AO outputs into a comparison table against behavioral labels / ground truth
+    - build_activation_oracle_paper_batches: Generate AO batch JSONL files from the exact gradual-CoT paper slice rows and trajectories
     """
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
     tyro.extras.subcommand_cli_from_dict(
@@ -145,6 +167,12 @@ def main():
             "run_behavioral_probe_wall_feature_patch": run_behavioral_probe_wall_feature_patch,
             "run_cognitive_map_probe_reasoning_eval": run_cognitive_map_probe_reasoning_eval,
             "run_plan_decoder_reasoning_eval": run_plan_decoder_reasoning_eval,
+            "run_plan_reasoning_alignment_eval": run_plan_reasoning_alignment_eval,
+            "run_gradual_cot_blackbox_alignment": run_gradual_cot_blackbox_alignment,
+            "preview_activation_oracle_tokens": preview_activation_oracle_tokens,
+            "run_activation_oracle_batch": run_activation_oracle_batch,
+            "compare_activation_oracle_results": compare_activation_oracle_results,
+            "build_activation_oracle_paper_batches": build_activation_oracle_paper_batches,
         }
     )
 
