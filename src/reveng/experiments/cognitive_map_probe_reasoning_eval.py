@@ -16,6 +16,7 @@ Experiment-only outputs written by the CLI command:
 from __future__ import annotations
 
 import csv
+import heapq
 import json
 import os
 from dataclasses import asdict, dataclass
@@ -24,6 +25,7 @@ from pathlib import Path
 from shutil import disk_usage
 from typing import Any, Sequence
 
+from huggingface_hub.errors import EntryNotFoundError
 from huggingface_hub import HfApi, get_hf_file_metadata, hf_hub_download, hf_hub_url, snapshot_download
 
 try:
@@ -63,6 +65,8 @@ DEFAULT_GRID_SIZE = 7
 DEFAULT_TRAJECTORY_INDEX = 0
 DEFAULT_STEP_INDEX = 0
 DEFAULT_PAD_TO_SIZE = 15
+DEFAULT_MAX_TRAJECTORIES = 3
+DEFAULT_MAX_STEPS_PER_TRAJECTORY = 2
 DEFAULT_REASONING_STAGES = ("pre_reasoning", "post_reasoning")
 DEFAULT_COORDINATE_ORDER = "row_col"
 # Inferred from the released evaluation text for the public cognitive-map probes.
@@ -81,6 +85,18 @@ INFERRED_SYMBOL_TO_SEMANTIC_NAME = {
     "G": "goal",
     "_": "open",
     "+": "padding",
+}
+ACTION_ID_TO_NAME = {
+    0: "LEFT",
+    1: "RIGHT",
+    2: "UP",
+    3: "DOWN",
+}
+ACTION_NAME_TO_DELTA = {
+    "LEFT": (-1, 0),
+    "RIGHT": (1, 0),
+    "UP": (0, -1),
+    "DOWN": (0, 1),
 }
 
 
@@ -157,6 +173,7 @@ class StageEvaluationRow:
     example_id: str
     reasoning_stage: str
     trajectory_filename: str
+    trajectory_stem: str
     step_index: int
     grid_size: int
     layer: int
@@ -164,9 +181,25 @@ class StageEvaluationRow:
     wall_cell_accuracy: float
     agent_location_exact: int
     goal_location_exact: int
+    truth_agent_x: int
+    truth_agent_y: int
+    pred_agent_x: int | None
+    pred_agent_y: int | None
+    truth_goal_x: int
+    truth_goal_y: int
+    pred_goal_x: int | None
+    pred_goal_y: int | None
+    truth_wall_left: int
+    pred_wall_left: int
     wall_left_correct: int
+    truth_wall_right: int
+    pred_wall_right: int
     wall_right_correct: int
+    truth_wall_up: int
+    pred_wall_up: int
     wall_up_correct: int
+    truth_wall_down: int
+    pred_wall_down: int
     wall_down_correct: int
 
 
@@ -429,6 +462,10 @@ def _probe_filename(layer: int, model_type: str, reasoning_stage: str, scope: st
     return f"cognitive_map_probe_layer{layer}_{model_type}_{reasoning_stage}_all_{scope_suffix}.pt"
 
 
+def _trajectory_indices_for_grid_size(grid_size: int, *, max_trajectories: int) -> list[int]:
+    return list(range(max_trajectories))
+
+
 def _parse_grid_rows(grid_state: list[str]) -> list[list[str]]:
     parsed: list[list[str]] = []
     for raw_row in grid_state[1:]:
@@ -480,6 +517,49 @@ def _wall_judgments(grid: list[list[str]], x: int, y: int) -> dict[str, bool]:
         "wall_up": cell(x, y - 1) == "#",
         "wall_down": cell(x, y + 1) == "#",
     }
+
+
+def _compute_optimal_actions_from_grid(grid: list[list[str]], goal: tuple[int, int]) -> dict[tuple[int, int], set[int]]:
+    height = len(grid)
+    width = len(grid[0]) if height > 0 else 0
+
+    def is_passable(x: int, y: int) -> bool:
+        if x < 0 or y < 0 or x >= width or y >= height:
+            return False
+        return grid[y][x] != "#"
+
+    neighbors = [(-1, 0, 0), (1, 0, 1), (0, -1, 2), (0, 1, 3)]
+    distances: dict[tuple[int, int], int] = {goal: 0}
+    heap_queue: list[tuple[int, tuple[int, int]]] = [(0, goal)]
+
+    while heap_queue:
+        dist, (x, y) = heapq.heappop(heap_queue)
+        if dist > distances.get((x, y), 10**9):
+            continue
+        for dx, dy, _ in neighbors:
+            nx, ny = x + dx, y + dy
+            if is_passable(nx, ny):
+                new_dist = dist + 1
+                if new_dist < distances.get((nx, ny), 10**9):
+                    distances[(nx, ny)] = new_dist
+                    heapq.heappush(heap_queue, (new_dist, (nx, ny)))
+
+    optimal_actions: dict[tuple[int, int], set[int]] = {}
+    for y in range(height):
+        for x in range(width):
+            if not is_passable(x, y):
+                continue
+            current_dist = distances.get((x, y), 10**9)
+            if current_dist == 10**9:
+                continue
+            action_ids: set[int] = set()
+            for dx, dy, action_id in neighbors:
+                nx, ny = x + dx, y + dy
+                if is_passable(nx, ny) and distances.get((nx, ny), 10**9) == current_dist - 1:
+                    action_ids.add(action_id)
+            optimal_actions[(x, y)] = action_ids
+    optimal_actions[goal] = set()
+    return optimal_actions
 
 
 def _load_probe_checkpoint(path: Path) -> tuple[nn.Module, CognitiveProbeCheckpointInfo, torch.Tensor, torch.Tensor]:
@@ -671,20 +751,31 @@ def _render_grid(grid: list[list[str]]) -> str:
     return "\n".join(lines)
 
 
+def _render_original_grid(grid_state: list[str]) -> str:
+    return "\n".join(grid_state)
+
+
+def _bool_to_yes_no(value: int | bool) -> str:
+    return "yes" if bool(value) else "no"
+
+
 def _evaluate_stage(
     *,
     example_id: str,
     reasoning_stage: str,
     trajectory_filename: str,
+    trajectory_stem: str,
     trajectory: dict[str, Any],
     step_index: int,
     layer: int,
-    probe_path: Path,
+    model: nn.Module,
+    checkpoint_info: CognitiveProbeCheckpointInfo,
+    scaler_mean: torch.Tensor,
+    scaler_std: torch.Tensor,
     activation_paths: list[Path],
     pad_to_size: int,
     coordinate_order: str,
 ) -> tuple[StageEvaluationRow, list[list[str]], list[list[str]]]:
-    model, checkpoint_info, scaler_mean, scaler_std = _load_probe_checkpoint(probe_path)
     activation_vectors = [_load_activation_vector(path) for path in activation_paths]
 
     truth_unpadded = _parse_grid_rows(trajectory["steps"][step_index]["grid_state"])
@@ -710,6 +801,7 @@ def _evaluate_stage(
         example_id=example_id,
         reasoning_stage=reasoning_stage,
         trajectory_filename=trajectory_filename,
+        trajectory_stem=trajectory_stem,
         step_index=step_index,
         grid_size=int(trajectory["grid_params"]["grid_width"]),
         layer=layer,
@@ -717,9 +809,25 @@ def _evaluate_stage(
         wall_cell_accuracy=_cell_accuracy_for_symbol(predicted, truth, "#"),
         agent_location_exact=int(pred_agent == truth_agent),
         goal_location_exact=int(pred_goal == truth_goal),
+        truth_agent_x=truth_agent[0],
+        truth_agent_y=truth_agent[1],
+        pred_agent_x=(None if pred_agent is None else pred_agent[0]),
+        pred_agent_y=(None if pred_agent is None else pred_agent[1]),
+        truth_goal_x=truth_goal[0],
+        truth_goal_y=truth_goal[1],
+        pred_goal_x=(None if pred_goal is None else pred_goal[0]),
+        pred_goal_y=(None if pred_goal is None else pred_goal[1]),
+        truth_wall_left=int(truth_walls["wall_left"]),
+        pred_wall_left=int(pred_walls["wall_left"]),
         wall_left_correct=int(pred_walls["wall_left"] == truth_walls["wall_left"]),
+        truth_wall_right=int(truth_walls["wall_right"]),
+        pred_wall_right=int(pred_walls["wall_right"]),
         wall_right_correct=int(pred_walls["wall_right"] == truth_walls["wall_right"]),
+        truth_wall_up=int(truth_walls["wall_up"]),
+        pred_wall_up=int(pred_walls["wall_up"]),
         wall_up_correct=int(pred_walls["wall_up"] == truth_walls["wall_up"]),
+        truth_wall_down=int(truth_walls["wall_down"]),
+        pred_wall_down=int(pred_walls["wall_down"]),
         wall_down_correct=int(pred_walls["wall_down"] == truth_walls["wall_down"]),
     )
     return row, truth, predicted
@@ -828,6 +936,8 @@ def run_cognitive_map_probe_reasoning_eval(
     grid_size: int = DEFAULT_GRID_SIZE,
     trajectory_index: int = DEFAULT_TRAJECTORY_INDEX,
     step_index: int = DEFAULT_STEP_INDEX,
+    max_trajectories: int = DEFAULT_MAX_TRAJECTORIES,
+    max_steps_per_trajectory: int = DEFAULT_MAX_STEPS_PER_TRAJECTORY,
     pad_to_size: int = DEFAULT_PAD_TO_SIZE,
     coordinate_order: str = DEFAULT_COORDINATE_ORDER,
 ) -> None:
@@ -847,41 +957,48 @@ def run_cognitive_map_probe_reasoning_eval(
     cache_root = Path(cache_dir)
     cache_root.mkdir(parents=True, exist_ok=True)
 
-    trajectory_filename = _trajectory_filename(grid_size=grid_size, trajectory_index=trajectory_index)
-    trajectory_path, trajectory_size = _download_checked_file(
-        repo_id=PUBLIC_TRAJECTORIES_REPO_ID,
-        repo_type="dataset",
-        filename=trajectory_filename,
-        cache_dir=cache_root,
-    )
-    trajectory = json.load(open(trajectory_path))
-    if step_index >= len(trajectory["steps"]):
-        raise IndexError(f"step_index {step_index} out of range for trajectory with {len(trajectory['steps'])} steps")
-    if int(trajectory["grid_params"]["grid_width"]) != grid_size:
-        raise ValueError("Requested grid_size does not match downloaded trajectory metadata")
-
-    model_id = str(trajectory["model_params"]["model_id"])
-    model_subdir = model_id.replace("/", "__")
-    traj_stem = Path(trajectory_filename).stem
-    activation_root = (
-        f"size{grid_size}/{traj_stem}/{model_subdir}/layer_{probe_layer}/step_{step_index}"
-    )
-    step = trajectory["steps"][step_index]
-    pre_activation_filenames = [f"{activation_root}/prompt_suffix/{i}.pt" for i in range(3)]
-    post_activation_token_ids = [int(step["output_n_tokens"]) - 16 + i for i in range(3)]
-    post_activation_filenames = [f"{activation_root}/output/{token_id}.pt" for token_id in post_activation_token_ids]
-
     stage_probe_filenames = {
         stage: _probe_filename(probe_layer, probe_model_type, stage, probe_scope)
         for stage in DEFAULT_REASONING_STAGES
     }
 
+    trajectory_filenames = [
+        _trajectory_filename(grid_size=grid_size, trajectory_index=index)
+        for index in _trajectory_indices_for_grid_size(grid_size, max_trajectories=max_trajectories)
+    ]
+    trajectories: list[tuple[str, dict[str, Any]]] = []
     all_files: list[tuple[str, str, str]] = []
     for stage, probe_filename in stage_probe_filenames.items():
         all_files.append((PUBLIC_COGNITIVE_PROBE_REPO_ID, "model", probe_filename))
-    all_files.append((PUBLIC_TRAJECTORIES_REPO_ID, "dataset", trajectory_filename))
-    for filename in pre_activation_filenames + post_activation_filenames:
-        all_files.append((PUBLIC_ACTIVATIONS_REPO_ID, "dataset", filename))
+    for trajectory_filename in trajectory_filenames:
+        all_files.append((PUBLIC_TRAJECTORIES_REPO_ID, "dataset", trajectory_filename))
+        trajectory_path, _ = _download_checked_file(
+            repo_id=PUBLIC_TRAJECTORIES_REPO_ID,
+            repo_type="dataset",
+            filename=trajectory_filename,
+            cache_dir=cache_root,
+        )
+        trajectory = json.load(open(trajectory_path))
+        trajectories.append((trajectory_filename, trajectory))
+        if int(trajectory["grid_params"]["grid_width"]) != grid_size:
+            raise ValueError("Requested grid_size does not match downloaded trajectory metadata")
+        model_id = str(trajectory["model_params"]["model_id"])
+        model_subdir = model_id.replace("/", "__")
+        traj_stem = Path(trajectory_filename).stem
+        for local_step_index, step in enumerate(trajectory["steps"][:max_steps_per_trajectory]):
+            activation_root = (
+                f"size{grid_size}/{traj_stem}/{model_subdir}/layer_{probe_layer}/step_{local_step_index}"
+            )
+            for i in range(3):
+                all_files.append(
+                    (PUBLIC_ACTIVATIONS_REPO_ID, "dataset", f"{activation_root}/prompt_suffix/{i}.pt")
+                )
+            post_token_ids = [int(step["output_n_tokens"]) - 16 + i for i in range(3)]
+            for token_id in post_token_ids:
+                all_files.append(
+                    (PUBLIC_ACTIVATIONS_REPO_ID, "dataset", f"{activation_root}/output/{token_id}.pt")
+                )
+
     estimated_download_bytes = sum((_hf_file_size(repo_id, repo_type=repo_type, filename=filename) or 0) for repo_id, repo_type, filename in all_files)
     disk_check = _check_disk_budget(
         target_dir=cache_root,
@@ -894,59 +1011,149 @@ def run_cognitive_map_probe_reasoning_eval(
             "Refusing released cognitive-probe evaluation download: estimated footprint exceeds the configured size cap or local free space after headroom reservation."
         )
 
-    pre_paths = [
-        _download_checked_file(repo_id=PUBLIC_ACTIVATIONS_REPO_ID, repo_type="dataset", filename=filename, cache_dir=cache_root)[0]
-        for filename in pre_activation_filenames
-    ]
-    post_paths = [
-        _download_checked_file(repo_id=PUBLIC_ACTIVATIONS_REPO_ID, repo_type="dataset", filename=filename, cache_dir=cache_root)[0]
-        for filename in post_activation_filenames
-    ]
     stage_probe_paths = {
         stage: _download_checked_file(repo_id=PUBLIC_COGNITIVE_PROBE_REPO_ID, repo_type="model", filename=filename, cache_dir=cache_root)[0]
         for stage, filename in stage_probe_filenames.items()
     }
+    loaded_stage_probes = {
+        stage: _load_probe_checkpoint(path)
+        for stage, path in stage_probe_paths.items()
+    }
+    pre_probe_info = loaded_stage_probes["pre_reasoning"][1]
 
-    pre_probe_model, pre_probe_info, _, _ = _load_probe_checkpoint(stage_probe_paths["pre_reasoning"])
-    del pre_probe_model
-    compatibility = _compatibility_report(
-        trajectory_filename=trajectory_filename,
-        trajectory=trajectory,
-        step_index=step_index,
-        layer=probe_layer,
-        probe_input_dim=pre_probe_info.input_dim,
-        pad_to_size=pad_to_size,
-        coordinate_order=coordinate_order,
-        pre_paths=pre_paths,
-        post_paths=post_paths,
-    )
-    _write_json(out_dir / "compatibility_report.json", asdict(compatibility))
-
+    compatibility_reports: list[CompatibilityReport] = []
     rows: list[StageEvaluationRow] = []
+    matched_wall_rows: list[dict[str, Any]] = []
     stage_truth_and_predictions: dict[str, tuple[list[list[str]], list[list[str]]]] = {}
-    for stage in DEFAULT_REASONING_STAGES:
-        activation_paths = pre_paths if stage == "pre_reasoning" else post_paths
-        row, truth, predicted = _evaluate_stage(
-            example_id=f"{traj_stem}_step{step_index}",
-            reasoning_stage=stage,
-            trajectory_filename=trajectory_filename,
-            trajectory=trajectory,
-            step_index=step_index,
-            layer=probe_layer,
-            probe_path=stage_probe_paths[stage],
-            activation_paths=activation_paths,
-            pad_to_size=pad_to_size,
-            coordinate_order=coordinate_order,
-        )
-        rows.append(row)
-        stage_truth_and_predictions[stage] = (truth, predicted)
+    skipped_missing_activation_states: list[dict[str, Any]] = []
+    for trajectory_filename, trajectory in trajectories:
+        model_id = str(trajectory["model_params"]["model_id"])
+        model_subdir = model_id.replace("/", "__")
+        traj_stem = Path(trajectory_filename).stem
+        for local_step_index, step in enumerate(trajectory["steps"][:max_steps_per_trajectory]):
+            activation_root = (
+                f"size{grid_size}/{traj_stem}/{model_subdir}/layer_{probe_layer}/step_{local_step_index}"
+            )
+            try:
+                pre_paths = [
+                    _download_checked_file(
+                        repo_id=PUBLIC_ACTIVATIONS_REPO_ID,
+                        repo_type="dataset",
+                        filename=f"{activation_root}/prompt_suffix/{i}.pt",
+                        cache_dir=cache_root,
+                    )[0]
+                    for i in range(3)
+                ]
+                post_token_ids = [int(step["output_n_tokens"]) - 16 + i for i in range(3)]
+                post_paths = [
+                    _download_checked_file(
+                        repo_id=PUBLIC_ACTIVATIONS_REPO_ID,
+                        repo_type="dataset",
+                        filename=f"{activation_root}/output/{token_id}.pt",
+                        cache_dir=cache_root,
+                    )[0]
+                    for token_id in post_token_ids
+                ]
+            except EntryNotFoundError:
+                skipped_missing_activation_states.append(
+                    {
+                        "trajectory_filename": trajectory_filename,
+                        "step_index": local_step_index,
+                    }
+                )
+                continue
+            compatibility = _compatibility_report(
+                trajectory_filename=trajectory_filename,
+                trajectory=trajectory,
+                step_index=local_step_index,
+                layer=probe_layer,
+                probe_input_dim=pre_probe_info.input_dim,
+                pad_to_size=pad_to_size,
+                coordinate_order=coordinate_order,
+                pre_paths=pre_paths,
+                post_paths=post_paths,
+            )
+            compatibility_reports.append(compatibility)
+            truth_unpadded = _parse_grid_rows(step["grid_state"])
+            truth_grid_for_action = _pad_grid(truth_unpadded, pad_to_size=pad_to_size)
+            truth_agent_pos = _agent_position(truth_grid_for_action)
+            truth_goal_pos = _goal_position(truth_grid_for_action)
+            optimal_action_ids = _compute_optimal_actions_from_grid(truth_grid_for_action, truth_goal_pos).get(
+                truth_agent_pos, set()
+            )
+            optimal_action_names = [ACTION_ID_TO_NAME[action_id] for action_id in sorted(optimal_action_ids)]
+            observed_action = str(step.get("agent_action", ""))
+            observed_action_upper = observed_action.upper()
+            truth_walls_for_action = _wall_judgments(truth_grid_for_action, *truth_agent_pos)
+            action_to_wall_key = {
+                "LEFT": "wall_left",
+                "RIGHT": "wall_right",
+                "UP": "wall_up",
+                "DOWN": "wall_down",
+            }
+            wall_hit = (
+                truth_walls_for_action[action_to_wall_key[observed_action_upper]]
+                if observed_action_upper in action_to_wall_key
+                else False
+            )
+            for stage in DEFAULT_REASONING_STAGES:
+                activation_paths = pre_paths if stage == "pre_reasoning" else post_paths
+                model, checkpoint_info, scaler_mean, scaler_std = loaded_stage_probes[stage]
+                row, truth, predicted = _evaluate_stage(
+                    example_id=f"{traj_stem}_step{local_step_index}",
+                    reasoning_stage=stage,
+                    trajectory_filename=trajectory_filename,
+                    trajectory_stem=traj_stem,
+                    trajectory=trajectory,
+                    step_index=local_step_index,
+                    layer=probe_layer,
+                    model=model,
+                    checkpoint_info=checkpoint_info,
+                    scaler_mean=scaler_mean,
+                    scaler_std=scaler_std,
+                    activation_paths=activation_paths,
+                    pad_to_size=pad_to_size,
+                    coordinate_order=coordinate_order,
+                )
+                rows.append(row)
+                original_grid_text = _render_original_grid(step["grid_state"])
+                for direction in ("left", "right", "up", "down"):
+                    matched_wall_rows.append(
+                        {
+                            "example_id": row.example_id,
+                            "trajectory_id": traj_stem,
+                            "step_index": str(local_step_index),
+                            "reasoning_split": "pre" if stage == "pre_reasoning" else "post",
+                            "question_id": f"wall_{direction}",
+                            "ground_truth_label": _bool_to_yes_no(getattr(row, f"truth_wall_{direction}")),
+                            "whitebox_prediction": _bool_to_yes_no(getattr(row, f"pred_wall_{direction}")),
+                            "grid_text": original_grid_text,
+                            "state_description_text": "",
+                            "carrying_key": False,
+                            "observed_action": observed_action_upper,
+                            "optimal_actions_json": json.dumps(optimal_action_names),
+                            "is_optimal_action": json.dumps(observed_action_upper in optimal_action_names),
+                            "wall_hit": json.dumps(wall_hit),
+                            "source_dataset": "released_cognitive_map_probe_slice",
+                            "grid_size": str(grid_size),
+                            "probe_layer": str(probe_layer),
+                        }
+                    )
+                if not stage_truth_and_predictions:
+                    stage_truth_and_predictions[stage] = (truth, predicted)
 
     _write_rows_csv(out_dir / "cognitive_map_probe_rows.csv", rows)
     summary_rows = _summary_rows(rows)
     _write_summary_csv(out_dir / "cognitive_map_probe_summary.csv", summary_rows)
+    if matched_wall_rows:
+        _write_json(out_dir / "matched_wall_rows_preview.json", {"rows": matched_wall_rows[:4]})
+        with open(out_dir / "matched_wall_rows.csv", "w", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=list(matched_wall_rows[0].keys()))
+            writer.writeheader()
+            writer.writerows(matched_wall_rows)
     _write_example_markdown(
         output_dir=out_dir,
-        compatibility=compatibility,
+        compatibility=compatibility_reports[0],
         stage_truth_and_predictions=stage_truth_and_predictions,
     )
 
@@ -957,7 +1164,7 @@ def run_cognitive_map_probe_reasoning_eval(
         "trajectories_repo_id": PUBLIC_TRAJECTORIES_REPO_ID,
         "results_repo_id": PUBLIC_RESULTS_REPO_ID,
         "disk_check": asdict(disk_check),
-        "compatibility": asdict(compatibility),
+        "compatibility_reports": [asdict(report) for report in compatibility_reports],
         "inferred_label_mapping": {
             str(raw): {
                 "symbol": symbol,
@@ -967,7 +1174,11 @@ def run_cognitive_map_probe_reasoning_eval(
         },
         "summary_rows": summary_rows,
         "coordinate_order": coordinate_order,
+        "n_rows": len(rows),
+        "n_matched_wall_rows": len(matched_wall_rows),
+        "skipped_missing_activation_states": skipped_missing_activation_states,
     }
+    _write_json(out_dir / "compatibility_report.json", [asdict(report) for report in compatibility_reports])
     _write_json(out_dir / "status.json", manifest)
 
 

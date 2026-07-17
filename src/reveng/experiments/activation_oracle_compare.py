@@ -33,6 +33,10 @@ def _extract_json_blob(text: str) -> str | None:
     return match.group(0) if match else None
 
 
+def _read_json(path: str | Path) -> dict[str, Any]:
+    return json.loads(Path(path).read_text())
+
+
 def normalize_oracle_value(value: Any) -> str:
     if value is None:
         return ""
@@ -58,12 +62,63 @@ def normalize_oracle_value(value: Any) -> str:
     return json.dumps(_canonicalize_json(parsed), sort_keys=True, separators=(",", ":"))
 
 
+def _parse_action_list(value: Any) -> list[str]:
+    if value is None:
+        return []
+    parsed = value
+    if isinstance(value, str):
+        stripped = value.strip()
+        if not stripped:
+            return []
+        try:
+            parsed = json.loads(stripped)
+        except json.JSONDecodeError:
+            parsed = [value]
+    if not isinstance(parsed, list):
+        return []
+    normalized: list[str] = []
+    for item in parsed:
+        text = normalize_oracle_value(item)
+        if text:
+            normalized.append(text)
+    return normalized
+
+
+def _load_input_row_index(results_path: str | Path) -> dict[str, dict[str, Any]]:
+    run_manifest_path = Path(results_path).with_name("run_manifest.json")
+    if not run_manifest_path.exists():
+        return {}
+    manifest = _read_json(run_manifest_path)
+    input_path = manifest.get("input_path")
+    if not input_path:
+        return {}
+    try:
+        indexed_rows = {}
+        for row in _read_jsonl(input_path):
+            row_id = row.get("row_id")
+            if isinstance(row_id, str) and row_id:
+                indexed_rows[row_id] = row
+        return indexed_rows
+    except Exception:
+        return {}
+
+
+def _augment_from_input_row(row: dict[str, Any], input_rows: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    row_id = row.get("row_id")
+    if not isinstance(row_id, str) or row_id not in input_rows:
+        return row
+    augmented = dict(input_rows[row_id])
+    augmented.update(row)
+    return augmented
+
+
 def compare_activation_oracle_results(
     results_path: str,
     output_csv_path: str | None = None,
     summary_json_path: str | None = None,
 ) -> dict[str, Any]:
-    rows = _read_jsonl(results_path)
+    input_row_index = _load_input_row_index(results_path)
+    rows = [_augment_from_input_row(row, input_row_index) for row in _read_jsonl(results_path)]
     if output_csv_path is None:
         output_csv_path = str(Path(results_path).with_name("ao_behavioral_comparison.csv"))
     if summary_json_path is None:
@@ -76,12 +131,15 @@ def compare_activation_oracle_results(
         "rows_with_behavioral_label": 0,
         "rows_with_representational_label": 0,
         "rows_with_ground_truth": 0,
+        "rows_with_optimal_action_set": 0,
         "segment_matches_behavioral": 0,
         "full_sequence_matches_behavioral": 0,
         "segment_matches_representational": 0,
         "full_sequence_matches_representational": 0,
         "segment_matches_ground_truth": 0,
         "full_sequence_matches_ground_truth": 0,
+        "segment_matches_optimal_action_set": 0,
+        "full_sequence_matches_optimal_action_set": 0,
     }
 
     for row in rows:
@@ -96,6 +154,8 @@ def compare_activation_oracle_results(
         normalized_ground_truth = normalize_oracle_value(ground_truth)
         normalized_segment = normalize_oracle_value(segment_response)
         normalized_full_sequence = normalize_oracle_value(full_sequence_response)
+        optimal_actions = _parse_action_list(row.get("optimal_actions_json", []))
+        normalized_optimal_actions_json = json.dumps(sorted(optimal_actions), separators=(",", ":")) if optimal_actions else ""
 
         segment_matches_behavioral = bool(normalized_behavioral) and normalized_segment == normalized_behavioral
         full_matches_behavioral = bool(normalized_behavioral) and normalized_full_sequence == normalized_behavioral
@@ -103,16 +163,21 @@ def compare_activation_oracle_results(
         full_matches_representational = bool(normalized_representational) and normalized_full_sequence == normalized_representational
         segment_matches_ground_truth = bool(normalized_ground_truth) and normalized_segment == normalized_ground_truth
         full_matches_ground_truth = bool(normalized_ground_truth) and normalized_full_sequence == normalized_ground_truth
+        segment_matches_optimal_action_set = bool(optimal_actions) and normalized_segment in optimal_actions
+        full_matches_optimal_action_set = bool(optimal_actions) and normalized_full_sequence in optimal_actions
 
         summary["rows_with_behavioral_label"] += int(bool(normalized_behavioral))
         summary["rows_with_representational_label"] += int(bool(normalized_representational))
         summary["rows_with_ground_truth"] += int(bool(normalized_ground_truth))
+        summary["rows_with_optimal_action_set"] += int(bool(optimal_actions))
         summary["segment_matches_behavioral"] += int(segment_matches_behavioral)
         summary["full_sequence_matches_behavioral"] += int(full_matches_behavioral)
         summary["segment_matches_representational"] += int(segment_matches_representational)
         summary["full_sequence_matches_representational"] += int(full_matches_representational)
         summary["segment_matches_ground_truth"] += int(segment_matches_ground_truth)
         summary["full_sequence_matches_ground_truth"] += int(full_matches_ground_truth)
+        summary["segment_matches_optimal_action_set"] += int(segment_matches_optimal_action_set)
+        summary["full_sequence_matches_optimal_action_set"] += int(full_matches_optimal_action_set)
 
         comparison_rows.append(
             {
@@ -122,10 +187,13 @@ def compare_activation_oracle_results(
                 "step_index": row.get("step_index", ""),
                 "reasoning_reveal_pct": row.get("reasoning_reveal_pct", ""),
                 "question_id": row.get("question_id", ""),
+                "oracle_prompt_family": row.get("oracle_prompt_family", ""),
                 "oracle_prompt": row.get("oracle_prompt", ""),
                 "behavioral_label": behavioral_label,
                 "representational_label": representational_label,
                 "ground_truth": ground_truth,
+                "optimal_actions_json": row.get("optimal_actions_json", "[]"),
+                "normalized_optimal_actions_json": normalized_optimal_actions_json,
                 "segment_response": segment_response,
                 "full_sequence_response": full_sequence_response,
                 "normalized_behavioral_label": normalized_behavioral,
@@ -139,6 +207,8 @@ def compare_activation_oracle_results(
                 "full_sequence_matches_representational_label": full_matches_representational,
                 "segment_matches_ground_truth": segment_matches_ground_truth,
                 "full_sequence_matches_ground_truth": full_matches_ground_truth,
+                "segment_matches_optimal_action_set": segment_matches_optimal_action_set,
+                "full_sequence_matches_optimal_action_set": full_matches_optimal_action_set,
             }
         )
 
@@ -151,6 +221,8 @@ def compare_activation_oracle_results(
             "behavioral_label",
             "representational_label",
             "ground_truth",
+            "optimal_actions_json",
+            "normalized_optimal_actions_json",
             "segment_response",
             "full_sequence_response",
             "normalized_behavioral_label",
@@ -164,6 +236,8 @@ def compare_activation_oracle_results(
             "full_sequence_matches_representational_label",
             "segment_matches_ground_truth",
             "full_sequence_matches_ground_truth",
+            "segment_matches_optimal_action_set",
+            "full_sequence_matches_optimal_action_set",
         ])
         writer.writeheader()
         writer.writerows(comparison_rows)

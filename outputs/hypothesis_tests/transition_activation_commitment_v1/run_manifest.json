@@ -1,0 +1,15 @@
+{
+  "activation_index": "outputs/activation_collection/gpt_oss_20b_boundary_v1/activation_index.parquet",
+  "activation_model_rows": 36,
+  "allocentric_probe_readouts": {
+    "path": "outputs/hypothesis_tests/transition_activation_commitment_v1/allocentric_readouts/allocentric_transition_belief_rows.csv",
+    "positions": 7084,
+    "rows": 85008,
+    "status": "completed"
+  },
+  "commitment_tail_rows": 46,
+  "exp1_dir": "outputs/experiment1_activation_monitor/gpt_oss_local_sentence_matched46_v1",
+  "status": "completed",
+  "transition_belief_rows": 7038,
+  "transition_model_rows": 20
+}

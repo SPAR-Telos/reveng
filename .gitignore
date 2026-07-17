@@ -217,6 +217,8 @@ data/
 # Reproducibility-critical counterfactual inputs/manifests (track these)
 !data/
 data/*
+!data/activation_oracle/
+!data/activation_oracle/*.jsonl
 !data/cf/
 data/cf/*
 !data/cf/pair_manifest.json
@@ -236,5 +238,20 @@ data/behavioral_probes/smoke_test_wall_check/
 counterfactual_artifacts/
 counterfactual_activation_patching_results/
 .codex/
+.hf_home/
 
 *.pdf
+
+# Local uploaded archives and heavy generated activation artifacts
+*.zip
+outputs/activation_collection/
+outputs/activation_collection_pilot/
+outputs/**/shards/
+outputs/**/state_records/
+outputs/**/*.safetensors
+
+# Raw resumable model readout logs can be regenerated from scripts/manifests.
+outputs/**/agent_location_after_readouts.jsonl
+
+# Local Codex runtime mount/file
+.codex

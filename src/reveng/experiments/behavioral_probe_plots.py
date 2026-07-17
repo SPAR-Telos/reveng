@@ -199,8 +199,9 @@ def plot_belief_action_gap_summary(
 
     x = list(range(len(labels)))
     width = 0.18
-    fig, axes = plt.subplots(2, 1, figsize=(10.5, 7.2), constrained_layout=True)
+    fig, axes = plt.subplots(2, 1, figsize=(10.5, 7.6), constrained_layout=True, sharex=True)
     fig.patch.set_facecolor("white")
+    fig.set_constrained_layout_pads(h_pad=0.08, hspace=0.08)
 
     ax = axes[0]
     ax.bar([idx - width / 2 for idx in x], greedy_accuracy, width, color=GREEDY_BLUE, label="Greedy probe accuracy")
@@ -213,6 +214,7 @@ def plot_belief_action_gap_summary(
     for xpos, value in zip([idx + width / 2 for idx in x], mc_accuracy, strict=True):
         ax.text(xpos, value + 0.025, f"{value:.2f}", ha="center", va="bottom", fontsize=8.5, color=TEXT_COLOR)
     ax.legend(frameon=False, loc="lower left")
+    ax.tick_params(labelbottom=False)
 
     ax = axes[1]
     positions = {
@@ -232,15 +234,11 @@ def plot_belief_action_gap_summary(
     ax.set_ylim(0.0, 1.08)
     ax.set_ylabel("Gap rate", color=TEXT_COLOR)
     ax.set_xlabel("Observed-action direction", color=TEXT_COLOR)
-    ax.set_title("Does the Model Act Against Correctly Reported Wall Information?", color=TEXT_COLOR, fontsize=13)
-    ax.text(
-        0.0,
-        1.03,
-        "Fractions above bars = gap cases / eligible single-step states in this subset, not trajectories.",
-        transform=ax.transAxes,
-        fontsize=8.5,
+    ax.set_title(
+        "Does the Model Act Against Correctly Reported Wall Information?",
         color=TEXT_COLOR,
-        va="bottom",
+        fontsize=13,
+        pad=10,
     )
 
     annotations = [
@@ -254,11 +252,10 @@ def plot_belief_action_gap_summary(
             value = float(row[rate_key])
             label = f"{int(float(row[count_key]))}/{int(float(row[denom_key]))}"
             ax.text(xpos, value + 0.025, label, ha="center", va="bottom", fontsize=8.0, color=TEXT_COLOR)
-    ax.legend(frameon=False, loc="upper left", ncols=2)
+    ax.legend(frameon=False, loc="upper center", bbox_to_anchor=(0.5, 0.98), ncols=2, fontsize=8.5)
 
     for ax in axes:
         ax.set_xticks(x)
-        ax.set_xticklabels(labels)
         ax.grid(axis="y", color=LIGHT_GRID, linewidth=0.8, alpha=0.9)
         for boundary in range(1, len(labels)):
             ax.axvline(boundary - 0.5, color=LIGHT_GRID, linestyle="--", linewidth=0.8, alpha=0.8)
@@ -268,6 +265,7 @@ def plot_belief_action_gap_summary(
         ax.spines["left"].set_color(LIGHT_GRID)
         ax.spines["bottom"].set_color(LIGHT_GRID)
         ax.tick_params(colors=TEXT_COLOR)
+    axes[1].set_xticklabels(labels)
 
     fig.savefig(output, dpi=200, bbox_inches="tight")
     plt.close(fig)

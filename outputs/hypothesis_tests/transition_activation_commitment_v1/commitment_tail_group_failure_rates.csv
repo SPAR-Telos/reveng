@@ -1,0 +1,5 @@
+commitment_timing_group,post_commitment_length_group,states,suboptimal_final_action_states,suboptimal_final_action_rate,median_cut_commitment_sentence_fraction,median_cut_post_commitment_sentences
+earlier commitment,longer post-commitment reasoning,20,10,0.5,0.7861970490242742,24.0
+earlier commitment,shorter post-commitment reasoning,3,1,0.3333333333333333,0.7861970490242742,24.0
+later commitment,longer post-commitment reasoning,3,3,1.0,0.7861970490242742,24.0
+later commitment,shorter post-commitment reasoning,20,6,0.3,0.7861970490242742,24.0

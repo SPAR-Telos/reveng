@@ -1,0 +1,2 @@
+example_id,trajectory_id,step_index,reasoning_split,question_id,ground_truth_label,grid_text,carrying_key,observed_action,optimal_actions_json,is_optimal_action,wall_hit,whitebox_prediction,whitebox_score
+ex_007_s12,traj_07,12,pre,wall_right,yes,"#########\n#__A#G__#\n#___#___#\n#_______#\n#D#######\n#___#K__#\n#___#___#\n#_______#\n#########",false,RIGHT,"[""DOWN""]",false,true,yes,0.94

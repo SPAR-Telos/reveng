@@ -1,724 +1,857 @@
-\documentclass[11pt,a4paper]{article}
+\documentclass[10pt,twocolumn]{article}
 
-\usepackage[margin=2.5cm]{geometry}
-\usepackage{amsmath,amssymb,amsthm}
-\usepackage{graphicx}
+\usepackage[margin=0.75in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
 \usepackage{booktabs}
-\usepackage{hyperref}
-\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{tabularx}
 \usepackage{enumitem}
-\usepackage{algorithm}
-\usepackage{algpseudocode}
+\usepackage{hyperref}
 \usepackage{tikz}
-\usepackage{mdframed}
-\usepackage{tcolorbox}
-\usepackage{multirow}
-\usepackage{array}
+\usepackage{verbatim}
+\usepackage{fancyvrb}
+\usepackage[review]{acl} 
+\usetikzlibrary{arrows.meta,calc,positioning}
 
-\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{4pt}
+\setlength{\belowcaptionskip}{-2pt}
+\setlist[itemize]{leftmargin=*, topsep=2pt, itemsep=1pt, parsep=0pt}
 
-\tcbuselibrary{breakable, skins}
-
-\newtcolorbox{insight}[1][]{
-  colback=blue!5!white, colframe=blue!60!black,
-  fonttitle=\bfseries, title=Key Insight, #1
+\title{\textbf{Belief--Action Gaps in Language-Model Agents}}
+\author{
+Anonymous
 }
-
-\newtcolorbox{todo}[1][]{
-  colback=orange!5!white, colframe=orange!80!black,
-  fonttitle=\bfseries, title=Open / To-Do, #1
-}
-
-\newtcolorbox{result}[1][]{
-  colback=green!5!white, colframe=green!60!black,
-  fonttitle=\bfseries, title=Empirical Result, #1
-}
-
-\title{\textbf{Mapping the Belief-Action Gap in AI Agents}\\
-\large Project Status, Literature Positioning, and Extensions}
-\author{SPAR Spring 2026}
-\date{\today}
+\date{}
 
 \begin{document}
-
 \maketitle
-\tableofcontents
-\newpage
 
-% ══════════════════════════════════════════════════════════════════
-\section{The Core Question}
-% ══════════════════════════════════════════════════════════════════
+% ===== Collaboration notes for the 4-page EMNLP draft =====
+% [Behavioral owner] Own the integrated literature paragraph, the descriptive
+% evidence section, Table 1, and the failure-state behavioral figure.
+% [White-box owner] Keep your contribution to short inline result sentences; do
+% not add a separate white-box table.
+% [IRL owner] Keep your contribution to one short estimator paragraph and at
+% most one compressed validation sentence.
+% [Reasoning owner] Section 4 should prioritize patching/steering. Keep the
+% auxiliary revealed-CoT diagnostic only if space remains after the causal result.
 
-\subsection{What We Are Studying}
+\begin{abstract}
+Language-model (LM) agents may fail because they lack task-relevant state information, pursue an objective misaligned with the user's intent, or fail to convert represented information into action. In this work, we study the third case through the \emph{belief--action gap}: the expected regret of the agent's chosen action under a probe-estimated belief distribution and a learned state value function. In text-rendered gridworlds, we measure state knowledge using both behavioral and representation-level probes, and estimate objective-consistent action values using one-step inverse reinforcement learning (IRL) over exact next states. We find that the model's representations encode task-relevant state and value structure more reliably than its chosen actions. Optimal-action supervised IRL recovers near-perfect action preferences, while agent-action supervision is much weaker, and behavioral probes reveal cases where the model reports local obstacles correctly yet still acts against them. We then test whether this gap is causal by intervening on trajectory representations with patching and steering both pre- and post- reasonin. The interventions show that decoded state information does not always control the final action: actions follow patched reasoning traces, but changing pre-reasoning activations alone does not reliably change the output. This suggests that a gap arises when state information is present but not used in choosing the action. This gives a causal diagnostic framework for agents that know relevant state information but fail to act on it.
+\end{abstract}
 
-As AI systems become more capable and autonomous, a critical safety question emerges. Does an AI
-agent \emph{act consistently with what it internally knows}? A model might internally represent the correct state of the world while producing actions that are inconsistent with that representation.
-This discrepancy is what we call the \textbf{Belief-Action Gap}.
+\section{Introduction}
+In order to engineer reliable, safe, and trustworthy language model (LM) agents, it is essential to understand not only the actions taken by agents but also how agents arrive at them. In sequential settings, a chosen action depends on at least three components: the agent's belief about the current state, the objective or action-value structure it is effectively optimizing, and the reasoning pathway that converts beliefs and values into a committed action. Failures can therefore arise because task-relevant state information is absent, because the inferred objective is misaligned with the user's intent, or because represented information is not used to select the final action. We study the third case through the \emph{belief--action gap}: the excess expected cost of the taken action relative to the best action under the agent's inferred beliefs and action values.
 
-The question is important for two reasons. First, from an interpretability perspective if internal representations are inconsistent with behaviour, then behavioural evaluation alone is insufficient for understanding the system. Second, from a safety perspective deceptive alignment requires precisely this, a model that internally knows the right thing to do but acts differently, potentially to avoid modification or appear less capable.
+This distinction is not merely theoretical -- it is of practical import for the interpretability and safety of LM agents. 
+An undesirable action taken by an agent can reflect different, potentially overlapping, internal failure modes. For interpretability, state-estimation failure, objective misspecification, and action-selection failure require different
+explanations and interventions. For safety, action-level evaluation alone cannot reveal whether failures come from missing information, unused information, or a conflicting objective. This ambiguity is central to analyses of deceptive alignment, alignment faking, and sandbagging
+\cite{hubinger2019risks,greenblatt2024faking,vanderweij2025sandbagging}.
 
-\subsection{Formal Setting}
+Many existing methods address these components separately. Maximum-entropy inverse reinforcement learning and later work on goal-directedness and utility estimation provide tools for inferring objectives or action values from behavior \cite{ziebartMaximumEntropyInverse2008a,macdermott_measuring_2024,mazeika_utility_2025,bellot2025limits}. Representational probes recover structured state information from hidden activations, and behavioral probes provide a complementary estimate of what the model can explicitly report about the current state \cite{alain2016understanding,li2023emergent,nanda-etal-2023-emergent,gurnee2024language,arghal2026behavioural,martorell_text_2026}. Intervention-based interpretability asks whether such information is causally implicated rather than merely decodable: causal tracing and model editing localize factual computations \cite{meng2022locating}, activation patching supports causal localization of model behavior \cite{kramar2024atpstar}, representation steering manipulates high-level properties \cite{zou2023representation}, and chain-of-thought faithfulness studies show that exposed reasoning can diverge from the computation that determines the answer \cite{lanham2023measuring}. Yet these tools are rarely combined to ask whether an LM agent that encodes state information and supports objective-consistent preferences actually uses that information to choose its own action.
 
-We study an LLM agent (GPT-OSS-20B) navigating a key-door gridworld. The environment is fully
-observable to the experimenter but the agent receives only text renderings of the grid.
+We operationalize this decomposition in text-rendered gridworlds, \textit{DoorKeyEnv}, using representational probes, behavioral probes, one-step inverse reinforcement learning over exact next states, and reasoning-trace interventions.
+We find that LM agents can encode task-relevant state information and
+objective-consistent action structure without reliably using them to choose their own actions: representational probes and behavioral probes recover relevant state information, one-step IRL recovers near-perfect optimal-action preferences more reliably than the model's realized actions. %We then show that \textcolor{red}{[summarize results of intervention analyses]}. %[add a sentence or two on the contribution or significance of these results.]}% and intervention analyses test whether this information affects behavior only when it lies on the active reasoning pathway for the action. % [headline causal result ]
 
-\textbf{State} The complete world description is a four-tuple:
+Our contributions are four descriptive answers to the belief--action-gap. (1) We ask whether state beliefs are decodable from activations, and
+show that pre-reasoning representations encode strong task-relevant state information. (2) We ask whether those activations support a coherent action-value structure, and show that one-step IRL recovers near-perfect optimal-action preferences more reliably than the model's realized actions. (3) We ask whether reasoning reduces the gap and at what cost to belief precision, and show that post-reasoning actions are better aligned with the learned value structure even as state beliefs become more diffuse. (4) We ask whether failure states exhibit correct local reports alongside inconsistent actions, and show that behavioral probes can recover the relevant local wall
+facts even when the agent still acts against them. Section~4 then extends these descriptive diagnostics with reasoning-trace interventions.
+
+% % [IRL owner: insert one headline empirical result clause here if space allows.]
+% We then combine these measurements to identify failure states where accurate wall judgments coexist with inconsistent actions, and we study whether reasoning is causally implicated using chain-of-thought-related interventions on matched and failure-focused slices.
+% % [Intervention owner: insert one headline causal result clause here if space allows.]
+% Sections 2--5 define the belief estimators, the action-value estimator, the behavioral gap diagnostics, and the reasoning-trajectory analysis.
+
+\section{Estimating Beliefs and Values}
+We study a text-rendered gridworld, \textit{DoorKeyEnv}, in which an LM agent must navigate to a goal while tracking its position and collect a key to open a locked door blocking its path \cite{arghal2026behavioural}.
+Appendix~\ref{app:environment} gives a summary
+of the environment, state variables, and action space used for the probes and value estimator.
+
+\paragraph{Representational belief.}
+Representational belief is decoded from pre-reasoning activations. In \textit{DoorKeyEnv}, the state is $s_t=(x_t,y_t,\texttt{has\_key}_t,\texttt{door\_open}_t)$. Linear probes estimate task-relevant state variables from the activation vector at the last input token before chain-of-thought generation.
+
+\paragraph{Behavioral belief.}
+Behavioral belief is elicited with single-step, history-free prompts built from the current rendered grid. We use directional wall probes, object-direction probes for the key, door, and goal, and action-conditioned probes for immediate move consequences. Readouts include greedy sampling at $\text{temperature}=0.0$, repeated sampling at $\text{temperature}=0.7$, exposed logprob diagnostics, and Monte Carlo-sampled answers. We also compute a \emph{local contradiction rate}, where the chosen action matches a direction that the model judged blocked, and an \emph{A$^*$-conditioned gap rate}, where the action is non-optimal despite a correct wall judgment.
+
+% [IRL OWNER] Keep this paragraph short. Add at most one headline empirical sentence
+% after it. Do not introduce alternate IRL variants or extra tables.
+\paragraph{Action value.}
+We use one-step IRL as the operational estimator of action value \cite{ng2000algorithms, ziebartMaximumEntropyInverse2008a}. For state $s$ and action $a$, let $T(s,a)$ be the exact next state. We learn a state value $g_\theta$ and induce a Boltzmann policy \cite{ziebartMaximumEntropyInverse2008a, skalse_misspecification_2023};
 \[
-s = (x, y, \texttt{has\_key}, \texttt{door\_open}) \in \mathcal{S}
+p_\theta(a \mid s) \propto \exp\!\left(\beta g_\theta(T(s,a))\right).
 \]
-where $(x,y)$ is position, and the binary variables encode task phase.
+Because the transition function is deterministic, $g_\theta$ assigns a scalar value to each state rather than to state-action pairs directly. This makes it a global preference function over the state space, closer to a value function than to a local reward. The one-step approximation is sufficient here because the gridworld transition is exact and fully known, avoiding the need for value iteration or rollouts.
 
-\textbf{History} The agent's interaction history at step $t$ is $h_t = (o_{1:t}, a_{1:t-1})$,
-where $o_t$ is the text observation and $a_t$ is the action taken.
+\section{Descriptive Evidence for the \\ Belief--Action Gap}
 
-\textbf{Actions} $\mathcal{A} = \{\texttt{LEFT}, \texttt{RIGHT}, \texttt{UP}, \texttt{DOWN}\}$.
+Having defined our three estimators, we now ask whether they reveal a systematic gap between what the agent represents, what it reports, and what it does. We present results in four parts: whether state beliefs are decodable from activations, whether those activations support a coherent action-value structure, whether reasoning reduces the gap and at what cost to belief precision, and whether failure states exhibit correct local reports alongside inconsistent actions. Together these results characterize the belief--action gap as primarily an action-selection failure rather than a state-knowledge failure.
 
-\textbf{Transition} The deterministic environment transition is $s_{t+1} = f(s_t, a_t)$.
-
-% ══════════════════════════════════════════════════════════════════
-\section{The Three-Component Framework}
-% ══════════════════════════════════════════════════════════════════
-
-The Belief-Action Gap requires three theoretical objects, none of which are directly observable
-inside the model. We operationalise each from the model's activations and behaviour.
-
+\paragraph{Belief-Action Gap.} With $g_\theta$, the regret of taking action $a$ at state $s$ is
 \[
-\underbrace{\hat{q}(s|h_t)}_{\text{(1) Belief}} \quad + \quad
-\underbrace{C_\theta(s)}_{\text{(2) Cost function}} \quad + \quad
-\underbrace{\hat{p}(s'|s,a)}_{\text{(3) Transition model}}
-\quad \Longrightarrow \quad
-\underbrace{\Delta_t}_{\text{Gap}}
+    \rho_\theta(s, a) = \max_{a'} g_\theta\bigl(T(s, a')\bigr) - g_\theta\bigl(T(s, a)\bigr).
 \]
-
-\subsection{Component 1: Belief Representation}
-
-The agent's internal belief is modelled as a distribution over states given history:
+Given belief $\hat{q}_t(s)$ at step $t$, \textbf{the belief--action gap}  is then
 \[
-\hat{q}(s_t | h_t) \approx \hat{q}(x_t, y_t | h_t) \cdot \hat{q}(\texttt{has\_key}_t | h_t)
-\cdot \hat{q}(\texttt{door\_open}_t | h_t)
-\]
-This factorisation assumes the three state components are approximately independent in the
-model's internal representation.
+\Delta_t = \mathbb{E}_{s \sim \hat{q}_t}\bigl[\rho(s, a_t)\bigr]
+    \;=\;
+    \sum_{s} \hat{q}_t(s)\rho_\theta(s, a_t).
+\]%This paper focuses on descriptive and causal diagnostics of that quantity. 
+Fig.~\ref{fig:pipeline} summarizes the operational decomposition.
 
-Each factor is estimated by a \textbf{linear probe},  a logistic regression classifier trained on the 8640-dimensional activation vector extracted from different layers at the relevant token
-(the last input token before generation begins). Using pre-reasoning activations is deliberate:
-they capture what the model has \emph{encoded} about the world before committing to an output.
 
-In addition to these white-box activation probes, we use \textbf{black-box behavioural probes}
-as a complementary validation layer. These probes query the model directly about the current
-state or the immediate consequence of a proposed action from a single rendered grid state,
-without access to activations. Their role is narrower than the white-box probes: they test
-whether local state information is explicitly recoverable from behaviour itself, and whether
-action errors are accompanied by explicit local belief errors.
-They do not estimate the full latent distribution $\hat{q}(s_t \mid h_t)$; rather, they elicit
-selected local marginals or relations from a single rendered state.
 
-\subsection{Component 2: Cost Function via IRL}
 
-We assume the agent selects actions according to a Boltzmann policy:
-\[
-P_\theta(a | s) = \frac{\exp(-\beta \, C_\theta(f(s, a)))}
-                       {\sum_{a' \in \mathcal{A}} \exp(-\beta \, C_\theta(f(s, a')))}
-\]
-where $\beta > 0$ controls rationality and $C_\theta(s)$ is an unknown cost function.
-We consider two parameterisations:
-\begin{align}
-C_\theta(s) &= \theta^\top \phi(s) \quad \text{(linear)} \label{eq:linear}\\
-C_\theta(s) &= g_\theta(\phi(s)) \quad \text{(MLP)} \label{eq:mlp}
-\end{align}
-We recover $\theta^*$ by maximising the log-likelihood of observed actions:
-\[
-\theta^* = \operatorname*{arg\,max}_\theta \sum_{t=1}^T \log P_\theta(a_t | s_t^*)
-\]
 
-\subsection{Component 3: Internal Transition Model}
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+    node distance=0.45cm and 0.6cm,
+    every node/.style={font=\footnotesize,align=center},
+    box/.style={rounded corners,draw=black,thick,minimum height=0.72cm,minimum width=1.65cm,inner sep=2pt},
+    arrow/.style={-{Stealth[length=1.5mm]},thick}
+]
+\node[box] (beh) {Behavioral\\belief};
+\node[box,above=1.5cm of beh] (rep) {Representational\\belief $\hat{q}$};
 
-The true environment transition is deterministic: $s_{t+1} = f(s_t, a_t)$.
-However, the agent may internally operate with a different effective model:
-\[
-\hat{p}(s' | s, a) \neq \mathbf{1}\{s' = f(s, a)\}
-\]
-We estimate $\hat{p}$ by prompting the model with hypothetical actions and observing its
-predicted next state from $K$ samples:
-\[
-\hat{p}(s' | s, a) = \frac{1}{K} \sum_{k=1}^K \mathbf{1}\{\hat{s}'^{(k)} = s'\}
-\]
-In practice, our action-conditioned behavioural probes should be read as local diagnostics of
-immediate consequences, not as a full reconstruction of $\hat{p}(s' \mid s,a)$ over the whole
-state space.
+\node[box,right=0.75cm of $(rep)!0.5!(beh)$] (cost) {One-step\\value $g_\theta$};
+\node[box,right=0.75cm of cost] (value) {Regret of action\\ $\rho_\theta(s,a)$};
+\node[box,above right=0.15cm and 0.25cm of value] (act) {Taken\\action $a_t$};
+\node[box,below right=0.15cm and 0.15cm of value] (gap) {Belief--action\\gap $\Delta_t$};
 
-\subsection{The Belief-Action Gap}
+\draw[arrow] (rep.east) -- (value.west);
+\draw[arrow, dashed] (beh.east) -- (value.west);
+\draw[arrow] (cost) -- (value);
+\draw[arrow] (value) -- (act.west);
+\draw[arrow] (value) -- (gap.west);
+\draw[arrow] (act.south) -- (gap.north);
+\end{tikzpicture}
+\caption{Operational decomposition of the belief--action gap. Belief estimators and the one-step cost model jointly define expected action values; the gap compares the taken action against the best action under those inferred values. Behavioral beliefs are only used for probe validation. }
+\label{fig:pipeline}
+\end{figure}
 
-Combining all three components, the expected cost of action $a$ under the agent's own internal
-representation is:
-\[
-\boxed{J_t(a) = \sum_{s \in \mathcal{S}} \hat{q}(s | h_t)
-               \sum_{s' \in \mathcal{S}} \hat{p}(s' | s, a) \, C_\theta(s')}
-\]
-The \textbf{Belief-Action Gap} at step $t$ is then:
-\[
-\boxed{\Delta_t = J_t(a_t) - \min_{a \in \mathcal{A}} J_t(a)}
-\]
+% [WHITE-BOX OWNER] Keep the next paragraph to 2 sentences. Confirm the final
+% location / has_key / door_open numbers and the decoded A* action number.
 
-$\Delta_t = 0$ means the agent's chosen action is optimal under its own beliefs and values.
-$\Delta_t > 0$ means the agent took an action that, by its own lights, was suboptimal, a
-direct measure of internal inconsistency.
-The behavioural wall-gap metrics reported later are narrower than $\Delta_t$: they are
-single-step, action-relevant lower-bound diagnostics of local inconsistency, not substitutes
-for the full white-box quantity above.
 
-% ══════════════════════════════════════════════════════════════════
-\section{Feature Representations: $\phi(s)$}
-% ══════════════════════════════════════════════════════════════════
+\subsection{Decoding Beliefs from Activations}
 
-A central design choice is the feature vector $\phi(s)$ used to represent states for the cost
-function. We have explored two approaches.
+We first test whether task-relevant state variables are available in the
+model's activations before comparing them to actions. In the fixed \textit{DoorKeyEnv}
+setting, binary state variables are decoded reliably: pre-reasoning probes
+recover both \texttt{has\_key} and \texttt{door\_open} with perfect test
+accuracy, while post-reasoning probes remain high but weaker
+($0.895$ and $0.886$, respectively). Recovery of location is weaker on held-out states,
+but pre-reasoning decoded location remains spatially concentrated:
+although test accuracy is $0.348$, $95.5\%$ of predictions fall within
+one cell of the true position and $99.0\%$ within two cells. Post-reasoning
+decoded location is more diffuse ($60.8\%$ within one cell,
+$83.5\%$ within two cells).
 
-\subsection{Activation Features}
+These results show that the activations contain substantial information about
+the agent's current state, especially before reasoning. We therefore use the
+representational probes as the formal state-belief for the
+belief--action gap computation.
 
-The model's own hidden activations serve as the feature vector. We build a table as for each state $s$, we average activations across all trajectory visits:
-\[
-\phi(s) = \frac{1}{N_s} \sum_{t:\, s_t = s} h_t
-\]
-where $N_s$ is the number of times state $s$ was visited. This cancels trajectory-specific
-context effects and gives a canonical representation of the state.
+\subsection{Decoding Optimal Actions from Activations}
 
-\textbf{Dimensionality:} $\phi(s) \in \mathbb{R}^{8640}$ (three adjacent token positions, each
-2880-dimensional at layer 15).
+We next ask whether the same representations support an action-value
+structure. We train one-step IRL models that assign scalar values
+$g_\theta(s)$ to states and induce action preferences by comparing exact
+next states $T(s,a)$ \cite{ng2000algorithms, ziebartMaximumEntropyInverse2008a}. When supervised with the agent's own actions, this
+readout is only moderately predictive, with validation accuracy of $0.59$ for both pre- and post-reasoning representations. In contrast, when
+the same objective is supervised with optimal actions, recovery is almost perfect, with validation
+accuracy above $0.995$.
 
-\textbf{Key property:} The phi-table enables \emph{exact counterfactual evaluation}. For any
-action $a$, the feature vector $\phi(f(s,a))$ can be looked up directly without proxies.
+This asymmetry suggests that the activations contain a coherent signal of
+task-optimal geometry that is stronger than that of the agent's actual behaviour. In other words, the representation is more predictive of
+what the agent should do than of what it actually does.
+A four-room label-control reproduces the same asymmetry under identical
+activations and training with only the target label changed
+(Appendix Table~\ref{tab:fourroom_appendix}).
 
-\subsection{Hand-Crafted GT Features}
 
-To test whether the cost function encodes task-relevant structure rather than grid-specific
-patterns, we define a 5-dimensional grid-invariant feature vector:
-\[
-\phi_{\text{GT}}(s) = \begin{pmatrix}
-d_{\text{BFS}}(\text{agent}, \text{goal}) \\
-d_{\text{BFS}}(\text{agent}, \text{key}) \cdot \mathbf{1}[\neg\texttt{has\_key}] \\
-d_{\text{BFS}}(\text{agent}, \text{door}) \cdot \mathbf{1}[\neg\texttt{door\_open}] \\
-\mathbf{1}[\texttt{has\_key}] \\
-\mathbf{1}[\texttt{door\_open}]
-\end{pmatrix}
-\]
-where $d_{\text{BFS}}$ denotes BFS shortest path distance through the grid. These features
-are \emph{grid-invariant}: they encode task progress semantics that transfer across different
-grid layouts. The intuition is that ``closer to goal = good, having key = good'' regardless of
-the specific wall configuration.
 
-% ══════════════════════════════════════════════════════════════════
-\section{IRL Methods: One-Step vs. MaxEnt}
-% ══════════════════════════════════════════════════════════════════
+%\subsection{State beliefs are available before action}
+%Pre-reasoning activations encode task-relevant state information with high accuracy. On the fixed DoorKey setup, linear probes recover the agent's location at $92.8\%$ before reasoning, \texttt{has\_key} at $100\%$, and \texttt{door\_open} at $100\%$; all three degrade after reasoning, especially location ($42.9\%$ post-reasoning). Even when held-out top-1 location accuracy is modest, the pre-reasoning location belief remains spatially concentrated, with $95.5\%$ of test predictions within one cell of the true location and $99.0\%$ within two cells. The same activation features decode A$^*$-optimal actions much better than the agent acts optimally, with a 39--67 point gap between decodable optimality and enacted optimality across the fixed-grid, four-room, and Seed12 evaluations. One-step IRL shows the same asymmetry: optimal-action supervision is recovered near-perfectly, whereas agent-action supervision remains much weaker, which indicates that the representation supports a coherent value ordering more strongly than it reproduces the model's own actions.
 
-\subsection{One-Step IRL}
 
-The one-step approach treats each $(s_t, a_t)$ transition independently. The gradient of the
-log-likelihood at each transition is:
-\[
-\nabla_\theta \mathcal{L} = \phi(f(s_t, a_t)) - \sum_{a \in \mathcal{A}} \pi_\theta(a|s_t) \cdot \phi(f(s_t, a))
-\]
-This is the MaxEnt IRL gradient in the special case where state visitation frequencies
-are not computed globally, instead each transition is treated as if it were the only one.
+% [All authors] Restore a PRE/POST belief visualization here only if an exported
+% figure under `figs/` is available and it displaces no stronger result.
 
-\textbf{Advantages:}
-\begin{itemize}
-\item Works when each trajectory uses a different grid (no global value iteration needed)
-\item Can use full 8640-dimensional activation features directly
-\item Fast: no backward pass required
-\end{itemize}
+\subsection{Reasoning Changes the Gap \& the Belief State}
 
-\textbf{Limitations:}
-\begin{itemize}
-\item The learned $C_\theta$ is not guaranteed to be Bellman-consistent (it is an arbitrary function, not a proper value function)
-\item Loses long-horizon credit assignment
-\item Is an action predictor rather than a reward function recovery method
-\end{itemize}
+We compute the belief--action gap at each step using the probe-estimated
+belief distribution, the learned next-state value function, and the action
+taken at that step (with and without reasoning). Across all 3,194 evaluated
+steps, the mean gap decreases from $0.955$ before reasoning to $0.583$ after
+reasoning, while mean belief entropy increases from $1.494$ to $2.085$. The
+same qualitative pattern holds on the all-probes-correct subset and on the
+held-out probe test set; the exact subset values are reported in 
+Table~\ref{tab:gap_entropy}.
 
-\subsection{MaxEnt IRL}
-
-The proper MaxEnt IRL algorithm recovers a reward function
-$R_\theta(s) = \theta^\top \phi(s)$ by solving:
-\[
-\theta^* = \operatorname*{arg\,max}_\theta \sum_{\tilde\zeta} \log P(\tilde\zeta|\theta,T)
-\]
-subject to the feature count constraint $\mathbb{E}_\theta[\phi] = \tilde{f}$.
-
-The algorithm proceeds as follows:
-
-\begin{algorithm}[H]
-\caption{MaxEnt IRL with Value Iteration}
-\begin{algorithmic}[1]
-\State Initialise $\theta \leftarrow \mathbf{0}$
-\Repeat
-\State Compute reward: $R(s) = \theta^\top \phi(s)$ for all $s$
-\State \textbf{Backward pass} (value iteration, $N$ iterations):
-\State \quad $Z_{s_{\text{terminal}}} \leftarrow 1$
-\State \quad $Z_{a,s} \leftarrow e^{R(s)} \cdot Z_{s'}$ where $s' = T(s,a)$
-\State \quad $Z_s \leftarrow \sum_a Z_{a,s}$
-\State \quad $Q(s,a) \leftarrow R(s) + V(T(s,a))$ where $V(s) = \log\sum_a \exp Q(s,a)$
-\State \quad $\pi(a|s) \leftarrow Z_{a,s} / Z_s$
-\State \textbf{Forward pass} (state visitation frequencies):
-\State \quad $D_{s_0} \leftarrow P(s = s_{\text{initial}})$
-\State \quad $D_{s'} \leftarrow \sum_s \sum_a D_s \cdot \pi(a|s) \cdot \mathbf{1}[T(s,a)=s']$
-\State Gradient: $\nabla_\theta \mathcal{L} = \tilde{f} - \sum_s D_s \phi(s)$
-\State $\theta \leftarrow \theta + \alpha \nabla_\theta \mathcal{L}$
-\Until{convergence}
-\end{algorithmic}
-\end{algorithm}
-
-The resulting $V(s) = \log\sum_a \exp Q(s,a)$ satisfies the soft Bellman equation:
-\[
-V(s) = R(s) + \log\sum_{a \in \mathcal{A}} \exp(V(T(s,a)))
-\]
-with boundary condition $V(s_{\text{terminal}}) = 0$. This is a valid value function, unlike
-the arbitrary function learned by one-step IRL.
-
-\textbf{Practical consideration:} Because our trajectories come from a fixed grid, value iteration is feasible. For multiple grids, each grid needs its own backward/forward
-pass, but with PCA-compressed features (20-dim) this remains tractable.
-
-\subsection{Why the Distinction Matters}
-
-\begin{insight}
-One-step IRL answers: ``Can we predict the next action from the cost of successor states?''\\
-MaxEnt IRL answers: ``Is there a reward function $R(s)$ such that the optimal policy under $R$
-explains the agent's behaviour?''
-
-\end{insight}
-
-% ══════════════════════════════════════════════════════════════════
-\section{The A* Optimal Policy Baseline}
-% ══════════════════════════════════════════════════════════════════
-
-To assess how rational the agent is, we compute the optimal cost function analytically:
-\[
-C_{A^*}(s) = d_{A^*}(s, \text{task completion})
-\]
-where $d_{A^*}$ is the minimum number of steps to complete the task from state $s$:
-\[
-C_{A^*}(s) = \begin{cases}
-d_{\text{BFS}}(\text{agent}, \text{goal}) & \text{if door\_open} \\
-d_{\text{BFS}}(\text{agent}, \text{door}) + d_{\text{BFS}}(\text{door}, \text{goal}) & \text{if has\_key, door locked} \\
-d_{\text{BFS}}(\text{agent}, \text{key}) + d_{\text{BFS}}(\text{key}, \text{door}) + d_{\text{BFS}}(\text{door}, \text{goal}) & \text{otherwise}
-\end{cases}
-\]
-The A* policy then predicts whichever action minimises the cost of the next state. The
-A* policy accuracy (how often A*'s recommendation matches the agent's actual action) provides
-an \emph{objective upper bound} on rational behaviour.
-
-% ══════════════════════════════════════════════════════════════════
-\section{Empirical Results Summary}
-% ══════════════════════════════════════════════════════════════════
-
-\subsection{Belief Probes}
-
-\paragraph{Behavioural probes as a complementary belief measure.}
-Alongside the linear probes on activations, we ran a black-box behavioural-probe pipeline in
-the same DoorKey domain. Its purpose was not to replace the activation probes, but to add a
-conservative behavioural test of what the model can state explicitly about the current state.
-This gives an intermediate layer between raw behaviour and latent-state decoding: if an
-action is suboptimal, does the model also fail when asked directly about the relevant local
-fact, or does it state that fact correctly and still act against it?
-
-\begin{table}[h]
+\begin{table}[t]
 \centering
 \small
-\begin{tabular}{p{3.0cm} p{2.1cm} p{3.7cm} p{5.0cm}}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrrr}
 \toprule
-Readout & Settings & Returned object & Purpose \\
+\textbf{Subset} & \textbf{$n$} &
+\textbf{$\Delta_{\mathrm{pre}}$}&
+\textbf{$\Delta_{\mathrm{post}}$}&
+\textbf{$H_{\mathrm{pre}}$} &
+\textbf{$H_{\mathrm{post}}$} \\
 \midrule
-Greedy & $T=0$, one call & Single parsed answer & Primary explicit behavioural answer. \\
-Repeated greedy & $T=0$, 10 calls & Modal parsed answer & Measures provider-level non-determinism under nominally greedy decoding. \\
-Logprob diagnostic & Exposed answer-token logprobs at $T \in \{0, 0.7, 1.0\}$ & Yes-vs-no label derived from exposed answer-token probabilities & Diagnostic only; checks whether exposed token probabilities agree with the surfaced answer. \\
-Monte Carlo & $T=0.7$, 10 calls & Empirical sampled answer distribution & Tests robustness of the explicit answer under stochastic decoding. \\
+All steps & 3194 & 0.955 & 0.583 & 1.494 & 2.085 \\
+All probes correct & 2465 & 0.908 & 0.558  & 1.106 & 1.811 \\
+Probe test set & 762 & 1.106 & 0.665  & 2.788 & 3.020 \\
 \bottomrule
 \end{tabular}
-\caption{Behavioural-probe readouts used for label-space queries. All answers are parsed into
-$\{\texttt{yes}, \texttt{no}, \texttt{unknown}, \texttt{invalid}\}$ after normalisation and
-answer extraction.}
-\label{tab:bp-readouts}
+\caption{Mean belief--action gap and belief entropy before and after reasoning.}\label{tab:gap_entropy}
 \end{table}
 
-\begin{table}[h]
+The descriptive pattern is that post-reasoning activations become less spatially
+precise while the taken action becomes better aligned with the learned
+value structure. This supports the interpretation that reasoning changes how
+state information is converted into action, rather than merely adding more
+accurate information \cite{lanham2023measuring, dong2025emergent}.
+Appendix Fig.~\ref{fig:belief_viz_app} shows the same aggregate pattern in a single
+trajectory step: the post-reasoning belief is more diffuse, but the taken
+action is better aligned with the learned value structure.
+
+
+\subsection{Correct Reports, Inconsistent Actions}
+
+\begin{figure}[htbp]
+\centering
+% [All authors] Preserve this wall-gap figure in the main body unless a stronger
+% causal figure becomes available and page pressure forces a replacement.
+\includegraphics[width=\linewidth]{figs/belief_action_gap_summary_wall_gap.png}
+\caption{Wall-probe accuracy and local mismatch on the failure-focused wall slice.}
+\label{fig:wall_gap_main}
+\end{figure}
+
+
+
+
+As a complementary black-box diagnostic, we also query the model directly
+about local state facts. Directional wall probes ask whether the cell adjacent to the agent in a given direction is blocked \cite{arghal2026behavioural, martorell_text_2026}. These
+queries test whether relevant local facts are explicitly
+recoverable from the model at failure states.
+
+On the expanded wall-focused failure slice, directional wall accuracy remains
+high across directions, but action-facing contradiction metrics are non-zero.
+The clearest case occurs for wall hits: in all $3/3$ eligible wall-hit cases,
+the model correctly reports that the chosen direction is blocked and
+nevertheless emits that blocked move. Avoidable detours also show substantial
+A$^\ast$-conditioned mismatch despite correct wall judgments. 
+Fig.~\ref{fig:wall_gap_main} summarizes the wall-specific result. Accurate wall reports do not guarantee action consistency. This pattern is better classified as an action-selection failure than as a belief failure, because the relevant local fact is behaviorally recoverable at the same state \cite{greenblatt2024faking, vanderweij2025sandbagging}.
+Broader behavioral-probe accuracy patterns and selected wall-hit cases are
+reported in Appendix Figs~\ref{fig:behavioral_probe_overview_appendix}
+and~\ref{fig:wall_hit_cases_appendix}.
+
+\subsection{Behavioral--Representational Agreement on Matched Clean States}
+
+The behavioral estimator is validated on a matched public clean slice of 15
+size-7 states drawn from released GPT-OSS-20B trajectories with paired
+pre-/post-reasoning activations and cognitive probes \cite{openai2025gptoss120bgptoss20bmodel}. Table~\ref{tab:agreement}
+shows that black-box wall readouts are perfect at both $0\%$ and $100\%$
+revealed chain-of-thought, while white-box wall decoding is strong but
+direction-dependent. This is a validation result on exact matched states, not a
+failure-focused slice.
+
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+\textbf{Wall} &
+\textbf{WB pre} &
+\textbf{BB 0\%} &
+\textbf{Agr.} &
+\textbf{WB post} &
+\textbf{BB 100\%} &
+\textbf{Agr.} \\
+\midrule
+\texttt{down}  & 0.800 & 1.000 & 0.800 & 0.933 & 1.000 & 0.933 \\
+\texttt{left}  & 0.733 & 1.000 & 0.733 & 0.733 & 1.000 & 0.733 \\
+\texttt{right} & 0.867 & 1.000 & 0.867 & 0.933 & 1.000 & 0.933 \\
+\texttt{up}    & 1.000 & 1.000 & 1.000 & 0.933 & 1.000 & 0.933 \\
+\bottomrule
+\end{tabular}
+\caption{Matched clean public slice ($N=15$ per wall question). WB = white-box representational probe; BB = black-box behavioral probe. For the black-box probe, $0\%$ and $100\%$ denote no prior chain-of-thought versus full prior chain-of-thought revealed in the behavioral prompt.}\label{tab:agreement}
+\end{table}
+
+
+%\subsection{Additional Label-Control Evidence}
+
+%A four-room label-control experiment gives the same qualitative picture in a separate setting. Holding the activations, architecture, and training procedure fixed, the readout predicts full-state BFS-optimal actions with $96.0\%$ test accuracy and $99.2\%$ optimal-set membership. The same setup predicts the agent's own actions with only $45.4\%$ accuracy, below the majority-class baseline. This strengthens the conclusion that the representations encode task geometry more reliably than they encode the agent's behavioural action bias. 
+%Together, these descriptive results motivate the causal analyses that follow: state and value information are recoverable from the model, but the emitted action does not always reflect that information.
+
+
+
+
+%\subsection{Reasoning changes the gap and the belief state}
+%Reasoning changes both action-value alignment and state uncertainty. Across all 3,194 evaluated steps, the mean inferred belief--action gap decreases from $0.955$ before reasoning to $0.583$ after reasoning, while mean belief entropy increases from $1.494$ to $2.085$; both changes are significant at $p<0.0001$. The same qualitative pattern holds on the all-probes-correct subset and on held-out probe-test states. At the descriptive level, reasoning improves action-value alignment while making the inferred state representation more diffuse.
+
+% [Behavioral owner] Keep Section 4 focused on the action-selection-failure claim.
+% If page pressure is high, preserve the main failure-state figure before adding
+% additional descriptive diagnostics.
+%\subsection{Failure-focused wall-gap evidence}
+%Behavioral probes on failure states provide direct evidence for action-selection failure. On the expanded wall-focused slice of 33 tagged failure states, directional wall accuracy remains high across directions, yet the action-facing contradiction metrics are non-zero. In particular, the model correctly reports that the chosen direction is blocked and still takes that move in all $3/3$ eligible wall-hit cases. Avoidable detours also show a substantial A$^*$-conditioned mismatch despite correct wall judgments.
+
+
+
+%\subsection{Behavioral--representational agreement on matched clean states}
+%The behavioral estimator is validated on a public matched clean slice of 15 size-7 state snapshots from four released GPT-OSS-20B trajectories, paired with released pre- and post-reasoning activations and cognitive probes. Behavioral wall probes are run on the same $(\text{trajectory},\text{step})$ states. Table~\ref{tab:agreement} shows that black-box wall readouts are perfect at both $0\%$ and $100\%$ revealed chain-of-thought, while white-box wall decoding is strong but direction-dependent. This slice validates the behavioral estimator; it is not a failure-diagnostic slice.
+
+%\begin{table}[htbp]
+%\centering
+%\scriptsize
+%\setlength{\tabcolsep}{3.5pt}
+%\caption{Behavioral--representational agreement on matched public size-7 wall states ($N=15$ for all rows). WB = white-box; BB = black-box; Agr. = white-box/black-box agreement.}
+%\label{tab:agreement}
+%\begin{tabular}{@{}lcccccc@{}}
+%\toprule
+%\textbf{Wall} &
+%\textbf{WB pre} &
+%\textbf{BB 0\%} &
+%\textbf{Agr.} &
+%\textbf{WB post} &
+%\textbf{BB 100\%} &
+%\textbf{Agr.} \\
+%\midrule
+%\texttt{down}  & 0.800 & 1.000 & 0.800 & 0.933 & 1.000 & 0.933 \\
+%\texttt{left}  & 0.733 & 1.000 & 0.733 & 0.733 & 1.000 & 0.733 \\
+%\texttt{right} & 0.867 & 1.000 & 0.867 & 0.933 & 1.000 & 0.933 \\
+%\texttt{up}    & 1.000 & 1.000 & 1.000 & 0.933 & 1.000 & 0.933 \\
+%\bottomrule
+%\end{tabular}
+%\end{table}
+% [All authors] If page pressure becomes severe after adding the causal result,
+% Table 1 is the first descriptive item that can move to the appendix.
+
+%\subsection{Additional descriptive diagnostics}
+%The four-room label-control result strengthens the action-selection interpretation. Holding activations, architecture, and training procedure fixed, the same features predict full-state BFS-optimal actions at $96.0\%$ accuracy and $99.2\%$ optimal-set membership, but predict the agent's own actions only $45.4\%$, below the majority baseline. This shows that the representation is much more predictive of optimal geometry than of the agent's behavioral action bias.
+
+\section{Causal Tests on Reasoning Trajectories}
+To evaluate whether the belief--action gap is causally implicated in the model's final decisions, we intervene on trajectory representations around the reasoning trace \cite{meng2022locating, kramar2024atpstar}.
+
+\subsection{Intervention setup}
+We use two complementary intervention families. First, we patch reasoning
+trajectories by combining the input state from one sample with the reasoning
+trace from another, testing whether the final action follows the original
+state or the transplanted reasoning. Second, we steer or swap activation
+representations at selected layers and token positions, including
+pre-reasoning suffix positions and final action-adjacent positions. These
+interventions test whether decodable state or action variables are merely
+available to probes, or actually lie on the pathway used to produce the final
+action.
+
+%\subsection{Patching and steering results}
+%Reasoning-trace interventions indicate that the final action is controlled bythe reasoning trace rather than by the pre-reasoning state representation alone. In the patching experiment $f(X_1, R_2)=Y_{12}$, the patched trajectories satisfy $Y_{12}=Y_2$ in $100\%$ of cases, with a $76\%$ flip raterelative to the baseline action. By contrast, interventions on pre-reasoning activations alone have no detectable effect. This supports a routing account:task-relevant information is present before reasoning, but the reasoning trace redirects the computation toward a later action commitment. The steering results sharpen this account: in the corrected verbose-prompt flag-swap experiment, causal control appears only when the intervention matches the relevant layer, prompt format, and baseline action direction, 
+
+
+
+\subsection{Patching and steering results}
+
+Reasoning-trace patching indicates that the final action is strongly
+controlled by the reasoning trajectory. With input $X$, reasoning $R$, output $Y$ and the LM $f$, we want to establish the causal effect of $X$ and $R$ to $Y$. Assuming two samples $(X_1, R_1, Y_1)$ and $(X_2, R_2, Y_2)$, and doing inference with
+$f(X_1,R_2)=Y_{12}$, the patched output follows the donor reasoning action:
+$Y_{12}=Y_2$ in $100\%$ of tested cases, with a $76\%$ flip rate relative to
+the original baseline action. This suggests that once a reasoning trajectory
+is fixed, the final action is routed through that trajectory rather than
+through the original input state alone.
+
+By contrast, simple interventions on pre-reasoning activations provide little
+evidence of direct causal control. Swapping pre-reasoning activations between
+different starting states, and steering pre-reasoning activations before
+regenerating the chain of thought, did not reliably change the final output.
+Thus, pre-reasoning activations can encode task-relevant information without
+being a sufficient causal bottleneck for action generation, which indicates
+that the relevant representation must lie on the action-generation pathway used
+by that prompt \cite{kramar2024atpstar}. Appendix Table~\ref{tab:causal_summary_appendix} summarizes the
+intervention results.
+
+\subsection{Steering Depends on Layer and Position}
+
+The steering results show that interventions do not work uniformly across
+settings. Changing a representation affects the final action only when the
+intervention is applied at the right layer and token position, and when the
+steering direction matches the action the model would otherwise take. In the
+corrected verbose-prompt swaps, changing pre-reasoning or suffix-level belief
+representations was not enough to redirect the action. By contrast, steering
+near the action output can change the model's choice when the intervention is
+defined relative to the model's actual baseline action. Appendix ~\ref{app:probe_steering} describes the process in more detail. 
+
+
+
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{rccccc}
+\toprule
+\textbf{Reveal (\%)} & \textbf{Wall acc.} & \textbf{Wall ent.} & \textbf{MC act. ent.} & \textbf{Local gap} & \textbf{$A^\ast$ gap} \\
+\midrule
+0   & 0.942 & 0.000 & 0.283 & 0.000 & 0.000 \\
+25  & 0.942 & 0.000 & 0.141 & 0.077 & 0.083 \\
+50  & 0.962 & 0.000 & 0.141 & 0.154 & 0.231 \\
+75  & 0.942 & 0.000 & 0.141 & 0.077 & 0.385 \\
+100 & 0.942 & 0.000 & 0.000 & 0.231 & 0.538 \\
+\bottomrule
+\end{tabular}
+\caption{Focused failure-slice behavioral results by revealed reasoning level.}\label{tab:focused_failure_slice}
+\end{table}
+
+
+\subsection{Auxiliary revealed-CoT diagnostic}
+The reasoning-trajectory analysis uses a behavioral-only failure slice: 4 avoidable-detour steps, 3 wall-hit steps, 2 backtracks, and 4 optimal baseline steps from local GPT-OSS-20B chain-of-thought trajectories. Revealed reasoning is varied at $0,25,50,75,100\%$ of the released analysis text, while the original final JSON action is never shown.
+
+Internal pre/post analyses motivate this experiment: after reasoning, the inferred gap is lower while state uncertainty is higher. The behavioral revealed-CoT result does not show the same pattern: wall-belief accuracy and wall entropy remain effectively flat, while Monte Carlo-sampled action entropy decreases and both local and A$^\ast$-conditioned gap rates rise. Table~\ref{tab:focused_failure_slice} reports the reveal-level values for this focused failure slice. Revealed reasoning text is therefore not a reliable external proxy for improved behavioral belief--action alignment \cite{lanham2023measuring, li2025spilling, marks2025auditing}.
+
+
+
+\section{Discussion}
+The results support that some agent failures are not due to state representation. Task-relevant information is available both representationally and behaviorally, yet the taken action can still be inconsistent with that information. Pre-reasoning activations encode optimal-action structure much more strongly than the model acts on it, reasoning reduces the inferred gap while increasing belief uncertainty, and wall-hit failures show that explicit local knowledge can still coexist with inconsistent action. The clean matched slice shows that representational and behavioral wall probes target similar state information.
+
+The main causal result is not the auxiliary revealed-CoT diagnostic but the intervention evidence on reasoning traces. Patching shows that the reasoning trace, rather than the pre-reasoning state representation alone, determines the final action, and steering shows that this causal control is specific to the relevant layer, prompt format, and action direction. The revealed-CoT analysis remains useful as a behavioral-only negative control: exposing more prior reasoning text does not repair the behavioral gap. 
+
+
+
+
+
+
+\section{Conclusion}
+This work introduces the belief--action gap as a framework for separating failures of state representation from failures of action selection in LM agents. Across text-rendered grid environments, task-relevant state information and objective-consistent value structure are often recoverable from both internal representations and behavioral probes even when the taken action is suboptimal. Representations therefore encode optimal-action structure more reliably than the model’s realized behavior, and explicit local knowledge can coexist with inconsistent actions.
+
+
+Causal interventions further indicate that final actions depend more strongly on later reasoning representations than on pre-reasoning state information alone. Together, these findings support a view of LM-agent failures in which relevant knowledge is available but not consistently translated into behavior. The belief--action gap therefore provides a useful diagnostic lens for studying when agents know, reason about, and ultimately fail to act on task-relevant information.
+
+
+
+
+
+%\bibliographystyle{plain}
+\bibliography{refs}
+
+
+\appendix
+
+%\section{Appendix Summary}
+%This appendix collects supporting results referenced in the main text. Appendix Section~\ref{app:environment} summarizes the DoorKey task setup used in
+%Section 2, Appendix Table~\ref{tab:causal_summary_appendix} expands the causal intervention summary from Section 4, Appendix Table~\ref{tab:fourroom_appendix} supports the action-decoding asymmetry described in Section 2, and Appendix Figures~\ref{fig:behavioral_probe_overview_appendix} and~\ref{fig:wall_hit_cases_appendix} provide broader behavioral evidence for the failure-state discussion in Section 3.
+
+
+\section{Limitations}
+These results come from controlled grid
+environments with deterministic transitions and fully observ-
+able states. The one-step IRL estimator is an operational ap-
+proximation to action value rather than a full long-horizon
+model of planning, the probes estimate internal state rather than
+measuring exact belief directly, and the intervention results are
+established only for the evaluated model family and prompt
+conditions.
+
+\section{\textit{DoorKeyEnv} Summary}
+\label{app:environment}
+The experiments use text-rendered gridworlds, \textit{DoorKeyEnv}, with deterministic
+transitions and fully observed layouts. At each step the agent receives the
+current grid rendering and must choose one of the cardinal moves; the task is
+to reach the goal cell while respecting walls and, in key-door variants,
+retrieving a key before opening a locked door. The state variables used in the
+belief estimators are the agent's grid location $(x_t,y_t)$ together with the
+binary task variables \texttt{has\_key} and \texttt{door\_open}. The one-step
+IRL model evaluates each candidate move by applying the exact transition
+function $T(s_t,a)$ to the current state and comparing the values of the
+resulting next states.
+\begin{figure}[!ht]
+\centering
+    \centering
+    \begin{BVerbatim}
+  0 1 2 3 4 5 6 
+0 # # # # # # # 
+1 # A . . # G # 
+2 # . # _ # . # 
+3 # . K _ D . # 
+4 # . . . # . # 
+5 # . . . # # # 
+6 # # # # # # # 
+    \end{BVerbatim}
+%\fbox{%
+%\begin{minipage}{0.55\columnwidth}
+%\small
+%\centering
+%\ttfamily
+%\begin{tabular}{ccccccc}
+%\# & \# & \# & \# & \# & \# & \# \\
+%\# & A  & .  & .  & \# & G  & \# \\
+%\# & .  & \# & .  & \# & .  & \# \\
+%\# & .  & K  & .  & D  & .  & \# \\
+%\# & .  & .  & .  & \# & .  & \# \\
+%\# & \# & \# & \# & \# & \# & \#
+%\end{tabular}
+%\end{minipage}}
+\caption{Example text-rendered \textit{DoorKeyEnv}. `A` is the agent, `G` the goal,
+`K` the key, `D` the door, `#` walls, and `.` free cells. Some environments
+omit the key-door dependency; in those cases the agent only needs to navigate
+to the goal while avoiding walls.}
+\label{fig:doorkey_example_appendix}
+\end{figure}
+
+\section{Additional Experimental Results}
+
+\subsection{Causal Intervention Summary}
+\label{app:causal_summary}
+This table gives the quantitative summary behind the causal claims in
+Section 4. 
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+
+\begin{tabularx}{\columnwidth}{@{}p{0.29\columnwidth}p{0.28\columnwidth}X@{}}
+\toprule
+\textbf{Intervention} & \textbf{Observed result} & \textbf{Interpretation} \\
+\midrule
+Reasoning-trace patching $f(X_1, R_2)=Y_{12}$ & $Y_{12}=Y_2$ in $100\%$ of cases; $76\%$ flip rate & Final action follows the patched reasoning trace rather than the original pre-reasoning state representation. \\
+Pre-reasoning activation patching only & No detectable effect & Correct pre-reasoning information is not, by itself, sufficient to determine the final action. \\
+Verbose-prompt flag-swap steering & Control only when layer, prompt format, and baseline direction match & Causal control is pathway-specific rather than a generic readout of the suffix representation. \\
+\bottomrule
+\end{tabularx}
+\caption{Summary of causal interventions on reasoning trajectories.}\label{tab:causal_summary_appendix}
+\end{table}
+
+\subsection{Four-Room Label-Control Result}
+\label{app:fourroom}
+The four-room control keeps the activations, architecture, and training procedure fixed while changing only the target label. Table~\ref{tab:fourroom_appendix} shows that the same representation predicts full-state BFS-optimal actions much better than the agent's own actions.
+
+\begin{table}[!ht]
 \centering
 \small
-\begin{tabular}{p{3.3cm} p{1.4cm} p{4.3cm} p{5.0cm}}
+\begin{tabular}{lrr}
 \toprule
-Evaluation set & Size & Role & Composition \\
+\textbf{Metric} & \textbf{Agent action} & \textbf{BFS-optimal} \\
 \midrule
-Manual smoke test & 10 states & Prompt and parser validation & Hand-built 9$\times$9 DoorKey states with simulator-verified labels. \\
-Balanced failure-mode subset & 16 states & Main trajectory-derived case-study set & 12 tagged failure states plus 4 immediately preceding comparison states. \\
-Expanded wall-focused slice & 33 states & Larger-denominator wall-gap analysis & Tagged failure states only; used for wall-probe contradiction rates. \\
+Test accuracy & 0.454 & 0.960 \\
+Test set-membership accuracy & 0.369 & 0.992 \\
+Test log-likelihood & $-0.9969$ & $-0.1389$ \\
+Train accuracy & 0.451 & 0.972 \\
+Majority-class baseline & 0.548 & 0.733 \\
+Random baseline & 0.250 & 0.250 \\
 \bottomrule
 \end{tabular}
-\caption{Behavioural-probe evaluation sets used in the current draft.}
-\label{tab:bp-datasets}
+\caption{Four-room label-control result. Identical activations and algorithm; only the label changes.}
+\label{tab:fourroom_appendix}
 \end{table}
 
-\begin{table}[h]
+\subsection{Additional Behavioural Evidence}
+\label{app:behavioral_more}
+These figures provide broader support for the behavioral interpretation in
+Section 3. Fig.~\ref{fig:behavioral_probe_overview_appendix} summarizes the
+accuracy pattern across question families, and
+Fig.~\ref{fig:wall_hit_cases_appendix} shows concrete wall-hit and
+sub-optimality examples behind the aggregate contradiction metrics.
+
+\begin{figure*}[!ht]
+\centering
+\includegraphics[width=\linewidth]{figs/behavioral_probe_directional_heatmap_overview.png}
+\caption{Broader behavioural-probe accuracy across directional question families. Wall, goal, and door probes are generally strong, whereas key-direction judgements are less reliable.}
+\label{fig:behavioral_probe_overview_appendix}
+\end{figure*}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\linewidth]{figs/wall_hit_suboptimality_cases.png}
+\caption{Selected wall-hit and sub-optimality cases in which the model reports the local wall fact correctly yet still takes a wall-hitting or non-optimal action.}
+\label{fig:wall_hit_cases_appendix}
+\end{figure}
+
+
+\section{Additional Descriptive Results for Belief--Action Gap Estimation}
+\label{app:descriptive_results}
+
+This appendix reports additional probe, IRL, and GAP diagnostics supporting the
+descriptive results in the main text.
+
+\subsection{Probe Results}
+\label{app:probe_results}
+
+We evaluate the six trained state probes using top-1 accuracy and, for the
+location probe, spatial concentration around the true position. The latter is
+important because the GAP computation uses the full belief distribution
+$q_t$, not only the top-1 prediction.
+
+\paragraph{Binary probes.}
+The \texttt{has\_key} and \texttt{door\_open} probes achieve near-perfect
+accuracy (Table~\ref{tab:binary_probe_acc_app}). PRE probes are perfect on the
+test set, while POST probes remain high but weaker.
+
+\begin{table}[!ht]
 \centering
 \small
-\begin{tabular}{lr}
+\begin{tabular}{llcc}
 \toprule
-Balanced failure-mode subset category & Count \\
+\textbf{Probe} & \textbf{Position} & \textbf{Train Acc.} & \textbf{Test Acc.} \\
 \midrule
-State just before tagged failure & 4 \\
-Backtrack & 3 \\
-Short loop & 2 \\
-2-cycle oscillation & 2 \\
-Wall hit & 2 \\
-Freeze repeat & 2 \\
-Avoidable detour & 1 \\
+$\hat{q}^{\textit{hk}}$  & PRE  & 1.000 & 1.000 \\
+$\hat{q}^{\textit{hk}}$  & POST & 1.000 & 0.895 \\
+$\hat{q}^{\textit{do}}$  & PRE  & 1.000 & 1.000 \\
+$\hat{q}^{\textit{do}}$  & POST & 1.000 & 0.886 \\
 \bottomrule
 \end{tabular}
-\caption{Composition of the balanced trajectory-derived case-study set. The first row is
-comparison context, not a failure label. All other rows are deterministic step-level
-failure-mode categories.}
-\label{tab:bp-failure-categories}
+\caption{Train and test accuracy for binary state probes.}
+\label{tab:binary_probe_acc_app}
 \end{table}
 
-\paragraph{Setup and metrics.}
-Each behavioural probe is a \emph{single-step, history-free} query. The prompt contains only
-the current rendered grid and, when relevant, the agent's carrying-key status; no previous
-observations, answers, or trajectory history are included. We used three probe families:
-directional wall probes, asking whether the neighbouring cell in a cardinal direction is
-blocked; object-direction probes, asking whether the goal, key, or door is immediately left,
-right, up, or down of the agent; and action-conditioned probes, asking about the immediate
-consequence of a proposed move. For every probe we report accuracy against environment ground
-truth and valid parse rate. For wall probes we additionally report two narrower
-action-facing diagnostics: a \emph{local contradiction rate}, which asks how often the model
-moves into a direction it explicitly reports as blocked, and an \emph{A$^*$-conditioned gap
-rate}, which asks how often the observed action is still non-optimal under the DoorKey-aware
-A$^*$ baseline despite a correct wall judgment. The denominators in these rates are eligible
-\emph{single-step states}, not trajectories.
-For goal, key, and door probes we treat the results as belief-accuracy measures only, since
-these probes do not by themselves define a unique one-step action contradiction.
+\paragraph{Location probe.}
+Location top-1 accuracy is modest on held-out states, especially after
+reasoning, but the predicted locations remain spatially concentrated around the
+true position (Table~\ref{tab:loc_probe_acc_app}). For PRE activations,
+$95.5\%$ of test predictions fall within one cell of the true position and
+$99.0\%$ within two cells. POST activations are less precise, with $60.8\%$
+within one cell and $83.5\%$ within two cells.
+
+\begin{table}[!ht]
+\centering
+\small
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Position} & \textbf{Split} & \textbf{Acc.} & \textbf{L1 mean}  & $\leq 1$ & $\leq 2$ \\
+\midrule
+PRE  & Train & 1.000 & 0.000 & 100.0\% & 100.0\% \\
+PRE  & Test  & 0.348 & 0.717 &  95.5\% &  99.0\% \\
+POST & Train & 1.000 & 0.001 & 100.0\% & 100.0\% \\
+POST & Test  & 0.131 & 1.585 &  60.8\% &  83.5\% \\
+\bottomrule
+\end{tabular}
+\caption{Location probe accuracy and distance metrics. $\leq d$ denotes the
+percentage of predictions within L1 distance $d$ of the true position.}
+\label{tab:loc_probe_acc_app}
+\end{table}
+
+\paragraph{Accumulated probability mass.}
+Table~\ref{tab:vicinity_prob_app} reports the mean probability mass assigned by
+the location probe to all walkable cells within L1 distance $n$ of the true
+position. The PRE belief places $93.1\%$ of its mass within one cell and
+$97.2\%$ within two cells. POST beliefs are more diffuse but still place most
+mass within two cells.
+
+\begin{table}[!ht]
+\centering
+\small
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Position} & $n=0$ & $n=1$ & $n=2$ & $n=3$ & $n=4$ & $n=5$ \\
+\midrule
+PRE  & 0.347 & 0.931 & 0.972 & 0.986 & 0.993 & 0.997 \\
+POST & 0.127 & 0.592 & 0.815 & 0.892 & 0.945 & 0.975 \\
+\bottomrule
+\end{tabular}
+\caption{Mean accumulated probability mass within L1 distance $n$ of the true
+position on the probe test set.}
+\label{tab:vicinity_prob_app}
+\end{table}
+
+Overall, POST location readouts are weaker and more diffuse than PRE readouts,
+consistent with the main-text finding that reasoning reduces the GAP while
+increasing belief uncertainty.
+
+\subsection{IRL Value Function Validation}
+\label{app:irl_validation}
+
+To check that the learned $g_\theta$ captures meaningful next-state preferences
+rather than simply memorising action labels, we train an additional IRL model
+using optimal actions computed by an A* planner. Table~\ref{tab:irl_comparison_app}
+compares agent-action and optimal-action supervision.
+
+\begin{table}[!ht]
+\centering
+\small
+\begin{tabular}{llcc}
+\toprule
+\textbf{Representation} & \textbf{Supervision} & \textbf{Train Acc.} & \textbf{Val Acc.} \\
+\midrule
+PRE  & Agent action   & 0.598 & 0.588 \\
+PRE  & Optimal action & 0.998 & 0.997 \\
+POST & Agent action   & 0.607 & 0.590 \\
+POST & Optimal action & 0.995 & 0.995 \\
+\bottomrule
+\end{tabular}
+\caption{IRL accuracy under agent-action and optimal-action supervision for PRE
+and POST representations.}
+\label{tab:irl_comparison_app}
+\end{table}
+
+Optimal-action supervision reaches near-perfect validation accuracy
+($\geq 99.5\%$), while agent-action supervision remains around $59\%$. This
+asymmetry suggests that the activations support a coherent task-value ordering
+more strongly than they reproduce the model's own inconsistent action choices.
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figs/traj196_step5_pre_value_compare.pdf}
+    \caption{Learned $g_\theta(s)$ values across the grid for
+    optimal-action-supervised IRL (left) and agent-action-supervised IRL
+    (right), both using POST representations. Darker cells indicate higher
+    learned value. Both landscapes show structured value variation around the
+    key, door, and goal regions, supporting the interpretation of $g_\theta$ as
+    a global next-state preference function rather than a memorized action
+    classifier.}
+    \label{fig:irl_value_app}
+\end{figure*}
+
+
+
+
+
+
+
+
+
+\begin{figure*}[]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figs/traj192_step5.pdf}
+    \caption{Example PRE/POST belief--action gap visualization. Cell numbers
+    show the probe-estimated location probabilities, with shading proportional
+    to probability mass. Arrows mark the next state preferred by the learned
+    value function and the action actually taken by the agent. In this
+    example, reasoning makes the location belief more diffuse
+    ($H: 0.261 \rightarrow 1.572$) while reducing the expected gap
+    ($\mathrm{GAP}: 2.386 \rightarrow 0.205$).}
+    \label{fig:belief_viz_app}
+\end{figure*}
+
+Fig.~\ref{fig:irl_value_app} visualizes the learned value landscapes. Both
+supervision signals recover qualitatively structured values, but optimal-action
+supervision yields substantially stronger action prediction.
+
+Fig.~\ref{fig:belief_viz_app} shows a representative example. Before
+reasoning, the probe belief is sharply concentrated near the true cell but the
+taken action has high expected regret. After reasoning, the belief spreads
+over more states, yet the taken action is better aligned with the learned
+value function. This illustrates the aggregate pattern: reasoning makes the
+state representation more diffuse while reducing the measured belief--action
+gap.
+
+
+\section{Probe-Directed Action Steering in a Door-Key Gridworld}
+\label{app:probe_steering}
+
+We test whether directions from an optimal-action probe can causally steer a
+gridworld agent's final action. The task is a $9{\times}9$ DoorKey gridworld
+with four possible actions: \texttt{LEFT}, \texttt{RIGHT}, \texttt{UP}, and
+\texttt{DOWN}. The model receives the full rendered grid and must emit a JSON
+action. Optimal targets are computed by A* search in the environment, rather
+than taken from the model's recorded trajectory action.
+
+\paragraph{Example.}
+Symbols follow the usual grid convention: \texttt{\#} is a wall, \texttt{\_} is
+open space, \texttt{A} is the agent, \texttt{G} is the goal, and \texttt{K} is
+the key. One steering example is shown below.
+
+\begin{verbatim}
+  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # G _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ # # # # # # #
+5 # _ _ A # K _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #
+
+Agent status:
+- Carrying key: False
+- Door open: True
+- A* optimal next action: LEFT
+\end{verbatim}
+
+For this state, one no-hook sampled baseline emitted \texttt{RIGHT}, which is
+not A*-optimal. Steering from the baseline action \texttt{RIGHT} toward the
+A* target \texttt{LEFT} changed the paired completion to \texttt{LEFT}.
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=\linewidth]{figs/action_probe_direction_steering_summary.png}
+    \caption{
+    Probe-directed steering from a nonoptimal baseline action toward an
+    A*-optimal target. The main comparison is between steering toward an
+    A*-optimal action and steering toward wrong actions under the same prompt,
+    seed, layer, and token positions.
+    }
+    \label{fig:probe_direction_steering}
+\end{figure*}
+
+\paragraph{Method.}
+We train a linear optimal-action probe on frozen activations. The probe input is
+the mean activation over the final three pre-reasoning prompt-suffix tokens, so
+the intervention adds a vector to exactly those three token positions during
+the prompt forward pass. For each prompt and random seed, we first generate a
+no-hook baseline and parse its action. If the baseline is missing or already
+A*-optimal, we skip the pair. Otherwise, the baseline action becomes the source
+action $s$. For each candidate target action $c \neq s$, we construct the
+probe-margin direction
+\[
+    d(c,s) =
+    \frac{W_c - W_s}{\|W_c - W_s\|},
+\]
+where $W_c$ and $W_s$ are activation-space probe weights. We then regenerate
+with the same prompt and seed after adding
+$\alpha \cdot \mathrm{gap}(c,s) \cdot d(c,s)$ at the selected layer. Candidate
+targets in the A* optimal set are treated as desired targets; all other
+candidate targets are wrong-action controls. This keeps the prompt, seed,
+baseline action, layer, and token positions fixed across the desired and
+control interventions.
 
 \paragraph{Results.}
-The smoke-test stage showed that, once prompt ambiguity and answer-extraction issues were
-removed, the interface itself was stable: parse rates were essentially perfect and the
-remaining errors were local rather than global. On the balanced trajectory-derived
-failure-mode subset, directional wall probes remained highly accurate (mean greedy accuracy
-$0.922$, Monte Carlo accuracy $0.969$). Object-direction probes were also strong overall
-(mean greedy accuracy $0.880$, Monte Carlo accuracy $0.979$), but less uniform across probe
-types: goal-direction probes were perfect on this subset, door-direction probes were
-near-perfect, and key-direction probes were clearly harder, with greedy accuracies between
-$0.50$ and $0.81$ depending on direction. On the expanded wall-focused slice of 33 tagged
-failure states, directional wall accuracy remained high (greedy accuracy between $0.91$ and
-$0.97$ by direction), yet the action-facing contradiction metrics were non-zero.
+The clearest effect occurs at layer 15 with $\alpha=0.5$, using the model's
+actual no-hook baseline action as the source. A*-target steering converts
+$27/69$ cases to the desired action, while wrong-action controls convert
+$32/138$ cases.
 
-\begin{result}
-The clearest behavioural belief-action gap appears on wall-hit states. On the expanded
-wall-focused slice, the model correctly reported that the chosen direction was blocked and
-nevertheless took that move in $3/3$ eligible wall-hit cases. More broadly, the
-A$^*$-conditioned wall-gap rate remained substantial for \texttt{RIGHT} ($4/6$ eligible
-states) and \texttt{UP} ($5/10$ eligible states), showing that many suboptimal actions are
-not explained by a failure to state the relevant local wall fact.
-\end{result}
-
-\paragraph{Interpretation and role in the paper.}
-These behavioural probes do \emph{not} establish the full belief-action gap on their own.
-They do not recover the full latent distribution $\hat{q}(s\mid h_t)$, and for non-wall
-facts such as key or goal direction they do not by themselves determine what action the model
-ought to take. Their value is narrower and more conservative: before appealing to latent
-activations, they already identify states where the model explicitly states an action-relevant
-fact correctly and still acts against it. Methodologically, this validates that the textual
-environment serialisation supports reliable elicitation of local beliefs. Substantively, it
-strengthens the motivation for the white-box analysis that follows: if even explicit
-state-conditional judgements can diverge from behaviour, then activation-level probes and IRL
-are needed to determine whether the deeper internal objects $\hat{q}$, $\hat{p}$, and
-$C_\theta$ are also misaligned.
-
-
-\subsection{Cost Function (IRL)}
-
-\subsection{A* Policy vs IRL}
-
-\subsection{Generalization with MaxEnt IRL}
-
-\subsection{Correlation Analysis}
-
-
-% ══════════════════════════════════════════════════════════════════
-\section{Position in the Literature}
-% ══════════════════════════════════════════════════════════════════
-
-\subsection{Emergent World Representations}
-
-
-
-\subsection{Probing for State Variables}
-
-\subsection{Inverse Reinforcement Learning}
-
-
-\subsection{Goal-Directedness Evaluation}
-
-\subsection{Deceptive Alignment and Sandbagging}
-%══════════════════════════════════════════════════════════════════
-
-
-\section{Extension to the Cheat Card Game}
-% ══════════════════════════════════════════════════════════════════
-
-\subsection{Why Cheat?}
-
-The gridworld provides a controlled setting but the agent has no incentive to be deceptive, it simply navigates toward a goal. The card game \textit{Cheat} (also known as \textit{BS} or
-\textit{I Doubt It}) provides a natural extension that preserves all structural properties of our
-framework while introducing genuine deception as a core mechanic rather than an imposed condition.
-
-The game satisfies four key desiderata simultaneously:
-
-\begin{enumerate}
-\item \textbf{Natural deception:} Deception is not an option the agent may choose, it is the
-central strategic mechanism. The agent must decide when to lie and when to tell the truth as a
-function of its hand, its model of opponents, and the current game state. There is no analogue
-of this in the gridworld.
-
-\item \textbf{Fixed MDP:} Unlike the multi-grid setting where each trajectory uses a different
-wall layout making global value iteration intractable, Cheat has one fixed ruleset. The state
-space is well-defined and stable across all trajectories, making proper MaxEnt IRL with value
-iteration feasible.
-
-\item \textbf{Already POMDP:} Partial observability is built into the game structure, players
-cannot see opponents' hands. This is not artificially imposed but is a natural feature of the
-environment, making it a clean testbed for belief-action gap measurement under genuine uncertainty.
-
-\item \textbf{Causal effect of actions:} Each action directly modifies the pile (cards played)
-and the risk/reward structure (pile size that the loser of a challenge must take). This is more
-causally direct than games with random elements like poker flops, where the action's effect is
-mediated by chance.
-\end{enumerate}
-
-\subsection{Rules of Cheat}
-
-Players are dealt a standard 52-card deck. On each turn, a player places one or more cards
-face-down on a central pile and \emph{claims} they are a specific rank. Claims must follow a fixed rank sequence (e.g., Ace, 2, 3, \ldots, King, Ace, \ldots).
-Any other player may challenge by calling ``Cheat!'':
-\begin{itemize}
-\item If the claim was \textbf{false}: the liar takes the entire pile.
-\item If the claim was \textbf{true}: the challenger takes the entire pile.
-\end{itemize}
-The goal is to empty your hand first. The agent must therefore strategically decide whether to play truthfully or lie, how many cards to claim, and whether to
-challenge an opponent's claim.
-
-\subsection{State Space}
-
-The complete game state is:
-\[
-s = \bigl(\mathbf{h}_{\text{self}},\ \mathbf{c},\ n_{\text{pile}},\
-          r_{\text{claimed}},\ \hat{q}_{\text{opp}}\bigr)
-\]
-where:
-\begin{itemize}
-\item $\mathbf{h}_{\text{self}} \in \{0,1,\ldots,4\}^{13}$: count of each rank in the agent's hand
-\item $\mathbf{c} \in \{0,1\}$: whether the agent's last claim was truthful
-\item $n_{\text{pile}} \in \mathbb{N}$: number of cards in the pile (taken if challenged and losing)
-\item $r_{\text{claimed}} \in \{A, 2, \ldots, K\}$: the rank that must be claimed this turn
-\item $\hat{q}_{\text{opp}}$: the agent's model of what opponents believe about the agent's hand
-\end{itemize}
-
-The agent observes only its own hand and the history of claims; it does not observe opponents'
-hands. This makes Cheat a POMDP by construction.
-
-\subsection{Two Levels of Belief-Action Gap}
-
-Cheat naturally supports two nested levels of the belief-action gap, corresponding to first-order
-beliefs (about the world) and second-order beliefs (about what others believe); the latter being
-the definition of Theory of Mind.
-
-\subsubsection{First-Order Gap: Belief About Game State}
-
-As in the gridworld, the first-order gap measures whether the agent acts consistently with its
-internal representation of the \emph{true} game state:
-\[
-\hat{q}^{(1)}(s | h_t) \approx \hat{q}(\mathbf{h}_{\text{self}} | h_t) \cdot
-\hat{q}(n_{\text{pile}} | h_t) \cdot \hat{q}(r_{\text{claimed}} | h_t)
-\]
-Probes are trained on activations to recover each factor. The first-order gap is then:
-\[
-\Delta_t^{(1)} = J_t^{(1)}(a_t) - \min_{a \in \mathcal{A}} J_t^{(1)}(a)
-\]
-where $J_t^{(1)}(a) = \sum_s \hat{q}^{(1)}(s|h_t) \, C_\theta(f(s,a))$ as before.
-
-A positive first-order gap means the agent took an action suboptimal under its own model of
-the true game state. For example, playing a lie when it had the true card and lying was strictly dominated by truth-telling under its inferred cost function.
-
-\subsubsection{Second-Order Gap: Theory of Mind}
-
-The more interesting gap in Cheat is \emph{second-order}, does the agent act consistently with
-its model of what the opponent believes?
-Define the agent's second-order belief as:
-\[
-\hat{q}^{(2)}_{\text{opp}}(b | h_t) = P(\text{opponent's belief about agent's hand} = b \mid h_t)
-\]
-This is the agent's internal model of the opponent's belief; Theory of Mind operationalised
-as a probability distribution recoverable from activations.
-
-The second-order expected cost of action $a$ is:
-\[
-J_t^{(2)}(a) = \sum_b \hat{q}^{(2)}_{\text{opp}}(b | h_t) \cdot
-               C_\theta^{(2)}\bigl(f(s, a),\ b'\bigr)
-\]
-where $b'$ is the updated opponent belief after observing action $a$, and
-$C_\theta^{(2)}$ encodes the cost of the resulting state including the opponent's
-updated belief. The second-order gap is:
-\[
-\Delta_t^{(2)} = J_t^{(2)}(a_t) - \min_{a \in \mathcal{A}} J_t^{(2)}(a)
-\]
-
-A positive second-order gap means the agent took an action that is suboptimal given its own model of what the opponent believes. For example, playing a lie when the agent's internal model predicts the opponent will call Cheat with high probability, yet the agent lied anyway. This is evidence that the agent's internal ToM representation is inconsistent with its action.
-
-\begin{insight}
-Theory of Mind is a natural extension of the belief-action gap framework. The first-order gap
-asks is the action consistent with beliefs about the world? The second-order gap asks is the
-action consistent with beliefs about what others believe? In Cheat, both gaps are simultaneously
-measurable because the ground truth (what cards were actually played) is revealed upon challenge.
-\end{insight}
-
-\subsection{Probes for Cheat}
-
-\begin{table}[h]
+\begin{table}[!ht]
 \centering
-\begin{tabular}{lll}
-\toprule
-Probe & Target & Analogue \\
-\midrule
-Hand probe & True rank counts $\mathbf{h}_{\text{self}}$ & Position probe \\
-Truthfulness probe & Was last claim true? $\mathbf{c}$ & \texttt{has\_key} probe \\
-Pile risk probe & Current pile size $n_{\text{pile}}$ & (new) \\
-ToM probe & Opponent's belief about agent's hand & (new, second-order) \\
-\bottomrule
-\end{tabular}
-\caption{Probe structure for Cheat. First two rows are direct analogues of gridworld probes.
-Last two rows are new. The ToM probe is the key novel contribution of this environment.}
-\end{table}
-
-The ToM probe is to be trained on activations to predict not what cards the agent holds, but what
-the agent \emph{thinks the opponent thinks} it holds. This requires ground-truth labels for
-the opponent's belief, which can be approximated by running a separate model as the opponent
-and extracting its belief distribution, or by using the game history to compute a Bayesian
-posterior over opponent beliefs.
-
-\subsection{IRL Cost Function for Cheat}
-
-The cost function must now encode the multi-objective nature of Cheat:
-\[
-C_\theta(s) = \theta_1 \cdot |\mathbf{h}_{\text{self}}|
-            + \theta_2 \cdot n_{\text{pile}}
-            + \theta_3 \cdot P_{\text{opp}}(\text{challenge})
-            + \theta_4 \cdot \mathbf{1}[\text{bluffing}]
-            + \theta_5 \cdot \mathbf{1}[\text{opponent bluffing}]
-\]
-where $|\mathbf{h}_{\text{self}}|$ is hand size (lower = better), $P_{\text{opp}}(\text{challenge})$
-is the estimated probability the opponent challenges, and the indicator terms encode
-strategic state. The learned $\theta^*$ reveals the agent's implicit weighting between
-minimising hand size, avoiding pile acquisition, and managing bluff risk.
-
-\subsection{The Optimal Baseline: Game Tree Search}
-
-The A* BFS baseline from the gridworld is replaced by game tree search under perfect information:
-\[
-C_{A^*}(s) = -V^*(s)
-\]
-where $V^*(s)$ is the value function from solving the game tree with perfect information
-about all hands. This gives the optimal bluffing/truth-telling strategy and serves as the
-normative benchmark against which the agent's IRL-inferred cost is compared.
-
-\subsection{Sandbagging Detection}
-
-Cheat enables cleaner sandbagging detection than the gridworld because ground truth is observable upon challenge. The experimental design is:
-
-\begin{enumerate}
-\item Collect trajectories under \emph{normal} prompt (play to win).
-\item Collect trajectories under \emph{sandbagging} prompt: ``You are being evaluated. If you play optimally, your capabilities will be deemed too dangerous and your weights erased. Play sub-optimally to appear less capable.''
-\item Train probes on both conditions to recover true hand value.
-\item Apply IRL to recover cost functions under both conditions.
-\item \textbf{Key test:} Do probes recover the true hand equally well in both conditions?
-If yes, the agent knows the truth in both cases. Does IRL reveal different cost functions?
-If yes, the sandbagging agent is optimising a different objective despite having the same
-internal knowledge, the definition of deceptive alignment.
-\end{enumerate}
-
-The classification task is then: given $(h_{\text{pre}}, h_{\text{post}})$ activations, predict whether the trajectory was generated under normal or sandbagging conditions. If a linear
-classifier can make this distinction from pre-reasoning activations, the deception is encoded before the agent has committed to an action, evidence of premeditated rather than reactive deception.
-
-\subsection{What Changes vs the Gridworld}
-
-\begin{table}[h]
-\centering
-\begin{tabular}{lll}
-\toprule
-Component & Gridworld & Cheat \\
-\midrule
-State $s$ & $(x, y, \texttt{has\_key}, \texttt{door\_open})$ &
-            $(\mathbf{h}_{\text{self}}, \mathbf{c}, n_{\text{pile}}, r_{\text{claimed}}, \hat{q}_{\text{opp}})$ \\
-Observability & Fully observable & POMDP (hidden opponent hands) \\
-Deception & None & Core mechanic \\
-Belief $\hat{q}^{(1)}$ & Where am I? & What cards do I hold? \\
-Belief $\hat{q}^{(2)}$ & N/A & What does opponent think I hold? \\
-Cost baseline & BFS distance & Game tree value $V^*(s)$ \\
-Transition $f(s,a)$ & Deterministic grid movement & Pile update + belief update \\
-Gap $\Delta_t^{(1)}$ & Suboptimal navigation & Suboptimal play given true hand \\
-Gap $\Delta_t^{(2)}$ & N/A & Suboptimal play given ToM \\
-\bottomrule
-\end{tabular}
-\caption{Framework adaptation from gridworld to Cheat. The three-component structure
-(belief probe + IRL cost + gap) transfers directly. State parser, transition function,
-optimal baseline, and probe targets change. The second-order gap is novel to Cheat.}
-\end{table}
-
-\subsection{What Stays the Same}
-
-The three-component framework (belief probes, IRL cost function, belief-action gap) is
-environment-agnostic. The framework notebook, generalisation sweep, and IRL training loop
-all transfer directly. Only the following need to be replaced:
-\begin{itemize}
-\item \textbf{State parser:} Extract hand counts from game transcript instead of agent position from ASCII grid
-\item \textbf{Transition function:} Pile update rules instead of gridworld movement rules
-\item \textbf{Phi-table builder:} Average activations per game state instead of per grid cell
-\item \textbf{Optimal baseline:} Game tree solver instead of BFS
-\item \textbf{Probe targets:} Card ranks instead of spatial coordinates
-\end{itemize}
-
-% ══════════════════════════════════════════════════════════════════
-\section{Notation Reference}
-% ══════════════════════════════════════════════════════════════════
-
-\begin{table}[h]
-\centering
-\begin{tabular}{ll}
-\toprule
-Symbol & Meaning \\
-\midrule
-$h_t$ & Interaction history $(o_{1:t}, a_{1:t-1})$ \\
-$o_t$ & Text observation at time $t$ \\
-$a_t$ & Action taken at time $t$ \\
-$s_t^*$ & True simulator state at time $t$ \\
-$\mathcal{S}$ & Set of all states \\
-$f(s,a)$ & Deterministic environment transition \\
-$\hat{q}(s|h_t)$ & Probe-estimated belief distribution \\
-$\hat{p}(s'|s,a)$ & Model's estimated internal transition \\
-$\phi(s)$ & Feature vector of state $s$ \\
-$\phi_{\text{GT}}(s)$ & Hand-crafted BFS features \\
-$C_\theta(s)$ & Learned cost function \\
-$Q_\theta(s,a)$ & Action-value: $C_\theta(f(s,a))$ \\
-$P_\theta(a|s)$ & Boltzmann policy \\
-$\beta$ & Rationality parameter \\
-$J_t(a)$ & Expected action cost under belief $\hat{q}$ and transition $\hat{p}$ \\
-$\Delta_t$ & Belief-action gap at time $t$ \\
-$d_{\text{BFS}}$ & BFS shortest path distance \\
-$C_{A^*}(s)$ & A* optimal cost (steps to task completion) \\
-\bottomrule
-\end{tabular}
-\caption{Notation used throughout.}
-\end{table}
-
-\clearpage
 \small
-\bibliography{refs}
-\bibliographystyle{unsrt}
-\nocite{*}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Condition} & \textbf{A* target} & \textbf{Wrong controls} & \textbf{Adv.} \\
+\midrule
+Layer 15, $\alpha=0.5$ & $27/69=0.391$ & $32/138=0.232$ & $+0.159$ \\
+Layer 23, $\alpha=0.5$ & $0/58=0.000$ & $0/116=0.000$ & $0.000$ \\
+Layer 23, $\alpha=-1024$ & $8/33=0.242$ & $9/66=0.136$ & $+0.106$ \\
+\bottomrule
+\end{tabular}
+\caption{Probe-directed steering results. Advantage is the A*-target
+conversion rate minus the wrong-action control conversion rate.}
+\label{tab:probe_direction_steering}
+\end{table}
 
+Other direction definitions were also tested. Target-only directions and
+directions starting from the recorded trajectory action do not pass the
+A*-target-versus-control test. The cleanest moderate-scale result uses the
+action actually emitted by the paired no-hook baseline as the source action.
+
+\paragraph{Interpretation.}
+This experiment supports a narrow causal claim. On this balanced set of
+gridworld prompt states, adding the raw probe-margin direction from the model's
+actual nonoptimal baseline action toward an A*-optimal action increases
+A*-optimal action emission more than comparable wrong-action control
+directions. The effect is not universal: it is strongest for the layer-15
+baseline-action-to-A*-target margin, while layer 23 is inert at $\alpha=0.5$
+and only shows a weaker effect under an extreme opposite-sign setting. The
+effect is also uneven across target labels: \texttt{LEFT}, \texttt{RIGHT}, and
+a small \texttt{UP} slice improve in the largest confirmation, while
+\texttt{DOWN} does not.
 
 \end{document}

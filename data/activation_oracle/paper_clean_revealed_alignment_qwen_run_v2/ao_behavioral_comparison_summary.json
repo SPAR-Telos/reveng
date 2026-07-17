@@ -1,0 +1,16 @@
+{
+  "results_path": "data/activation_oracle/paper_clean_revealed_alignment_qwen_run_v2/results.jsonl",
+  "rows": 450,
+  "rows_with_behavioral_label": 375,
+  "rows_with_representational_label": 120,
+  "rows_with_ground_truth": 375,
+  "rows_with_optimal_action_set": 450,
+  "segment_matches_behavioral": 0,
+  "full_sequence_matches_behavioral": 282,
+  "segment_matches_representational": 0,
+  "full_sequence_matches_representational": 108,
+  "segment_matches_ground_truth": 0,
+  "full_sequence_matches_ground_truth": 312,
+  "segment_matches_optimal_action_set": 0,
+  "full_sequence_matches_optimal_action_set": 135
+}

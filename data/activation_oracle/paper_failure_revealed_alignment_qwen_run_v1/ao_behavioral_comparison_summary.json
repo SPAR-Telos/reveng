@@ -4,10 +4,13 @@
   "rows_with_behavioral_label": 325,
   "rows_with_representational_label": 0,
   "rows_with_ground_truth": 325,
+  "rows_with_optimal_action_set": 325,
   "segment_matches_behavioral": 0,
   "full_sequence_matches_behavioral": 233,
   "segment_matches_representational": 0,
   "full_sequence_matches_representational": 0,
   "segment_matches_ground_truth": 0,
-  "full_sequence_matches_ground_truth": 242
+  "full_sequence_matches_ground_truth": 242,
+  "segment_matches_optimal_action_set": 0,
+  "full_sequence_matches_optimal_action_set": 33
 }

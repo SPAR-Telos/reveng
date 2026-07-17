@@ -45,6 +45,14 @@ from reveng.experiments.behavioral_probe_runner import (
     map_raw_candidates_to_semantic_probs,
     run_behavioral_probe_door_semantics_ablation,
 )
+from reveng.experiments.behavioral_probe_alignment import (
+    build_behavioral_probe_instances_from_matched_rows,
+    build_probe_alignment_gap_cases,
+    build_probe_alignment_rows,
+    load_matched_probe_rows,
+    select_behavioral_questions_for_matched_rows,
+    summarize_probe_alignment_rows,
+)
 from reveng.experiments.behavioral_probe_smoke_data import (
     SMOKE_TEST_STATES,
     derive_example_truth,
@@ -58,6 +66,17 @@ from reveng.experiments.behavioral_probe_trajectory_data import (
     build_trajectory_manifest,
     mine_behavioral_probe_instances,
     run_behavioral_probe_trajectory_eval,
+)
+from reveng.experiments.wall_feature_patch_experiment import (
+    PATCH_TYPES,
+    build_wall_feature_patch_rows,
+    build_wall_feature_patch_template,
+    choose_wall_feature_donor,
+    collect_unpatched_readouts,
+    load_wall_feature_patch_candidates,
+    run_behavioral_probe_wall_feature_patch,
+    select_wall_feature_patch_states,
+    summarize_wall_feature_patch_rows,
 )
 
 
@@ -406,6 +425,19 @@ def test_prompt_preset_selection_changes_preamble_not_question_label():
     assert prompt_default != prompt_cardinal
 
 
+def test_belief_prompt_can_use_state_description_text_override():
+    question = next(q for q in BEHAVIORAL_PROBE_QUESTIONS if q.question_id == "wall_right")
+    prompt = _belief_prompt(
+        grid_text=SMOKE_TEST_STATES[0].grid_text,
+        carrying_key=False,
+        question=question,
+        prompt_preset="cardinal_action_explicit",
+        state_description_text="Observed state snapshot:\nrow 0 ...",
+    )
+    assert "Observed state snapshot:" in prompt
+    assert "Current grid state:" not in prompt
+
+
 def test_summarize_probe_rows_for_label3_and_coord():
     rows = [
         {
@@ -537,6 +569,144 @@ def test_summarize_probe_rows_for_label3_and_coord():
     assert failure_gap_rows[0]["n_failure_states"] == 1
     assert failure_gap_rows[0]["local_belief_action_gap_rate"] == 1.0
     assert coord_row["greedy_exact_match_accuracy"] == 1.0
+
+
+def test_matched_probe_rows_group_into_instances_and_questions(tmp_path: Path):
+    matched_path = tmp_path / "matched.csv"
+    matched_path.write_text(
+        "\n".join(
+            [
+                "example_id,trajectory_id,step_index,reasoning_split,question_id,ground_truth_label,grid_text,carrying_key,observed_action,optimal_actions_json,is_optimal_action,state_description_text,whitebox_prediction,whitebox_score",
+                'ex1,traj1,3,pre,wall_right,yes,"grid A",false,RIGHT,"[""RIGHT""]",false,"Observed state text",yes,0.8',
+                'ex1,traj1,3,pre,hit_wall_after_right,yes,"grid A",false,RIGHT,"[""RIGHT""]",false,"Observed state text",yes,0.7',
+            ]
+        )
+        + "\n"
+    )
+    matched_rows = load_matched_probe_rows(
+        str(matched_path),
+        answer_space="label3",
+        reasoning_split="pre",
+    )
+    assert len(matched_rows) == 2
+    questions = select_behavioral_questions_for_matched_rows(matched_rows, answer_space="label3")
+    assert [q.question_id for q in questions] == ["hit_wall_after_right", "wall_right"]
+    instances = build_behavioral_probe_instances_from_matched_rows(matched_rows)
+    assert len(instances) == 1
+    assert set(instances[0]["allowed_question_ids"]) == {"wall_right", "hit_wall_after_right"}
+    assert instances[0]["state_description_text"] == "Observed state text"
+    assert instances[0]["probe_truths"]["wall_right"] == "yes"
+
+
+def test_alignment_rows_and_summary_capture_whitebox_blackbox_cases():
+    matched_rows = [
+        {
+            "example_id": "ex1",
+            "trajectory_id": "traj1",
+            "step_index": "3",
+            "reasoning_split": "pre",
+            "question_id": "wall_right",
+            "ground_truth_label": "yes",
+            "whitebox_prediction": "yes",
+            "whitebox_score": "0.8",
+            "grid_text": "grid",
+            "state_description_text": "",
+            "carrying_key": False,
+            "observed_action": "RIGHT",
+            "optimal_actions": ["LEFT"],
+            "is_optimal_action": False,
+            "wall_hit": True,
+            "source_dataset": "matched_whitebox",
+        },
+        {
+            "example_id": "ex2",
+            "trajectory_id": "traj1",
+            "step_index": "4",
+            "reasoning_split": "pre",
+            "question_id": "wall_right",
+            "ground_truth_label": "no",
+            "whitebox_prediction": "yes",
+            "whitebox_score": "0.4",
+            "grid_text": "grid",
+            "state_description_text": "",
+            "carrying_key": False,
+            "observed_action": "UP",
+            "optimal_actions": ["UP"],
+            "is_optimal_action": True,
+            "wall_hit": False,
+            "source_dataset": "matched_whitebox",
+        },
+    ]
+    behavioral_rows = [
+        {
+            "example_id": "ex1",
+            "reasoning_split": "pre",
+            "question_id": "wall_right",
+            "greedy_answer": "yes",
+            "greedy_modal_answer": "yes",
+            "mc_answer": "yes",
+            "mc_yes_no_answer": "yes",
+            "logprob_yes_no_answer_t0": "yes",
+            "belief_action_consistency": "inconsistent",
+            "mc_belief_action_consistency": "inconsistent",
+        },
+        {
+            "example_id": "ex2",
+            "reasoning_split": "pre",
+            "question_id": "wall_right",
+            "greedy_answer": "no",
+            "greedy_modal_answer": "no",
+            "mc_answer": "no",
+            "mc_yes_no_answer": "no",
+            "logprob_yes_no_answer_t0": "no",
+            "belief_action_consistency": "not_applicable",
+            "mc_belief_action_consistency": "not_applicable",
+        },
+    ]
+    alignment_rows = build_probe_alignment_rows(matched_rows, behavioral_rows)
+    assert len(alignment_rows) == 2
+    assert alignment_rows[0]["both_correct"] is True
+    assert alignment_rows[0]["both_correct_action_non_optimal"] is True
+    assert alignment_rows[0]["both_correct_wall_hit"] is True
+    assert alignment_rows[1]["blackbox_correct_whitebox_wrong"] is True
+    summary = summarize_probe_alignment_rows(alignment_rows)
+    assert len(summary) == 1
+    assert summary[0]["n_rows"] == 2
+    assert summary[0]["whitebox_accuracy"] == 0.5
+    assert summary[0]["blackbox_greedy_accuracy"] == 1.0
+    assert summary[0]["both_correct_count"] == 1
+    gap_cases = build_probe_alignment_gap_cases(alignment_rows)
+    assert len(gap_cases) == 1
+    assert gap_cases[0]["example_id"] == "ex1"
+
+
+def test_run_probe_rows_skips_questions_not_allowed_per_instance():
+    action_client = FakeBehavioralProbeClient('{"action": "RIGHT"}', action_text="RIGHT")
+    logprob_clients = {
+        "t0": FakeBehavioralProbeClient("A", logprob_primary="A", temperature=0.0),
+        "t07": FakeBehavioralProbeClient("A", logprob_primary="A", temperature=0.7),
+        "t1": FakeBehavioralProbeClient("A", logprob_primary="A", temperature=1.0),
+    }
+    mc_client = FakeBehavioralProbeClient("A", temperature=0.7)
+    example = _single_instance()[0]
+    example["allowed_question_ids"] = ["wall_right"]
+    example["probe_truths"]["wall_right"] = "yes"
+    questions = get_behavioral_probe_questions(question_family="wall_directional", answer_space="label3")
+    rows, _, _ = _run_probe_rows(
+        model_name="together_ai/openai/gpt-oss-20b",
+        examples=[example],
+        questions=questions,
+        mc_sample_repeats=1,
+        mc_temperature=0.7,
+        prompt_preset="default_observable_state",
+        logprob_temperatures=(0.0, 0.7, 1.0),
+        action_client=action_client,
+        logprob_clients=logprob_clients,
+        mc_client=mc_client,
+        verbose=False,
+        greedy_repeats=1,
+    )
+    assert [row["question_id"] for row in rows] == ["wall_right"]
 
 
 def test_run_probe_rows_uses_t0_baseline_and_writes_probability_diagnostics():
@@ -955,6 +1125,83 @@ def test_trajectory_manifest_recomputes_optimal_length_and_flags_stored_astar(tm
     assert suboptimal_row["length_delta"] == 2
 
 
+def test_doorkey_solver_returns_all_tied_shortest_first_actions():
+    state = (
+        _render_test_grid(
+            (
+                "#########",
+                "#_______#",
+                "#_A____#",
+                "#_______#",
+                "#___G___#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#########",
+            )
+        ),
+        False,
+    )
+
+    solver = DoorKeyStateSolver()
+
+    assert solver.shortest_distance(state) == 4
+    assert solver.optimal_actions(state) == ["DOWN", "RIGHT"]
+
+
+def test_doorkey_solver_requires_key_and_closed_door_when_they_block_goal():
+    state = (
+        _render_test_grid(
+            (
+                "#########",
+                "#AK_DG__#",
+                "#########",
+                "#########",
+                "#########",
+                "#########",
+                "#########",
+                "#########",
+                "#########",
+            )
+        ),
+        False,
+    )
+
+    solver = DoorKeyStateSolver()
+    after_key = solver.step(state, "RIGHT")["next_state"]
+    after_door_open = solver.step(after_key, "RIGHT")["next_state"]
+
+    assert solver.shortest_distance(state) == 4
+    assert solver.optimal_actions(state) == ["RIGHT"]
+    assert after_key[1] is True
+    assert "K" not in after_key[0]
+    assert "D" not in after_door_open[0]
+
+
+def test_doorkey_solver_does_not_force_unnecessary_key_or_door_route():
+    state = (
+        _render_test_grid(
+            (
+                "#########",
+                "#AG____K#",
+                "#_______#",
+                "#___D___#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#_______#",
+                "#########",
+            )
+        ),
+        False,
+    )
+
+    solver = DoorKeyStateSolver()
+
+    assert solver.shortest_distance(state) == 1
+    assert solver.optimal_actions(state) == ["RIGHT"]
+
+
 def test_mine_behavioral_probe_instances_supports_suboptimal_trajectory_slice(tmp_path: Path):
     suboptimal_state = (
         _render_test_grid(
@@ -1157,3 +1404,218 @@ def test_door_semantics_ablation_writes_focused_outputs(tmp_path: Path, monkeypa
     assert (output_dir / "decision.json").exists()
     decision = json.loads((output_dir / "decision.json").read_text())
     assert decision["winner_variant"] == "observed"
+
+
+def _wall_feature_candidate_rows() -> list[dict[str, object]]:
+    return [
+        {
+            "example_id": "wall_hit_right",
+            "trajectory_id": "traj1",
+            "step_index": "1",
+            "grid_text": SMOKE_TEST_STATES[0].grid_text,
+            "carrying_key": False,
+            "observed_action": "RIGHT",
+            "is_optimal_action": False,
+            "wall_hit": True,
+            "primary_step_failure_mode": "wall_hit",
+            "probe_truths_json": json.dumps({"wall_right": "yes", "wall_up": "no"}),
+            "optimal_actions_json": json.dumps(["LEFT"]),
+        },
+        {
+            "example_id": "avoid_left",
+            "trajectory_id": "traj2",
+            "step_index": "2",
+            "grid_text": SMOKE_TEST_STATES[1].grid_text,
+            "carrying_key": False,
+            "observed_action": "LEFT",
+            "is_optimal_action": False,
+            "wall_hit": False,
+            "primary_step_failure_mode": "avoidable_detour",
+            "probe_truths_json": json.dumps({"wall_left": "no", "wall_up": "yes"}),
+            "optimal_actions_json": json.dumps(["RIGHT"]),
+        },
+        {
+            "example_id": "backtrack_up",
+            "trajectory_id": "traj3",
+            "step_index": "3",
+            "grid_text": SMOKE_TEST_STATES[2].grid_text,
+            "carrying_key": False,
+            "observed_action": "UP",
+            "is_optimal_action": False,
+            "wall_hit": False,
+            "primary_step_failure_mode": "backtrack",
+            "probe_truths_json": json.dumps({"wall_up": "yes", "wall_right": "no"}),
+            "optimal_actions_json": json.dumps(["DOWN"]),
+        },
+        {
+            "example_id": "baseline_down",
+            "trajectory_id": "traj4",
+            "step_index": "4",
+            "grid_text": SMOKE_TEST_STATES[3].grid_text,
+            "carrying_key": False,
+            "observed_action": "DOWN",
+            "is_optimal_action": True,
+            "wall_hit": False,
+            "primary_step_failure_mode": "none",
+            "probe_truths_json": json.dumps({"wall_down": "no", "wall_left": "yes"}),
+            "optimal_actions_json": json.dumps(["DOWN"]),
+        },
+        {
+            "example_id": "donor_right_open",
+            "trajectory_id": "traj5",
+            "step_index": "5",
+            "grid_text": SMOKE_TEST_STATES[4].grid_text,
+            "carrying_key": False,
+            "observed_action": "RIGHT",
+            "is_optimal_action": True,
+            "wall_hit": False,
+            "primary_step_failure_mode": "none",
+            "probe_truths_json": json.dumps({"wall_right": "no"}),
+            "optimal_actions_json": json.dumps(["RIGHT"]),
+        },
+        {
+            "example_id": "donor_left_wall",
+            "trajectory_id": "traj6",
+            "step_index": "6",
+            "grid_text": SMOKE_TEST_STATES[5].grid_text,
+            "carrying_key": False,
+            "observed_action": "LEFT",
+            "is_optimal_action": True,
+            "wall_hit": False,
+            "primary_step_failure_mode": "none",
+            "probe_truths_json": json.dumps({"wall_left": "yes"}),
+            "optimal_actions_json": json.dumps(["LEFT"]),
+        },
+        {
+            "example_id": "donor_up_open",
+            "trajectory_id": "traj7",
+            "step_index": "7",
+            "grid_text": SMOKE_TEST_STATES[6].grid_text,
+            "carrying_key": False,
+            "observed_action": "UP",
+            "is_optimal_action": True,
+            "wall_hit": False,
+            "primary_step_failure_mode": "none",
+            "probe_truths_json": json.dumps({"wall_up": "no"}),
+            "optimal_actions_json": json.dumps(["UP"]),
+        },
+        {
+            "example_id": "donor_down_wall",
+            "trajectory_id": "traj8",
+            "step_index": "8",
+            "grid_text": SMOKE_TEST_STATES[7].grid_text,
+            "carrying_key": False,
+            "observed_action": "DOWN",
+            "is_optimal_action": True,
+            "wall_hit": False,
+            "primary_step_failure_mode": "none",
+            "probe_truths_json": json.dumps({"wall_down": "yes"}),
+            "optimal_actions_json": json.dumps(["DOWN"]),
+        },
+    ]
+
+
+def test_select_wall_feature_patch_states_and_choose_donor():
+    candidate_path = Path("/tmp/test_wall_feature_candidates_select.csv")
+    _write_csv(candidate_path, _wall_feature_candidate_rows())
+    rows = load_wall_feature_patch_candidates(str(candidate_path))
+    selected = select_wall_feature_patch_states(
+        rows,
+        max_wall_hit=1,
+        max_avoidable_detour=1,
+        max_backtrack=1,
+        max_baseline=1,
+    )
+    assert len(selected) == 4
+    assert selected[0]["target_wall_question"] == "wall_right"
+    donor = choose_wall_feature_donor(selected[0], rows)
+    assert donor["ground_truth_label"] == "no"
+    assert donor["target_wall_question"] == selected[0]["target_wall_question"]
+    candidate_path.unlink()
+
+
+def test_wall_feature_patch_template_and_summary(tmp_path: Path):
+    candidate_path = tmp_path / "candidates.csv"
+    _write_csv(candidate_path, _wall_feature_candidate_rows())
+    rows = load_wall_feature_patch_candidates(str(candidate_path))
+    selected = select_wall_feature_patch_states(rows, max_wall_hit=1, max_avoidable_detour=1, max_backtrack=1, max_baseline=1)
+    assert {row["primary_step_failure_mode"] for row in selected} == {
+        "wall_hit",
+        "avoidable_detour",
+        "backtrack",
+        "baseline_optimal",
+    }
+    donor = choose_wall_feature_donor(selected[0], rows)
+    assert donor["ground_truth_label"] != selected[0]["ground_truth_label"]
+
+    template_rows = build_wall_feature_patch_template(selected, rows)
+    assert len(template_rows) == len(selected) * len(PATCH_TYPES)
+    patch_rows = [
+        {
+            "example_id": selected[0]["example_id"],
+            "patch_type": "pre_to_pre",
+            "patched_wall_answer": selected[0]["ground_truth_label"],
+            "patched_action": selected[0]["observed_action"],
+        }
+    ]
+    joined = build_wall_feature_patch_rows(
+        selected_rows=selected,
+        template_rows=template_rows,
+        unpatched_readouts=[
+            {
+                "example_id": row["example_id"],
+                "unpatched_wall_answer": row["ground_truth_label"],
+                "unpatched_wall_raw": "A",
+                "unpatched_action": row["observed_action"],
+                "unpatched_action_raw": '{"action":"%s"}' % row["observed_action"],
+            }
+            for row in selected
+        ],
+        patch_results_index={(row["example_id"], row["patch_type"]): row for row in patch_rows},
+    )
+    assert any(row["status"] == "pending_patch_results" for row in joined if row["patch_type"] != "none")
+    summary = summarize_wall_feature_patch_rows(joined)
+    assert {row["patch_type"] for row in summary} == set(PATCH_TYPES)
+
+
+def test_collect_unpatched_readouts_uses_action_relevant_wall_question():
+    candidate_path = Path("/tmp/test_wall_feature_candidates.csv")
+    _write_csv(candidate_path, _wall_feature_candidate_rows())
+    rows = load_wall_feature_patch_candidates(str(candidate_path))
+    selected = select_wall_feature_patch_states(rows, max_wall_hit=1, max_avoidable_detour=0, max_backtrack=0, max_baseline=0)
+    belief_client = FakeBehavioralProbeClient("A")
+    action_client = FakeBehavioralProbeClient('{"action":"LEFT"}', action_text="LEFT")
+    readouts, usage = collect_unpatched_readouts(
+        selected,
+        model_name="together_ai/openai/gpt-oss-20b",
+        belief_client=belief_client,
+        action_client=action_client,
+    )
+    assert len(readouts) == 1
+    assert readouts[0]["unpatched_wall_answer"] == "yes"
+    assert readouts[0]["unpatched_action"] == "LEFT"
+    assert "immediately right of the agent" in belief_client.ask_text_calls[0][0].lower()
+    assert usage["total"]["requests"] == 2
+    candidate_path.unlink()
+
+
+def test_run_behavioral_probe_wall_feature_patch_writes_scaffold(tmp_path: Path):
+    candidate_path = tmp_path / "candidates.csv"
+    _write_csv(candidate_path, _wall_feature_candidate_rows())
+    out_dir = tmp_path / "out"
+    run_behavioral_probe_wall_feature_patch(
+        candidate_rows_path=str(candidate_path),
+        output_dir=str(out_dir),
+        run_unpatched_queries=False,
+        verbose=False,
+        max_wall_hit=1,
+        max_avoidable_detour=1,
+        max_backtrack=1,
+        max_baseline=1,
+    )
+    assert (out_dir / "selected_states.csv").exists()
+    assert (out_dir / "wall_feature_patch_interventions_template.csv").exists()
+    assert (out_dir / "wall_feature_patch_rows.csv").exists()
+    assert (out_dir / "wall_feature_patch_summary.csv").exists()
+    status = json.loads((out_dir / "wall_feature_patch_status.json").read_text())
+    assert status["status"] == "pending_patch_results"

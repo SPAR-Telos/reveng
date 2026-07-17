@@ -1,0 +1,16 @@
+{
+  "duplicated_token_assignments": 0,
+  "n_reasoning_sentences": 153622,
+  "n_reasoning_traces": 1276,
+  "n_tokens_outside_sentences": 3188,
+  "n_traces_with_tokens_outside_sentences": 607,
+  "n_trajectory_files": 95,
+  "output_path": "data/behavioral_probes/doorkey_chunking_validation/sentence_token_boundaries_gpt_oss_20b.csv",
+  "overlapping_token_spans": 0,
+  "sentences_path": "data/behavioral_probes/doorkey_chunking_validation/sentences.csv",
+  "span_convention": "zero-based half-open",
+  "status": "completed",
+  "tokenizer_ids_match_stored_tokens": true,
+  "tokenizer_name": "openai/gpt-oss-20b",
+  "tokenizer_revision": "6cee5e81ee83917806bbde320786a8fb61efebee"
+}

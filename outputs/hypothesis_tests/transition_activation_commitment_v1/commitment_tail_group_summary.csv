@@ -1,0 +1,3 @@
+state_group,states,mean_commitment_sentence_fraction,median_commitment_sentence_fraction,mean_post_commitment_sentences,median_post_commitment_sentences,mean_post_commitment_fraction
+Optimal final action,26,0.6811993262882159,0.8789036544850498,41.34615384615385,16.0,0.31880067371178417
+Suboptimal final action,20,0.7535454805862188,0.7590338369865929,36.85,31.0,0.24645451941378113

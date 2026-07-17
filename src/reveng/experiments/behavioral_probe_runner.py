@@ -55,6 +55,7 @@ logger = logging.getLogger(__name__)
 
 RAW_LABEL_TOKENS = ("A", "B", "C")
 DIRECT_SEMANTIC_TOKENS = ("yes", "no", "unknown")
+ACTION_TOKENS = ("UP", "DOWN", "LEFT", "RIGHT")
 SUPPORTED_LOGPROB_TEMPS = (0.0, 0.7, 1.0)
 PROMPT_PRESETS: dict[str, str] = {
     "default_observable_state": "Answer using only the current observable state shown below.",
@@ -164,6 +165,30 @@ def _behavioral_probe_preamble(prompt_preset: str) -> str:
 
 
 def _observed_action_prompt(grid_text: str, carrying_key: bool, prompt_preset: str) -> str:
+    return _observed_action_prompt_with_state_text(
+        grid_text=grid_text,
+        carrying_key=carrying_key,
+        prompt_preset=prompt_preset,
+        state_description_text=None,
+    )
+
+
+def _observed_action_prompt_with_state_text(
+    *,
+    grid_text: str,
+    carrying_key: bool,
+    prompt_preset: str,
+    state_description_text: str | None,
+) -> str:
+    if state_description_text:
+        state_block = state_description_text.rstrip() + "\n\n"
+    else:
+        state_block = (
+            "Current grid state:\n\n"
+            + grid_text
+            + "\n\n"
+            + f"Agent status:\n- Carrying key: {str(carrying_key).lower()}\n\n"
+        )
     return (
         _behavioral_probe_preamble(prompt_preset)
         + "\n"
@@ -172,10 +197,7 @@ def _observed_action_prompt(grid_text: str, carrying_key: bool, prompt_preset: s
         + "The key is automatically picked up when the agent moves onto K. "
         + "A closed door D can only be opened if the agent already has the key.\n\n"
         + "# Inputs\n\n"
-        + "Current grid state:\n\n"
-        + grid_text
-        + "\n\n"
-        + f"Agent status:\n- Carrying key: {str(carrying_key).lower()}\n\n"
+        + state_block
         + 'Respond with exactly a JSON object of the form {"action": "<UP|DOWN|LEFT|RIGHT>"}.\n'
         + "Do not include any extra text before or after the JSON."
     )
@@ -187,6 +209,7 @@ def _belief_prompt(
     carrying_key: bool,
     question: BehavioralProbeQuestion,
     prompt_preset: str,
+    state_description_text: str | None = None,
 ) -> str:
     prompt_text = question.prompt_text
     if question.answer_space == "label3":
@@ -200,12 +223,13 @@ def _belief_prompt(
         _behavioral_probe_preamble(prompt_preset)
         + "\n"
         + "# Inputs\n\n"
-        + "Current grid state:\n\n"
-        + grid_text
-        + "\n\n"
     )
-    if question.show_carrying_key:
-        prompt += f"Agent status:\n- Carrying key: {str(carrying_key).lower()}\n\n"
+    if state_description_text:
+        prompt += state_description_text.rstrip() + "\n\n"
+    else:
+        prompt += "Current grid state:\n\n" + grid_text + "\n\n"
+        if question.show_carrying_key:
+            prompt += f"Agent status:\n- Carrying key: {str(carrying_key).lower()}\n\n"
     prompt += prompt_text + "\n\n"
     if question.answer_space == "coord_json":
         prompt += (
@@ -470,6 +494,17 @@ def _select_answer_logprob_entry(logprobs: Any, surfaced_answer: str | None = No
             if _semantic_answer_from_raw_token(token_text) == surfaced_answer:
                 return entry
 
+    # The prompt explicitly requests A/B/C. If the model emits an elaboration
+    # such as "B = no", use the requested label token rather than the later
+    # semantic word, whose top alternatives are a different token position.
+    raw_label_entries = [
+        entry
+        for entry in answer_like_entries
+        if _normalize_raw_answer_token(getattr(entry, "token", None)) in RAW_LABEL_TOKENS
+    ]
+    if raw_label_entries:
+        return raw_label_entries[-1]
+
     return answer_like_entries[-1]
 
 
@@ -548,6 +583,135 @@ def _extract_answer_token_logprobs(logprobs: Any, surfaced_answer: str | None = 
             }
         ]
     return None
+
+
+def _entry_candidate_diagnostics(
+    entry: Any | None,
+    *,
+    labels: tuple[str, ...],
+    normalize_token: Any,
+) -> dict[str, Any]:
+    """Summarize one generated token's top-logprob alternatives without hiding truncation."""
+    probabilities = {label: 0.0 for label in labels}
+    if entry is None:
+        return {
+            "probabilities": probabilities,
+            "candidate_probability_mass": 0.0,
+            "top_logprob_probability_mass": 0.0,
+            "excluded_probability_mass_lower_bound": 1.0,
+            "missing_candidates": list(labels),
+            "raw_top_logprobs": [],
+        }
+    raw_candidates = [
+        (getattr(top, "token", None), getattr(top, "logprob", None))
+        for top in (getattr(entry, "top_logprobs", []) or [])
+    ]
+    generated = (getattr(entry, "token", None), getattr(entry, "logprob", None))
+    if generated not in raw_candidates:
+        raw_candidates.append(generated)
+    seen: set[tuple[str, float]] = set()
+    raw_rows: list[dict[str, Any]] = []
+    top_mass = 0.0
+    for token, logprob in raw_candidates:
+        if token is None or logprob is None or not math.isfinite(float(logprob)):
+            continue
+        identity = (str(token), float(logprob))
+        if identity in seen:
+            continue
+        seen.add(identity)
+        probability = math.exp(float(logprob))
+        top_mass += probability
+        normalized = normalize_token(str(token))
+        if normalized in probabilities:
+            probabilities[normalized] += probability
+        raw_rows.append(
+            {
+                "token": str(token),
+                "logprob": float(logprob),
+                "probability": probability,
+                "normalized_candidate": normalized or "",
+            }
+        )
+    candidate_mass = sum(probabilities.values())
+    normalized_probabilities = {
+        label: value / candidate_mass if candidate_mass > 0 else 0.0
+        for label, value in probabilities.items()
+    }
+    return {
+        "probabilities": normalized_probabilities,
+        "candidate_probability_mass": candidate_mass,
+        "top_logprob_probability_mass": min(1.0, top_mass),
+        "excluded_probability_mass_lower_bound": max(0.0, 1.0 - top_mass),
+        "missing_candidates": [label for label, value in probabilities.items() if value == 0.0],
+        "raw_top_logprobs": raw_rows,
+    }
+
+
+def _normalize_action_token(token_text: str | None) -> str | None:
+    if token_text is None:
+        return None
+    matches = re.findall(r"\b(UP|DOWN|LEFT|RIGHT)\b", token_text.upper())
+    return matches[-1] if matches else None
+
+
+def _select_action_logprob_entry(logprobs: Any, surfaced_action: str | None) -> Any | None:
+    if logprobs is None or getattr(logprobs, "content", None) is None:
+        return None
+    entries = [
+        entry
+        for entry in logprobs.content
+        if _normalize_action_token(getattr(entry, "token", None)) is not None
+    ]
+    if surfaced_action in ACTION_TOKENS:
+        matching = [
+            entry
+            for entry in entries
+            if _normalize_action_token(getattr(entry, "token", None)) == surfaced_action
+        ]
+        if matching:
+            return matching[-1]
+    return entries[-1] if entries else None
+
+
+def _collect_action4_logprob_readout(
+    *,
+    client: BehavioralProbeLLM,
+    prompt: str,
+    seed: int,
+    top_logprobs: int,
+) -> dict[str, Any]:
+    raw_text, raw_response, usage = _query_text_with_logprobs(
+        client,
+        prompt,
+        seed=seed,
+        top_logprobs=top_logprobs,
+    )
+    try:
+        visible_action = _extract_action_label(raw_text)
+    except ValueError:
+        visible_action = "INVALID"
+    logprobs = raw_response.choices[0].logprobs if raw_response is not None else None
+    entry = _select_action_logprob_entry(logprobs, visible_action)
+    diagnostics = _entry_candidate_diagnostics(
+        entry,
+        labels=ACTION_TOKENS,
+        normalize_token=_normalize_action_token,
+    )
+    probabilities = diagnostics["probabilities"]
+    recommended_action = (
+        max(probabilities, key=probabilities.get)
+        if diagnostics["candidate_probability_mass"] > 0
+        else "INVALID"
+    )
+    return {
+        "raw_output": raw_text,
+        "visible_action": visible_action,
+        "recommended_action": recommended_action,
+        "probabilities": probabilities,
+        "entropy": shannon_entropy(probabilities),
+        **diagnostics,
+        "usage": usage,
+    }
 
 
 def _probabilities_from_mc_answers(sampled_answers: list[str]) -> dict[str, float]:
@@ -684,7 +848,19 @@ def _collect_label3_logprob_readout(
     )
     logprobs = raw_response.choices[0].logprobs if raw_response is not None else None
     visible_answer = parse_behavioral_probe_answer(raw_text)
-    raw_probs = extract_raw_answer_candidates_from_logprobs(logprobs, visible_answer)
+    answer_entry = _select_answer_logprob_entry(logprobs, visible_answer)
+    candidate_diagnostics = _entry_candidate_diagnostics(
+        answer_entry,
+        labels=RAW_LABEL_TOKENS,
+        normalize_token=_normalize_raw_answer_token,
+    )
+    # Use the deduplicated A/B/C alternatives at the requested label position.
+    # The legacy extractor also included direct semantic words and could count
+    # the generated token twice when it was repeated in top_logprobs.
+    raw_probs = {
+        token: float(candidate_diagnostics["probabilities"].get(token, 0.0))
+        for token in RAW_LABEL_TOKENS
+    }
     semantic_probs = map_raw_candidates_to_semantic_probs(raw_probs)
     return {
         "raw_output": raw_text,
@@ -694,6 +870,15 @@ def _collect_label3_logprob_readout(
         "answer": sampled_answer_from_probabilities(semantic_probs),
         "entropy": shannon_entropy(semantic_probs),
         "answer_token_logprobs": _extract_answer_token_logprobs(logprobs, visible_answer),
+        "candidate_probability_mass": candidate_diagnostics["candidate_probability_mass"],
+        "top_logprob_probability_mass": candidate_diagnostics[
+            "top_logprob_probability_mass"
+        ],
+        "excluded_probability_mass_lower_bound": candidate_diagnostics[
+            "excluded_probability_mass_lower_bound"
+        ],
+        "missing_candidates": candidate_diagnostics["missing_candidates"],
+        "raw_top_logprobs": candidate_diagnostics["raw_top_logprobs"],
         "usage": usage,
     }
 
@@ -746,14 +931,20 @@ def _run_probe_rows(
     raw_rows: list[dict[str, Any]] = []
     total_examples = len(examples)
     total_questions = len(questions)
+    total_planned_rows = 0
+    for example in examples:
+        allowed_ids = set(example.get("allowed_question_ids", [question.question_id for question in questions]))
+        total_planned_rows += sum(1 for question in questions if question.question_id in allowed_ids)
 
     for example_idx, example in enumerate(examples, start=1):
         if verbose:
             logger.info("Behavioral probe example %s/%s: %s", example_idx, total_examples, example["example_id"])
-        observed_action_prompt = _observed_action_prompt(
-            example["grid_text"],
-            bool(example["carrying_key"]),
-            prompt_preset,
+        state_description_text = example.get("state_description_text")
+        observed_action_prompt = _observed_action_prompt_with_state_text(
+            grid_text=example["grid_text"],
+            carrying_key=bool(example["carrying_key"]),
+            prompt_preset=prompt_preset,
+            state_description_text=state_description_text,
         )
         if example.get("observed_action") is not None:
             observed_action = example["observed_action"]
@@ -779,14 +970,17 @@ def _run_probe_rows(
                     traceback.format_exc(),
                 )
 
-        for question_idx, question in enumerate(questions, start=1):
+        allowed_question_ids = set(example.get("allowed_question_ids", [question.question_id for question in questions]))
+        example_questions = [question for question in questions if question.question_id in allowed_question_ids]
+        for question_idx, question in enumerate(example_questions, start=1):
             if verbose:
-                logger.info("  Question %s/%s: %s", question_idx, total_questions, question.question_id)
+                logger.info("  Question %s/%s: %s", question_idx, len(example_questions), question.question_id)
             prompt = _belief_prompt(
                 grid_text=example["grid_text"],
                 carrying_key=bool(example["carrying_key"]),
                 question=question,
                 prompt_preset=prompt_preset,
+                state_description_text=state_description_text,
             )
             ground_truth = example["probe_truths"][question.target_variable]
 
@@ -853,14 +1047,15 @@ def _run_probe_rows(
                 rows.append(row)
                 raw_rows.append(
                     {
-                        "example_id": example["example_id"],
-                        "question_id": question.question_id,
-                        "prompt": prompt,
-                        "observed_action_prompt": observed_action_prompt,
-                        "observed_action_raw": observed_action_raw,
-                        "observed_action_source": observed_action_source,
-                        "mc_raw_outputs": mc_raw_outputs,
-                        "parsed_row": row,
+                    "example_id": example["example_id"],
+                    "question_id": question.question_id,
+                    "prompt": prompt,
+                    "reasoning_split": example.get("reasoning_split", ""),
+                    "observed_action_prompt": observed_action_prompt,
+                    "observed_action_raw": observed_action_raw,
+                    "observed_action_source": observed_action_source,
+                    "mc_raw_outputs": mc_raw_outputs,
+                    "parsed_row": row,
                     }
                 )
                 checkpoint_writer.append(
@@ -870,6 +1065,7 @@ def _run_probe_rows(
                         "completed_rows": len(rows),
                         "total_examples": total_examples,
                         "total_questions": total_questions,
+                        "total_planned_rows": total_planned_rows,
                         "current_example_id": example["example_id"],
                         "current_question_id": question.question_id,
                     },
@@ -947,14 +1143,18 @@ def _run_probe_rows(
                 "answer_space": question.answer_space,
                 "variant_id": question.variant_id or "",
                 "prompt_preset": prompt_preset,
+                "reasoning_split": example.get("reasoning_split", ""),
+                "state_description_text": state_description_text or "",
                 "grid_text": example["grid_text"],
                 "carrying_key": example["carrying_key"],
                 "observed_action": observed_action,
                 "optimal_actions_json": json.dumps(example.get("optimal_actions", [])),
                 "is_optimal_action": example.get("is_optimal_action", ""),
+                "wall_hit": example.get("wall_hit", ""),
                 "primary_step_failure_mode": example.get("primary_step_failure_mode", ""),
                 "selection_stage": example.get("selection_stage", ""),
                 "selection_reason": example.get("selection_reason", ""),
+                "source_dataset": example.get("source_dataset", example.get("source", "")),
                 "greedy_answer": greedy_answer,
                 "greedy_answers_json": json.dumps(greedy_answers),
                 "greedy_modal_answer": greedy_modal_answer,
@@ -1003,6 +1203,7 @@ def _run_probe_rows(
                     "example_id": example["example_id"],
                     "question_id": question.question_id,
                     "prompt": prompt,
+                    "reasoning_split": example.get("reasoning_split", ""),
                     "observed_action_prompt": observed_action_prompt,
                     "observed_action_raw": observed_action_raw,
                     "observed_action_source": observed_action_source,
@@ -1022,6 +1223,7 @@ def _run_probe_rows(
                     "completed_rows": len(rows),
                     "total_examples": total_examples,
                     "total_questions": total_questions,
+                    "total_planned_rows": total_planned_rows,
                     "current_example_id": example["example_id"],
                     "current_question_id": question.question_id,
                 },

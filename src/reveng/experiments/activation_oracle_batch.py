@@ -34,9 +34,13 @@ class ActivationOracleBatchRow(BaseModel):
     example_id: str = ""
     trajectory_id: str = ""
     question_id: str = ""
+    oracle_prompt_family: str = ""
     source_dataset: str = ""
     observed_action: str = ""
     blackbox_action: str = ""
+    optimal_actions_json: str = "[]"
+    blackbox_action_is_optimal: bool | None = None
+    is_optimal_action: bool | None = None
     whitebox_prediction_pre: str = ""
     whitebox_prediction_post: str = ""
     reasoning_reveal_pct: int | None = None

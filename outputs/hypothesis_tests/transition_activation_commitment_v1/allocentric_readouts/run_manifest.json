@@ -1,0 +1,8 @@
+{
+  "cases_per_state": 4,
+  "expected_positions": 7084,
+  "positions_in_checkpoint": 7084,
+  "rows": 85008,
+  "status": "completed",
+  "temperature": 0.7
+}

@@ -1,0 +1,4 @@
+model_name,outcome,n,events,non_events,converged,warning
+action_change_next,action_change_next,653,61,592,True,
+optimality_loss_next,optimality_loss_next,653,12,641,True,
+optimality_recovery_next,optimality_recovery_next,653,15,638,True,near-perfect fitted probabilities

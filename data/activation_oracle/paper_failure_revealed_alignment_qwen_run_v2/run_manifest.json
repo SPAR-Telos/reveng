@@ -1,0 +1,23 @@
+{
+  "input_path": "data/activation_oracle/paper_failure_revealed_alignment_qwen_batch_v2.jsonl",
+  "output_dir": "data/activation_oracle/paper_failure_revealed_alignment_qwen_run_v2",
+  "model_name": "Qwen/Qwen3-8B",
+  "oracle_lora_path": "adamkarvonen/checkpoints_latentqa_cls_past_lens_addition_Qwen3-8B",
+  "default_oracle_input_types": [
+    "segment",
+    "full_seq"
+  ],
+  "generation_max_new_tokens": 50,
+  "eval_batch_size": 32,
+  "layer_percent": 50,
+  "injection_layer": 1,
+  "steering_coefficient": 1.0,
+  "limit": null,
+  "load_in_8bit": true,
+  "device_map": "auto",
+  "allow_custom_override": false,
+  "total_rows_seen": 390,
+  "parsed_rows": 390,
+  "succeeded_rows": 390,
+  "failed_rows": 0
+}

@@ -1,0 +1,10 @@
+{
+  "experiment1_dir": "outputs/experiment1_activation_monitor/gpt_oss_local_sentence_matched46_v1",
+  "experiment2_dir": "outputs/experiment2_behavioral_beliefs/gpt_oss_local_sentence_matched46_v1",
+  "output_dir": "outputs/reader_facing/experiment1_2_gpt_oss_matched46_v1",
+  "n_states": 46,
+  "n_trajectories": 31,
+  "n_sentence_prefixes": 7084,
+  "n_belief_rows": 63756,
+  "action_entropy_protocol": "temperature_0.7_candidate_logprob_distribution_over_UP_DOWN_LEFT_RIGHT"
+}

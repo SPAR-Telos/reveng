@@ -1,0 +1,25 @@
+{
+  "attention_metric_primary": "final_action_to_sentence_mass",
+  "attention_metric_secondary": "final_action_to_sentence_mean",
+  "completed_sentences": 7038,
+  "completed_states": 46,
+  "file_size_bytes": 10912072,
+  "filesystem_bytes": 11022336,
+  "forward_chunk_size": 512,
+  "last_completed_trace_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_92_step_004",
+  "layers": [
+    8,
+    15,
+    23
+  ],
+  "model_load_peak_rss_bytes": 6356561920,
+  "model_load_seconds": 5.58470838300002,
+  "model_name": "openai/gpt-oss-20b",
+  "model_revision": "6cee5e81ee83917806bbde320786a8fb61efebee",
+  "model_snapshot": "/root/.cache/huggingface/hub/models--openai--gpt-oss-20b/snapshots/6cee5e81ee83917806bbde320786a8fb61efebee",
+  "pending_states": 0,
+  "scope": "matched46",
+  "sentence_boundaries_path": "data/behavioral_probes/doorkey_chunking_validation/sentence_token_boundaries_gpt_oss_20b.csv",
+  "states": 46,
+  "status": "completed"
+}

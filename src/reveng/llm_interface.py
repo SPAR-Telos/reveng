@@ -132,6 +132,34 @@ class BaseLLMInterface:
             "failure_messages": list(self._last_retry_info.get("failure_messages", [])),
         }
 
+    @staticmethod
+    def _choice_get(choice: Any, key: str, default: Any = None) -> Any:
+        value = getattr(choice, key, None)
+        if value is None and isinstance(choice, dict):
+            value = choice.get(key, default)
+        return default if value is None else value
+
+    def _extract_response_content(self, response: Any) -> str:
+        choices = getattr(response, "choices", None)
+        if not choices:
+            raise ValueError("Model response is missing choices.")
+        choice = choices[0]
+        message = self._choice_get(choice, "message")
+        content = self._choice_get(message, "content")
+        if not content:
+            content = self._choice_get(message, "reasoning_content")
+        if not content:
+            provider_fields = self._choice_get(message, "provider_specific_fields", {})
+            if isinstance(provider_fields, dict):
+                content = provider_fields.get("reasoning_content") or provider_fields.get("reasoning")
+        if not content:
+            logger.error(f"Empty response from model. Full choice object: {choice}")
+            finish_reason = self._choice_get(choice, "finish_reason", "N/A")
+            raise ValueError(
+                f"Empty response from model. Finish reason: '{finish_reason}'"
+            )
+        return str(content)
+
     def _completion_with_retry(
         self,
         response_format: Optional[BaseModel] = None,
@@ -163,6 +191,7 @@ class BaseLLMInterface:
                         response_format=response_format,
                         max_tokens=max_tokens,
                     )
+                    self._extract_response_content(response)
                 except Exception as e:
                     logger.error(f"Model request failed: {e}\n{traceback.format_exc()}")
                     raise
@@ -198,16 +227,7 @@ class BaseLLMInterface:
             )
 
             # Parse response
-            content = response.choices[0].message.content
-            if not content:
-                choice = response.choices[0]
-                # Log the entire choice object to see the finish_reason
-                logger.error(f"Empty response from model. Full choice object: {choice}")
-                # Raise a more informative error
-                finish_reason = choice.get("finish_reason", "N/A")
-                raise ValueError(
-                    f"Empty response from model. Finish reason: '{finish_reason}'"
-                )
+            content = self._extract_response_content(response)
 
             content, response = inject_thinking_for_qwen(
                 model_name=self.model_name, content=content, response=response
@@ -248,14 +268,7 @@ class BaseLLMInterface:
             )
 
             # Parse response
-            content = response.choices[0].message.content
-            if not content:
-                choice = response.choices[0]
-                logger.error(f"Empty response from model. Full choice object: {choice}")
-                finish_reason = choice.get("finish_reason", "N/A")
-                raise ValueError(
-                    f"Empty response from model. Finish reason: '{finish_reason}'"
-                )
+            content = self._extract_response_content(response)
 
             content, response = inject_thinking_for_qwen(
                 model_name=self.model_name, content=content, response=response

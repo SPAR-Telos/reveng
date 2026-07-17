@@ -1,0 +1,16 @@
+outcome,predictor,coefficient,SE,95% CI,p,events,warning
+Action changes at next prefix,reasoning progress,-3.3733356297981625,0.6846815918132424,"[-4.715, -2.031]",8.355828384471064e-07,61,
+Action changes at next prefix,action confidence (+0.00001 probability),-3.572876826127866,6.468344361656024,"[-16.251, 9.105]",0.5806993861223326,61,
+Action changes at next prefix,state-belief uncertainty (0.01 bits),-0.2646758014313333,0.5011709885266,"[-1.247, 0.718]",0.5974196798847641,61,
+Action changes at next prefix,belief error rate,-0.37018880185945685,1.2103652490330115,"[-2.743, 2.002]",0.7597197436572071,61,
+Action changes at next prefix,recommended action conflicts with reported state,1.120705047209024,0.3513594038235831,"[0.432, 1.809]",0.0014245708275132734,61,
+Optimal action becomes suboptimal,reasoning progress,-0.7390486590668912,1.2319225776832037,"[-3.154, 1.676]",0.5485629793300213,12,
+Optimal action becomes suboptimal,action confidence (+0.00001 probability),1.4220386555392133,13.107204987852873,"[-24.268, 27.112]",0.9136047137329998,12,
+Optimal action becomes suboptimal,state-belief uncertainty (0.01 bits),-0.045277972660494915,0.4637495555466956,"[-0.954, 0.864]",0.9222224997715369,12,
+Optimal action becomes suboptimal,belief error rate,-0.40080877688183764,2.315953631368836,"[-4.940, 4.138]",0.8626009257137534,12,
+Optimal action becomes suboptimal,recommended action conflicts with reported state,0.5230741059787285,0.7108830388537406,"[-0.870, 1.916]",0.4618469706534911,12,
+Suboptimal action becomes optimal,reasoning progress,-3.478286066320844,1.2123573200507118,"[-5.855, -1.102]",0.004117364548174459,15,near-perfect fitted probabilities
+Suboptimal action becomes optimal,action confidence (+0.00001 probability),453.5101508354855,523.2389910682813,"[-572.038, 1479.059]",0.3860865912052841,15,near-perfect fitted probabilities
+Suboptimal action becomes optimal,state-belief uncertainty (0.01 bits),-0.16773201146272232,0.7094154932391338,"[-1.558, 1.223]",0.8130936531687983,15,near-perfect fitted probabilities
+Suboptimal action becomes optimal,belief error rate,-1.2200589753512057,2.207920696695318,"[-5.548, 3.107]",0.5805491303033716,15,near-perfect fitted probabilities
+Suboptimal action becomes optimal,recommended action conflicts with reported state,2.5383677893575567,0.7017515397219682,"[1.163, 3.914]",0.0002978201053496044,15,near-perfect fitted probabilities

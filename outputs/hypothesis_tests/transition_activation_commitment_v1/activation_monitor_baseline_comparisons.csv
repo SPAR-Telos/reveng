@@ -1,0 +1,5 @@
+target,best_activation_model,activation_auc,reasoning_progress_auc,scalar_readout_auc,activation_minus_progress_auc,activation_minus_scalar_auc,interpretation
+action_change,activation_pca_15_sentence_final,0.5971541425747764,0.5321574829888032,0.8164111449868875,0.06499665958597323,-0.2192570024121111,"beats reasoning progress, but not scalar readouts"
+optimal_to_suboptimal,activation_pca_15_sentence_mean,0.6283100478054041,0.6032142428131579,0.8123025983632542,0.025095804992246173,-0.18399255055785013,does not pass +0.05 over reasoning progress
+suboptimal_to_optimal,activation_pca_23_sentence_final,0.6134940759357329,0.6200103863464423,0.7752045212663649,-0.006516310410709436,-0.16171044533063195,does not pass +0.05 over reasoning progress
+commitment_onset,activation_pca_15_sentence_final,0.7036846370179703,0.7324530880086436,0.7555142444031333,-0.028768450990673267,-0.05182960738516296,does not pass +0.05 over reasoning progress
