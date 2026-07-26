@@ -37,6 +37,7 @@ dependencies = [
     "huggingface_hub==0.35.3",
     "bitsandbytes>=0.48.1",
     "kernels==0.10.2",
+    "scikit-learn>=1.7.0",
 ]
 
 [tool.setuptools]

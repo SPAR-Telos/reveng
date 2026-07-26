@@ -23,9 +23,9 @@ EVENTS = {
     "Suboptimal to optimal": {"suboptimal_to_optimal"},
 }
 METRICS = {
-    "update_norm": ("Activation change magnitude", False),
-    "adjacent_cosine": ("Cosine distance from previous sentence", True),
-    "previous_mean_cosine": ("Similarity to preceding reasoning mean", False),
+    "update_norm": ("Euclidean distance between adjacent sentence representations", False),
+    "adjacent_cosine": ("Cosine distance between adjacent sentence representations", True),
+    "previous_mean_cosine": ("Cosine similarity to the mean of earlier sentence representations", False),
 }
 
 
@@ -155,15 +155,18 @@ def build_activation_monitor(exp1: Path, *, bootstrap_repeats: int) -> pd.DataFr
         event_n = int(
             result[
                 (result.event == event_label)
-                & (result.activation_metric == "Activation change magnitude")
+                & (result.activation_metric == METRICS["update_norm"][0])
             ].n_event_positions.iloc[0]
         )
         event_labels.append(f"{event_label} (n={event_n})")
     ax.set_yticks(y_base, labels=event_labels)
     ax.set_xlim(0.35, 0.75)
-    ax.set_xlabel("AUROC for identifying the event position (0.5 = chance)")
-    ax.set_ylabel("Action event")
-    ax.set_title(f"Can Activation Changes Identify Action Events?\n46 states, {len(primary):,} activation-backed sentence positions")
+    ax.set_xlabel("AUROC for distinguishing event positions from other sentence positions (0.5 = chance)")
+    ax.set_ylabel("Action-selection event")
+    ax.set_title(
+        f"Can Simple Activation Metrics Distinguish Action-Selection Events?\n"
+        f"46 states, {len(primary):,} sentence positions"
+    )
     ax.legend(frameon=False, fontsize=8, loc="center left", bbox_to_anchor=(1.01, 0.5))
     ax.grid(axis="x", color="#E5EEF5", linewidth=0.8)
     fig.tight_layout()
@@ -178,7 +181,7 @@ def write_reports(exp1: Path, exp2: Path, monitor: pd.DataFrame) -> None:
     manifest = json.loads((exp1 / "analysis_manifest.json").read_text())
     positions = pd.read_csv(exp1 / "position_rows.csv")
     commitments = positions[positions.commitment_onset == True]  # noqa: E712
-    primary = monitor[monitor.activation_metric == "Activation change magnitude"]
+    primary = monitor[monitor.activation_metric == METRICS["update_norm"][0]]
     exp1_lines = [
         "# Experiment 1: Activation Monitor of Action Events",
         "",
@@ -257,8 +260,10 @@ def write_reports(exp1: Path, exp2: Path, monitor: pd.DataFrame) -> None:
         "sentence positions containing recommendation changes, retrospective commitment onset, optimality loss, "
         "or optimality recovery from other sentence positions. Points are AUROC values and bars are 95 percent "
         "intervals from bootstrapping complete trajectories. AUROC 0.5 indicates chance discrimination. "
-        "Similarity to the preceding reasoning mean is the cosine similarity between the current sentence "
-        "activation and the average activation over earlier reasoning sentences in the same trajectory state.\n"
+        "Cosine similarity to the mean of earlier sentence representations compares the current sentence-mean "
+        "activation with the average sentence-mean activation over all earlier reasoning sentences for the same "
+        "environment state. This is a contemporaneous univariate association, not a forecast of a later event, "
+        "and it does not adjust for reasoning progress or sentence content.\n"
     )
     (exp1 / "FIGURE_CAPTIONS.md").write_text(captions)
 

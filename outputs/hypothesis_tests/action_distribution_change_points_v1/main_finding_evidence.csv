@@ -1,0 +1,12 @@
+claim_component,estimate,ci_low,ci_high,n_states,status
+final_action_jump_within_three_sentences_of_stable_selection,0.391304,,,46,supports_temporal_relationship_not_boundary_equivalence
+random_position_within_three_sentences_of_stable_selection,0.063865,,,46,null_reference
+median_absolute_boundary_separation_sentences,16.0,,,46,supports_two_distinct_boundaries
+final_action_jump_before_stable_selection,0.630435,,,46,supports_probability_revision_before_stability
+failure_minus_control_jump_progress,0.032420,-0.142669,0.207774,46,no_group_difference
+belief_error_event_minus_control,-0.003623,-0.012195,0.000000,46,no_belief_error_association
+layer15_sentence_mean_similarity_event_minus_control,0.011949,0.005209,0.019448,46,contemporaneous_activation_association
+next_distribution_change_auroc_improvement,0.099428,0.007846,0.189520,46,exploratory_leading_signal
+next_final_action_jump_auroc_improvement,-0.006097,-0.021195,0.007203,46,no_leading_signal
+next_stable_selection_auroc_improvement,-0.006544,-0.020200,0.005555,45,no_leading_signal
+layer23_stable_selection_attention_difference,0.001509,0.000274,0.002801,43,supporting_attention_association

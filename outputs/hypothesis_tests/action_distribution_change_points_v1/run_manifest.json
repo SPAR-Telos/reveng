@@ -1,0 +1,31 @@
+{
+  "actions": [
+    "UP",
+    "DOWN",
+    "LEFT",
+    "RIGHT"
+  ],
+  "activation_sensitivity_rows": 6,
+  "alignment_random_repeats": 5000,
+  "analysis": "sentence_level_action_distribution_change_points",
+  "attention_rows": 270,
+  "change_point_rows": 138,
+  "model": "openai/gpt-oss-20b",
+  "new_model_inference": false,
+  "positions": 7084,
+  "prediction_permutation_repeats": 200,
+  "seed": 42,
+  "semantic_candidates": 137,
+  "source_files": {
+    "data/behavioral_probes/doorkey_chunking_validation/sentences.csv": "e418211fd104b67f967dfb70aa6cb45e2c44bdd4d12522268b40892bae1c4453",
+    "outputs/experiment1_activation_monitor/gpt_oss_local_sentence_matched46_v1/belief_rows.csv": "f0505f4005226c53751794c01b25e62061f42f4c6cc6632646e9337028f436a9",
+    "outputs/experiment1_activation_monitor/gpt_oss_local_sentence_matched46_v1/event_rows.csv": "f8374eaac8f1067368d2578963f0a53895c8bfa72e81e0db2e438446fd39e17a",
+    "outputs/experiment1_activation_monitor/gpt_oss_local_sentence_matched46_v1/geometry_rows.csv": "55f55245b141ffc08be2070c79a026e328e457019e9260bbe036c228cf36616f",
+    "outputs/experiment1_activation_monitor/gpt_oss_local_sentence_matched46_v1/position_rows.csv": "5cea57ad68f5b7ff8624c06a1dd2616151952a5185a8fb806f39a0d0d02a4195"
+  },
+  "states": 46,
+  "status": "completed",
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "trajectories": 31
+}

@@ -1,0 +1,10 @@
+boundary_type,metric,n_matched_pairs,mean_failure_minus_control,ci_low,ci_high
+final_action_jump,boundary_reasoning_progress,23,0.032420130878843594,-0.14266902333036724,0.20777411502572365
+final_action_jump,final_action_jump_abruptness_ratio,23,-0.08040171536308241,-0.36746683571221905,0.16776503163833448
+final_action_jump,local_post_minus_pre_js,23,-0.007961382870370385,-0.21108506768940993,0.1908999571395286
+largest_distribution_change,boundary_reasoning_progress,23,0.012166510410216725,-0.17248715012036817,0.1947910290504052
+largest_distribution_change,final_action_jump_abruptness_ratio,23,-0.08040171536308241,-0.36746683571221905,0.16776503163833448
+largest_distribution_change,local_post_minus_pre_js,23,-0.01588406635657495,-0.33241071882102025,0.2982250432156503
+stable_action_boundary,boundary_reasoning_progress,23,0.09341618890538174,-0.07414347987027713,0.2759551213287578
+stable_action_boundary,final_action_jump_abruptness_ratio,23,-0.08040171536308241,-0.36746683571221905,0.16776503163833448
+stable_action_boundary,local_post_minus_pre_js,22,0.04335669860182476,-0.11377360933991129,0.2043750671105369

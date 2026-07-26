@@ -308,14 +308,14 @@ def _plot(offset_summary: pd.DataFrame, output_path: Path) -> None:
         ax.grid(color=GRID, linewidth=0.8)
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
-    axes[0].set_ylabel("Action entropy over UP, DOWN,\nLEFT, and RIGHT (bits)")
+    axes[0].set_ylabel("Entropy over the four action probabilities (bits)")
     axes[0].set_title(
-        f"Action uncertainty around commitment\n"
+        f"Action Uncertainty Before and After Action Commitment\n"
         f"Window = +/-{max_abs_offset} sentences; mean sentence length in window = {mean_chars:.1f} characters"
     )
     axes[0].legend(frameon=False, fontsize=8, loc="upper right")
     axes[1].set_ylabel("Probability assigned to\nthe recommended action")
-    axes[1].set_xlabel("Sentence offset from commitment")
+    axes[1].set_xlabel("Sentence position relative to action commitment")
     axes[1].set_ylim(-0.02, 1.02)
     axes[1].xaxis.set_major_locator(MaxNLocator(integer=True))
     fig.tight_layout()
@@ -328,11 +328,11 @@ def _append_caption(caption_path: Path) -> None:
     caption = (
         "\n## action_entropy_around_commitment.png\n\n"
         "Action uncertainty and action confidence around retrospective commitment in the matched 46-state "
-        "sentence-prefix run. Offset 0 is the first reasoning prefix where the recommended action equals the "
+        "run. Position 0 is the first sentence boundary where the recommended action equals the "
         "full-trace recommendation and remains unchanged for the rest of the trace. Action entropy is Shannon "
         "entropy over the temperature 0.7 logprob distribution on UP, DOWN, LEFT, and RIGHT. Action confidence "
         "is the probability assigned to the recommended action. Lines show medians across states and bands show "
-        "interquartile ranges; prefixes outside the available trace window are excluded. The plot uses a "
+        "interquartile ranges; positions outside the available trace window are excluded. The plot uses a "
         "+/-10 sentence window; in this run, sentences in that window average about 43 characters.\n"
     )
     existing = caption_path.read_text() if caption_path.exists() else "# Figure Captions\n"

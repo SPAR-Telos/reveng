@@ -1,0 +1,4 @@
+state_group,n_states,random_repeats,observed_median_absolute_offset_sentences,null_median_absolute_offset_mean,null_median_absolute_offset_ci_low,null_median_absolute_offset_ci_high,permutation_p_offset_at_least_as_close,observed_fraction_within_three_sentences,null_fraction_within_three_mean,null_fraction_within_three_ci_low,null_fraction_within_three_ci_high,permutation_p_fraction_at_least_as_high
+all,46,5000,16.0,41.0391,26.0,59.5,0.0001999600079984003,0.391304347826087,0.06386521739130434,0.0,0.13043478260869565,0.0001999600079984003
+failure,23,5000,6.0,42.666,23.0,67.0,0.0001999600079984003,0.43478260869565216,0.057521739130434776,0.0,0.17391304347826086,0.0001999600079984003
+control,23,5000,19.0,40.8012,21.0,69.0,0.01759648070385923,0.34782608695652173,0.06729565217391303,0.0,0.17391304347826086,0.0001999600079984003

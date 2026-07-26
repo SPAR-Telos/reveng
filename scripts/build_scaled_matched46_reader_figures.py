@@ -126,14 +126,14 @@ def build_commitment_timing(positions: pd.DataFrame, out: Path) -> pd.DataFrame:
             "commitment_sentence_index",
             "commitment_sentence_ci_low",
             "commitment_sentence_ci_high",
-            "Commitment position (sentence index)",
+            "Reasoning sentences revealed",
         ),
         (
             axes[1],
             "commitment_progress",
             "commitment_progress_ci_low",
             "commitment_progress_ci_high",
-            "Fraction of reasoning text revealed",
+            "Reasoning characters revealed (fraction of trace)",
         ),
     ]:
         for i, group_name in enumerate(order):
@@ -169,7 +169,7 @@ def build_commitment_timing(positions: pd.DataFrame, out: Path) -> pd.DataFrame:
         for group_name in order:
             row = summary[summary.group == group_name].iloc[0]
             label = "Control" if group_name == "control" else "Failure"
-            labels.append(f"{label}\n(n={int(row.n_states)}, max={int(row.max_total_sentence_prefixes)} sentences)")
+            labels.append(f"{label}\n(n={int(row.n_states)} states)")
         ax.set_xticks([0, 1], labels=labels)
         ax.set_ylabel(y_label)
         ax.grid(axis="y", color=GRID, linewidth=0.8)
@@ -249,13 +249,13 @@ def build_entropy_decision_events(positions: pd.DataFrame, events: pd.DataFrame,
     summary.to_csv(out / "action_entropy_decision_event_summary.csv", index=False)
 
     setup_matplotlib()
-    fig, ax = plt.subplots(figsize=(8.4, 4.4))
+    fig, ax = plt.subplots(figsize=(10.2, 4.5))
     labels = {
-        "action_change": "Action change",
-        "optimal_to_suboptimal": "Optimal ->\nsuboptimal",
-        "sustained_optimal_to_suboptimal": "Sustained optimal ->\nsuboptimal",
-        "suboptimal_to_optimal": "Suboptimal ->\noptimal",
-        "commitment_onset": "Commitment onset",
+        "action_change": "Action\nchanges",
+        "optimal_to_suboptimal": "Becomes\nsuboptimal",
+        "sustained_optimal_to_suboptimal": "Becomes suboptimal\nand stays suboptimal",
+        "suboptimal_to_optimal": "Becomes\noptimal",
+        "commitment_onset": "Action first\nremains stable",
     }
     plot_rows = summary[summary["event_family"].isin(order)].set_index("event_family").loc[
         [x for x in order if x in set(summary["event_family"])]
@@ -273,8 +273,8 @@ def build_entropy_decision_events(positions: pd.DataFrame, events: pd.DataFrame,
     ax.errorbar(x, means, yerr=yerr, fmt="none", ecolor=DARK, capsize=3, linewidth=1)
     ax.axhline(0, color="#777777", linestyle="--", linewidth=1)
     ax.set_xticks(x, [f"{labels[idx]}\n(n={int(plot_rows.loc[idx, 'n_events'])})" for idx in plot_rows.index])
-    ax.set_ylabel("Change in action entropy at event (bits)")
-    ax.set_title("Change in Action Entropy at Decision Events")
+    ax.set_ylabel("Entropy after event minus entropy before event (bits)")
+    ax.set_title("Change in Action Uncertainty at Recommendation Events")
     ax.grid(axis="y", color=GRID, linewidth=0.8)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
@@ -381,21 +381,21 @@ def build_belief_error_alignment(beliefs: pd.DataFrame, events: pd.DataFrame, ou
             )
         ax.axvline(0, color="#777777", linestyle="--", linewidth=1)
         if family == "action_change":
-            ax.set_title("Action change")
-            ax.set_xlabel("Sentence offset from action change")
+            ax.set_title("Recommended action\nchanges")
+            ax.set_xlabel("Sentence position relative to action change")
         elif family == "optimal_to_suboptimal":
-            ax.set_title("Optimal to suboptimal")
-            ax.set_xlabel("Sentence offset from optimality change")
+            ax.set_title("Recommended action\nbecomes suboptimal")
+            ax.set_xlabel("Sentence position relative to optimality loss")
         else:
-            ax.set_title("Suboptimal to optimal")
-            ax.set_xlabel("Sentence offset from optimality change")
+            ax.set_title("Recommended action\nbecomes optimal")
+            ax.set_xlabel("Sentence position relative to optimality recovery")
         ax.grid(color=GRID, linewidth=0.8)
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
-    axes[0].set_ylabel("Mean fraction of probes with incorrect answer")
+    axes[0].set_ylabel("Fraction of belief questions answered incorrectly")
     axes[2].legend(frameon=False, fontsize=8, loc="upper left", bbox_to_anchor=(1.01, 1.0))
-    fig.suptitle("Wall, Key, and Door Belief Errors Around Action and Optimality Changes", y=1.02)
-    fig.tight_layout()
+    fig.suptitle("Wall, Key, and Door Belief Errors Around Action and Optimality Changes", y=0.99)
+    fig.tight_layout(rect=(0, 0, 1, 0.93))
     fig.savefig(out / "figs" / "belief_errors_before_after_optimality_changes.png", dpi=220, bbox_inches="tight")
     plt.close(fig)
     return summary
@@ -468,9 +468,9 @@ def build_belief_entropy_around_commitment(
     subset = summary[(summary["level"] == "aggregate") & (summary["belief"] == "all_current_state_beliefs")].sort_values("relative_commitment_offset")
     ax.plot(subset["relative_commitment_offset"], subset["mean_entropy_bits"], marker="o", linewidth=2.0, color=DARK)
     ax.axvline(0, color="#777777", linestyle="--", linewidth=1)
-    ax.set_title("Current-State Belief Entropy Around Commitment")
-    ax.set_xlabel("Sentence offset from commitment")
-    ax.set_ylabel("Mean entropy over wall, key, and door beliefs (bits)")
+    ax.set_title("Current-State Belief Uncertainty Around Action Commitment")
+    ax.set_xlabel("Sentence position relative to action commitment")
+    ax.set_ylabel("Mean entropy over wall, key, and door answers (bits)")
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     ax.grid(color=GRID, linewidth=0.8)
     ax.spines["top"].set_visible(False)
@@ -496,9 +496,9 @@ def build_belief_entropy_around_commitment(
             label=labels[group_name],
         )
     ax.axvline(0, color="#777777", linestyle="--", linewidth=1)
-    ax.set_title("Wall, Key, and Door Belief Entropy Around Commitment")
-    ax.set_xlabel("Sentence offset from commitment")
-    ax.set_ylabel("Mean belief entropy (bits)")
+    ax.set_title("Wall, Key, and Door Belief Uncertainty Around Action Commitment")
+    ax.set_xlabel("Sentence position relative to action commitment")
+    ax.set_ylabel("Mean answer entropy (bits)")
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     ax.grid(color=GRID, linewidth=0.8)
     ax.spines["top"].set_visible(False)
@@ -539,9 +539,9 @@ def build_belief_entropy_around_commitment(
             label=labels[question_id],
         )
     ax.axvline(0, color="#777777", linestyle="--", linewidth=1)
-    ax.set_title("Individual Current-State Belief Entropy Around Commitment")
-    ax.set_xlabel("Sentence offset from commitment")
-    ax.set_ylabel("Mean belief entropy (bits)")
+    ax.set_title("Uncertainty for Individual State Questions Around Action Commitment")
+    ax.set_xlabel("Sentence position relative to action commitment")
+    ax.set_ylabel("Mean answer entropy (bits)")
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     ax.grid(color=GRID, linewidth=0.8)
     ax.spines["top"].set_visible(False)
@@ -712,23 +712,23 @@ def write_report(
 
 ## commitment_timing_by_state_group.png
 
-Action commitment timing for failure and control states in the matched 46-state GPT-OSS-20B sentence-prefix run. Commitment is the first sentence prefix where the recommended action equals the full-trace recommendation and remains stable through the rest of the trace. The left panel shows sentence index; the right panel shows the fraction of reasoning text revealed. Points are states; black markers show group means with 95 percent bootstrap confidence intervals over states. The x-axis labels include the maximum number of sentence prefixes in each group.
+Action commitment timing for failure and control states in the matched 46-state GPT-OSS-20B run. The recommendation is measured after every reasoning sentence. Commitment is the first sentence boundary where the recommended action equals the full-trace recommendation and remains stable through the rest of the trace. The left panel reports the number of reasoning sentences revealed at commitment; the right panel divides the number of reasoning characters revealed by the total number of reasoning characters in that trace. The 46 traces contain 20 to 365 reasoning sentences. Points are environment states; dark markers show group means with 95 percent bootstrap confidence intervals over states.
 
 ## action_entropy_change_decision_events.png
 
-Change in action entropy at decision events. For each event, entropy change is entropy at the event sentence prefix minus entropy at the previous sentence prefix. Action entropy is Shannon entropy over the temperature 0.7 candidate-logprob distribution on UP, DOWN, LEFT, and RIGHT. Negative values mean the model became more confident in one action at the event. The plot does not use activations; the available activations for this run are means over sentence-token spans from the same fixed reasoning traces.
+Change in action uncertainty when the recommendation changes or first remains stable. For each event, the plotted value is entropy after the event minus entropy at the preceding sentence boundary. Action entropy is Shannon entropy over the temperature 0.7 candidate-logprob distribution on UP, DOWN, LEFT, and RIGHT. Negative values mean the model became more confident in one action. The plot does not use activations.
 
 ## belief_errors_before_after_optimality_changes.png
 
-Mean belief error rates around recommendation changes and changes in whether the recommended action is optimal. Offset 0 is the first sentence prefix where the event occurs. Error rate means the fraction of relevant belief probes whose answer disagrees with the ground-truth DoorKey state label. The plot separates wall, key, and door beliefs and includes an all-current-state-belief aggregate.
+Mean belief error rates around recommendation changes and changes in whether the recommended action is optimal. Position 0 is the first sentence boundary where the event occurs. Error rate is the fraction of wall, key-possession, or door-state questions whose answer disagrees with the ground-truth DoorKey state. The plot reports each belief family and an aggregate across all six current-state questions.
 
 ## belief_entropy_around_commitment_aggregate.png
 
-Mean current-state belief entropy around retrospective action commitment. Offset 0 is the first sentence prefix where the recommended action equals the full-trace recommendation and remains stable. Entropy is averaged over wall-left, wall-right, wall-up, wall-down, key-held, and door-open belief probes.
+Mean current-state belief uncertainty around retrospective action commitment. Position 0 is the first sentence boundary where the recommended action equals the full-trace recommendation and remains stable. Entropy is averaged over wall-left, wall-right, wall-up, wall-down, key-held, and door-open answer distributions at temperature 0.7.
 
 ## belief_entropy_around_commitment_by_family.png
 
-Mean belief entropy around retrospective action commitment, separated into wall, key, and door belief families. This checks whether post-commitment reasoning is associated with residual uncertainty about particular parts of the environment state.
+Mean answer entropy around retrospective action commitment, separated into wall, key-possession, and door-state questions. This checks whether post-commitment reasoning is associated with residual uncertainty about particular parts of the environment state.
 
 ## belief_entropy_around_commitment_by_question.png
 

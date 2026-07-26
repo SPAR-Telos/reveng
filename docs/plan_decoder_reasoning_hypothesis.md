@@ -100,39 +100,26 @@ Case studies:
 - a few grids with observed action, optimal action, and decoded pre/post plan
   prefixes
 
-## Current blockers
+## Current status
 
-This experiment is not blocked on probe checkpoints anymore. It is blocked on
-which public activation/probe releases are actually usable on this machine.
+The earlier activation and local-model blockers are resolved. The repository
+now contains GPT-OSS-20B activations for 1,276 environment states from 95
+trajectories at layers 8, 15, and 23. The saved representations include
+sentence means and final-token activations, complete-reasoning summaries,
+three-token PRE and POST windows, and the final action token.
 
-Current blockers:
+The remaining work is a compatibility and evaluation task:
 
-- "The broader public \"with cognitive probes\" release is too large for this machine."
-- the broader public `trajectories_test_full_with_cognitive_map_probes` release
-  is too large for this machine to use directly:
-  - file: `trajectories_test_full_with_probes.tar`
-  - size: about `41.9 GB`
-  - free disk at attempted download time: about `23.3 GB`
-- so if we later want failure-focused white-box slices from that tar, we need
-  either:
-  - more disk, or
-  - a narrower release / direct subset from colleagues
-- local `openai/gpt-oss-20b` cache is still incomplete for local extraction
-- local loading stack is still incomplete for a practical 20B run:
-  - `accelerate` missing
-  - `bitsandbytes` missing
+- verify that the released decoder's expected three activation positions match
+  the stored PRE and POST window tensors exactly;
+- verify checkpoint model revision, layer, hidden width, normalization, and
+  action-label vocabulary;
+- join each state to its executed ten-action target sequence;
+- evaluate prefix accuracy without fitting or selecting on the test states.
 
-So the current repo can:
-
-- download and validate the published plan decoders
-- use the released `activations_test_full` dataset where compatible
-- evaluate them when real activation tensors are provided
-
-But it cannot yet:
-
-- extract those activations locally from GPT-OSS-20B on this machine
-- rely on the oversized `with_cognitive_map_probes` tar for failure-focused
-  slices on this machine
+The oversized public cognitive-probe archive is still unnecessary for this
+specific plan-decoder test because the required boundary activations have now
+been generated locally.
 
 ## Confounders to keep in mind
 
@@ -163,5 +150,5 @@ Reusable code already exists in the repo for this direction:
 
 What is still needed for a real run:
 
-- a valid activation source table, or
-- a full local model setup capable of extracting the required activations
+- the decoder-to-activation compatibility check described above;
+- a target table containing the next ten executed actions for each state.

@@ -1,0 +1,7 @@
+target,horizon_sentences,at_risk_population,n_positions,n_trajectories,n_positive_windows,positive_window_rate,n_unique_transitions
+recommendation_change,1,all sentence positions,6946,31,658,0.09473078030521163,658
+optimality_loss,1,positions with a currently optimal recommendation,5359,31,156,0.02910990856503079,156
+recovery,1,positions with a currently suboptimal recommendation,1587,23,173,0.1090107120352867,173
+recommendation_change,3,all sentence positions,6854,31,1416,0.20659468923256494,658
+optimality_loss,3,positions with a currently optimal recommendation,5283,31,347,0.06568237743706228,156
+recovery,3,positions with a currently suboptimal recommendation,1571,23,367,0.23360916613621896,173

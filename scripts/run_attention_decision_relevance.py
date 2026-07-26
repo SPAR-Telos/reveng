@@ -47,6 +47,17 @@ DEFAULT_BELIEF_SHIFT_ROWS = Path(
     "outputs/experiment2_behavioral_beliefs/gpt_oss_local_sentence_matched46_v1/belief_shift_rows.csv"
 )
 
+EVENT_LABELS = {
+    "action_change": "Recommended action changes",
+    "belief_change:action_consequence": "Reported action consequence changes",
+    "belief_change:adjacent_wall": "Reported wall state changes",
+    "belief_change:task_state": "Reported key or door state changes",
+    "commitment_onset": "Action commitment",
+    "suboptimal_to_optimal": "Recommended action becomes optimal",
+    "sustained_optimal_to_suboptimal": "Sustained change to a suboptimal action",
+    "transient_optimal_to_suboptimal": "Transient change to a suboptimal action",
+}
+
 
 def log(message: str) -> None:
     print(f"[attention-decision] {message}", file=sys.stderr, flush=True)
@@ -236,14 +247,19 @@ def extract_final_action_attention(
         for layer in layers:
             weights = captured[int(layer)]
             action_weights = weights[0, :, 0, :]
+            # Sliding-attention layers expose only their retained key window.
+            # Convert absolute sentence token positions to indices in that window.
+            source_token_count = state.action_position + 1
+            source_offset = max(0, source_token_count - action_weights.shape[-1])
             sentence_mass = torch.zeros(
                 (action_weights.shape[0], len(state.sentence_spans)), dtype=torch.float32
             )
             sentence_mean = torch.zeros_like(sentence_mass)
             for sentence_index, (start, end) in enumerate(state.sentence_spans):
-                clipped_end = min(end, action_weights.shape[-1])
-                if start < clipped_end:
-                    span_weights = action_weights[:, start:clipped_end]
+                relative_start = max(0, start - source_offset)
+                relative_end = min(end - source_offset, action_weights.shape[-1])
+                if relative_start < relative_end:
+                    span_weights = action_weights[:, relative_start:relative_end]
                     sentence_mass[:, sentence_index] = span_weights.sum(dim=-1)
                     sentence_mean[:, sentence_index] = span_weights.mean(dim=-1)
             tensors[f"layer_{layer}.final_action_to_sentence_mass"] = sentence_mass
@@ -505,11 +521,17 @@ def window_indices(center: int, sentence_count: int, width: int) -> list[int]:
     return [idx for idx in range(center - width, center + width + 1) if 0 <= idx < sentence_count]
 
 
-def choose_control_center(center: int, sentence_count: int, width: int) -> int | None:
+def choose_control_center(
+    center: int,
+    sentence_count: int,
+    width: int,
+    forbidden_centers: set[int],
+) -> int | None:
     candidates = [
         idx
-        for idx in range(sentence_count)
-        if abs(idx - center) > width and window_indices(idx, sentence_count, width)
+        for idx in range(width, sentence_count - width)
+        if abs(idx - center) > 2 * width
+        and not any(abs(idx - other) <= width for other in forbidden_centers)
     ]
     if not candidates:
         return None
@@ -527,17 +549,36 @@ def analyze_attention(args: argparse.Namespace) -> None:
         position_rows_path=args.position_rows,
     )
     events = [event for event in events if event["trace_id"] in records_by_trace]
+    # Multiple probes can change at the same sentence. The attention comparison
+    # treats that sentence window as one event rather than counting it repeatedly.
+    events = list(
+        {
+            (event["trace_id"], event["event_type"], event["center_sentence_index"]): event
+            for event in events
+        }.values()
+    )
+    event_centers: dict[tuple[str, str], set[int]] = defaultdict(set)
+    for event in events:
+        event_centers[(str(event["trace_id"]), str(event["event_type"]))].add(
+            int(event["center_sentence_index"])
+        )
     layers = tuple(sorted({int(layer) for layer in args.layers}))
     event_rows: list[dict[str, Any]] = []
     head_rows: list[dict[str, Any]] = []
     tensor_cache: dict[tuple[str, int], torch.Tensor] = {}
+    zero_attention_layers: set[int] = set()
     for event in events:
         record = records_by_trace[event["trace_id"]]
         sentence_count = int(record["sentence_count"])
         center = int(event["center_sentence_index"])
-        if center >= sentence_count:
+        if center < args.event_window or center >= sentence_count - args.event_window:
             continue
-        control_center = choose_control_center(center, sentence_count, args.event_window)
+        control_center = choose_control_center(
+            center,
+            sentence_count,
+            args.event_window,
+            event_centers[(str(event["trace_id"]), str(event["event_type"]))],
+        )
         if control_center is None:
             continue
         event_window = window_indices(center, sentence_count, args.event_window)
@@ -547,6 +588,9 @@ def analyze_attention(args: argparse.Namespace) -> None:
             if cache_key not in tensor_cache:
                 tensor_cache[cache_key] = load_attention_tensor(record, layer, args.metric)
             attention = tensor_cache[cache_key]
+            if not bool(torch.count_nonzero(attention)):
+                zero_attention_layers.add(layer)
+                continue
             event_head_values = attention[:, event_window].sum(dim=1)
             control_head_values = attention[:, control_window].sum(dim=1)
             diff = event_head_values - control_head_values
@@ -558,6 +602,7 @@ def analyze_attention(args: argparse.Namespace) -> None:
                 "event_window_n_sentences": len(event_window),
                 "control_center_sentence_index": control_center,
                 "control_window_n_sentences": len(control_window),
+                "control_window_excludes_same_event_type": True,
                 "event_attention_mean_across_heads": float(event_head_values.mean().item()),
                 "control_attention_mean_across_heads": float(control_head_values.mean().item()),
                 "event_minus_control_attention": float(diff.mean().item()),
@@ -583,6 +628,20 @@ def analyze_attention(args: argparse.Namespace) -> None:
     write_csv(output / "attention_event_rows_used.csv", events)
     write_csv(output / "attention_event_window_summary.csv", summarize_event_rows(event_rows))
     write_csv(output / "attention_head_summary.csv", summarize_head_rows(head_rows, args.folds))
+    warning_lines = ["# Attention Analysis Checks", ""]
+    if zero_attention_layers:
+        warning_lines.extend(
+            [
+                "The following requested layers were excluded because their stored sentence-attention tensors were exactly zero: "
+                + ", ".join(str(layer) for layer in sorted(zero_attention_layers))
+                + ".",
+                "",
+                "For GPT-OSS-20B, layer 8 uses sliding-window attention. The original extractor indexed its 128-token attention window using full-sequence token positions, so the stored layer-8 sentence aggregates are invalid. Layers 15 and 23 use full attention and are retained.",
+            ]
+        )
+    else:
+        warning_lines.append("No all-zero stored attention layers were found.")
+    (output / "attention_analysis_checks.md").write_text("\n".join(warning_lines) + "\n")
     write_report(output, event_rows, head_rows, args)
     write_figures(output, event_rows, head_rows, args)
 
@@ -594,8 +653,22 @@ def summarize_event_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
         grouped[(str(row["event_type"]), int(row["layer"]), str(row.get("matched_role", "")))].append(row)
     out: list[dict[str, Any]] = []
     for (event_type, layer, matched_role), group in sorted(grouped.items()):
-        diffs = [float(row["event_minus_control_attention"]) for row in group]
-        lo, hi = ci95(diffs)
+        by_trajectory: dict[str, list[dict[str, Any]]] = defaultdict(list)
+        for row in group:
+            by_trajectory[str(row["trajectory_id"])].append(row)
+        trajectory_diffs = [
+            mean(float(row["event_minus_control_attention"]) for row in trajectory_rows)
+            for trajectory_rows in by_trajectory.values()
+        ]
+        trajectory_event_attention = [
+            mean(float(row["event_attention_mean_across_heads"]) for row in trajectory_rows)
+            for trajectory_rows in by_trajectory.values()
+        ]
+        trajectory_control_attention = [
+            mean(float(row["control_attention_mean_across_heads"]) for row in trajectory_rows)
+            for trajectory_rows in by_trajectory.values()
+        ]
+        lo, hi = ci95(trajectory_diffs)
         out.append(
             {
                 "event_type": event_type,
@@ -604,13 +677,16 @@ def summarize_event_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "events": len(group),
                 "states": len({row["trace_id"] for row in group}),
                 "trajectories": len({row["trajectory_id"] for row in group}),
-                "mean_event_attention": mean(float(row["event_attention_mean_across_heads"]) for row in group),
-                "mean_control_attention": mean(float(row["control_attention_mean_across_heads"]) for row in group),
-                "mean_event_minus_control_attention": mean(diffs),
-                "se_event_minus_control_attention": standard_error(diffs),
+                "mean_event_attention": mean(trajectory_event_attention),
+                "mean_control_attention": mean(trajectory_control_attention),
+                "mean_event_minus_control_attention": mean(trajectory_diffs),
+                "se_event_minus_control_attention": standard_error(trajectory_diffs),
                 "ci95_low": lo,
                 "ci95_high": hi,
-                "fraction_positive": mean(1.0 if value > 0 else 0.0 for value in diffs),
+                "fraction_positive": mean(1.0 if value > 0 else 0.0 for value in trajectory_diffs),
+                "fraction_trajectories_positive": mean(
+                    1.0 if value > 0 else 0.0 for value in trajectory_diffs
+                ),
             }
         )
     return out
@@ -639,7 +715,11 @@ def summarize_head_rows(rows: list[dict[str, Any]], folds: int) -> list[dict[str
                 "fraction_positive_events": mean(1.0 if value > 0 else 0.0 for value in diffs),
                 "folds_observed": len(fold_means),
                 "folds_positive": sum(value > 0 for value in fold_means),
-                "replicated_positive": len(fold_means) >= max(2, folds - 1) and sum(value > 0 for value in fold_means) >= max(2, folds - 1),
+                "consistent_positive_across_subsets": len(fold_means) >= max(2, folds - 1)
+                and sum(value > 0 for value in fold_means) >= max(2, folds - 1),
+                # Retain the old field for compatibility with existing readers.
+                "replicated_positive": len(fold_means) >= max(2, folds - 1)
+                and sum(value > 0 for value in fold_means) >= max(2, folds - 1),
             }
         )
     out.sort(key=lambda row: (not bool(row["replicated_positive"]), -float(row["mean_event_minus_control_attention"])))
@@ -652,40 +732,60 @@ def write_report(output: Path, event_rows: list[dict[str, Any]], head_rows: list
     lines = [
         "# Attention Decision Relevance",
         "",
-        "This analysis stores compact attention from the final action token to canonical reasoning sentences. It does not store full token-by-token attention matrices.",
+        "This analysis measures attention from the final action token to canonical reasoning sentences. It does not store full token-by-token attention matrices.",
         "",
         f"- Scope: `{args.scope}`",
-        f"- Metric: final-action attention `{args.metric}` aggregated over sentence windows",
-        f"- Event window: +/-{args.event_window} sentences",
+        "- Primary metric: the share of final-action attention assigned to a seven-sentence window, averaged across attention heads",
+        f"- Event window: the event sentence and {args.event_window} sentences before and after it",
+        "- Comparison: the closest non-overlapping window in the same state, at a similar reasoning position, containing no event of the same type",
+        "- Confidence intervals: computed across trajectory-level mean differences",
         f"- Event-window rows: {len(event_rows):,}",
         f"- Head-event rows: {len(head_rows):,}",
         "",
         "## Main event-window summary",
         "",
-        "| Event type | Layer | Group | Events | Mean event minus control attention | Fraction positive |",
-        "|---|---:|---|---:|---:|---:|",
+        "| Event | Layer | State group | Event positions | Trajectories | Attention difference (percentage points) | 95% CI | Trajectories with positive difference |",
+        "|---|---:|---|---:|---:|---:|---:|---:|",
     ]
     for row in summary:
         if int(row["layer"]) != 15:
             continue
         lines.append(
-            f"| {row['event_type']} | {row['layer']} | {row['matched_role'] or 'all'} | "
-            f"{row['events']} | {float(row['mean_event_minus_control_attention']):.6f} | "
-            f"{float(row['fraction_positive']):.3f} |"
+            f"| {EVENT_LABELS.get(str(row['event_type']), row['event_type'])} | {row['layer']} | {row['matched_role'] or 'all'} | "
+            f"{row['events']} | {row['trajectories']} | {100 * float(row['mean_event_minus_control_attention']):.3f} | "
+            f"[{100 * float(row['ci95_low']):.3f}, {100 * float(row['ci95_high']):.3f}] | "
+            f"{float(row['fraction_trajectories_positive']):.3f} |"
         )
     lines.extend(
         [
             "",
-            "## Top replicated heads",
+            "## Action commitment across usable layers",
             "",
-            "| Event type | Layer | Head | Events | Mean event minus control attention | Positive folds |",
+            "| Layer | States | Trajectories | Attention difference (percentage points) | 95% CI |",
+            "|---:|---:|---:|---:|---:|",
+        ]
+    )
+    for row in summary:
+        if row["event_type"] != "commitment_onset" or row["matched_role"] != "all":
+            continue
+        lines.append(
+            f"| {row['layer']} | {row['states']} | {row['trajectories']} | "
+            f"{100 * float(row['mean_event_minus_control_attention']):.3f} | "
+            f"[{100 * float(row['ci95_low']):.3f}, {100 * float(row['ci95_high']):.3f}] |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Exploratory head screen",
+            "",
+            "| Event | Layer | Head | Event positions | Attention difference (percentage points) | Positive trajectory subsets |",
             "|---|---:|---:|---:|---:|---:|",
         ]
     )
     for row in top_heads:
         lines.append(
-            f"| {row['event_type']} | {row['layer']} | {row['head_index']} | "
-            f"{row['events']} | {float(row['mean_event_minus_control_attention']):.6f} | "
+            f"| {EVENT_LABELS.get(str(row['event_type']), row['event_type'])} | {row['layer']} | {row['head_index']} | "
+            f"{row['events']} | {100 * float(row['mean_event_minus_control_attention']):.3f} | "
             f"{row['folds_positive']}/{row['folds_observed']} |"
         )
     lines.extend(
@@ -693,7 +793,9 @@ def write_report(output: Path, event_rows: list[dict[str, Any]], head_rows: list
             "",
             "## Interpretation note",
             "",
-            "This is correlational. A positive event-minus-control value means the final action token attended more to sentences near that event than to a progress-matched non-event window in the same state. This supports an information-routing hypothesis only as auxiliary evidence; it does not prove causal use.",
+            "Action commitment is the clearest current signal: the final action token assigns more attention to reasoning near commitment than to comparable reasoning elsewhere. Changes in reported action consequences show a smaller positive difference. Attention near optimality loss and recovery is close to zero. These associations do not show that the attended sentences caused or informed the final action.",
+            "",
+            "Layer 8 is excluded because the stored aggregates are invalid for that layer's 128-token sliding-attention window; see `attention_analysis_checks.md`. The head screen is exploratory because heads were selected and summarized on the same pilot data.",
         ]
     )
     (output / "attention_decision_relevance_report.md").write_text("\n".join(lines) + "\n")
@@ -718,41 +820,109 @@ def write_figures(output: Path, event_rows: list[dict[str, Any]], head_rows: lis
     ]
     if not summary:
         summary = [row for row in summarize_event_rows(event_rows) if int(row["layer"]) == 15]
-    summary = sorted(summary, key=lambda row: str(row["event_type"]))
-    labels = [str(row["event_type"]).replace("belief_change:", "belief: ") for row in summary]
-    values = [float(row["mean_event_minus_control_attention"]) for row in summary]
-    lows = [float(row["ci95_low"]) for row in summary]
-    highs = [float(row["ci95_high"]) for row in summary]
+    summary = sorted(summary, key=lambda row: float(row["mean_event_minus_control_attention"]))
+    labels = [
+        f"{EVENT_LABELS.get(str(row['event_type']), row['event_type'])}\n"
+        f"(n={row['events']} positions, {row['trajectories']} trajectories)"
+        for row in summary
+    ]
+    values = [100 * float(row["mean_event_minus_control_attention"]) for row in summary]
+    lows = [100 * float(row["ci95_low"]) for row in summary]
+    highs = [100 * float(row["ci95_high"]) for row in summary]
     lower = [abs(v - lo) if not math.isnan(lo) else 0.0 for v, lo in zip(values, lows)]
     upper = [abs(hi - v) if not math.isnan(hi) else 0.0 for v, hi in zip(values, highs)]
     if labels:
-        fig, ax = plt.subplots(figsize=(9, 4.8))
-        ax.bar(range(len(labels)), values, color="#2f6fb3", yerr=[lower, upper], capsize=3)
-        ax.axhline(0, color="#333333", linewidth=0.8)
-        ax.set_xticks(range(len(labels)))
-        ax.set_xticklabels(labels, rotation=35, ha="right")
-        ax.set_ylabel("Final-action attention to event window minus matched non-event window")
-        ax.set_title("Final Action Attention Near Decision Events")
+        fig, ax = plt.subplots(figsize=(10, 6.4))
+        y = list(range(len(labels)))
+        ax.errorbar(
+            values,
+            y,
+            xerr=[lower, upper],
+            fmt="o",
+            color="#2166ac",
+            ecolor="#6baed6",
+            capsize=3,
+            markersize=6,
+        )
+        ax.axvline(0, color="#333333", linewidth=0.8)
+        ax.set_yticks(y)
+        ax.set_yticklabels(labels)
+        ax.set_xlabel(
+            "Difference in final-action attention assigned to seven-sentence windows "
+            "(percentage points)"
+        )
+        ax.set_ylabel("Reasoning event")
+        ax.set_title("Final-Action Attention Near Reasoning Events")
         fig.tight_layout()
         fig.savefig(figs / "attention_event_window_difference.png", dpi=200)
+        plt.close(fig)
+
+    commitment_groups = [
+        row
+        for row in summarize_event_rows(event_rows)
+        if int(row["layer"]) == 15
+        and row["event_type"] == "commitment_onset"
+        and row["matched_role"] in {"failure", "control"}
+    ]
+    commitment_groups.sort(key=lambda row: str(row["matched_role"]), reverse=True)
+    if commitment_groups:
+        group_labels = [
+            f"{str(row['matched_role']).capitalize()} states\n"
+            f"(n={row['states']} states, {row['trajectories']} trajectories)"
+            for row in commitment_groups
+        ]
+        group_values = [100 * float(row["mean_event_minus_control_attention"]) for row in commitment_groups]
+        group_lows = [100 * float(row["ci95_low"]) for row in commitment_groups]
+        group_highs = [100 * float(row["ci95_high"]) for row in commitment_groups]
+        group_lower = [abs(value - low) for value, low in zip(group_values, group_lows)]
+        group_upper = [abs(high - value) for value, high in zip(group_values, group_highs)]
+        fig, ax = plt.subplots(figsize=(8.2, 3.8))
+        y = list(range(len(group_labels)))
+        ax.errorbar(
+            group_values,
+            y,
+            xerr=[group_lower, group_upper],
+            fmt="o",
+            color="#2166ac",
+            ecolor="#6baed6",
+            capsize=4,
+            markersize=7,
+        )
+        ax.axvline(0, color="#333333", linewidth=0.8)
+        ax.set_yticks(y)
+        ax.set_yticklabels(group_labels)
+        ax.set_xlabel(
+            "Difference in final-action attention assigned to the commitment window\n"
+            "(percentage points)"
+        )
+        ax.set_ylabel("State group")
+        ax.set_title("Attention to Reasoning Near Action Commitment")
+        fig.tight_layout()
+        fig.savefig(figs / "commitment_attention_by_state_group.png", dpi=200)
         plt.close(fig)
 
     heads = [
         row
         for row in summarize_head_rows(head_rows, args.folds)
-        if bool(row["replicated_positive"])
-    ][:15]
+        if bool(row["consistent_positive_across_subsets"])
+        and int(row["layer"]) == 15
+        and row["event_type"] == "commitment_onset"
+    ][:10]
     if heads:
-        labels = [f"L{row['layer']} H{row['head_index']} {row['event_type']}" for row in heads]
-        values = [float(row["mean_event_minus_control_attention"]) for row in heads]
-        fig, ax = plt.subplots(figsize=(9, 5.5))
+        labels = [f"Layer {row['layer']}, head {row['head_index']}" for row in heads]
+        values = [100 * float(row["mean_event_minus_control_attention"]) for row in heads]
+        fig, ax = plt.subplots(figsize=(8.5, 5.2))
         ax.barh(range(len(labels)), values, color="#5b9bd5")
         ax.axvline(0, color="#333333", linewidth=0.8)
         ax.set_yticks(range(len(labels)))
         ax.set_yticklabels(labels)
         ax.invert_yaxis()
-        ax.set_xlabel("Final-action attention to event window minus matched non-event window")
-        ax.set_title("Heads With Replicated Attention Increase Near Events")
+        ax.set_xlabel(
+            "Difference in final-action attention assigned to the commitment window\n"
+            "(percentage points)"
+        )
+        ax.set_ylabel("Attention head")
+        ax.set_title("Exploratory Attention Heads Near Action Commitment")
         fig.tight_layout()
         fig.savefig(figs / "top_attention_heads.png", dpi=200)
         plt.close(fig)
@@ -762,11 +932,15 @@ def write_figures(output: Path, event_rows: list[dict[str, Any]], head_rows: lis
         "",
         "## attention_event_window_difference.png",
         "",
-        "For each state, attention is measured from the final action token to reasoning sentences. The plotted value is attention to sentences within three sentences of a decision or belief event minus attention to a progress-matched non-event window in the same state. Positive values mean the final action token attended more to the event window.",
+        "Attention is measured from the final action token to the event sentence and the three sentences on either side. Each point subtracts attention to the closest non-overlapping seven-sentence window in the same state, at a similar reasoning position, that contains no event of the same type. Values are means of trajectory-level differences at layer 15; error bars are 95% confidence intervals across trajectories. Positive values mean greater attention near the event. This is correlational and does not establish that the attended reasoning caused the final action.",
+        "",
+        "## commitment_attention_by_state_group.png",
+        "",
+        "Final-action attention near retrospective action commitment, shown separately for failure and control states. Commitment is the first sentence boundary at which the recommended action equals the full-trace recommendation and remains unchanged. Values compare the seven-sentence commitment window with a non-overlapping same-state window; error bars are 95% confidence intervals across trajectory-level means. The difference between state groups is descriptive and is not a direct between-group significance test.",
         "",
         "## top_attention_heads.png",
         "",
-        "Heads are shown when their event-window attention increase is positive in most trajectory-grouped folds. This is a descriptive head-level screen, not causal evidence.",
+        "The ten layer-15 heads with the largest positive attention difference near action commitment among heads showing a positive difference in at least four of five trajectory-grouped subsets. Head selection and effect estimation use the same pilot data, so this is an exploratory screen requiring held-out validation, not evidence of a specialized causal circuit.",
     ]
     (output / "FIGURE_CAPTIONS.md").write_text("\n".join(captions) + "\n")
 

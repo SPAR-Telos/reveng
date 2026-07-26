@@ -1,0 +1,33 @@
+{
+  "elastic_net_c_grid": [
+    0.03,
+    0.3,
+    3.0
+  ],
+  "elastic_net_l1_ratio_grid": [
+    0.0,
+    0.5,
+    1.0
+  ],
+  "environment_states": 46,
+  "exact_d2h_implemented": false,
+  "inner_folds": 3,
+  "input_files": {
+    "data/behavioral_probes/doorkey_chunking_validation/sentences.csv": "e418211fd104b67f967dfb70aa6cb45e2c44bdd4d12522268b40892bae1c4453",
+    "outputs/activation_collection/gpt_oss_20b_boundary_v1/activation_index.parquet": "5b09123f1ba3646363f19a7b26e70fd61ba5389b89aef4b1f4a5cee43418d32d",
+    "outputs/experiment1_activation_monitor/gpt_oss_local_sentence_matched46_v1/position_rows.csv": "5cea57ad68f5b7ff8624c06a1dd2616151952a5185a8fb806f39a0d0d02a4195",
+    "outputs/experiment2_behavioral_beliefs/gpt_oss_local_sentence_matched46_v1/belief_rows.csv": "c5fcbd32c361ac2a97d4cb532b94df22305eafb9c5447953367470da5ab774e5"
+  },
+  "large_distribution_change_quantile": 0.9,
+  "outer_folds": 5,
+  "outer_grouping": "trajectory_id",
+  "seed": 42,
+  "sentence_backed_positions": 6992,
+  "sentence_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "status": "complete",
+  "target_horizons_sentences": [
+    1,
+    3
+  ],
+  "trajectories": 31
+}

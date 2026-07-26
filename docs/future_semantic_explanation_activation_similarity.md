@@ -7,6 +7,10 @@ optimality loss and other action events. Does this occur because the sentence
 restates, summarizes, or consolidates earlier reasoning before the recommended
 action changes?
 
+The broader hypothesis is that reiteration, route rechecking, or consolidation
+is more common immediately before action changes than in reasoning-progress
+and length-matched non-event sentences.
+
 This interpretation is not part of the current result. The current evidence
 only establishes a geometric association.
 
@@ -19,7 +23,8 @@ action-event and activation labels. Require one primary label:
 
 | Label | Operational definition |
 |---|---|
-| Restatement | Repeats a previously stated fact, action, or conclusion without adding a new inference. |
+| Restatement or reiteration | Repeats a previously stated fact, action, or conclusion without adding a new inference. |
+| Route rechecking | Re-evaluates whether a previously proposed route is traversable, valid, or efficient. |
 | Summary or consolidation | Combines earlier claims into a plan or decision without introducing a new state fact. |
 | New inference | Derives a new state fact, consequence, or route decision. |
 | Correction or backtracking | Explicitly revises or rejects earlier reasoning. |
@@ -44,9 +49,32 @@ increases and whether adding semantic labels reduces the activation-similarity
 coefficient. Such attenuation would be consistent with the semantic
 explanation, but it would not establish mediation or causality.
 
+## Connections to the Main Claim
+
+Apply the same labels to action-distribution change points, commitment
+boundaries, final-action attention windows, belief changes, and
+post-commitment reasoning. This makes the following questions testable:
+
+- whether the largest increase in full-trace action probability and later
+  stable action selection have different semantic categories;
+- which reasoning functions precede changes in the action distribution;
+- whether optimal and suboptimal commitments have different semantic
+  signatures;
+- whether activation similarity and final-action attention select the same
+  classes of sentences;
+- whether post-commitment text consists mainly of rechecking and reiteration
+  while action probabilities remain stable;
+- whether correction language coincides with corrected state or transition
+  beliefs.
+
+These are correlational links. If one category consistently precedes action
+changes, use that category to select sentences for deletion, replacement, and
+on-policy resampling. Only those interventions can support the claim that the
+identified sentence function changes the action.
+
 ## Related Work
 
-- [Thought Anchors](https://openreview.net/forum?id=VnSlfeRCaU) studies
+- [Thought Anchors](https://openreview.net/forum?id=6NUtPO9PdV) studies
   sentence importance, planning, and uncertainty management using
   counterfactual resampling and attention.
 - [Beyond the Commitment Boundary](https://arxiv.org/abs/2606.13603) studies
