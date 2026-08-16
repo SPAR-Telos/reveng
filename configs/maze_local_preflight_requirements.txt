@@ -1,0 +1,11 @@
+# Install in the dedicated GPU preflight environment before `uv pip install --no-deps -e .`.
+# PyTorch is intentionally omitted because its wheel/index must match the remote CUDA stack.
+transformers>=5.5,<6
+accelerate>=1.8
+safetensors>=0.5
+kernels==0.10.2
+gymnasium==1.2.0
+minigrid==3.0.0
+numpy>=2.0
+pillow>=10
+sentencepiece>=0.2
