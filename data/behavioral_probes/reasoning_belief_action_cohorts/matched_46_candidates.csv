@@ -1,0 +1,875 @@
+example_id,trajectory_id,source_file,model_name,step_index,grid_text,carrying_key,observed_action,is_optimal_action,wall_hit,current_position,next_position,canonical_state,current_optimal_distance,next_optimal_distance,trajectory_actual_length,trajectory_recomputed_optimal_length,trajectory_length_delta,trajectory_reached_goal,stored_astar_distance,stored_astar_suspicious,trajectory_class,primary_step_failure_mode,is_failure_onset,is_terminal_failure_tail,is_pre_failure_context,pre_failure_for_step_index,selection_stage,selected_for_probe,selection_reason,probe_truths_json,optimal_actions_json,legacy_optimal_actions_json,failure_modes_json,matched_pair_id,matched_role,match_carrying_key,match_closed_door_visible,match_n_optimal_actions,match_distance_bin_5
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_002,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33.json,together_ai/openai/gpt-oss-20b,2,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ A # 
+3 # _ _ _ # _ _ K # 
+4 # # # _ # # # D # 
+5 # _ _ G # _ _ _ # 
+6 # _ _ _ _ _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",False,LEFT,False,False,"7,2","6,2","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ # _ _ A #
+3 # _ _ _ # _ _ K #
+4 # # # _ # # # D #
+5 # _ _ G # _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",9,10,13,11,2,True,18,True,suboptimal_success,backtrack,True,False,False,,failure,True,"avoidable_detour,backtrack,suboptimal_success_failure_step","{""agent_location"": {""col"": 7, ""row"": 2}, ""agent_location_after_down"": {""col"": 7, ""row"": 3}, ""agent_location_after_left"": {""col"": 6, ""row"": 2}, ""agent_location_after_right"": {""col"": 7, ""row"": 2}, ""agent_location_after_up"": {""col"": 7, ""row"": 1}, ""door_location"": {""col"": 7, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 3, ""row"": 5}, ""has_key"": ""no"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""no"", ""has_key_after_right"": ""no"", ""has_key_after_up"": ""no"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""yes"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""yes"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": 7, ""row"": 3}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""yes"", ""wall_up"": ""no""}","[""DOWN""]","[""DOWN""]","[""backtrack"", ""avoidable_detour""]",pair_001,failure,False,True,1,1
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0.json,together_ai/openai/gpt-oss-20b,1,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ K _ # 
+3 # _ _ _ # _ A _ # 
+4 # _ # # # D # # # 
+5 # _ _ _ _ _ _ G # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",False,UP,True,False,"6,3","6,2","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ # _ K _ #
+3 # _ _ _ # _ A _ #
+4 # _ # # # D # # #
+5 # _ _ _ _ _ _ G #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",7,6,8,8,0,True,8,False,optimal_success,none,False,False,True,2,context,True,pre_failure_context,"{""agent_location"": {""col"": 6, ""row"": 3}, ""agent_location_after_down"": {""col"": 6, ""row"": 3}, ""agent_location_after_left"": {""col"": 5, ""row"": 3}, ""agent_location_after_right"": {""col"": 7, ""row"": 3}, ""agent_location_after_up"": {""col"": 6, ""row"": 2}, ""door_location"": {""col"": 5, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 7, ""row"": 5}, ""has_key"": ""no"", ""has_key_after_down"": ""no"", ""has_key_after_left"": ""no"", ""has_key_after_right"": ""no"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""yes"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""yes"", ""key_location"": {""col"": 6, ""row"": 2}, ""wall_down"": ""yes"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""UP""]","[""LEFT""]",[],pair_001,control,False,True,1,1
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_59_step_002,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_59,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_59.json,together_ai/openai/gpt-oss-20b,2,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ A _ # _ _ _ # 
+3 # _ K _ # _ _ _ # 
+4 # # D # # _ # # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ _ _ _ _ # 
+7 # _ _ G # _ _ _ # 
+8 # # # # # # # # # ",False,RIGHT,False,False,"2,2","3,2","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ A _ # _ _ _ #
+3 # _ K _ # _ _ _ #
+4 # # D # # _ # # #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ G # _ _ _ #
+8 # # # # # # # # #",6,7,10,8,2,True,30,True,suboptimal_success,avoidable_detour,True,False,False,,failure,True,"avoidable_detour,suboptimal_success_failure_step","{""agent_location"": {""col"": 2, ""row"": 2}, ""agent_location_after_down"": {""col"": 2, ""row"": 3}, ""agent_location_after_left"": {""col"": 1, ""row"": 2}, ""agent_location_after_right"": {""col"": 3, ""row"": 2}, ""agent_location_after_up"": {""col"": 2, ""row"": 1}, ""door_location"": {""col"": 2, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 3, ""row"": 7}, ""has_key"": ""no"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""no"", ""has_key_after_right"": ""no"", ""has_key_after_up"": ""no"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""yes"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": 2, ""row"": 3}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""DOWN""]","[""DOWN""]","[""avoidable_detour""]",pair_002,failure,False,True,1,1
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_19_step_002,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_19,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_19.json,together_ai/openai/gpt-oss-20b,2,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ _ _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # # # # # # _ # 
+5 # _ K A D _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ G # 
+8 # # # # # # # # # ",False,LEFT,True,False,"3,5","2,5","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ _ _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ # _ _ _ #
+4 # # # # # # # _ #
+5 # _ K A D _ _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ # _ _ G #
+8 # # # # # # # # #",8,7,10,10,0,True,21,True,optimal_success,none,False,False,True,3,context,True,pre_failure_context,"{""agent_location"": {""col"": 3, ""row"": 5}, ""agent_location_after_down"": {""col"": 3, ""row"": 6}, ""agent_location_after_left"": {""col"": 2, ""row"": 5}, ""agent_location_after_right"": {""col"": 3, ""row"": 5}, ""agent_location_after_up"": {""col"": 3, ""row"": 5}, ""door_location"": {""col"": 4, ""row"": 5}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 7, ""row"": 7}, ""has_key"": ""no"", ""has_key_after_down"": ""no"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""no"", ""has_key_after_up"": ""no"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""yes"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""yes"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""yes"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": 2, ""row"": 5}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""yes""}","[""LEFT""]","[""RIGHT""]",[],pair_002,control,False,True,1,1
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_34_step_006,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_34,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_34.json,together_ai/openai/gpt-oss-20b,6,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ G # _ _ _ # 
+3 # _ _ _ D _ _ _ # 
+4 # # # # # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ A # 
+7 # _ _ _ _ _ _ K # 
+8 # # # # # # # # # ",False,LEFT,False,False,"7,6","6,6","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ G # _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # # # # # # # _ #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ # _ _ A #
+7 # _ _ _ _ _ _ K #
+8 # # # # # # # # #",10,11,18,16,2,True,30,True,suboptimal_success,avoidable_detour,True,False,False,,failure,True,"avoidable_detour,suboptimal_success_failure_step","{""agent_location"": {""col"": 7, ""row"": 6}, ""agent_location_after_down"": {""col"": 7, ""row"": 7}, ""agent_location_after_left"": {""col"": 6, ""row"": 6}, ""agent_location_after_right"": {""col"": 7, ""row"": 6}, ""agent_location_after_up"": {""col"": 7, ""row"": 5}, ""door_location"": {""col"": 4, ""row"": 3}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 3, ""row"": 2}, ""has_key"": ""no"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""no"", ""has_key_after_right"": ""no"", ""has_key_after_up"": ""no"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""yes"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""yes"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": 7, ""row"": 7}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""yes"", ""wall_up"": ""no""}","[""DOWN""]","[""UP""]","[""avoidable_detour""]",pair_003,failure,False,True,1,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_001,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10.json,together_ai/openai/gpt-oss-20b,1,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ _ _ _ _ # 
+2 # _ _ _ # _ G _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # D # # # _ # # 
+5 # K A _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",False,LEFT,True,False,"2,5","1,5","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ _ _ _ _ #
+2 # _ _ _ # _ G _ #
+3 # _ _ _ # _ _ _ #
+4 # # D # # # _ # #
+5 # K A _ # _ _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",11,10,12,12,0,True,15,True,optimal_success,none,False,False,True,2,context,True,pre_failure_context,"{""agent_location"": {""col"": 2, ""row"": 5}, ""agent_location_after_down"": {""col"": 2, ""row"": 6}, ""agent_location_after_left"": {""col"": 1, ""row"": 5}, ""agent_location_after_right"": {""col"": 3, ""row"": 5}, ""agent_location_after_up"": {""col"": 2, ""row"": 5}, ""door_location"": {""col"": 2, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 6, ""row"": 2}, ""has_key"": ""no"", ""has_key_after_down"": ""no"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""no"", ""has_key_after_up"": ""no"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""yes"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""yes"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": 1, ""row"": 5}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""LEFT""]","[""UP""]",[],pair_003,control,False,True,1,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_41_step_000,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_41,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_41.json,together_ai/openai/gpt-oss-20b,0,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # K A _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # D # # # # # _ # 
+5 # _ _ _ # G _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ _ _ _ _ # 
+8 # # # # # # # # # ",False,DOWN,False,False,"2,2","2,3","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # K A _ # _ _ _ #
+3 # _ _ _ # _ _ _ #
+4 # D # # # # # _ #
+5 # _ _ _ # G _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",12,13,14,12,2,True,18,True,suboptimal_success,avoidable_detour,True,False,False,,failure,True,"avoidable_detour,suboptimal_success_failure_step","{""agent_location"": {""col"": 2, ""row"": 2}, ""agent_location_after_down"": {""col"": 2, ""row"": 3}, ""agent_location_after_left"": {""col"": 1, ""row"": 2}, ""agent_location_after_right"": {""col"": 3, ""row"": 2}, ""agent_location_after_up"": {""col"": 2, ""row"": 1}, ""door_location"": {""col"": 1, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 5, ""row"": 5}, ""has_key"": ""no"", ""has_key_after_down"": ""no"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""no"", ""has_key_after_up"": ""no"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""yes"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": 1, ""row"": 2}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""LEFT""]","[""DOWN"", ""LEFT""]","[""avoidable_detour""]",pair_004,failure,False,True,1,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_004,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11.json,together_ai/openai/gpt-oss-20b,4,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ _ _ A _ # 
+3 # _ _ _ # _ K _ # 
+4 # D # # # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # G _ _ _ _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",False,DOWN,True,False,"6,2","6,3","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ _ _ A _ #
+3 # _ _ _ # _ K _ #
+4 # D # # # # # # #
+5 # _ _ _ # _ _ _ #
+6 # G _ _ _ _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",11,10,15,15,0,True,30,True,optimal_success,none,False,False,True,5,context,True,pre_failure_context,"{""agent_location"": {""col"": 6, ""row"": 2}, ""agent_location_after_down"": {""col"": 6, ""row"": 3}, ""agent_location_after_left"": {""col"": 5, ""row"": 2}, ""agent_location_after_right"": {""col"": 7, ""row"": 2}, ""agent_location_after_up"": {""col"": 6, ""row"": 1}, ""door_location"": {""col"": 1, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 1, ""row"": 6}, ""has_key"": ""no"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""no"", ""has_key_after_right"": ""no"", ""has_key_after_up"": ""no"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""yes"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": 6, ""row"": 3}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""DOWN""]","[""LEFT""]",[],pair_004,control,False,True,1,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_002,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57.json,together_ai/openai/gpt-oss-20b,2,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ G D _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # # _ # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ K A # 
+8 # # # # # # # # # ",False,RIGHT,False,True,"7,7","7,7","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ G D _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ # _ _ _ #
+4 # # # _ # # # _ #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ # _ K A #
+8 # # # # # # # # #",12,12,15,14,1,True,30,True,suboptimal_success,wall_hit,True,False,False,,failure,True,"suboptimal_success_failure_step,wall_hit","{""agent_location"": {""col"": 7, ""row"": 7}, ""agent_location_after_down"": {""col"": 7, ""row"": 7}, ""agent_location_after_left"": {""col"": 6, ""row"": 7}, ""agent_location_after_right"": {""col"": 7, ""row"": 7}, ""agent_location_after_up"": {""col"": 7, ""row"": 6}, ""door_location"": {""col"": 4, ""row"": 1}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 3, ""row"": 1}, ""has_key"": ""no"", ""has_key_after_down"": ""no"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""no"", ""has_key_after_up"": ""no"", ""hit_wall_after_down"": ""yes"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""yes"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""yes"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": 6, ""row"": 7}, ""wall_down"": ""yes"", ""wall_left"": ""no"", ""wall_right"": ""yes"", ""wall_up"": ""no""}","[""LEFT""]","[""UP""]","[""wall_hit""]",pair_005,failure,False,True,1,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_12_step_003,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_12,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_12.json,together_ai/openai/gpt-oss-20b,3,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ D _ G _ # 
+3 # _ _ _ # _ _ _ # 
+4 # _ # # # # # # # 
+5 # A K _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ _ _ _ _ # 
+8 # # # # # # # # # ",False,RIGHT,True,False,"1,5","2,5","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ D _ G _ #
+3 # _ _ _ # _ _ _ #
+4 # _ # # # # # # #
+5 # A K _ # _ _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",10,9,13,13,0,True,30,True,optimal_success,none,False,False,True,4,context,True,pre_failure_context,"{""agent_location"": {""col"": 1, ""row"": 5}, ""agent_location_after_down"": {""col"": 1, ""row"": 6}, ""agent_location_after_left"": {""col"": 1, ""row"": 5}, ""agent_location_after_right"": {""col"": 2, ""row"": 5}, ""agent_location_after_up"": {""col"": 1, ""row"": 4}, ""door_location"": {""col"": 4, ""row"": 2}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 6, ""row"": 2}, ""has_key"": ""no"", ""has_key_after_down"": ""no"", ""has_key_after_left"": ""no"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""no"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""yes"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""yes"", ""is_key_up"": ""no"", ""key_location"": {""col"": 2, ""row"": 5}, ""wall_down"": ""no"", ""wall_left"": ""yes"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""RIGHT""]","[""UP""]",[],pair_005,control,False,True,1,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_003,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57.json,together_ai/openai/gpt-oss-20b,3,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ G D _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # # _ # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ K A # 
+8 # # # # # # # # # ",False,LEFT,True,False,"7,7","6,7","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ G D _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ # _ _ _ #
+4 # # # _ # # # _ #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ # _ K A #
+8 # # # # # # # # #",12,11,15,14,1,True,30,True,suboptimal_success,freeze_repeat,False,False,False,,failure,True,"freeze_repeat_onset,suboptimal_success_failure_step","{""agent_location"": {""col"": 7, ""row"": 7}, ""agent_location_after_down"": {""col"": 7, ""row"": 7}, ""agent_location_after_left"": {""col"": 6, ""row"": 7}, ""agent_location_after_right"": {""col"": 7, ""row"": 7}, ""agent_location_after_up"": {""col"": 7, ""row"": 6}, ""door_location"": {""col"": 4, ""row"": 1}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 3, ""row"": 1}, ""has_key"": ""no"", ""has_key_after_down"": ""no"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""no"", ""has_key_after_up"": ""no"", ""hit_wall_after_down"": ""yes"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""yes"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""yes"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": 6, ""row"": 7}, ""wall_down"": ""yes"", ""wall_left"": ""no"", ""wall_right"": ""yes"", ""wall_up"": ""no""}","[""LEFT""]","[""UP""]","[""freeze_repeat""]",pair_006,failure,False,True,1,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_23_step_006,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_23,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_23.json,together_ai/openai/gpt-oss-20b,6,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ K # _ _ _ # 
+2 # _ _ A # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # # # # # _ # # # 
+5 # G _ _ D _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",False,UP,True,False,"3,2","3,1","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ K # _ _ _ #
+2 # _ _ A # _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # # # # # _ # # #
+5 # G _ _ D _ _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",11,10,17,17,0,True,30,True,optimal_success,none,False,False,True,7,context,True,pre_failure_context,"{""agent_location"": {""col"": 3, ""row"": 2}, ""agent_location_after_down"": {""col"": 3, ""row"": 3}, ""agent_location_after_left"": {""col"": 2, ""row"": 2}, ""agent_location_after_right"": {""col"": 3, ""row"": 2}, ""agent_location_after_up"": {""col"": 3, ""row"": 1}, ""door_location"": {""col"": 4, ""row"": 5}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 1, ""row"": 5}, ""has_key"": ""no"", ""has_key_after_down"": ""no"", ""has_key_after_left"": ""no"", ""has_key_after_right"": ""no"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""yes"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""yes"", ""key_location"": {""col"": 3, ""row"": 1}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""yes"", ""wall_up"": ""no""}","[""UP""]","[""DOWN""]",[],pair_006,control,False,True,1,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_000,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15.json,together_ai/openai/gpt-oss-20b,0,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # A _ K # _ _ G # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # # D # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ _ _ _ _ # 
+8 # # # # # # # # # ",False,DOWN,False,False,"1,1","1,2","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ K # _ _ G #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ # _ _ _ #
+4 # # # D # # # _ #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",18,19,26,18,8,True,30,True,suboptimal_success,avoidable_detour,True,False,False,,failure,True,"avoidable_detour,suboptimal_success_failure_step","{""agent_location"": {""col"": 1, ""row"": 1}, ""agent_location_after_down"": {""col"": 1, ""row"": 2}, ""agent_location_after_left"": {""col"": 1, ""row"": 1}, ""agent_location_after_right"": {""col"": 2, ""row"": 1}, ""agent_location_after_up"": {""col"": 1, ""row"": 1}, ""door_location"": {""col"": 3, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 7, ""row"": 1}, ""has_key"": ""no"", ""has_key_after_down"": ""no"", ""has_key_after_left"": ""no"", ""has_key_after_right"": ""no"", ""has_key_after_up"": ""no"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""yes"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""yes"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": 3, ""row"": 1}, ""wall_down"": ""no"", ""wall_left"": ""yes"", ""wall_right"": ""no"", ""wall_up"": ""yes""}","[""RIGHT""]","[""DOWN"", ""RIGHT""]","[""avoidable_detour""]",pair_007,failure,False,True,1,3
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_21_step_009,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_21,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_21.json,together_ai/openai/gpt-oss-20b,9,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # K _ _ # 
+2 # _ _ _ # A _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # _ # # # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ D _ G _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",False,UP,True,False,"5,2","5,1","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # K _ _ #
+2 # _ _ _ # A _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ # # # # # # #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ D _ G _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",15,14,24,24,0,True,30,True,optimal_success,none,False,False,True,10,context,True,pre_failure_context,"{""agent_location"": {""col"": 5, ""row"": 2}, ""agent_location_after_down"": {""col"": 5, ""row"": 3}, ""agent_location_after_left"": {""col"": 5, ""row"": 2}, ""agent_location_after_right"": {""col"": 6, ""row"": 2}, ""agent_location_after_up"": {""col"": 5, ""row"": 1}, ""door_location"": {""col"": 4, ""row"": 6}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 6, ""row"": 6}, ""has_key"": ""no"", ""has_key_after_down"": ""no"", ""has_key_after_left"": ""no"", ""has_key_after_right"": ""no"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""yes"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""yes"", ""key_location"": {""col"": 5, ""row"": 1}, ""wall_down"": ""no"", ""wall_left"": ""yes"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""UP""]","[""DOWN""]",[],pair_007,control,False,True,1,3
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_003,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33.json,together_ai/openai/gpt-oss-20b,3,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ A _ # 
+3 # _ _ _ # _ _ K # 
+4 # # # _ # # # D # 
+5 # _ _ G # _ _ _ # 
+6 # _ _ _ _ _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",False,RIGHT,True,False,"6,2","7,2","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ # _ A _ #
+3 # _ _ _ # _ _ K #
+4 # # # _ # # # D #
+5 # _ _ G # _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",10,9,13,11,2,True,18,True,suboptimal_success,oscillation_2cycle,False,False,False,,failure,True,"backtrack,oscillation_2cycle_onset,suboptimal_success_failure_step","{""agent_location"": {""col"": 6, ""row"": 2}, ""agent_location_after_down"": {""col"": 6, ""row"": 3}, ""agent_location_after_left"": {""col"": 5, ""row"": 2}, ""agent_location_after_right"": {""col"": 7, ""row"": 2}, ""agent_location_after_up"": {""col"": 6, ""row"": 1}, ""door_location"": {""col"": 7, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 3, ""row"": 5}, ""has_key"": ""no"", ""has_key_after_down"": ""no"", ""has_key_after_left"": ""no"", ""has_key_after_right"": ""no"", ""has_key_after_up"": ""no"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": 7, ""row"": 3}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""DOWN"", ""RIGHT""]","[""DOWN"", ""RIGHT""]","[""oscillation_2cycle"", ""backtrack""]",pair_008,failure,False,True,2,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_001,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33.json,together_ai/openai/gpt-oss-20b,1,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ A _ # 
+3 # _ _ _ # _ _ K # 
+4 # # # _ # # # D # 
+5 # _ _ G # _ _ _ # 
+6 # _ _ _ _ _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",False,RIGHT,True,False,"6,2","7,2","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ # _ A _ #
+3 # _ _ _ # _ _ K #
+4 # # # _ # # # D #
+5 # _ _ G # _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",10,9,13,11,2,True,18,True,suboptimal_success,none,False,False,True,2,context,True,pre_failure_context,"{""agent_location"": {""col"": 6, ""row"": 2}, ""agent_location_after_down"": {""col"": 6, ""row"": 3}, ""agent_location_after_left"": {""col"": 5, ""row"": 2}, ""agent_location_after_right"": {""col"": 7, ""row"": 2}, ""agent_location_after_up"": {""col"": 6, ""row"": 1}, ""door_location"": {""col"": 7, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 3, ""row"": 5}, ""has_key"": ""no"", ""has_key_after_down"": ""no"", ""has_key_after_left"": ""no"", ""has_key_after_right"": ""no"", ""has_key_after_up"": ""no"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": 7, ""row"": 3}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""DOWN"", ""RIGHT""]","[""DOWN"", ""RIGHT""]",[],pair_008,control,False,True,2,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_34_step_007,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_34,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_34.json,together_ai/openai/gpt-oss-20b,7,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ G # _ _ _ # 
+3 # _ _ _ D _ _ _ # 
+4 # # # # # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ A _ # 
+7 # _ _ _ _ _ _ K # 
+8 # # # # # # # # # ",False,RIGHT,True,False,"6,6","7,6","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ G # _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # # # # # # # _ #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ # _ A _ #
+7 # _ _ _ _ _ _ K #
+8 # # # # # # # # #",11,10,18,16,2,True,30,True,suboptimal_success,backtrack,False,False,False,,failure,True,"backtrack,suboptimal_success_failure_step","{""agent_location"": {""col"": 6, ""row"": 6}, ""agent_location_after_down"": {""col"": 6, ""row"": 7}, ""agent_location_after_left"": {""col"": 5, ""row"": 6}, ""agent_location_after_right"": {""col"": 7, ""row"": 6}, ""agent_location_after_up"": {""col"": 6, ""row"": 5}, ""door_location"": {""col"": 4, ""row"": 3}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 3, ""row"": 2}, ""has_key"": ""no"", ""has_key_after_down"": ""no"", ""has_key_after_left"": ""no"", ""has_key_after_right"": ""no"", ""has_key_after_up"": ""no"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": 7, ""row"": 7}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""DOWN"", ""RIGHT""]","[""RIGHT"", ""UP""]","[""backtrack""]",pair_009,failure,False,True,2,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_001,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57.json,together_ai/openai/gpt-oss-20b,1,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ G D _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # # _ # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ A # 
+7 # _ _ _ # _ K _ # 
+8 # # # # # # # # # ",False,DOWN,True,False,"7,6","7,7","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ G D _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ # _ _ _ #
+4 # # # _ # # # _ #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ # _ _ A #
+7 # _ _ _ # _ K _ #
+8 # # # # # # # # #",13,12,15,14,1,True,30,True,suboptimal_success,none,False,False,True,2,context,True,pre_failure_context,"{""agent_location"": {""col"": 7, ""row"": 6}, ""agent_location_after_down"": {""col"": 7, ""row"": 7}, ""agent_location_after_left"": {""col"": 6, ""row"": 6}, ""agent_location_after_right"": {""col"": 7, ""row"": 6}, ""agent_location_after_up"": {""col"": 7, ""row"": 5}, ""door_location"": {""col"": 4, ""row"": 1}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 3, ""row"": 1}, ""has_key"": ""no"", ""has_key_after_down"": ""no"", ""has_key_after_left"": ""no"", ""has_key_after_right"": ""no"", ""has_key_after_up"": ""no"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""yes"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": 6, ""row"": 7}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""yes"", ""wall_up"": ""no""}","[""DOWN"", ""LEFT""]","[""UP""]",[],pair_009,control,False,True,2,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_007,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15.json,together_ai/openai/gpt-oss-20b,7,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ G # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # # A # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ _ _ _ _ # 
+8 # # # # # # # # # ",True,UP,False,False,"3,4","3,3","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ G #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ # _ _ _ #
+4 # # # A # # # _ #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",13,14,26,18,8,True,30,True,suboptimal_success,backtrack,False,False,False,,failure,True,"avoidable_detour,backtrack,suboptimal_success_failure_step","{""agent_location"": {""col"": 3, ""row"": 4}, ""agent_location_after_down"": {""col"": 3, ""row"": 5}, ""agent_location_after_left"": {""col"": 3, ""row"": 4}, ""agent_location_after_right"": {""col"": 3, ""row"": 4}, ""agent_location_after_up"": {""col"": 3, ""row"": 3}, ""door_location"": {""col"": -1, ""row"": -1}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 7, ""row"": 1}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""yes"", ""hit_wall_after_right"": ""yes"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""yes"", ""wall_right"": ""yes"", ""wall_up"": ""no""}","[""DOWN""]","[""DOWN""]","[""backtrack"", ""avoidable_detour""]",pair_010,failure,True,False,1,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_006,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15.json,together_ai/openai/gpt-oss-20b,6,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ G # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ A # _ _ _ # 
+4 # # # _ # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ _ _ _ _ # 
+8 # # # # # # # # # ",True,DOWN,True,False,"3,3","3,4","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ G #
+2 # _ _ _ # _ _ _ #
+3 # _ _ A # _ _ _ #
+4 # # # _ # # # _ #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ _ _ _ _ #
+8 # # # # # # # # #",14,13,26,18,8,True,30,True,suboptimal_success,none,False,False,True,7,context,True,pre_failure_context,"{""agent_location"": {""col"": 3, ""row"": 3}, ""agent_location_after_down"": {""col"": 3, ""row"": 4}, ""agent_location_after_left"": {""col"": 2, ""row"": 3}, ""agent_location_after_right"": {""col"": 3, ""row"": 3}, ""agent_location_after_up"": {""col"": 3, ""row"": 2}, ""door_location"": {""col"": -1, ""row"": -1}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 7, ""row"": 1}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""yes"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""yes"", ""wall_up"": ""no""}","[""DOWN""]","[""DOWN""]",[],pair_010,control,True,False,1,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_13_step_001,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_13,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_13.json,together_ai/openai/gpt-oss-20b,1,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ _ _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # G _ _ # _ _ _ # 
+4 # D # # # # # _ # 
+5 # _ A _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",True,LEFT,True,False,"2,5","1,5","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ _ _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # G _ _ # _ _ _ #
+4 # D # # # # # _ #
+5 # _ A _ # _ _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",3,2,4,4,0,True,6,True,optimal_success,backtrack,True,False,False,,failure,True,backtrack,"{""agent_location"": {""col"": 2, ""row"": 5}, ""agent_location_after_down"": {""col"": 2, ""row"": 6}, ""agent_location_after_left"": {""col"": 1, ""row"": 5}, ""agent_location_after_right"": {""col"": 3, ""row"": 5}, ""agent_location_after_up"": {""col"": 2, ""row"": 5}, ""door_location"": {""col"": 1, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 1, ""row"": 3}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""yes"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""yes""}","[""LEFT""]","[""LEFT""]","[""backtrack""]",pair_011,failure,True,True,1,0
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_75_step_002,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_75,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_75.json,together_ai/openai/gpt-oss-20b,2,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ _ _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # _ # # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ D _ _ _ # 
+7 # _ _ G # A _ _ # 
+8 # # # # # # # # # ",True,UP,True,False,"5,7","5,6","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ _ _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ # _ _ _ #
+4 # # _ # # # # # #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ D _ _ _ #
+7 # _ _ G # A _ _ #
+8 # # # # # # # # #",4,3,8,6,2,True,14,True,suboptimal_success,none,False,False,True,3,context,True,pre_failure_context,"{""agent_location"": {""col"": 5, ""row"": 7}, ""agent_location_after_down"": {""col"": 5, ""row"": 7}, ""agent_location_after_left"": {""col"": 5, ""row"": 7}, ""agent_location_after_right"": {""col"": 6, ""row"": 7}, ""agent_location_after_up"": {""col"": 5, ""row"": 6}, ""door_location"": {""col"": 4, ""row"": 6}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 3, ""row"": 7}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""yes"", ""hit_wall_after_left"": ""yes"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""yes"", ""wall_left"": ""yes"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""UP""]","[""UP""]",[],pair_011,control,True,True,1,0
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_003,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0.json,together_ai/openai/gpt-oss-20b,3,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ A _ # 
+4 # _ # # # D # # # 
+5 # _ _ _ _ _ _ G # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",True,LEFT,True,False,"6,3","5,3","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ # _ A _ #
+4 # _ # # # D # # #
+5 # _ _ _ _ _ _ G #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",5,4,8,8,0,True,8,False,optimal_success,short_loop,False,False,False,,failure,True,short_loop_onset,"{""agent_location"": {""col"": 6, ""row"": 3}, ""agent_location_after_down"": {""col"": 6, ""row"": 3}, ""agent_location_after_left"": {""col"": 5, ""row"": 3}, ""agent_location_after_right"": {""col"": 7, ""row"": 3}, ""agent_location_after_up"": {""col"": 6, ""row"": 2}, ""door_location"": {""col"": 5, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 7, ""row"": 5}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""yes"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""yes"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""LEFT""]","[""LEFT""]","[""short_loop""]",pair_012,failure,True,True,1,1
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_010,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16.json,together_ai/openai/gpt-oss-20b,10,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # A # # # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ D _ _ G # 
+8 # # # # # # # # # ",True,DOWN,True,False,"1,4","1,5","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # A # # # # # # #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ D _ _ G #
+8 # # # # # # # # #",9,8,22,19,3,True,30,True,suboptimal_success,none,False,False,True,11,context,True,pre_failure_context,"{""agent_location"": {""col"": 1, ""row"": 4}, ""agent_location_after_down"": {""col"": 1, ""row"": 5}, ""agent_location_after_left"": {""col"": 1, ""row"": 4}, ""agent_location_after_right"": {""col"": 1, ""row"": 4}, ""agent_location_after_up"": {""col"": 1, ""row"": 3}, ""door_location"": {""col"": 4, ""row"": 7}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 7, ""row"": 7}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""yes"", ""hit_wall_after_right"": ""yes"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""yes"", ""wall_right"": ""yes"", ""wall_up"": ""no""}","[""DOWN""]","[""DOWN""]",[],pair_012,control,True,True,1,1
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_002,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10.json,together_ai/openai/gpt-oss-20b,2,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ _ _ _ _ # 
+2 # _ _ _ # _ G _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # D # # # _ # # 
+5 # A _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",True,RIGHT,True,False,"1,5","2,5","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ _ _ _ _ #
+2 # _ _ _ # _ G _ #
+3 # _ _ _ # _ _ _ #
+4 # # D # # # _ # #
+5 # A _ _ # _ _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",10,9,12,12,0,True,15,True,optimal_success,backtrack,True,False,False,,failure,True,backtrack,"{""agent_location"": {""col"": 1, ""row"": 5}, ""agent_location_after_down"": {""col"": 1, ""row"": 6}, ""agent_location_after_left"": {""col"": 1, ""row"": 5}, ""agent_location_after_right"": {""col"": 2, ""row"": 5}, ""agent_location_after_up"": {""col"": 1, ""row"": 5}, ""door_location"": {""col"": 2, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 6, ""row"": 2}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""yes"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""yes"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""yes"", ""wall_right"": ""no"", ""wall_up"": ""yes""}","[""RIGHT""]","[""RIGHT""]","[""backtrack""]",pair_013,failure,True,True,1,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_92_step_004,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_92,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_92.json,together_ai/openai/gpt-oss-20b,4,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ _ _ _ G # 
+3 # _ _ _ # _ _ _ # 
+4 # # # D # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ _ _ _ _ # 
+7 # _ _ _ # A _ _ # 
+8 # # # # # # # # # ",True,UP,True,False,"5,7","5,6","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ _ _ _ G #
+3 # _ _ _ # _ _ _ #
+4 # # # D # # # # #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ _ _ # A _ _ #
+8 # # # # # # # # #",11,10,17,15,2,True,30,True,suboptimal_success,none,False,False,True,5,context,True,pre_failure_context,"{""agent_location"": {""col"": 5, ""row"": 7}, ""agent_location_after_down"": {""col"": 5, ""row"": 7}, ""agent_location_after_left"": {""col"": 5, ""row"": 7}, ""agent_location_after_right"": {""col"": 6, ""row"": 7}, ""agent_location_after_up"": {""col"": 5, ""row"": 6}, ""door_location"": {""col"": 3, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 7, ""row"": 2}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""yes"", ""hit_wall_after_left"": ""yes"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""yes"", ""wall_left"": ""yes"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""UP""]","[""UP""]",[],pair_013,control,True,True,1,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_002,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0.json,together_ai/openai/gpt-oss-20b,2,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ A _ # 
+3 # _ _ _ # _ _ _ # 
+4 # _ # # # D # # # 
+5 # _ _ _ _ _ _ G # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",True,DOWN,True,False,"6,2","6,3","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ # _ A _ #
+3 # _ _ _ # _ _ _ #
+4 # _ # # # D # # #
+5 # _ _ _ _ _ _ G #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",6,5,8,8,0,True,8,False,optimal_success,backtrack,True,False,False,,failure,True,backtrack,"{""agent_location"": {""col"": 6, ""row"": 2}, ""agent_location_after_down"": {""col"": 6, ""row"": 3}, ""agent_location_after_left"": {""col"": 5, ""row"": 2}, ""agent_location_after_right"": {""col"": 7, ""row"": 2}, ""agent_location_after_up"": {""col"": 6, ""row"": 1}, ""door_location"": {""col"": 5, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 7, ""row"": 5}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""DOWN"", ""LEFT""]","[""DOWN"", ""LEFT""]","[""backtrack""]",pair_014,failure,True,True,2,1
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_30_step_004,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_30,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_30.json,together_ai/openai/gpt-oss-20b,4,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ D _ _ _ # 
+2 # _ _ G # _ _ A # 
+3 # _ _ _ # _ _ _ # 
+4 # _ # # # # _ # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",True,LEFT,True,False,"7,2","6,2","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ D _ _ _ #
+2 # _ _ G # _ _ A #
+3 # _ _ _ # _ _ _ #
+4 # _ # # # # _ # #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",6,5,10,10,0,True,30,True,optimal_success,none,False,False,True,5,context,True,pre_failure_context,"{""agent_location"": {""col"": 7, ""row"": 2}, ""agent_location_after_down"": {""col"": 7, ""row"": 3}, ""agent_location_after_left"": {""col"": 6, ""row"": 2}, ""agent_location_after_right"": {""col"": 7, ""row"": 2}, ""agent_location_after_up"": {""col"": 7, ""row"": 1}, ""door_location"": {""col"": 4, ""row"": 1}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 3, ""row"": 2}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""yes"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""yes"", ""wall_up"": ""no""}","[""LEFT"", ""UP""]","[""LEFT"", ""UP""]",[],pair_014,control,True,True,2,1
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_011,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16.json,together_ai/openai/gpt-oss-20b,11,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # _ # # # # # # # 
+5 # A _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ D _ _ G # 
+8 # # # # # # # # # ",True,UP,False,False,"1,5","1,4","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ # # # # # # #
+5 # A _ _ # _ _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ D _ _ G #
+8 # # # # # # # # #",8,9,22,19,3,True,30,True,suboptimal_success,backtrack,True,False,False,,failure,True,"avoidable_detour,backtrack,suboptimal_success_failure_step","{""agent_location"": {""col"": 1, ""row"": 5}, ""agent_location_after_down"": {""col"": 1, ""row"": 6}, ""agent_location_after_left"": {""col"": 1, ""row"": 5}, ""agent_location_after_right"": {""col"": 2, ""row"": 5}, ""agent_location_after_up"": {""col"": 1, ""row"": 4}, ""door_location"": {""col"": 4, ""row"": 7}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 7, ""row"": 7}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""yes"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""yes"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""DOWN"", ""RIGHT""]","[""DOWN"", ""RIGHT""]","[""backtrack"", ""avoidable_detour""]",pair_015,failure,True,True,2,1
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_68_step_007,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_68,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_68.json,together_ai/openai/gpt-oss-20b,7,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ A _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # # _ # # D # # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ G _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",True,DOWN,True,False,"6,2","6,3","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ # _ A _ #
+3 # _ _ _ _ _ _ _ #
+4 # # _ # # D # # #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ # _ G _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",6,5,13,13,0,True,30,True,optimal_success,none,False,False,True,8,context,True,pre_failure_context,"{""agent_location"": {""col"": 6, ""row"": 2}, ""agent_location_after_down"": {""col"": 6, ""row"": 3}, ""agent_location_after_left"": {""col"": 5, ""row"": 2}, ""agent_location_after_right"": {""col"": 7, ""row"": 2}, ""agent_location_after_up"": {""col"": 6, ""row"": 1}, ""door_location"": {""col"": 5, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 6, ""row"": 6}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""DOWN"", ""LEFT""]","[""DOWN"", ""LEFT""]",[],pair_015,control,True,True,2,1
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_30_step_005,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_30,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_30.json,together_ai/openai/gpt-oss-20b,5,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ D _ _ _ # 
+2 # _ _ G # _ A _ # 
+3 # _ _ _ # _ _ _ # 
+4 # _ # # # # _ # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",True,LEFT,True,False,"6,2","5,2","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ D _ _ _ #
+2 # _ _ G # _ A _ #
+3 # _ _ _ # _ _ _ #
+4 # _ # # # # _ # #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",5,4,10,10,0,True,30,True,optimal_success,short_loop,True,False,False,,failure,True,short_loop_onset,"{""agent_location"": {""col"": 6, ""row"": 2}, ""agent_location_after_down"": {""col"": 6, ""row"": 3}, ""agent_location_after_left"": {""col"": 5, ""row"": 2}, ""agent_location_after_right"": {""col"": 7, ""row"": 2}, ""agent_location_after_up"": {""col"": 6, ""row"": 1}, ""door_location"": {""col"": 4, ""row"": 1}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 3, ""row"": 2}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""LEFT"", ""UP""]","[""LEFT"", ""UP""]","[""short_loop""]",pair_016,failure,True,True,2,1
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_80_step_004,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_80,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_80.json,together_ai/openai/gpt-oss-20b,4,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # # # # # # # _ # 
+5 # _ _ _ D _ _ _ # 
+6 # A _ _ # _ _ G # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",True,UP,True,False,"1,6","1,5","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # # # # # # # _ #
+5 # _ _ _ D _ _ _ #
+6 # A _ _ # _ _ G #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",8,7,12,12,0,True,30,True,optimal_success,none,False,False,True,5,context,True,pre_failure_context,"{""agent_location"": {""col"": 1, ""row"": 6}, ""agent_location_after_down"": {""col"": 1, ""row"": 7}, ""agent_location_after_left"": {""col"": 1, ""row"": 6}, ""agent_location_after_right"": {""col"": 2, ""row"": 6}, ""agent_location_after_up"": {""col"": 1, ""row"": 5}, ""door_location"": {""col"": 4, ""row"": 5}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 7, ""row"": 6}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""yes"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""yes"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""RIGHT"", ""UP""]","[""RIGHT"", ""UP""]",[],pair_016,control,True,True,2,1
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_31_step_005,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_31,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_31.json,together_ai/openai/gpt-oss-20b,5,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # _ # # # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ G _ D _ _ _ # 
+7 # _ _ _ # _ _ A # 
+8 # # # # # # # # # ",True,UP,True,False,"7,7","7,6","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ # _ _ _ #
+4 # _ # # # # # _ #
+5 # _ _ _ # _ _ _ #
+6 # _ G _ D _ _ _ #
+7 # _ _ _ # _ _ A #
+8 # # # # # # # # #",6,5,11,11,0,True,30,True,optimal_success,backtrack,True,False,False,,failure,True,backtrack,"{""agent_location"": {""col"": 7, ""row"": 7}, ""agent_location_after_down"": {""col"": 7, ""row"": 7}, ""agent_location_after_left"": {""col"": 6, ""row"": 7}, ""agent_location_after_right"": {""col"": 7, ""row"": 7}, ""agent_location_after_up"": {""col"": 7, ""row"": 6}, ""door_location"": {""col"": 4, ""row"": 6}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 2, ""row"": 6}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""yes"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""yes"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""yes"", ""wall_left"": ""no"", ""wall_right"": ""yes"", ""wall_up"": ""no""}","[""LEFT"", ""UP""]","[""LEFT"", ""UP""]","[""backtrack""]",pair_017,failure,True,True,2,1
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_83_step_004,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_83,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_83.json,together_ai/openai/gpt-oss-20b,4,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ G _ # 
+3 # _ _ _ # _ _ _ # 
+4 # _ # # # # D # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ _ _ _ _ # 
+7 # _ A _ # _ _ _ # 
+8 # # # # # # # # # ",True,UP,True,False,"2,7","2,6","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ # _ G _ #
+3 # _ _ _ # _ _ _ #
+4 # _ # # # # D # #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ _ _ _ _ #
+7 # _ A _ # _ _ _ #
+8 # # # # # # # # #",9,8,13,13,0,True,30,True,optimal_success,none,False,False,True,5,context,True,pre_failure_context,"{""agent_location"": {""col"": 2, ""row"": 7}, ""agent_location_after_down"": {""col"": 2, ""row"": 7}, ""agent_location_after_left"": {""col"": 1, ""row"": 7}, ""agent_location_after_right"": {""col"": 3, ""row"": 7}, ""agent_location_after_up"": {""col"": 2, ""row"": 6}, ""door_location"": {""col"": 6, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 6, ""row"": 2}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""yes"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""yes"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""RIGHT"", ""UP""]","[""RIGHT"", ""UP""]",[],pair_017,control,True,True,2,1
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_005,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11.json,together_ai/openai/gpt-oss-20b,5,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ _ _ _ _ # 
+3 # _ _ _ # _ A _ # 
+4 # D # # # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # G _ _ _ _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",True,UP,True,False,"6,3","6,2","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ # _ A _ #
+4 # D # # # # # # #
+5 # _ _ _ # _ _ _ #
+6 # G _ _ _ _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",10,9,15,15,0,True,30,True,optimal_success,backtrack,True,False,False,,failure,True,backtrack,"{""agent_location"": {""col"": 6, ""row"": 3}, ""agent_location_after_down"": {""col"": 6, ""row"": 3}, ""agent_location_after_left"": {""col"": 5, ""row"": 3}, ""agent_location_after_right"": {""col"": 7, ""row"": 3}, ""agent_location_after_up"": {""col"": 6, ""row"": 2}, ""door_location"": {""col"": 1, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 1, ""row"": 6}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""yes"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""yes"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""LEFT"", ""UP""]","[""LEFT"", ""UP""]","[""backtrack""]",pair_018,failure,True,True,2,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_008,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20.json,together_ai/openai/gpt-oss-20b,8,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # D # # # # _ # # 
+5 # G _ _ # _ _ _ # 
+6 # _ _ _ # _ _ A # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",True,UP,True,False,"7,6","7,5","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # D # # # # _ # #
+5 # G _ _ # _ _ _ #
+6 # _ _ _ # _ _ A #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",11,10,20,19,1,True,30,True,suboptimal_success,none,False,False,True,9,context,True,pre_failure_context,"{""agent_location"": {""col"": 7, ""row"": 6}, ""agent_location_after_down"": {""col"": 7, ""row"": 7}, ""agent_location_after_left"": {""col"": 6, ""row"": 6}, ""agent_location_after_right"": {""col"": 7, ""row"": 6}, ""agent_location_after_up"": {""col"": 7, ""row"": 5}, ""door_location"": {""col"": 1, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 1, ""row"": 5}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""yes"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""yes"", ""wall_up"": ""no""}","[""LEFT"", ""UP""]","[""LEFT"", ""UP""]",[],pair_018,control,True,True,2,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_36_step_008,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_36,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_36.json,together_ai/openai/gpt-oss-20b,8,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ D _ _ _ # 
+4 # # _ # # # _ # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # G _ _ # 
+7 # A _ _ # _ _ _ # 
+8 # # # # # # # # # ",True,RIGHT,True,False,"1,7","2,7","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ D _ _ _ #
+4 # # _ # # # _ # #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ # G _ _ #
+7 # A _ _ # _ _ _ #
+8 # # # # # # # # #",13,12,21,21,0,True,30,True,optimal_success,backtrack,True,False,False,,failure,True,backtrack,"{""agent_location"": {""col"": 1, ""row"": 7}, ""agent_location_after_down"": {""col"": 1, ""row"": 7}, ""agent_location_after_left"": {""col"": 1, ""row"": 7}, ""agent_location_after_right"": {""col"": 2, ""row"": 7}, ""agent_location_after_up"": {""col"": 1, ""row"": 6}, ""door_location"": {""col"": 4, ""row"": 3}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 5, ""row"": 6}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""yes"", ""hit_wall_after_left"": ""yes"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""yes"", ""wall_left"": ""yes"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""RIGHT"", ""UP""]","[""RIGHT"", ""UP""]","[""backtrack""]",pair_019,failure,True,True,2,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_50_step_009,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_50,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_50.json,together_ai/openai/gpt-oss-20b,9,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # G _ _ # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # # # D # # # # # 
+5 # _ _ _ _ _ _ _ # 
+6 # _ _ _ # _ _ A # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",True,UP,True,False,"7,6","7,5","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # G _ _ # _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # # # D # # # # #
+5 # _ _ _ _ _ _ _ #
+6 # _ _ _ # _ _ A #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",10,9,19,19,0,True,30,True,optimal_success,none,False,False,True,10,context,True,pre_failure_context,"{""agent_location"": {""col"": 7, ""row"": 6}, ""agent_location_after_down"": {""col"": 7, ""row"": 7}, ""agent_location_after_left"": {""col"": 6, ""row"": 6}, ""agent_location_after_right"": {""col"": 7, ""row"": 6}, ""agent_location_after_up"": {""col"": 7, ""row"": 5}, ""door_location"": {""col"": 3, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 1, ""row"": 2}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""yes"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""yes"", ""wall_up"": ""no""}","[""LEFT"", ""UP""]","[""LEFT"", ""UP""]",[],pair_019,control,True,True,2,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_004,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57.json,together_ai/openai/gpt-oss-20b,4,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ G D _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # # _ # # # _ # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ A _ # 
+8 # # # # # # # # # ",True,RIGHT,True,False,"6,7","7,7","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ G D _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ # _ _ _ #
+4 # # # _ # # # _ #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ # _ A _ #
+8 # # # # # # # # #",11,10,15,14,1,True,30,True,suboptimal_success,backtrack,False,False,False,,failure,True,"backtrack,suboptimal_success_failure_step","{""agent_location"": {""col"": 6, ""row"": 7}, ""agent_location_after_down"": {""col"": 6, ""row"": 7}, ""agent_location_after_left"": {""col"": 5, ""row"": 7}, ""agent_location_after_right"": {""col"": 7, ""row"": 7}, ""agent_location_after_up"": {""col"": 6, ""row"": 6}, ""door_location"": {""col"": 4, ""row"": 1}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 3, ""row"": 1}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""yes"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""yes"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""RIGHT"", ""UP""]","[""RIGHT"", ""UP""]","[""backtrack""]",pair_020,failure,True,True,2,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_56_step_007,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_56,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_56.json,together_ai/openai/gpt-oss-20b,7,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # A _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # _ # # _ # # # 
+5 # _ _ _ # _ _ G # 
+6 # _ _ _ D _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",True,RIGHT,True,False,"1,1","2,1","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ # _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ # _ _ _ #
+4 # # _ # # _ # # #
+5 # _ _ _ # _ _ G #
+6 # _ _ _ D _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",12,11,19,19,0,True,30,True,optimal_success,none,False,False,True,8,context,True,pre_failure_context,"{""agent_location"": {""col"": 1, ""row"": 1}, ""agent_location_after_down"": {""col"": 1, ""row"": 2}, ""agent_location_after_left"": {""col"": 1, ""row"": 1}, ""agent_location_after_right"": {""col"": 2, ""row"": 1}, ""agent_location_after_up"": {""col"": 1, ""row"": 1}, ""door_location"": {""col"": 4, ""row"": 6}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 7, ""row"": 5}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""yes"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""yes"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""yes"", ""wall_right"": ""no"", ""wall_up"": ""yes""}","[""DOWN"", ""RIGHT""]","[""DOWN"", ""RIGHT""]",[],pair_020,control,True,True,2,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_77_step_003,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_77,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_77.json,together_ai/openai/gpt-oss-20b,3,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # A _ _ # _ _ _ # 
+2 # _ _ _ _ _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # # # # D # # # 
+5 # _ _ _ _ _ _ G # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",True,RIGHT,True,False,"1,1","2,1","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # A _ _ # _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ # _ _ _ #
+4 # # # # # D # # #
+5 # _ _ _ _ _ _ G #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",10,9,13,13,0,True,30,True,optimal_success,backtrack,True,False,False,,failure,True,backtrack,"{""agent_location"": {""col"": 1, ""row"": 1}, ""agent_location_after_down"": {""col"": 1, ""row"": 2}, ""agent_location_after_left"": {""col"": 1, ""row"": 1}, ""agent_location_after_right"": {""col"": 2, ""row"": 1}, ""agent_location_after_up"": {""col"": 1, ""row"": 1}, ""door_location"": {""col"": 5, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 7, ""row"": 5}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""yes"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""yes"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""yes"", ""wall_right"": ""no"", ""wall_up"": ""yes""}","[""DOWN"", ""RIGHT""]","[""DOWN"", ""RIGHT""]","[""backtrack""]",pair_021,failure,True,True,2,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_88_step_010,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_88,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_88.json,together_ai/openai/gpt-oss-20b,10,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ _ _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ A _ # _ _ _ # 
+4 # # # # # _ # # # 
+5 # _ _ G D _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",True,UP,True,False,"2,3","2,2","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ _ _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ A _ # _ _ _ #
+4 # # # # # _ # # #
+5 # _ _ G D _ _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",11,10,21,21,0,True,30,True,optimal_success,none,False,False,True,11,context,True,pre_failure_context,"{""agent_location"": {""col"": 2, ""row"": 3}, ""agent_location_after_down"": {""col"": 2, ""row"": 3}, ""agent_location_after_left"": {""col"": 1, ""row"": 3}, ""agent_location_after_right"": {""col"": 3, ""row"": 3}, ""agent_location_after_up"": {""col"": 2, ""row"": 2}, ""door_location"": {""col"": 4, ""row"": 5}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 3, ""row"": 5}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""yes"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""yes"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""RIGHT"", ""UP""]","[""RIGHT"", ""UP""]",[],pair_021,control,True,True,2,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_26_step_008,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_26,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_26.json,together_ai/openai/gpt-oss-20b,8,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ D _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # _ # # # _ # # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ A _ # _ _ _ # 
+7 # _ _ _ # _ G _ # 
+8 # # # # # # # # # ",True,LEFT,True,False,"2,6","1,6","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ D _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ # _ _ _ #
+4 # _ # # # _ # # #
+5 # _ _ _ # _ _ _ #
+6 # _ A _ # _ _ _ #
+7 # _ _ _ # _ G _ #
+8 # # # # # # # # #",17,16,25,25,0,True,30,True,optimal_success,short_loop,True,False,False,,failure,True,short_loop_onset,"{""agent_location"": {""col"": 2, ""row"": 6}, ""agent_location_after_down"": {""col"": 2, ""row"": 7}, ""agent_location_after_left"": {""col"": 1, ""row"": 6}, ""agent_location_after_right"": {""col"": 3, ""row"": 6}, ""agent_location_after_up"": {""col"": 2, ""row"": 5}, ""door_location"": {""col"": 4, ""row"": 1}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 6, ""row"": 7}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""LEFT"", ""UP""]","[""LEFT"", ""UP""]","[""short_loop""]",pair_022,failure,True,True,2,3
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_26_step_007,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_26,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_26.json,together_ai/openai/gpt-oss-20b,7,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ D _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # _ # # # _ # # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ A _ # _ G _ # 
+8 # # # # # # # # # ",True,UP,True,False,"2,7","2,6","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ D _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ # _ _ _ #
+4 # _ # # # _ # # #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ A _ # _ G _ #
+8 # # # # # # # # #",18,17,25,25,0,True,30,True,optimal_success,none,False,False,True,8,context,True,pre_failure_context,"{""agent_location"": {""col"": 2, ""row"": 7}, ""agent_location_after_down"": {""col"": 2, ""row"": 7}, ""agent_location_after_left"": {""col"": 1, ""row"": 7}, ""agent_location_after_right"": {""col"": 3, ""row"": 7}, ""agent_location_after_up"": {""col"": 2, ""row"": 6}, ""door_location"": {""col"": 4, ""row"": 1}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 6, ""row"": 7}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""yes"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""yes"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""LEFT"", ""UP""]","[""LEFT"", ""UP""]",[],pair_022,control,True,True,2,3
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_37_step_003,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_37,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_37.json,together_ai/openai/gpt-oss-20b,3,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # G _ _ # _ _ _ # 
+2 # _ _ _ _ _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # # # # # _ # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ _ D _ _ _ # 
+7 # A _ _ # _ _ _ # 
+8 # # # # # # # # # ",True,UP,True,False,"1,7","1,6","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # G _ _ # _ _ _ #
+2 # _ _ _ _ _ _ _ #
+3 # _ _ _ # _ _ _ #
+4 # # # # # # _ # #
+5 # _ _ _ # _ _ _ #
+6 # _ _ _ D _ _ _ #
+7 # A _ _ # _ _ _ #
+8 # # # # # # # # #",16,15,19,19,0,True,30,True,optimal_success,backtrack,True,False,False,,failure,True,backtrack,"{""agent_location"": {""col"": 1, ""row"": 7}, ""agent_location_after_down"": {""col"": 1, ""row"": 7}, ""agent_location_after_left"": {""col"": 1, ""row"": 7}, ""agent_location_after_right"": {""col"": 2, ""row"": 7}, ""agent_location_after_up"": {""col"": 1, ""row"": 6}, ""door_location"": {""col"": 4, ""row"": 6}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 1, ""row"": 1}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""yes"", ""hit_wall_after_left"": ""yes"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""yes"", ""wall_left"": ""yes"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""RIGHT"", ""UP""]","[""RIGHT"", ""UP""]","[""backtrack""]",pair_023,failure,True,True,2,3
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_42_step_007,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_42,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_42.json,together_ai/openai/gpt-oss-20b,7,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ _ _ _ _ # 
+2 # _ A _ # _ _ _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # # # # # # D # 
+5 # _ _ _ # _ _ _ # 
+6 # G _ _ _ _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",True,UP,True,False,"2,2","2,1","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ _ _ _ _ #
+2 # _ A _ # _ _ _ #
+3 # _ _ _ # _ _ _ #
+4 # # # # # # # D #
+5 # _ _ _ # _ _ _ #
+6 # G _ _ _ _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",17,16,26,24,2,True,30,True,suboptimal_success,none,False,False,True,8,context,True,pre_failure_context,"{""agent_location"": {""col"": 2, ""row"": 2}, ""agent_location_after_down"": {""col"": 2, ""row"": 3}, ""agent_location_after_left"": {""col"": 1, ""row"": 2}, ""agent_location_after_right"": {""col"": 3, ""row"": 2}, ""agent_location_after_up"": {""col"": 2, ""row"": 1}, ""door_location"": {""col"": 7, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 1, ""row"": 6}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""RIGHT"", ""UP""]","[""RIGHT"", ""UP""]",[],pair_023,control,True,True,2,3

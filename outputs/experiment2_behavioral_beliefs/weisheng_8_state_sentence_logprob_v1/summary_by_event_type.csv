@@ -1,0 +1,11 @@
+event_type,failure_category,n_events,n_nearby_belief_shifts,n_belief_shifts_leading,n_belief_shifts_coinciding,n_belief_shifts_lagging,n_persistent_belief_error_onsets
+action_identity_change_without_optimality_change,backtrack,10,0,0,0,0,0
+action_identity_change_without_optimality_change,none,24,0,0,0,0,0
+suboptimal_to_optimal_recovery,backtrack,3,14,3,2,9,5
+suboptimal_to_optimal_recovery,none,4,37,12,5,20,7
+suboptimal_to_optimal_recovery,short_loop,8,40,16,5,19,15
+sustained_optimal_to_suboptimal,backtrack,2,4,2,0,2,1
+sustained_optimal_to_suboptimal,short_loop,1,10,4,1,5,3
+transient_optimal_to_suboptimal,backtrack,1,7,0,2,5,2
+transient_optimal_to_suboptimal,none,2,26,7,4,15,6
+transient_optimal_to_suboptimal,short_loop,6,30,16,2,12,10

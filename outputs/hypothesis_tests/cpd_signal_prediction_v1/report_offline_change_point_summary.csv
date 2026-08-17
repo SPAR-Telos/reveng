@@ -1,0 +1,2 @@
+comparison,n_rows,n_change_points,reference_auprc,with_belief_changes_auprc,auprc_change,auprc_change_ci_low,auprc_change_ci_high
+belief_changes_added_to_distribution_history,6992,160,0.25239063882607526,0.24964336799976705,-0.0027472708263082124,-0.012711205789923767,0.008645178360983484

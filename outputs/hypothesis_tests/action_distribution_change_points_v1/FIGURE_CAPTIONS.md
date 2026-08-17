@@ -7,7 +7,9 @@ Probability assigned to the action recommended after the complete reasoning trac
 ## probability_jump_vs_stable_commitment.png
 
 Comparison of two retrospective action boundaries. The horizontal axis is the sentence producing the largest increase in probability assigned to the full-trace action. The vertical axis is the first sentence after which the highest-probability action remains equal to the full-trace action. Both positions are measured as the fraction of reasoning characters revealed. Points on the diagonal indicate agreement.
+The dashed diagonal is `y=x`: points above it indicate that stable action selection occurs later than the largest probability increase, while points below it indicate earlier stable selection.
 
 ## activation_similarity_around_distribution_change.png
 
 Cosine similarity between each layer-15 sentence-mean activation and the mean activation of all preceding reasoning sentences, aligned to the sentence with the largest adjacent Jensen-Shannon divergence in the probability distribution over UP, DOWN, LEFT, and RIGHT. Position 0 is the distribution-change sentence. The line is the median and the band is the interquartile range across 46 states. This association does not establish that the activation change causes the action-distribution change.
+These are exact token-aligned sentence means from the local GPT-OSS-20B extraction, not stride-2 activations. Mean pooling and the high baseline cosine similarity can compress visible differences, so the small peak is treated as an exploratory association rather than a practical monitor.

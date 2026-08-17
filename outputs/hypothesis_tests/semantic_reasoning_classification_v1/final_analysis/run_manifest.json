@@ -1,0 +1,223 @@
+{
+  "analysis": "audited_semantic_reasoning_evidence_v1",
+  "annotation_rows": 320,
+  "bootstrap_repeats": 2000,
+  "classification_scope": "contemporaneous classification of retrospectively detected change-point sentences; not an online forecast",
+  "inputs": {
+    "adjudication_overrides": {
+      "path": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/low_confidence_adjudication_overrides.csv",
+      "sha256": "b1add7b59c9d7227976facd4ac9f1f08d241d18636799dee8c0d1598b707556b"
+    },
+    "analysis_script": {
+      "path": "/root/reveng/scripts/build_semantic_reasoning_evidence.py",
+      "sha256": "467f1028949674f6e3be3dcab49b6196eac527ea9b9b5710a39eb5b72be84b63"
+    },
+    "annotation_key": {
+      "path": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/annotation_key.csv",
+      "sha256": "72206d1dd309a3c6ad65d20a1e0702fff49aa36a8c93533364ee02acfb4c8c80"
+    },
+    "annotations": {
+      "path": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/gpt_oss_local_annotations_v2.csv",
+      "sha256": "1738797245987fc82f1d121e0f2405ea326689908f5f1b8d5b3eaa2d5fc3202e"
+    },
+    "attention_differences": {
+      "path": "outputs/hypothesis_tests/prefix_action_attention_v1/paired_attention_differences.csv",
+      "sha256": "508d47bbb6505d0e1477a74e64d1e5721e413dfda127305a51157ef6c800fe8b"
+    },
+    "belief_rows": {
+      "path": "outputs/experiment1_activation_monitor/gpt_oss_local_sentence_matched46_v1/belief_rows.csv",
+      "sha256": "f0505f4005226c53751794c01b25e62061f42f4c6cc6632646e9337028f436a9"
+    },
+    "canonical_sentences": {
+      "path": "data/behavioral_probes/doorkey_chunking_validation/sentences.csv",
+      "sha256": "e418211fd104b67f967dfb70aa6cb45e2c44bdd4d12522268b40892bae1c4453"
+    },
+    "event_rows": {
+      "path": "outputs/experiment1_activation_monitor/gpt_oss_local_sentence_matched46_v1/event_rows.csv",
+      "sha256": "f8374eaac8f1067368d2578963f0a53895c8bfa72e81e0db2e438446fd39e17a"
+    },
+    "geometry_rows": {
+      "path": "outputs/experiment1_activation_monitor/gpt_oss_local_sentence_matched46_v1/geometry_rows.csv",
+      "sha256": "55f55245b141ffc08be2070c79a026e328e457019e9260bbe036c228cf36616f"
+    },
+    "pilot_adjudication": {
+      "path": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/pilot_adjudicated_labels.csv",
+      "sha256": "f70e21ca1f163205414a13f79983c752eb2eb3cd6ee56b48609bf4fa66339046"
+    },
+    "pilot_annotations": {
+      "path": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/gpt_oss_local_pilot_v2.csv",
+      "sha256": "6cb4f39f6d9a90db0c1b98eb6da69835de4bf58ec80bdde9e99ac186de21f9d7"
+    },
+    "pilot_duplicate_key": {
+      "path": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/pilot_duplicate_key.csv",
+      "sha256": "8d1c2b6908ef688dd656be3d4ca74c1b6c28a8ed739e5e6f297638c16bcd38d2"
+    },
+    "position_change_probabilities": {
+      "path": "outputs/hypothesis_tests/action_distribution_cpd_beast_v1/position_change_probabilities.csv",
+      "sha256": "49db0bedaf5f008fdf129027e58c3157c2353989ee3c22588b5eddd988394e8a"
+    }
+  },
+  "judge": {
+    "judge_model": [
+      "openai/gpt-oss-20b"
+    ],
+    "judge_prompt_sha256": [
+      "6b871a8822964d14612fdb232d3acc410ad9d321e616a1a39a15b15337890b52"
+    ],
+    "judge_prompt_version": [
+      "v2_calibrated"
+    ],
+    "judge_reasoning_effort": [
+      "medium"
+    ],
+    "judge_revision": [
+      "6cee5e81ee83917806bbde320786a8fb61efebee"
+    ],
+    "judge_seed": [
+      "42"
+    ],
+    "judge_temperature": [
+      "0.0"
+    ]
+  },
+  "matched_pairs": 160,
+  "permutation_repeats": 10000,
+  "primary_matched_pairs": 152,
+  "primary_taxonomy": {
+    "consolidation": "summary_or_restatement",
+    "correction": "route_deliberation",
+    "new_inference": "route_deliberation",
+    "procedural_continuation": "other",
+    "restatement": "summary_or_restatement",
+    "route_planning": "route_deliberation",
+    "state_reconstruction": "state_readout",
+    "unclear": "other",
+    "verification": "route_deliberation"
+  },
+  "random_seed": 42,
+  "table_products": {
+    "compact_semantic_labels": {
+      "columns": [
+        "sentence_id",
+        "environment_id",
+        "environment_step",
+        "sentence_number",
+        "context_before",
+        "target_sentence",
+        "target_sentence_characters",
+        "primary_label",
+        "broad_label",
+        "confidence",
+        "rationale",
+        "explicitly_revises_prior_reasoning",
+        "evaluates_prior_route_or_claim",
+        "repeats_prior_content",
+        "introduces_new_information_or_plan",
+        "adjudication_applied"
+      ],
+      "contains_cpd_fields": false,
+      "path": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/final_analysis/sentence_label_table.csv",
+      "rows": 320
+    },
+    "full_cpd_analysis_ledger": {
+      "columns": [
+        "sentence_id",
+        "environment_id",
+        "environment_step",
+        "sentence_number",
+        "annotation_id",
+        "context_before",
+        "target_sentence",
+        "target_sentence_characters",
+        "explicitly_revises_prior_reasoning",
+        "evaluates_prior_route_or_claim",
+        "repeats_prior_content",
+        "introduces_new_information_or_plan",
+        "primary_label",
+        "confidence",
+        "rationale",
+        "judge_model",
+        "judge_revision",
+        "judge_temperature",
+        "judge_seed",
+        "judge_prompt_version",
+        "judge_prompt_sha256",
+        "judge_reasoning_effort",
+        "raw_response",
+        "error",
+        "model_judge_primary_label",
+        "model_judge_confidence",
+        "model_judge_rationale",
+        "adjudication_applied",
+        "adjudication_rationale",
+        "broad_label",
+        "pair_id",
+        "example_id",
+        "trajectory_id",
+        "step_index",
+        "matched_role",
+        "primary_step_failure_mode",
+        "match_cost",
+        "change_point_position",
+        "control_position",
+        "change_point_progress",
+        "control_progress",
+        "absolute_progress_difference",
+        "change_point_sentence_characters",
+        "control_sentence_characters",
+        "posterior_change_probability",
+        "match_quality",
+        "item_role",
+        "position_index",
+        "target_char_start",
+        "target_char_end",
+        "reasoning_progress",
+        "action_label",
+        "action_is_optimal",
+        "previous_action_label",
+        "previous_action_is_optimal",
+        "recommendation_changes_here",
+        "optimality_loss_here",
+        "recovery_here",
+        "adjacent_js_divergence_bits",
+        "l2_distance_from_initial_action_distribution",
+        "beast_posterior_change_probability_at_position",
+        "prob_up",
+        "prob_down",
+        "prob_left",
+        "prob_right",
+        "commitment_onset_here",
+        "event_types_here",
+        "update_norm",
+        "adjacent_cosine",
+        "previous_mean_cosine",
+        "mean_belief_error_rate",
+        "mean_belief_entropy_bits",
+        "belief_answer_changes",
+        "belief_error_onsets",
+        "belief_error_recoveries"
+      ],
+      "contains_cpd_fields": true,
+      "path": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/final_analysis/sentence_label_cpd_analysis_table.csv",
+      "rows": 320
+    },
+    "matched_cohort_sentence_inventory": {
+      "columns": [
+        "sentence_id",
+        "environment_id",
+        "environment_step",
+        "sentence_number",
+        "target_sentence",
+        "semantic_label_available",
+        "primary_label",
+        "broad_label",
+        "confidence"
+      ],
+      "contains_cpd_fields": false,
+      "path": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/final_analysis/all_reasoning_sentence_inventory.csv",
+      "rows": 7038,
+      "semantically_labeled_rows": 320
+    }
+  },
+  "trajectories": 30
+}

@@ -1,0 +1,19 @@
+example_id,trajectory_id,step_index,grid_text,state_description_text,carrying_key,observed_action,optimal_actions,is_optimal_action,wall_hit,probe_truths,allowed_question_ids,reasoning_split,source_dataset
+demo_state_1,demo_traj_grid,12,"#########
+#__A#G__#
+#___#___#
+#_______#
+#D#######
+#___#K__#
+#___#___#
+#_______#
+#########",,False,RIGHT,['DOWN'],False,True,"{'wall_right': 'yes', 'wall_up': 'yes'}","['wall_right', 'wall_up']",post,matched_alignment_demo
+demo_state_2,demo_traj_grid,13,"#########
+#___#G__#
+#___#___#
+#__A____#
+#D#######
+#___#K__#
+#___#___#
+#_______#
+#########",,False,RIGHT,"['RIGHT', 'DOWN']",True,False,"{'wall_right': 'no', 'wall_up': 'no'}","['wall_right', 'wall_up']",post,matched_alignment_demo

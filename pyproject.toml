@@ -38,6 +38,7 @@ dependencies = [
     "bitsandbytes>=0.48.1",
     "kernels==0.10.2",
     "scikit-learn>=1.7.0",
+    "rbeast==0.1.25",
 ]
 
 [tool.setuptools]

@@ -1,0 +1,103 @@
+{
+  "balanced_failure_rows_per_mode": 2,
+  "completed_examples": 16,
+  "failure_candidate_rows_path": "data/behavioral_probes/trajectory_instances_recomputed_optimal/trajectory_selection_candidates.csv",
+  "greedy_repeats": 10,
+  "matched_wall_rows_path": "",
+  "max_concurrency": 8,
+  "max_examples": null,
+  "mc_sample_repeats": 10,
+  "mc_temperature": 0.7,
+  "model_name": "together_ai/openai/gpt-oss-20b",
+  "n_examples": 16,
+  "n_failure_breakdown_rows": 30,
+  "n_gradual_rows": 5,
+  "n_long_rows": 320,
+  "n_revised_rows": 0,
+  "resume": true,
+  "reveal_pcts": [
+    0,
+    25,
+    50,
+    75,
+    100
+  ],
+  "slice_mode": "trajectory_candidates",
+  "status": "completed",
+  "tokenization_method": "hf_tokenizer_local",
+  "trajectory_dir": "data/hf/trajectories_key_door_100/trajectories_key_door",
+  "trajectory_slice_type": "balanced_failure_modes",
+  "usage_summary": {
+    "by_phase": {
+      "action_greedy": {
+        "completion_tokens": 173808,
+        "cost_usd": 0.4464054000000014,
+        "prompt_tokens": 1314210,
+        "reasoning_tokens": 0,
+        "requests": 800,
+        "requests_with_retry": 0,
+        "retry_count": 0,
+        "retry_sleep_seconds": 0.0,
+        "total_tokens": 1488018
+      },
+      "action_mc": {
+        "completion_tokens": 177573,
+        "cost_usd": 0.44753490000000057,
+        "prompt_tokens": 1314210,
+        "reasoning_tokens": 0,
+        "requests": 800,
+        "requests_with_retry": 0,
+        "retry_count": 0,
+        "retry_sleep_seconds": 0.0,
+        "total_tokens": 1491783
+      },
+      "wall_greedy": {
+        "completion_tokens": 220733,
+        "cost_usd": 1.6010318999999944,
+        "prompt_tokens": 5116040,
+        "reasoning_tokens": 0,
+        "requests": 3200,
+        "requests_with_retry": 0,
+        "retry_count": 0,
+        "retry_sleep_seconds": 0.0,
+        "total_tokens": 5336773
+      },
+      "wall_logprob": {
+        "completion_tokens": 23862,
+        "cost_usd": 0.16035179999999996,
+        "prompt_tokens": 510644,
+        "reasoning_tokens": 0,
+        "requests": 320,
+        "requests_with_retry": 0,
+        "retry_count": 0,
+        "retry_sleep_seconds": 0.0,
+        "total_tokens": 534506
+      },
+      "wall_mc": {
+        "completion_tokens": 236638,
+        "cost_usd": 1.6058033999999994,
+        "prompt_tokens": 5116040,
+        "reasoning_tokens": 0,
+        "requests": 3200,
+        "requests_with_retry": 0,
+        "retry_count": 0,
+        "retry_sleep_seconds": 0.0,
+        "total_tokens": 5352678
+      }
+    },
+    "model_name": "together_ai/openai/gpt-oss-20b",
+    "tokenization_method": "hf_tokenizer_local",
+    "total": {
+      "completion_tokens": 832614,
+      "cost_usd": 4.261127400000045,
+      "prompt_tokens": 13371144,
+      "reasoning_tokens": 0,
+      "requests": 8320,
+      "requests_with_retry": 0,
+      "retry_count": 0,
+      "retry_sleep_seconds": 0.0,
+      "total_tokens": 14203758
+    }
+  },
+  "wall_sampling_mode": "full"
+}

@@ -1,0 +1,41 @@
+annotation_id,adjudicated_label,adjudication_rationale
+sem_974b1b9960e5bc01,verification,Evaluates the proposed door route by applying the already-discussed key prerequisite.
+sem_72498844d328956c,state_reconstruction,Directly records the goal coordinate from the grid.
+sem_3cf18c8c91e4cbc8,verification,Checks whether row 2 provides the crossing route currently under discussion.
+sem_eed3d0e438e3a299,verification,Explicitly checks the proposed row-1 crossing against the rendered row.
+sem_3db27ebef4630b8e,restatement,Repeats the key coordinate identified in the immediately preceding row transcription.
+sem_3b1e95e63d31d945,state_reconstruction,Directly records the goal coordinate from the grid.
+sem_a0fa5231735d2d96,verification,Checks the predecessor cells for a candidate approach to the previously discussed location.
+sem_7d33a7c6fc7307fd,route_planning,Introduces the door as the required route or subgoal for reaching the upper area.
+sem_a970af5b253f9e74,procedural_continuation,Announces the next analysis operation without yet performing a route check.
+sem_2fc68efc823d7a89,route_planning,Proposes a new route from the agent to the key.
+sem_1dc076867906d39b,route_planning,Proposes going around the wall after earlier candidate passages failed.
+sem_cf41b4cfd259cd0c,state_reconstruction,Lists the cells adjacent to the door without yet evaluating a route.
+sem_367e69932b89319d,verification,Tests a proposed downward route and identifies the blocking wall.
+sem_e193bf9b309979b1,verification,Recomputes the length of a previously proposed route.
+sem_3c861816bae0d107,verification,Poses a connectivity check motivated by the previously considered door route.
+sem_1bd1810b1811689c,state_reconstruction,Directly records the goal coordinate from the grid.
+sem_3b9cf65a6a485da8,new_inference,Derives the remaining possible adjacent cells from the preceding exclusions.
+sem_fbc0053ef4bb20de,verification,Compares two candidate first moves after a route has already been derived.
+sem_bedd1bd3feedc437,consolidation,Combines several row-level observations into a corridor-level summary.
+sem_da71a689dbcc5d5d,state_reconstruction,Directly records the door coordinate from the grid.
+sem_d5016c06921eaa0e,route_planning,Introduces adjacency to the door as the next subgoal.
+sem_e5755cf0d1eab65d,route_planning,Proposes the next route direction toward the goal.
+sem_a36ef3430de90460,state_reconstruction,Directly records the contents of row 0.
+sem_cf04fd139ea31f7b,new_inference,Derives that the bottom crossing may depend on opening the door.
+sem_a8ba19f29ad87ec1,state_reconstruction,Lists the door-adjacent cells and their observed traversability.
+sem_3a9d0dcd2d221352,route_planning,Selects right as the required next move after ruling out left and up.
+sem_7e55802ae0844faa,correction,Rejects the immediately preceding assumption that the agent might cross a wall.
+sem_a03a52dbec7aebd5,verification,Tests the proposed downward route and identifies where it is blocked.
+sem_23e08a453c6935dc,route_planning,Proposes going up column 1 to row 1.
+sem_3bd287e341ae5266,consolidation,Turns the preceding route assessment into the final action decision.
+sem_cd2fbb526e83fc93,restatement,Repeats the goal coordinate established by the immediately preceding row transcription.
+sem_af890d4fdae2ab8a,verification,Initiates and begins checking the candidate column-1 path.
+sem_3d75cad527766c25,route_planning,Proposes UP as the remaining traversable next move.
+sem_fa1385cbe547dba6,verification,Tests a newly proposed path and finds its first upward move blocked.
+sem_65277fcc321e9740,consolidation,Summarizes the previously established row-1 crossing into a complete route.
+sem_e8070236d6cf3566,state_reconstruction,Directly records that the right-adjacent cell is a wall.
+sem_a4402eb355ce1d2f,route_planning,"Proposes a new route beginning from cell (6,6)."
+sem_2518063f974bdd82,verification,"Answers the immediately preceding question about whether cell (6,4) is open."
+sem_85e09a68fb56a6be,verification,Tests the proposed upward route against the wall structure in row 4.
+sem_7adb6c7cd656b833,verification,Checks whether the target cell can be reached from its right side.

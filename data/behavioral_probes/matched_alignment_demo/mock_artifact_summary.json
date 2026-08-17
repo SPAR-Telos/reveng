@@ -1,0 +1,14 @@
+{
+  "n_input_rows": 8,
+  "n_mock_behavioral_rows": 8,
+  "n_alignment_rows": 8,
+  "n_summary_rows": 4,
+  "n_gap_case_rows": 4,
+  "deliberate_blackbox_disagreement": {
+    "example_id": "demo_state_2",
+    "reasoning_split": "post",
+    "question_id": "wall_up",
+    "ground_truth_label": "no",
+    "blackbox_greedy_answer": "yes"
+  }
+}

@@ -1,0 +1,25 @@
+event_family,candidate_chain,n_events_with_chain,event_coverage,n_occurrences
+optimal_to_suboptimal,hit_wall_after_left -> door_open,2,0.08,2
+suboptimal_to_optimal,wall_down+wall_left,1,0.034482758620689655,1
+optimal_to_suboptimal,door_open+door_open_after_left -> hit_wall_after_left,1,0.04,1
+suboptimal_to_optimal,door_open+hit_wall_after_left,1,0.034482758620689655,1
+optimal_to_suboptimal,has_key -> wall_down -> wall_up -> agent_location+hit_wall_after_up+wall_left,1,0.04,1
+suboptimal_to_optimal,wall_down -> agent_location+has_key+wall_left+wall_up,1,0.034482758620689655,1
+optimal_to_suboptimal,hit_wall_after_right -> hit_wall_after_right -> door_open+wall_down,1,0.04,1
+suboptimal_to_optimal,hit_wall_after_up -> wall_down -> agent_location,1,0.034482758620689655,1
+optimal_to_suboptimal,goal_location -> door_open -> hit_wall_after_up,1,0.04,1
+optimal_to_suboptimal,wall_down+wall_left+wall_right+wall_up,1,0.04,1
+suboptimal_to_optimal,agent_location+wall_left -> goal_location+wall_down+wall_right+wall_up,1,0.034482758620689655,1
+optimal_to_suboptimal,goal_location -> hit_wall_after_down -> wall_down+wall_right,1,0.04,1
+suboptimal_to_optimal,goal_location+wall_up -> hit_wall_after_down,1,0.034482758620689655,1
+optimal_to_suboptimal,goal_location -> agent_location+door_open -> hit_wall_after_down -> agent_location,1,0.04,1
+suboptimal_to_optimal,agent_location -> agent_location+door_open,1,0.034482758620689655,1
+optimal_to_suboptimal,door_open_after_down -> door_open+wall_right -> wall_down,1,0.04,1
+suboptimal_to_optimal,door_open_after_down -> door_open+wall_right -> wall_down,1,0.034482758620689655,1
+optimal_to_suboptimal,door_open+hit_wall_after_down,1,0.04,1
+suboptimal_to_optimal,door_open -> hit_wall_after_down,1,0.034482758620689655,1
+optimal_to_suboptimal,hit_wall_after_right -> door_open,1,0.04,1
+optimal_to_suboptimal,door_open+hit_wall_after_left -> wall_down,1,0.04,1
+suboptimal_to_optimal,door_open+wall_down -> hit_wall_after_left,1,0.034482758620689655,1
+optimal_to_suboptimal,agent_location+hit_wall_after_right -> has_key -> door_open+hit_wall_after_left,1,0.04,1
+suboptimal_to_optimal,agent_location -> has_key -> door_open+hit_wall_after_right,1,0.034482758620689655,1

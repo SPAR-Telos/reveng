@@ -1,0 +1,5 @@
+patch_type,n_states,n_ready_states,wall_answer_flip_rate,action_flip_rate,flip_toward_ground_truth_rate,patched_optimality_change,patched_wall_hit_change,status
+none,4,4,,,1.0,0.0,0.0,ready
+pre_to_pre,4,0,,,,,,pending_patch_results
+post_to_post,4,0,,,,,,pending_patch_results
+pre_to_post,4,0,,,,,,pending_patch_results

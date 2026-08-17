@@ -1,0 +1,5 @@
+reasoning_split,question_id,n_rows,trajectory_rows_with_whitebox,blackbox_greedy_accuracy,blackbox_mc_accuracy,whitebox_accuracy,whitebox_blackbox_agreement,both_correct_count,both_correct_rate,both_correct_action_non_optimal_count,both_correct_action_non_optimal_rate,both_correct_wall_hit_count,both_correct_wall_hit_rate,whitebox_correct_blackbox_wrong_count,blackbox_correct_whitebox_wrong_count
+pre,wall_down,6,6,1.0,1.0,0.6666666666666666,0.6666666666666666,4,0.6666666666666666,0,0.0,0,0.0,0,2
+pre,wall_left,6,6,1.0,1.0,0.5,0.5,3,0.5,0,0.0,0,0.0,0,3
+pre,wall_right,6,6,1.0,1.0,1.0,1.0,6,1.0,0,0.0,0,0.0,0,0
+pre,wall_up,6,6,1.0,1.0,1.0,1.0,6,1.0,0,0.0,0,0.0,0,0

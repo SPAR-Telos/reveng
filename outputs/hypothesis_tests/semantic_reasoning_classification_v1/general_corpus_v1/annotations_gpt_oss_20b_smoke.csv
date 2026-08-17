@@ -1,0 +1,17 @@
+annotation_id,context_before,target_sentence,target_sentence_characters,explicitly_revises_prior_reasoning,evaluates_prior_route_or_claim,repeats_prior_content,introduces_new_information_or_plan,primary_label,confidence,rationale,judge_model,judge_revision,judge_prompt_version,judge_prompt_sha256,judge_temperature,judge_seed,raw_response,error
+cal_01dc4620834b6bef,"[217] Thus goal unreachable?
+[218] But maybe door can be opened to allow passage?
+[219] The door at (5,4) might open to the left side?
+[220] Actually door is adjacent to goal at (5,3).
+[221] When adjacent to door, the door is removed.
+[222] But the door is not blocking goal; it's adjacent.
+[223] But door might be blocking path to goal from right side.
+[224] But we can approach goal from left side (5,2) to (5,3) if we can get to (5,2).",But cannot.,11,yes,no,no,no,correction,high,"The sentence negates the earlier possibility of reaching (5,2), directly correcting prior reasoning.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,"{""explicitly_revises_prior_reasoning"":""yes"",""evaluates_prior_route_or_claim"":""no"",""repeats_prior_content"":""no"",""introduces_new_information_or_plan"":""no"",""primary_label"":""correction"",""confidence"":""high"",""rationale"":""The sentence negates the earlier possibility of reaching (5,2), directly correcting prior reasoning.""}",
+cal_0809aa55f1f5725d,"[12] So D at (3,4).
+[13] Key K at row7 col7?
+[14] Row7: ""# _ _ _ _ _ _ K #"".
+[15] So K at (7,7).
+[16] Walls: many.
+[17] Need find path.
+[18] We must avoid walls (#).
+[19] We have open spaces.",Let's map accessible cells.,27,unsure,unsure,unsure,yes,procedural_continuation,high,"The sentence signals a transition to a new step of analysis, not a specific claim or state update.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,"{""explicitly_revises_prior_reasoning"":""unsure"",""evaluates_prior_route_or_claim"":""unsure"",""repeats_prior_content"":""unsure"",""introduces_new_information_or_plan"":""yes"",""primary_label"":""procedural_continuation"",""confidence"":""high"",""rationale"":""The sentence signals a transition to a new step of analysis, not a specific claim or state update.""}",

@@ -1,0 +1,5 @@
+event_type,n_events,events_with_error_onset_leading_or_coinciding,events_with_persistent_error_onset_leading_or_coinciding
+sustained_optimal_to_suboptimal,13,10,9
+transient_optimal_to_suboptimal,12,10,8
+suboptimal_to_optimal_recovery,29,19,17
+action_identity_change_without_optimality_change,20,0,0

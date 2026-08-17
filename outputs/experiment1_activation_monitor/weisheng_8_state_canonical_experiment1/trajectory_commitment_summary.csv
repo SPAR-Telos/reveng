@@ -1,0 +1,9 @@
+example_id,trajectory_id,step_index,failure_category,final_action,observed_action,optimal_actions_json,n_reasoning_steps,commitment_step,commitment_step_progress,trajectory_remains_optimal,sustained_optimality_loss_step,sustained_optimality_loss_progress,strict_optimality_loss_step,recovery_step,n_action_change_events,n_optimality_loss_events,n_sustained_optimality_loss_events,n_optimality_recovery_events
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_000,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0,0,none,RIGHT,RIGHT,"[""RIGHT"", ""UP""]",32,18,0.5625,True,,,,,6,0,0,0
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0,1,none,UP,UP,"[""UP""]",32,11,0.34375,False,,,,11,2,1,0,1
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_002,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0,2,backtrack,DOWN,DOWN,"[""DOWN"", ""LEFT""]",32,20,0.625,True,,,,,4,0,0,0
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_003,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0,3,short_loop,LEFT,LEFT,"[""LEFT""]",32,23,0.71875,False,,,,1,5,2,1,3
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_004,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0,4,none,DOWN,DOWN,"[""DOWN""]",31,0,0.0,True,,,,,0,0,0,0
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_005,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0,5,none,DOWN,DOWN,"[""DOWN""]",27,12,0.4444444444444444,False,,,,10,4,2,1,2
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_006,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0,6,none,RIGHT,RIGHT,"[""RIGHT""]",31,0,0.0,True,,,,,0,0,0,0
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_007,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0,7,none,RIGHT,RIGHT,"[""RIGHT""]",25,0,0.0,True,,,,,0,0,0,0

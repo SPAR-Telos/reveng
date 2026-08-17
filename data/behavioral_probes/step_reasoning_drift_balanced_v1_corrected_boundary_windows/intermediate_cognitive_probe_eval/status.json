@@ -1,0 +1,12 @@
+{
+  "status": "completed",
+  "interpretation": "exploratory_out_of_training_position_distribution",
+  "n_activation_positions": 719,
+  "n_evaluated_probe_positions": 1438,
+  "n_wall_predictions": 5752,
+  "n_skipped_rows": 0,
+  "probe_names": [
+    "pre_reasoning_probe",
+    "post_reasoning_probe"
+  ]
+}

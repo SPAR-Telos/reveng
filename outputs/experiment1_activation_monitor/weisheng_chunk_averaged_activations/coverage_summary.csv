@@ -1,0 +1,4 @@
+scope,n_chunks,n_covered_chunks,coverage_rate,relation
+all_canonical_chunks,39051,242,0.006197024403984533,subset
+archived_trajectory_steps,242,242,1.0,whole
+archived_trajectory_step_sampled_tokens,242,242,1.0,superset

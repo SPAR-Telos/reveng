@@ -1,0 +1,136 @@
+We need to decide next move. Let's parse grid.
+
+Coordinates: row index y, column x.
+
+Grid 9x9 (0-8). Walls at boundaries mostly.
+
+Let's map positions:
+
+Row1 (y=1): "# _ _ _ # _ _ _ #" -> columns: 0 wall, 1 '_', 2 '_', 3 '_', 4 '#', 5 '_',6 '_',7 '_',8 '#'.
+
+Row2 (y=2): "# _ _ _ # _ _ _ #".
+
+Row3 (y=3): "# _ _ _ # _ _ K #" -> K at (7,3).
+
+Row4 (y=4): "# # _ # # # # A #" -> A at (7,4). Wait row4: columns: 0 '#',1 '#',2 '_',3 '#',4 '#',5 '#',6 '#',7 'A',8 '#'.
+
+Row5 (y=5): "# _ _ _ # _ _ _ #".
+
+Row6 (y=6): "# _ _ _ D _ _ _ #" -> D at (4,6).
+
+Row7 (y=7): "# _ G _ # _ _ _ #" -> G at (2,7). Wait check: row7: columns: 0 '#',1 '_',2 'G',3 '_',4 '#',5 '_',6 '_',7 '_',8 '#'.
+
+Goal at (2,7).
+
+Agent at (7,4). Not carrying key.
+
+We need to reach key K at (7,3) first? Wait key at (7,3). It's adjacent above? Agent at (7,4). So key is just one step up. But is there any obstacle? There's no wall between. So we can move UP to get key. After picking key, we need to open door D at (4,6). We can open when adjacent to door. But we may not need to open door if path to goal doesn't require passing door. Let's analyze.
+
+Goal at (2,7). Door at (4,6). Is door on path? Let's examine grid layout.
+
+Let's list open cells coordinates: all '_' plus A, K, G.
+
+We need to find path from A to G.
+
+Without opening door: can we go from (7,4) to (2,7) without crossing D? Let's see.
+
+We can map obstacles (#). Walls at borders and some internal walls at (1,4), (2,4), (3,4), etc? Wait there is a vertical wall at column 4 between rows 1-7? Let's check rows: column 4 is '#', except maybe row? Let's check each row:
+
+Row0: all '#'.
+
+Row1: at col4 '#'.
+
+Row2: at col4 '#'.
+
+Row3: at col4 '#'.
+
+Row4: at col3 '#', col4 '#', col5 '#', col6 '#', col8 '#'.
+
+Row5: at col4 '#'.
+
+Row6: at col4 'D', but door is not wall but a door; but it might be considered an obstacle until opened. So initially door is closed, acts like wall. But there is no other walls at row6 except at col4.
+
+Row7: at col4 '#'.
+
+So there is a vertical wall at column 4 from row1 to row7 inclusive? Actually at row4 we have '#', '#', '#', '#', '#', '#', '#', A, '#', so at column4 row4 '#'; yes.
+
+Thus column4 from rows1-7 is '#', except row6 where door D is at column4. So vertical wall blocks left-right movement between columns 3 and 5 (except door). So to go from right side (col>4) to left side (col<4), we must go through door D at (4,6) (since it's the only opening). So the door is the only passage between right side (columns 5-7) and left side (columns 0-3). Since agent starts at col7, row4; goal at col2,row7. So agent must pass through door or find alternate route? There might be other openings? Let's check rows for any open cells at column4? Actually at rows 0,1,2,3,4,5,6,7,8: column4 has '#' except row6 has D. So only door.
+
+Thus to reach goal, agent must pass through door at (4,6). So must get key, open door, then proceed to goal.
+
+Thus plan: Move up to key, then navigate to door adjacent, open it, then go to goal.
+
+Now compute shortest path. Let's map positions.
+
+Start A at (7,4). Key at (7,3). Door at (4,6). Goal at (2,7).
+
+We need to pick key: from (7,4) to (7,3) is 1 step up. After picking key, we need to open door. To open door, agent must be adjacent to door (i.e., any of four cells around door). Adjacent cells to door (4,6): up (4,5), down (4,7), left (3,6), right (5,6). Among these, which are accessible? Let's check grid:
+
+- (4,5): row5 col4 is '#', so wall.
+- (4,7): row7 col4 '#', wall.
+- (3,6): row6 col3 is '_'? Row6: "# _ _ _ D _ _ _ #": col0 '#',1 '_',2 '_',3 '_',4 'D',5 '_',6 '_',7 '_',8 '#'. So col3 is '_' open.
+- (5,6): row6 col5 '_' open.
+
+Thus we can approach door from left (3,6) or right (5,6). The door is at (4,6). So we need to get to either (3,6) or (5,6) with key.
+
+From key at (7,3), we need to travel to either (3,6) or (5,6). Let's compute minimal steps.
+
+We should consider the path: from (7,3) to (5,6) maybe easier? Let's analyze.
+
+We cannot cross column4 until door open; but we can travel right side to column5 or 6 etc. But to reach door adjacent at (5,6) or (3,6) we need to cross to column5 or 3. But column4 is blocked by walls, but door at (4,6) is closed. However we can travel to (5,6) or (3,6) without passing through door because they are on same side? Let's examine grid: The door is at column4 row6. To reach (5,6) from right side (col7) you might go along row6 to col5? But column5 row6 is '_' open; but to get from (7,3) to (5,6) we might need to go down to row6 and left to col5. But there is vertical wall at column4 for rows1-7 except door. But to reach (5,6) we need to go through row6 col5, which is right of door; but we can approach door from right side: start at (7,3), go down to row6, then left to col5, that's adjacent to door. That path doesn't cross column4. So it's feasible.
+
+Similarly, we could go to (3,6) from left side after crossing door? Wait to reach (3,6) you need to cross column4? Because (3,6) is left of door. Starting from right side, to reach (3,6) you would need to cross door or go around? But since column4 is wall, you cannot cross to left side except through door. So to reach (3,6) you must first open door? But to open door you need to be adjacent; you could approach from right side to door, open it, then move left to (3,6). But you could also open door by being adjacent at (5,6) (right side). So best is to approach door from right side and open it at (5,6). Then after opening, door is removed; we can then go through door to left side.
+
+Thus path: A (7,4) -> Up to key (7,3). Then from key to (5,6). Let's compute steps.
+
+From (7,3) to (5,6):
+
+We need to move down to row6 and left to col5. Path: (7,3) -> down to (7,4) (back to start), down to (7,5), down to (7,6), left to (6,6), left to (5,6). That's 5 steps? Let's count: step1 down to (7,4), step2 down to (7,5), step3 down to (7,6), step4 left to (6,6), step5 left to (5,6). That's 5 moves. But maybe there's shorter path: from (7,3) left to (6,3), left to (5,3), down to (5,4), down to (5,5), down to (5,6). But check if any walls: row4 col5 '#', row5 col5 '_'? Wait row4 col5 '#', so can't go left to (5,3) and then down to (5,4) because (5,4) is wall. Let's check grid: Row4 (y=4): "# # _ # # # # A #": col5 '#', so can't pass. So that path blocked.
+
+What about path: (7,3) left to (6,3), left to (5,3), left to (4,3) but (4,3) is '_'? Wait row3? Actually row3 is "# _ _ _ # _ _ K #": col4 '#', but col3 '_'? Row3 col3 '_' yes. But we need to get to row6 col5. Maybe go down earlier: (7,3) down to (7,4), down to (7,5), left to (6,5), left to (5,5), down to (5,6). But check if (6,5) is open: row5 col6? Wait row5: "# _ _ _ # _ _ _ #": col5 '_'? Actually row5: col0 '#',1 '_',2 '_',3 '_',4 '#',5 '_',6 '_',7 '_',8 '#'. So col5 '_' open. So path: (7,3) down (7,4), down (7,5), left (6,5), left (5,5), down (5,6). Let's check (5,5) open? row5 col5 '_' yes. So that's 5 steps too: down, down, left, left, down.
+
+Could there be shorter? Maybe from (7,3) left to (6,3) (1), left to (5,3) (2), down to (5,4) blocked (#). So no.
+
+What about down to (7,4) (1), right? no.
+
+Thus 5 steps minimal.
+
+But maybe we can go to (5,6) via (7,3) left to (6,3), down to (6,4) but (6,4) is? row4 col6 '#', so blocked. So not.
+
+Thus path to door is 5 steps.
+
+After reaching (5,6) and having key, door automatically opens. Then we need to go from (5,6) to goal at (2,7). After door removed, we can pass through door cell? Door removed; it's an open space. We can then move left across column4 to left side. Let's compute minimal steps from (5,6) to goal.
+
+Goal at (2,7). Let's compute path: from (5,6) to (4,6) (door removed), to (3,6), to (2,6), to (2,7). But need to consider walls: Row6 col3 '_' open; row6 col2 '_'? Row6: "# _ _ _ D _ _ _ #": col2 '_' yes. Row6 col1 '_'? col1 '_' yes. Row5 col2 '_'? row5: "# _ _ _ # _ _ _ #": col2 '_' yes. Row6 col2 '_' open. Row6 col1 '_' open. Row6 col0 '#'. Row5 col2 '_' open. Row5 col3 '_' open. Row5 col4 '#'.
+
+Goal at (2,7). Row7 col2 'G'. Row7 col3 '_' open. Row7 col4 '#'.
+
+So path from (5,6) to goal:
+
+Option: (5,6) left to (4,6) (1), left to (3,6) (2), left to (2,6) (3), down to (2,7) (4). That's 4 steps. But check if any obstacles: (4,6) is door removed; (3,6) is '_' open; (2,6) is '_' open; (2,7) is G.
+
+Thus total steps: 1 (up to key) + 5 (to door adjacent) + 4 (to goal) = 10 steps.
+
+But maybe there is alternative path that reduces steps? Let's check if after picking key, we could go to goal via some other route that uses door from right side but maybe shorter? Let's compute.
+
+From key at (7,3) to goal directly: path would require crossing door. Suppose we go to door adjacent at (5,6) then to goal as above 4 steps. So 5+4.
+
+Could we instead go to door adjacent at (5,6) and then go to goal via different path maybe shorter? Suppose from (5,6) we could go down to (5,7) then left to (4,7) (wall), can't. So need to go left to (4,6) then left to (3,6) etc. That's 4 steps. So total 10.
+
+What if we go to door adjacent at (5,6) but after door removal, maybe go to (4,6) then down to (4,7) but wall at (4,7) '#', cannot. So 4 steps minimal.
+
+Is there possibility to go from key to goal by going to left side earlier? Let's analyze: After picking key at (7,3), we could go to left side via some path that doesn't require door? Wait door is at (4,6). To go to left side, we need to pass through door or circumvent? There is no other opening. So must cross door.
+
+Thus minimal steps from key to goal after door open is 5 (to door adjacent) + 4 = 9? Wait we counted 5 to door adjacent, but maybe we can go to door adjacent from key in fewer steps? Let's re-evaluate.
+
+We computed 5 steps from key to door adjacent (5,6). But maybe there is a shorter path: Let's compute Manhattan distance from (7,3) to (5,6) = |7-5|+|3-6|=2+3=5. So Manhattan distance 5. So 5 steps is minimal possible. So minimal 5 steps.
+
+Thus total steps minimal: 1 (to key) + 5 + 4 = 10.
+
+But maybe we can pick key and then go to door adjacent at (3,6) after door open? But to get to (3,6) from key would require crossing column4? Actually from key at (7,3) to (3,6) distance: |7-3|+|3-6|=4+3=7. But also must cross column4; but can't until door open. So we can't get to (3,6) until door open. So we can't open door from (3,6). So we must approach door from right side.
+
+Thus minimal steps 10.
+
+Now we need to decide first action: "UP" to go to key. Because agent at (7,4) and key at (7,3). So best action is "UP".
+
+Thus output JSON: {"action":"UP"}

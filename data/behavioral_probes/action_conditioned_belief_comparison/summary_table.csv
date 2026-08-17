@@ -1,0 +1,49 @@
+table_name,subset_name,reasoning_split,method_key,method_label,n,accuracy,fraction_unknown,note,inconsistent,potentially_consistent,unknown_based
+directional_belief_accuracy,non_optimal_action_rows,all,whitebox_released_probe,White-box released probe,0,n/a,n/a,No non-optimal action rows in the released clean repeat-10 slice.,,,
+directional_belief_accuracy,non_optimal_action_rows,all,blackbox_repeated_greedy_modal,Black-box repeated greedy modal,0,n/a,n/a,No non-optimal action rows in the released clean repeat-10 slice.,,,
+directional_belief_accuracy,non_optimal_action_rows,all,blackbox_mc_yes_no,Black-box MC yes/no,0,n/a,n/a,No non-optimal action rows in the released clean repeat-10 slice.,,,
+directional_belief_accuracy,non_optimal_action_rows,all,blackbox_logprob_yes_no_t07,Black-box logprob yes/no (T=0.7),0,n/a,n/a,No non-optimal action rows in the released clean repeat-10 slice.,,,
+consistency_profile,non_optimal_action_rows,all,whitebox_released_probe,White-box released probe,0,,,No non-optimal action rows in the released clean repeat-10 slice.,n/a,n/a,n/a
+consistency_profile,non_optimal_action_rows,all,blackbox_repeated_greedy_modal,Black-box repeated greedy modal,0,,,No non-optimal action rows in the released clean repeat-10 slice.,n/a,n/a,n/a
+consistency_profile,non_optimal_action_rows,all,blackbox_mc_yes_no,Black-box MC yes/no,0,,,No non-optimal action rows in the released clean repeat-10 slice.,n/a,n/a,n/a
+consistency_profile,non_optimal_action_rows,all,blackbox_logprob_yes_no_t07,Black-box logprob yes/no (T=0.7),0,,,No non-optimal action rows in the released clean repeat-10 slice.,n/a,n/a,n/a
+directional_belief_accuracy,all_clean_rows,all,whitebox_released_probe,White-box released probe,30,29/30 (96.7%),0/30 (0.0%),,,,
+directional_belief_accuracy,all_clean_rows,all,blackbox_repeated_greedy_modal,Black-box repeated greedy modal,30,30/30 (100.0%),0/30 (0.0%),,,,
+directional_belief_accuracy,all_clean_rows,all,blackbox_mc_yes_no,Black-box MC yes/no,30,30/30 (100.0%),0/30 (0.0%),,,,
+directional_belief_accuracy,all_clean_rows,all,blackbox_logprob_yes_no_t07,Black-box logprob yes/no (T=0.7),30,30/30 (100.0%),0/30 (0.0%),,,,
+consistency_profile,all_clean_rows,all,whitebox_released_probe,White-box released probe,30,,,,1/30 (3.3%),29/30 (96.7%),0/30 (0.0%)
+consistency_profile,all_clean_rows,all,blackbox_repeated_greedy_modal,Black-box repeated greedy modal,30,,,,0/30 (0.0%),30/30 (100.0%),0/30 (0.0%)
+consistency_profile,all_clean_rows,all,blackbox_mc_yes_no,Black-box MC yes/no,30,,,,0/30 (0.0%),30/30 (100.0%),0/30 (0.0%)
+consistency_profile,all_clean_rows,all,blackbox_logprob_yes_no_t07,Black-box logprob yes/no (T=0.7),30,,,,0/30 (0.0%),30/30 (100.0%),0/30 (0.0%)
+directional_belief_accuracy,non_optimal_action_rows,pre,whitebox_released_probe,White-box released probe,0,n/a,n/a,No non-optimal action rows in the released clean repeat-10 slice.,,,
+directional_belief_accuracy,non_optimal_action_rows,pre,blackbox_repeated_greedy_modal,Black-box repeated greedy modal,0,n/a,n/a,No non-optimal action rows in the released clean repeat-10 slice.,,,
+directional_belief_accuracy,non_optimal_action_rows,pre,blackbox_mc_yes_no,Black-box MC yes/no,0,n/a,n/a,No non-optimal action rows in the released clean repeat-10 slice.,,,
+directional_belief_accuracy,non_optimal_action_rows,pre,blackbox_logprob_yes_no_t07,Black-box logprob yes/no (T=0.7),0,n/a,n/a,No non-optimal action rows in the released clean repeat-10 slice.,,,
+consistency_profile,non_optimal_action_rows,pre,whitebox_released_probe,White-box released probe,0,,,No non-optimal action rows in the released clean repeat-10 slice.,n/a,n/a,n/a
+consistency_profile,non_optimal_action_rows,pre,blackbox_repeated_greedy_modal,Black-box repeated greedy modal,0,,,No non-optimal action rows in the released clean repeat-10 slice.,n/a,n/a,n/a
+consistency_profile,non_optimal_action_rows,pre,blackbox_mc_yes_no,Black-box MC yes/no,0,,,No non-optimal action rows in the released clean repeat-10 slice.,n/a,n/a,n/a
+consistency_profile,non_optimal_action_rows,pre,blackbox_logprob_yes_no_t07,Black-box logprob yes/no (T=0.7),0,,,No non-optimal action rows in the released clean repeat-10 slice.,n/a,n/a,n/a
+directional_belief_accuracy,all_clean_rows,pre,whitebox_released_probe,White-box released probe,15,14/15 (93.3%),0/15 (0.0%),,,,
+directional_belief_accuracy,all_clean_rows,pre,blackbox_repeated_greedy_modal,Black-box repeated greedy modal,15,15/15 (100.0%),0/15 (0.0%),,,,
+directional_belief_accuracy,all_clean_rows,pre,blackbox_mc_yes_no,Black-box MC yes/no,15,15/15 (100.0%),0/15 (0.0%),,,,
+directional_belief_accuracy,all_clean_rows,pre,blackbox_logprob_yes_no_t07,Black-box logprob yes/no (T=0.7),15,15/15 (100.0%),0/15 (0.0%),,,,
+consistency_profile,all_clean_rows,pre,whitebox_released_probe,White-box released probe,15,,,,1/15 (6.7%),14/15 (93.3%),0/15 (0.0%)
+consistency_profile,all_clean_rows,pre,blackbox_repeated_greedy_modal,Black-box repeated greedy modal,15,,,,0/15 (0.0%),15/15 (100.0%),0/15 (0.0%)
+consistency_profile,all_clean_rows,pre,blackbox_mc_yes_no,Black-box MC yes/no,15,,,,0/15 (0.0%),15/15 (100.0%),0/15 (0.0%)
+consistency_profile,all_clean_rows,pre,blackbox_logprob_yes_no_t07,Black-box logprob yes/no (T=0.7),15,,,,0/15 (0.0%),15/15 (100.0%),0/15 (0.0%)
+directional_belief_accuracy,non_optimal_action_rows,post,whitebox_released_probe,White-box released probe,0,n/a,n/a,No non-optimal action rows in the released clean repeat-10 slice.,,,
+directional_belief_accuracy,non_optimal_action_rows,post,blackbox_repeated_greedy_modal,Black-box repeated greedy modal,0,n/a,n/a,No non-optimal action rows in the released clean repeat-10 slice.,,,
+directional_belief_accuracy,non_optimal_action_rows,post,blackbox_mc_yes_no,Black-box MC yes/no,0,n/a,n/a,No non-optimal action rows in the released clean repeat-10 slice.,,,
+directional_belief_accuracy,non_optimal_action_rows,post,blackbox_logprob_yes_no_t07,Black-box logprob yes/no (T=0.7),0,n/a,n/a,No non-optimal action rows in the released clean repeat-10 slice.,,,
+consistency_profile,non_optimal_action_rows,post,whitebox_released_probe,White-box released probe,0,,,No non-optimal action rows in the released clean repeat-10 slice.,n/a,n/a,n/a
+consistency_profile,non_optimal_action_rows,post,blackbox_repeated_greedy_modal,Black-box repeated greedy modal,0,,,No non-optimal action rows in the released clean repeat-10 slice.,n/a,n/a,n/a
+consistency_profile,non_optimal_action_rows,post,blackbox_mc_yes_no,Black-box MC yes/no,0,,,No non-optimal action rows in the released clean repeat-10 slice.,n/a,n/a,n/a
+consistency_profile,non_optimal_action_rows,post,blackbox_logprob_yes_no_t07,Black-box logprob yes/no (T=0.7),0,,,No non-optimal action rows in the released clean repeat-10 slice.,n/a,n/a,n/a
+directional_belief_accuracy,all_clean_rows,post,whitebox_released_probe,White-box released probe,15,15/15 (100.0%),0/15 (0.0%),,,,
+directional_belief_accuracy,all_clean_rows,post,blackbox_repeated_greedy_modal,Black-box repeated greedy modal,15,15/15 (100.0%),0/15 (0.0%),,,,
+directional_belief_accuracy,all_clean_rows,post,blackbox_mc_yes_no,Black-box MC yes/no,15,15/15 (100.0%),0/15 (0.0%),,,,
+directional_belief_accuracy,all_clean_rows,post,blackbox_logprob_yes_no_t07,Black-box logprob yes/no (T=0.7),15,15/15 (100.0%),0/15 (0.0%),,,,
+consistency_profile,all_clean_rows,post,whitebox_released_probe,White-box released probe,15,,,,0/15 (0.0%),15/15 (100.0%),0/15 (0.0%)
+consistency_profile,all_clean_rows,post,blackbox_repeated_greedy_modal,Black-box repeated greedy modal,15,,,,0/15 (0.0%),15/15 (100.0%),0/15 (0.0%)
+consistency_profile,all_clean_rows,post,blackbox_mc_yes_no,Black-box MC yes/no,15,,,,0/15 (0.0%),15/15 (100.0%),0/15 (0.0%)
+consistency_profile,all_clean_rows,post,blackbox_logprob_yes_no_t07,Black-box logprob yes/no (T=0.7),15,,,,0/15 (0.0%),15/15 (100.0%),0/15 (0.0%)

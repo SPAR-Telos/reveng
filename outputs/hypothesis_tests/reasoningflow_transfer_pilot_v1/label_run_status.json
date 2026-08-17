@@ -1,0 +1,15 @@
+{
+  "expected_sentences": 120,
+  "free_gib": 21.8448486328125,
+  "gpu_index": 0,
+  "gpu_name": "NVIDIA L4",
+  "input": "outputs/hypothesis_tests/reasoningflow_transfer_pilot_v1/pilot_items.csv",
+  "labelled_sentences": 99,
+  "minimum_free_gib": 16.0,
+  "model_name": "openai/gpt-oss-20b",
+  "model_path": "/root/.cache/huggingface/hub/models--openai--gpt-oss-20b/snapshots/6cee5e81ee83917806bbde320786a8fb61efebee",
+  "nodes_output": "outputs/hypothesis_tests/reasoningflow_transfer_pilot_v1/model_node_annotations.csv",
+  "sentence_status_output": "outputs/hypothesis_tests/reasoningflow_transfer_pilot_v1/label_status.csv",
+  "status": "completed_with_errors",
+  "total_gib": 22.0343017578125
+}

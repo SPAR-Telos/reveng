@@ -1,0 +1,9 @@
+event_family,candidate_chain,n_events_with_chain,event_coverage,n_occurrences
+suboptimal_to_optimal,wall_down+wall_left,2,0.2222222222222222,2
+optimal_to_suboptimal,hit_wall_after_up -> has_key_after_up -> has_key_after_left+hit_wall_after_left+wall_up,1,0.16666666666666666,1
+suboptimal_to_optimal,door_open -> has_key_after_up+hit_wall_after_up+wall_up,1,0.1111111111111111,1
+suboptimal_to_optimal,door_open_after_left -> door_open -> hit_wall_after_down,1,0.1111111111111111,1
+optimal_to_suboptimal,door_open -> door_open_after_left -> door_open+wall_down,1,0.16666666666666666,1
+suboptimal_to_optimal,door_open -> has_key_after_down -> door_open_after_left+wall_down,1,0.1111111111111111,1
+optimal_to_suboptimal,hit_wall_after_left -> door_open,1,0.16666666666666666,1
+suboptimal_to_optimal,door_open+hit_wall_after_left,1,0.1111111111111111,1

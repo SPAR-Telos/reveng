@@ -1,0 +1,43 @@
+We need to determine next action from current state. Let's parse grid: 9 columns (0-8). 9 rows (0-8). Provided grid:
+
+Row0: 0: # # # # # # # # # 
+Row1: 1: # _ _ G D _ _ _ # 
+Row2: 2: # _ _ _ # _ _ _ # 
+Row3: 3: # _ _ _ # _ _ _ # 
+Row4: 4: # # # _ # # # _ # 
+Row5: 5: # _ _ _ # _ _ _ # 
+Row6: 6: # _ _ _ # _ _ _ # 
+Row7: 7: # _ _ _ # _ K A # 
+Row8: 8: # # # # # # # # # 
+
+Agent A at row7 col7? Let's confirm: row7: "# _ _ _ # _ K A #". Columns: 0 '#',1 '_',2 '_',3 '_',4 '#',5 '_',6 'K',7 'A',8 '#'. Yes A at (7,7). Key at (7,6). Door D at row1 col4. Goal G at row1 col3.
+
+Walls: all border and some interior at (2,4),(3,4),(4,2? Actually row4 col2 '#', col3 '_'? Wait row4: "# # # _ # # # _ #". So row4 col0 '#',1 '#',2 '#',3 '_',4 '#',5 '#',6 '#',7 '_',8 '#'.
+
+Goal G at (1,3). Door D at (1,4). Key at (7,6). Agent at (7,7). Key not yet picked.
+
+We need to reach goal. Path: Need to get key first to open door if door blocks path. Let's check if door blocks path from key to goal.
+
+From key at (7,6). Path to goal at (1,3). There is a door at (1,4) between goal and rest? Let's analyze grid layout.
+
+We have a corridor along column 4? Actually row1 col4 is D, but there is no other D. The goal at (1,3) left of door. Path from key to goal: maybe go up along column 6 to row1? Let's examine obstacles:
+
+Rows 2-7 at column 6: Row2 col6 '_' (open), row3 col6 '_' (open), row4 col6 '#', row5 col6 '_'? Wait row5: "# _ _ _ # _ _ _ #". col6 index: 0 '#',1 '_',2 '_',3 '_',4 '#',5 '_',6 '_',7 '_',8 '#'. So row5 col6 '_' open. Row6 col6 '_' open. Row7 col6 'K' open. So column 6 has a wall at row4 col6 '#', but that's at row4. So path up column6 from row7 to row2: row7 col6 K, row6 col6 _, row5 col6 _, row4 col6 '#', blocked. So can't go straight up. Need to circumvent.
+
+Let's check column 5: row7 col5 '_' open. Row6 col5 '_' open. Row5 col5 '_' open. Row4 col5 '#', blocked. Row3 col5 '_' open. Row2 col5 '_' open. Row1 col5 '_' open. Row0 col5 '#'.
+
+Column 4: row7 col4 '#' wall. So cannot go through column4 except row1 col4 D. Column 3: row7 col3 '_' open. Row6 col3 '_' open. Row5 col3 '_' open. Row4 col3 '_' open. Row3 col3 '_' open. Row2 col3 '_' open. Row1 col3 G. So path from key to goal can go left along column 3 from row7 up to row1. But we need to get to column3 from column6. We can go left at some row.
+
+From key at (7,6). Option: move left to (7,5), left to (7,4) but col4 is '#', so cannot. So must go up then left. Let's check from (7,6) up to row6 col6,5? Actually we can go up to row6 col6, then left to row6 col5, then up to row5 col5, left to row5 col4? row5 col4 '#' wall. So cannot go left there. We can go up to row5 col5, then up to row4 col5 '#', blocked. So need to go up to row3 col5, left to row3 col4? row3 col4 '#', blocked. So can't go left at row3.
+
+Let's try from key: Up to row6 col6, left to row6 col5, left to row6 col4 '#' blocked. So cannot.
+
+Alternative: from key, left to row7 col5, up to row6 col5, up to row5 col5, up to row4 col5 '#', cannot. So maybe go up to row3 col5, left to row3 col4 '#', can't. So maybe go up to row3 col5, left to row3 col4 blocked. So maybe go up to row2 col5, left to row2 col4 '#', blocked. So maybe go up to row1 col5, left to row1 col4 D (door). But door is locked; we need key to open it. So we can approach door at row1 col4 from adjacent cells to open it.
+
+We need to open door D at (1,4). To open, agent must be adjacent to door and have key. Adjacent cells: (0,4) top? row0 col4 '#', wall. (2,4) row2 col4 '#', wall. (1,3) G (goal). (1,5) row1 col5 '_' open. So the only adjacent open cell is (1,5). So agent must be at (1,5) with key to open door. Then door will be removed automatically and agent can go into (1,4) and then to goal at (1,3). So path: get key, then navigate to (1,5), open door, then go left to goal.
+
+So we need to compute shortest path from agent at (7,7) to key at (7,6). That's one step left. So first action should be LEFT to move to key. That will pick up key automatically. So next action: LEFT.
+
+We should verify no obstacles: (7,6) is K, open. So yes.
+
+Thus answer: LEFT.

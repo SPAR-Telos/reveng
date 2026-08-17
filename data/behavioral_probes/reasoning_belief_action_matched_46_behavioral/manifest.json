@@ -1,0 +1,33 @@
+{
+  "activation_span_validation": {
+    "n_overlaps": 1143,
+    "n_rows": 1518,
+    "reason": "adjacent reasoning activation spans overlap",
+    "valid": false
+  },
+  "belief_valid_parse_rate": 0.9595094574932447,
+  "candidate_rows_path": "data/behavioral_probes/reasoning_belief_action_cohorts/matched_46_candidates.csv",
+  "drift_run_dir": "data/behavioral_probes/step_reasoning_drift_matched_46_behavioral",
+  "max_positions": null,
+  "minimum_required_parse_rate": 0.95,
+  "mixed_effects_model_status": "not_fit_in_pilot; use feature_association_fdr.csv for trajectory-position descriptive screening and fit the prespecified mixed-effects model only after scaling",
+  "model_name": "together_ai/openai/gpt-oss-20b",
+  "n_action_events": 1072,
+  "n_belief_queries": 72165,
+  "n_belief_shifts": 7939,
+  "n_positions": 5553,
+  "parse_rate_gate_passed": true,
+  "representational_probe_gate": "blocked_until_activation_spans_are_regenerated",
+  "status": "completed",
+  "usage_summary": {
+    "completion_tokens": 1507680,
+    "cost_usd": 11.42573609999999,
+    "prompt_tokens": 36578107,
+    "reasoning_tokens": 0,
+    "requests": 19553,
+    "requests_with_retry": 0,
+    "retry_count": 0,
+    "retry_sleep_seconds": 0.0,
+    "total_tokens": 38085787
+  }
+}

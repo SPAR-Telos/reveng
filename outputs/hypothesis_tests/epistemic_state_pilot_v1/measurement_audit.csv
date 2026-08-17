@@ -1,0 +1,5 @@
+audit_scope,n_positions,n_belief_measurements,n_missing_or_invalid_beliefs,n_missing_belief_rows,n_invalid_probability_rows,n_explicit_unknown_top,explicit_unknown_top_rate,n_valid_positions,n_invalid_positions,n_confidently_correct_positions,n_unresolved_positions,n_confidently_wrong_positions
+overall,7084,21252,0,0,0,1013,0.047666102013928104,7084,0,1454,3698,1932
+chosen_wall,7084,7084,0,0,0,21,0.0029644268774703555,7084,0,1454,3698,1932
+hit_wall,7084,7084,0,0,0,27,0.003811405985319029,7084,0,1454,3698,1932
+has_key_after,7084,7084,0,0,0,965,0.1362224731789949,7084,0,1454,3698,1932

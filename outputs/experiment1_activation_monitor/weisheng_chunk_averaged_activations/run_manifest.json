@@ -1,0 +1,113 @@
+{
+  "activation_token_relation_within_archive_scope": "superset",
+  "archive_path": "data/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0.zip",
+  "chunk_coverage_rate_within_archive_scope": 1.0,
+  "chunked_trajectories_path": "data/behavioral_probes/doorkey_chunking_validation/chunked_trajectories_legacy_tail_packed_v1.csv",
+  "hidden_dims": [
+    2880
+  ],
+  "layers": [
+    0,
+    2,
+    4,
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20,
+    22
+  ],
+  "model_dir": "openai__gpt-oss-20b",
+  "n_activation_steps_without_canonical_chunks": 0,
+  "n_archive_scope_chunks": 242,
+  "n_canonical_chunks_total": 39051,
+  "n_chunk_activation_rows": 2904,
+  "n_chunks_with_sampled_activation": 242,
+  "n_chunks_without_sampled_activation": 0,
+  "n_sampled_tokens_outside_chunks": 5,
+  "output_dir": "outputs/experiment1_activation_monitor/weisheng_chunk_averaged_activations",
+  "per_step_meta": [
+    {
+      "n_chunks": 32,
+      "relative_base": 3,
+      "sampled_analysis_tokens": 614,
+      "sampled_tokens_outside_chunks": 3,
+      "step_index": 0,
+      "trace_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_000"
+    },
+    {
+      "n_chunks": 32,
+      "relative_base": 3,
+      "sampled_analysis_tokens": 1836,
+      "sampled_tokens_outside_chunks": 2,
+      "step_index": 1,
+      "trace_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001"
+    },
+    {
+      "n_chunks": 32,
+      "relative_base": 3,
+      "sampled_analysis_tokens": 554,
+      "sampled_tokens_outside_chunks": 0,
+      "step_index": 2,
+      "trace_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_002"
+    },
+    {
+      "n_chunks": 32,
+      "relative_base": 3,
+      "sampled_analysis_tokens": 746,
+      "sampled_tokens_outside_chunks": 0,
+      "step_index": 3,
+      "trace_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_003"
+    },
+    {
+      "n_chunks": 31,
+      "relative_base": 3,
+      "sampled_analysis_tokens": 302,
+      "sampled_tokens_outside_chunks": 0,
+      "step_index": 4,
+      "trace_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_004"
+    },
+    {
+      "n_chunks": 27,
+      "relative_base": 3,
+      "sampled_analysis_tokens": 260,
+      "sampled_tokens_outside_chunks": 0,
+      "step_index": 5,
+      "trace_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_005"
+    },
+    {
+      "n_chunks": 31,
+      "relative_base": 3,
+      "sampled_analysis_tokens": 272,
+      "sampled_tokens_outside_chunks": 0,
+      "step_index": 6,
+      "trace_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_006"
+    },
+    {
+      "n_chunks": 25,
+      "relative_base": 3,
+      "sampled_analysis_tokens": 178,
+      "sampled_tokens_outside_chunks": 0,
+      "step_index": 7,
+      "trace_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_007"
+    }
+  ],
+  "relation_to_all_canonical_chunks": "subset",
+  "relation_within_archive_scope": "whole",
+  "save_dtype": "float32",
+  "steps": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "trajectory_dir": "data/hf/trajectories_key_door_100/trajectories_key_door",
+  "trajectory_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0"
+}

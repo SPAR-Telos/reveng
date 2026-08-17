@@ -1,0 +1,113 @@
+event_family,candidate_chain,n_events_with_chain,event_coverage,n_occurrences
+optimal_to_suboptimal,door_open+hit_wall_after_left,3,0.023255813953488372,3
+optimal_to_suboptimal,door_open+hit_wall_after_up,3,0.023255813953488372,3
+optimal_to_suboptimal,hit_wall_after_up -> door_open,3,0.023255813953488372,3
+suboptimal_to_optimal,hit_wall_after_up -> door_open,2,0.014814814814814815,2
+optimal_to_suboptimal,wall_down -> door_open,2,0.015503875968992248,2
+suboptimal_to_optimal,hit_wall_after_left -> door_open,2,0.014814814814814815,2
+optimal_to_suboptimal,agent_location -> hit_wall_after_right+wall_up,2,0.015503875968992248,2
+suboptimal_to_optimal,wall_down+wall_left,1,0.007407407407407408,1
+optimal_to_suboptimal,door_open+door_open_after_left -> hit_wall_after_left,1,0.007751937984496124,1
+suboptimal_to_optimal,door_open+hit_wall_after_left,1,0.007407407407407408,1
+optimal_to_suboptimal,has_key -> wall_down -> wall_up -> agent_location+hit_wall_after_up+wall_left,1,0.007751937984496124,1
+suboptimal_to_optimal,wall_down -> agent_location+has_key+wall_left+wall_up,1,0.007407407407407408,1
+optimal_to_suboptimal,hit_wall_after_right -> hit_wall_after_right -> door_open+wall_down,1,0.007751937984496124,1
+suboptimal_to_optimal,hit_wall_after_up -> wall_down -> agent_location,1,0.007407407407407408,1
+optimal_to_suboptimal,goal_location -> door_open -> hit_wall_after_up,1,0.007751937984496124,1
+optimal_to_suboptimal,wall_down+wall_left+wall_right+wall_up,1,0.007751937984496124,1
+suboptimal_to_optimal,agent_location+wall_left -> goal_location+wall_down+wall_right+wall_up,1,0.007407407407407408,1
+optimal_to_suboptimal,goal_location -> hit_wall_after_down -> wall_down+wall_right,1,0.007751937984496124,1
+suboptimal_to_optimal,goal_location+wall_up -> hit_wall_after_down,1,0.007407407407407408,1
+optimal_to_suboptimal,agent_location+hit_wall_after_right -> has_key -> door_open+hit_wall_after_left,1,0.007751937984496124,1
+suboptimal_to_optimal,agent_location -> has_key -> door_open+hit_wall_after_right,1,0.007407407407407408,1
+optimal_to_suboptimal,has_key_after_up -> door_open,1,0.007751937984496124,1
+suboptimal_to_optimal,has_key_after_up -> door_open,1,0.007407407407407408,1
+optimal_to_suboptimal,door_open -> hit_wall_after_left+wall_down -> door_open_after_up,1,0.007751937984496124,1
+suboptimal_to_optimal,door_open+wall_down,1,0.007407407407407408,1
+optimal_to_suboptimal,door_open -> hit_wall_after_down,1,0.007751937984496124,1
+optimal_to_suboptimal,door_open+hit_wall_after_up -> door_open -> has_key_after_up,1,0.007751937984496124,1
+optimal_to_suboptimal,goal_location -> hit_wall_after_right,1,0.007751937984496124,1
+optimal_to_suboptimal,goal_location -> agent_location,1,0.007751937984496124,1
+optimal_to_suboptimal,goal_location -> hit_wall_after_down,1,0.007751937984496124,1
+optimal_to_suboptimal,agent_location+door_open+goal_location+hit_wall_after_left -> hit_wall_after_right,1,0.007751937984496124,1
+suboptimal_to_optimal,door_open+goal_location,1,0.007407407407407408,1
+optimal_to_suboptimal,agent_location+door_open+goal_location+hit_wall_after_left -> hit_wall_after_right -> door_open+goal_location,1,0.007751937984496124,1
+suboptimal_to_optimal,door_open+goal_location -> door_open+goal_location,1,0.007407407407407408,1
+optimal_to_suboptimal,goal_location+hit_wall_after_left -> door_open -> goal_location,1,0.007751937984496124,1
+suboptimal_to_optimal,goal_location -> door_open -> hit_wall_after_left,1,0.007407407407407408,1
+optimal_to_suboptimal,agent_location+goal_location,1,0.007751937984496124,1
+suboptimal_to_optimal,agent_location -> hit_wall_after_right,1,0.007407407407407408,1
+optimal_to_suboptimal,agent_location -> hit_wall_after_right,1,0.007751937984496124,1
+suboptimal_to_optimal,agent_location+hit_wall_after_right,1,0.007407407407407408,1
+optimal_to_suboptimal,door_open_after_down+wall_up -> agent_location,1,0.007751937984496124,1
+suboptimal_to_optimal,door_open_after_down -> hit_wall_after_down -> wall_up -> agent_location,1,0.007407407407407408,1
+optimal_to_suboptimal,hit_wall_after_down -> door_open+hit_wall_after_left,1,0.007751937984496124,1
+optimal_to_suboptimal,agent_location+wall_down+wall_up,1,0.007751937984496124,1
+suboptimal_to_optimal,door_open -> hit_wall_after_left -> wall_right,1,0.007407407407407408,1
+optimal_to_suboptimal,wall_right -> has_key_after_down+hit_wall_after_down -> wall_right,1,0.007751937984496124,1
+suboptimal_to_optimal,door_open+wall_right,1,0.007407407407407408,1
+optimal_to_suboptimal,door_open+wall_right -> hit_wall_after_left,1,0.007751937984496124,1
+suboptimal_to_optimal,door_open -> wall_right,1,0.007407407407407408,1
+suboptimal_to_optimal,agent_location+door_open -> hit_wall_after_down -> door_open,1,0.007407407407407408,1
+optimal_to_suboptimal,agent_location -> door_open -> agent_location,1,0.007751937984496124,1
+suboptimal_to_optimal,agent_location -> door_open -> agent_location,1,0.007407407407407408,1
+optimal_to_suboptimal,door_open -> hit_wall_after_up -> door_open,1,0.007751937984496124,1
+optimal_to_suboptimal,agent_location+door_open+hit_wall_after_left,1,0.007751937984496124,1
+suboptimal_to_optimal,agent_location+door_open+hit_wall_after_left,1,0.007407407407407408,1
+optimal_to_suboptimal,hit_wall_after_left -> hit_wall_after_down,1,0.007751937984496124,1
+suboptimal_to_optimal,hit_wall_after_left -> has_key_after_down,1,0.007407407407407408,1
+suboptimal_to_optimal,agent_location -> hit_wall_after_down,1,0.007407407407407408,1
+optimal_to_suboptimal,door_open -> has_key_after_down+hit_wall_after_down,1,0.007751937984496124,1
+optimal_to_suboptimal,door_open -> has_key_after_down+hit_wall_after_down -> agent_location+wall_down,1,0.007751937984496124,1
+suboptimal_to_optimal,door_open+wall_down -> agent_location,1,0.007407407407407408,1
+suboptimal_to_optimal,door_open+has_key_after_down,1,0.007407407407407408,1
+suboptimal_to_optimal,hit_wall_after_down -> hit_wall_after_left,1,0.007407407407407408,1
+optimal_to_suboptimal,hit_wall_after_left+wall_down -> hit_wall_after_down,1,0.007751937984496124,1
+suboptimal_to_optimal,hit_wall_after_left -> wall_down,1,0.007407407407407408,1
+optimal_to_suboptimal,agent_location -> wall_left,1,0.007751937984496124,1
+suboptimal_to_optimal,agent_location -> hit_wall_after_left -> wall_left,1,0.007407407407407408,1
+optimal_to_suboptimal,wall_down -> wall_up,1,0.007751937984496124,1
+optimal_to_suboptimal,hit_wall_after_up+wall_down -> door_open,1,0.007751937984496124,1
+suboptimal_to_optimal,door_open -> wall_down -> door_open+hit_wall_after_up,1,0.007407407407407408,1
+suboptimal_to_optimal,hit_wall_after_down+wall_down -> hit_wall_after_up,1,0.007407407407407408,1
+optimal_to_suboptimal,wall_down -> door_open+wall_down -> hit_wall_after_left,1,0.007751937984496124,1
+optimal_to_suboptimal,hit_wall_after_left -> hit_wall_after_down -> wall_down,1,0.007751937984496124,1
+suboptimal_to_optimal,wall_down -> hit_wall_after_up,1,0.007407407407407408,1
+optimal_to_suboptimal,door_open -> hit_wall_after_up -> wall_down,1,0.007751937984496124,1
+suboptimal_to_optimal,hit_wall_after_left -> wall_down -> hit_wall_after_up,1,0.007407407407407408,1
+suboptimal_to_optimal,hit_wall_after_left -> hit_wall_after_right,1,0.007407407407407408,1
+optimal_to_suboptimal,has_key -> hit_wall_after_left -> door_open_after_up+has_key+has_key_after_up,1,0.007751937984496124,1
+suboptimal_to_optimal,door_open -> has_key -> hit_wall_after_left,1,0.007407407407407408,1
+optimal_to_suboptimal,hit_wall_after_left -> door_open_after_up+has_key+has_key_after_up,1,0.007751937984496124,1
+suboptimal_to_optimal,door_open_after_up -> door_open,1,0.007407407407407408,1
+optimal_to_suboptimal,door_open -> hit_wall_after_left -> door_open,1,0.007751937984496124,1
+suboptimal_to_optimal,door_open -> door_open -> hit_wall_after_left,1,0.007407407407407408,1
+suboptimal_to_optimal,has_key_after_right -> door_open+hit_wall_after_right -> has_key,1,0.007407407407407408,1
+optimal_to_suboptimal,has_key -> door_open+has_key,1,0.007751937984496124,1
+optimal_to_suboptimal,door_open -> hit_wall_after_right,1,0.007751937984496124,1
+suboptimal_to_optimal,hit_wall_after_right -> hit_wall_after_left -> agent_location+door_open,1,0.007407407407407408,1
+optimal_to_suboptimal,agent_location -> door_open,1,0.007751937984496124,1
+suboptimal_to_optimal,agent_location+door_open -> door_open,1,0.007407407407407408,1
+optimal_to_suboptimal,hit_wall_after_right -> goal_location -> hit_wall_after_left,1,0.007751937984496124,1
+suboptimal_to_optimal,goal_location -> hit_wall_after_left -> agent_location,1,0.007407407407407408,1
+optimal_to_suboptimal,hit_wall_after_left -> agent_location+hit_wall_after_left,1,0.007751937984496124,1
+suboptimal_to_optimal,hit_wall_after_left -> agent_location -> agent_location+hit_wall_after_up,1,0.007407407407407408,1
+optimal_to_suboptimal,agent_location+hit_wall_after_left -> goal_location,1,0.007751937984496124,1
+suboptimal_to_optimal,agent_location+hit_wall_after_up -> goal_location,1,0.007407407407407408,1
+optimal_to_suboptimal,door_open+hit_wall_after_down -> has_key_after_down,1,0.007751937984496124,1
+suboptimal_to_optimal,door_open -> hit_wall_after_up,1,0.007407407407407408,1
+optimal_to_suboptimal,hit_wall_after_up -> door_open_after_up -> agent_location+door_open_after_left,1,0.007751937984496124,1
+suboptimal_to_optimal,hit_wall_after_up -> agent_location,1,0.007407407407407408,1
+optimal_to_suboptimal,hit_wall_after_up -> hit_wall_after_right,1,0.007751937984496124,1
+suboptimal_to_optimal,door_open -> hit_wall_after_right -> hit_wall_after_up,1,0.007407407407407408,1
+suboptimal_to_optimal,door_open+hit_wall_after_up,1,0.007407407407407408,1
+optimal_to_suboptimal,door_open -> hit_wall_after_up,1,0.007751937984496124,1
+suboptimal_to_optimal,agent_location+hit_wall_after_up+wall_up,1,0.007407407407407408,1
+suboptimal_to_optimal,agent_location+hit_wall_after_up+wall_up -> hit_wall_after_right,1,0.007407407407407408,1
+optimal_to_suboptimal,wall_up -> wall_down -> door_open,1,0.007751937984496124,1
+suboptimal_to_optimal,door_open+wall_up -> wall_down,1,0.007407407407407408,1
+suboptimal_to_optimal,wall_down -> door_open,1,0.007407407407407408,1
+optimal_to_suboptimal,door_open+has_key+hit_wall_after_right,1,0.007751937984496124,1
+suboptimal_to_optimal,wall_up -> agent_location+wall_left,1,0.007407407407407408,1
+optimal_to_suboptimal,wall_up -> agent_location+wall_left -> wall_up,1,0.007751937984496124,1
+suboptimal_to_optimal,wall_down+wall_up -> hit_wall_after_up,1,0.007407407407407408,1

@@ -1,0 +1,14 @@
+{
+  "candidate_rows_path": "data/behavioral_probes/trajectory_instances_recomputed_optimal/trajectory_selection_candidates.csv",
+  "matching_variables": [
+    "carrying_key",
+    "closed_door_visible",
+    "number_of_optimal_actions",
+    "current_optimal_distance_bin_width_5"
+  ],
+  "n_control_states": 61,
+  "n_exact_matched_pairs": 23,
+  "n_exact_matched_states": 46,
+  "n_failure_states": 124,
+  "n_selected_candidates": 185
+}

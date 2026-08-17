@@ -1,0 +1,936 @@
+annotation_id,sentence_id,environment_id,environment_step,sentence_number,example_id,reasoning_progress,calibration_source,reference_primary_label,reference_broad_label,duplicate_of_annotation_id,broad_label,confidence,teacher_broad_label,context_before,target_sentence,reviewed_broad_label,review_notes,reviewer
+cal_0809aa55f1f5725d,keepdoor_34__step_007__sentence_020,keepdoor_34,7,20,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_34_step_007,0.064569536423841,general_random,,,,state_readout,high,other,"[12] So D at (3,4).
+[13] Key K at row7 col7?
+[14] Row7: ""# _ _ _ _ _ _ K #"".
+[15] So K at (7,7).
+[16] Walls: many.
+[17] Need find path.
+[18] We must avoid walls (#).
+[19] We have open spaces.",Let's map accessible cells.,,,
+cal_8864f3161f43bcd4,keepdoor_15__step_000__sentence_071,keepdoor_15,0,71,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_000,0.8493975903614458,matched_reference_stress,restatement,summary_or_restatement,,state_readout,high,route_deliberation,"[63] Let's check obstacles: Row2 col1 is open, row2 col2 open, col3 open, col4 is wall, col5 open, col6 open, col7 open.
+[64] So we can go down from (1,1) to (2,1), right to (2,5), up to (1,5), right to (1,6), right to (1,7).
+[65] That's 1 step down, 4 steps right (to 2,5), 1 up, 2 right.
+[66] Total 8 steps.
+[67] But we also need to consider key at (1,3).
+[68] We may or may not need key.
+[69] The door at (4,3) is not on this path.
+[70] So we don't need to pick up key.",The agent status says not carrying key.,,,
+cal_0165a0cad1bddb59,keepdoor_33__step_003__sentence_137,keepdoor_33,3,137,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_003,0.7583333333333333,general_random,,,,route_deliberation,high,summary_or_restatement,"[129] We need to find minimal steps from agent to key, then to door adjacent, then to goal.
+[130] But we might pick key, then open door, then go to goal.
+[131] Compute shortest path from agent (2,6) to key (3,7).
+[132] Path: (2,6) -> (2,7) -> (3,7).
+[133] That's 2 steps.
+[134] Is there any shorter?
+[135] Could go down then right?
+[136] (2,6) down to (3,6) -> right to (3,7).",That's also 2 steps.,,,
+cal_02ef5eb3684c1181,keepdoor_19__step_002__sentence_011,keepdoor_19,2,11,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_19_step_002,0.1117021276595744,general_random,,,,state_readout,high,route_deliberation,"[3] Grid coordinates: rows 0-8, cols 0-8.
+[4] Walls '#' at borders and some interior.
+[5] Agent A at row 5, col 3?
+[6] Wait: row 5: ""# _ K A D _ _ _ #"".
+[7] Let's parse: row 5: column indices: 0 '#', 1 '_', 2 'K', 3 'A', 4 'D', 5 '_', 6 '_', 7 '_', 8 '#'.
+[8] So A at (5,3).
+[9] Key K at (5,2).
+[10] Door D at (5,4).",Goal G at row 7 col 7?,,,
+cal_5b7e675bbeb1086e,keepdoor_83__step_004__sentence_011,keepdoor_83,4,11,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_83_step_004,0.0783582089552238,matched_reference_stress,state_reconstruction,state_readout,,state_readout,high,route_deliberation,"[3] Agent at (7,2).
+[4] Goal at (2,6).
+[5] Key is already carried.
+[6] Door at (4,6).
+[7] We can open door when adjacent to door.
+[8] We need path to goal.
+[9] Let's map open spaces: Walls '#'.
+[10] Let's list coordinates.",Row0 all walls.,,,
+cal_015e2f6d94d1e5b7,keepdoor_92__step_004__sentence_144,keepdoor_92,4,144,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_92_step_004,0.7756756756756756,general_random,,,,route_deliberation,high,other,"[136] Right? (7,6) then up (6,6) then left (6,5) then left (6,4) then left (6,3) then up (5,3) that's 6.
+[137] Maybe go up then right?
+[138] (6,5) right (6,6) up (5,6) left (5,5) left (5,4) blocked.
+[139] So no. Up then left?
+[140] (6,5) left (6,4) left (6,3) up (5,3) that's 4 steps?
+[141] Let's check: (7,5)->(6,5) [1], ->(6,4) [2], ->(6,3) [3], ->(5,3) [4].
+[142] Wait but we moved left from 6,5 to 6,4 (open), left to 6,3 (open), up to 5,3 (open).
+[143] That is 4 moves.",Did we miss something?,,,
+cal_02a4d7628f6683f3,keepdoor_31__step_005__sentence_034,keepdoor_31,5,34,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_31_step_005,0.2481481481481481,general_random,,,,state_readout,high,route_deliberation,"[26] Let's map obstacles: walls at row0 all, row8 all, col0 all, col8 all.
+[27] Also internal walls: Row4 col2-6 are '#'?
+[28] Row4: ""# _ # # # # # _ #"".
+[29] So col2-6 are '#'.
+[30] Row6 col4 is door D.
+[31] Row4 col2-6 are walls.
+[32] Row4 col1 is '_' open, col7 is '_' open.
+[33] Goal G at (6,2).",But that's behind walls?,,,
+cal_7819bf1aade67431,keepdoor_88__step_010__sentence_013,keepdoor_88,10,13,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_88_step_010,0.0456204379562043,matched_reference_stress,restatement,summary_or_restatement,,route_deliberation,high,summary_or_restatement,"[5] Agent at (3,2).
+[6] Already carrying key: True.
+[7] So key already picked up earlier.
+[8] There is a door D at (5,4).
+[9] Goal G at (5,3).
+[10] We need to get to goal.
+[11] But door is adjacent to goal?
+[12] Let's see: door D at (5,4).","Goal at (5,3).",,,
+cal_19286b0f213486a9,keepdoor_26__step_008__sentence_103,keepdoor_26,8,103,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_26_step_008,0.4437229437229437,matched_reference_stress,route_planning,route_deliberation,,route_deliberation,high,state_readout,"[95] Let's see if we can go via row4: from (6,2) go up to (5,2)->(4,2) blocked.
+[96] So can't go to row4 col2.
+[97] But maybe go up to (5,2)->(5,3) -> up to (4,3) blocked.
+[98] So can't reach column5 that way.
+[99] Maybe we need to go through row7: from (6,2) go down to (7,2)->(7,3).
+[100] From (7,3) up to (6,3) open.
+[101] So same issue.
+[102] Maybe we need to go to column5 via column1?",Let's examine column1 path: row6 col1 open.,,,
+cal_05a70cf114dffa19,keepdoor_57__step_003__sentence_086,keepdoor_57,3,86,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_003,0.8465346534653465,general_random,,,,state_readout,high,route_deliberation,"[78] So maybe go up to row3 col5, left to row3 col4 '#', can't.
+[79] So maybe go up to row3 col5, left to row3 col4 blocked.
+[80] So maybe go up to row2 col5, left to row2 col4 '#', blocked.
+[81] So maybe go up to row1 col5, left to row1 col4 D (door).
+[82] But door is locked; we need key to open it.
+[83] So we can approach door at row1 col4 from adjacent cells to open it.
+[84] We need to open door D at (1,4).
+[85] To open, agent must be adjacent to door and have key.","Adjacent cells: (0,4) top?",,,
+cal_026d2198d6a0ac97,keepdoor_15__step_006__sentence_051,keepdoor_15,6,51,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_006,0.463302752293578,general_random,,,,state_readout,high,route_deliberation,"[43] Up to (1,2) open.
+[44] Right to (1,3) open.
+[45] Then right to (1,4) wall.
+[46] So cannot go that way.
+[47] We might need to go around via row2/row3 etc.
+[48] Consider path: (3,3) -> (3,2) -> (3,1) -> (2,1) -> (1,1) -> (1,2) -> (1,3) -> (2,3) -> (2,4) is wall.
+[49] Hmm.
+
+Maybe go via row5 or row6.
+[50] Let's analyze grid connectivity.",Open cells:,,,
+cal_06651edd2ab524dc,keepdoor_10__step_002__sentence_132,keepdoor_10,2,132,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_002,0.796969696969697,general_random,,,,route_deliberation,high,state_readout,"[124] So path: from (5,1) up to row1, right across, then down to goal.
+[125] Let's find shortest path.
+[126] Compute Manhattan distance ignoring obstacles: from (5,1) to (2,6) distance 3 up +5 right =8.
+[127] But obstacles may add steps.
+[128] Let's plan.
+[129] Path: (5,1) -> up to (4,1) but (4,1) is '#', cannot.
+[130] So need to go around: maybe go left?
+[131] but left of (5,1) is (5,0) '#'.",So can't go left or up.,,,
+cal_0759bcd9f74bb02a,keepdoor_37__step_003__sentence_037,keepdoor_37,3,37,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_37_step_003,0.1600877192982456,general_random,,,,other,high,route_deliberation,"[29] From agent at (7,1).
+[30] Need to reach (1,1).
+[31] Let's find shortest path ignoring door.
+[32] Use BFS mentally.
+[33] We can move up, down, left, right.
+[34] Walls at column 0 all rows, and column 8 all rows, row0 all columns, row8 all columns.
+[35] Also walls at row1 col4 '#', row3 col4 '#', row4 col0-5 '#', row4 col7 '#', row4 col8 '#', row5 col4 '#', row6 col4 'D', row7 col4 '#'.
+[36] So path must navigate through open cells.",Let's draw grid with coordinates.,,,
+cal_03c7819acba9d0d1,keepdoor_19__step_002__sentence_003,keepdoor_19,2,3,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_19_step_002,0.026595744680851,general_random,,,,state_readout,high,route_deliberation,"[1] We need to produce next move.
+[2] Let's analyze grid.","Grid coordinates: rows 0-8, cols 0-8.",,,
+cal_033e02f7477c7854,keepdoor_36__step_008__sentence_052,keepdoor_36,8,52,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_36_step_008,0.1716666666666666,general_random,,,,route_deliberation,high,state_readout,"[44] Let's try other route: from (5,1) right to (5,2) -> right to (5,3) -> right to (5,4)# can't.
+[45] So maybe from (5,3) up to (4,3)# no.
+[46] So can't go to (5,5) via that route.
+[47] Alternate: from (5,1) up?
+[48] can't. So maybe from (6,1) go right?
+[49] Row6 col1 '_' -> (6,2) '_' -> (6,3) '_' -> (6,4) '#' (since row6 col4 is '#').
+[50] So can't go to col5 via that row.
+[51] But from (6,3) up to (5,3) open?","yes. Then from (5,3) right to (5,4) blocked.",,,
+cal_0f4abf48900bfb95,keepdoor_15__step_006__sentence_051,keepdoor_15,6,51,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_006,0.463302752293578,general_random,,,cal_026d2198d6a0ac97,state_readout,high,route_deliberation,"[43] Up to (1,2) open.
+[44] Right to (1,3) open.
+[45] Then right to (1,4) wall.
+[46] So cannot go that way.
+[47] We might need to go around via row2/row3 etc.
+[48] Consider path: (3,3) -> (3,2) -> (3,1) -> (2,1) -> (1,1) -> (1,2) -> (1,3) -> (2,3) -> (2,4) is wall.
+[49] Hmm.
+
+Maybe go via row5 or row6.
+[50] Let's analyze grid connectivity.",Open cells:,,,
+cal_001f54bd1966abaf,keepdoor_20__step_008__sentence_068,keepdoor_20,8,68,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_008,0.531496062992126,general_random,,,,state_readout,high,route_deliberation,"[60] Down from (5,5) to (6,5) open.
+[61] From (6,5) left to (6,4)#.
+[62] So can't get to left side from row5.
+[63] Thus need to go up to row3 or 2 and then left then down.
+[64] Let's find path: Starting at (6,7).
+[65] Up to (5,7).
+[66] Up to (4,7)# cannot.
+[67] So maybe from (5,7) left to (5,6) left to (5,5).","Up from (5,5) blocked.",,,
+cal_00881bb3c4f7116f,keepdoor_30__step_005__sentence_059,keepdoor_30,5,59,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_30_step_005,0.527027027027027,general_random,,,,other,high,route_deliberation,"[51] That's 5 steps: down?
+[52] Wait from (1,4) to (1,3) left; then down to (2,3).
+[53] So total steps: 1 up, 1 left, 1 left, 1 left, 1 down =5.
+[54] But we need to consider door opening: when agent is adjacent to door at (1,4) we can open.
+[55] To open door, agent must be adjacent to door.
+[56] When we move into (1,4) door cell?
+[57] Actually door is cell (1,4).
+[58] To open door, agent must be adjacent to door and has key.","Agent can open door automatically when adjacent, not need to step into cell.",,,
+cal_7071192d1f7a40e7,keepdoor_59__step_002__sentence_033,keepdoor_59,2,33,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_59_step_002,0.2480916030534351,matched_reference_stress,restatement,summary_or_restatement,,state_readout,high,route_deliberation,"[25] The cell (3,2) is above door.
+[26] So if we are at (3,2) and have key, we are adjacent to door.
+[27] According to rule: door is automatically opened and removed from the grid when the agent is adjacent to the door (in front of it) and has already picked up the key.
+[28] So from key cell we can open door.
+[29] So we can just pick key and then move to door location?
+[30] Actually door removed.
+[31] So we can then move through that cell.
+[32] Goal at (7,3).","Path: from A(2,2) to K(3,2) then to door removal then to G.",,,
+cal_01219f290ea05c87,keepdoor_77__step_003__sentence_030,keepdoor_77,3,30,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_77_step_003,0.194078947368421,general_random,,,,state_readout,high,route_deliberation,"[22] So plan: from start (1,1) to either (3,5) or (5,5).
+[23] Let's find shortest path.
+[24] Compute distances.
+[25] We can move through open spaces.
+[26] Let's map open cells.
+[27] We'll compute a path to (3,5).
+[28] Starting at (1,1).
+[29] We can go right to (1,2),(1,3),(1,4) but (1,4) is '#'.","So can't. Let's go down to (2,1),(3,1),(4,1?) row4 col1 is '#', can't.",,,
+cal_11245610dae280df,keepdoor_23__step_006__sentence_013,keepdoor_23,6,13,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_23_step_006,0.625,general_random,,,,state_readout,high,route_deliberation,"[5] Row1: col0 #, col1 _, col2 _, col3 K, col4 #, col5 _, col6 _, col7 _, col8 #
+Row2: col0 #, col1 _, col2 _, col3 A, col4 #, col5 _, col6 _, col7 _, col8 #
+Row3: col0 #, col1 _, col2 _, col3 _, col4 _, col5 _, col6 _, col7 _, col8 #
+Row4: col0 #, col1 #, col2 #, col3 #, col4 #, col5 _, col6 #, col7 #, col8 #
+Row5: col0 #, col1 G, col2 _, col3 _, col4 D, col5 _, col6 _, col7 _, col8 #
+Row6: col0 #, col1 _, col2 _, col3 _, col4 #, col5 _, col6 _, col7 _, col8 #
+Row7: col0 #, col1 _, col2 _, col3 _, col4 #, col5 _, col6 _, col7 _, col8 #
+Row8: all walls.
+[6] Goal G at (5,1).
+[7] Door D at (5,4).
+[8] Key K at (1,3).
+[9] Agent A at (2,3).
+[10] Not carrying key.
+[11] Need to reach key first.
+[12] We need shortest path to key.",Let's compute.,,,
+cal_6765df841c8bde30,keepdoor_33__step_002__sentence_029,keepdoor_33,2,29,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_002,0.1993006993006993,matched_reference_stress,state_reconstruction,state_readout,,route_deliberation,high,state_readout,"[21] Walls (#).
+[22] Key at (3,7).
+[23] Door at (4,7).
+[24] Agent at (2,7).
+[25] So key is just above door, same column.
+[26] Key is accessible?
+[27] Let's see path from agent to key.
+[28] Agent at (2,7).","Adjacent cells: up (1,7), down (3,7), left (2,6), right (2,8).",,,
+cal_068300487616205a,keepdoor_56__step_007__sentence_101,keepdoor_56,7,101,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_56_step_007,0.6525974025974026,general_random,,,,state_readout,high,route_deliberation,"[93] From row3 col2, down to row4 col2 open, row5 col2 open, row6 col2 open.
+[94] So we can go from left side down to row6 via column2.
+[95] Let's check: path: (1,1)->(1,2)->(1,3)->(2,3)->(3,3)->(4,3) wall cannot.
+[96] So need to go earlier: from (1,3) down to (2,3) ok, from (2,3) down to (3,3) ok, from (3,3) down to (4,3) wall.
+[97] So can't go via col3.
+[98] Instead from (3,3) go left to (3,2) open, then down to (4,2) open, (5,2) open, (6,2) open.
+[99] So path: (1,1)->(1,2)->(1,3)->(2,3)->(3,3)->(3,2)->(4,2)->(5,2)->(6,2).
+[100] Good. Now at (6,2).","We need to open door at (6,4).",,,
+cal_f072370c93c602d6,keepdoor_50__step_009__sentence_048,keepdoor_50,9,48,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_50_step_009,0.4398148148148148,matched_reference_stress,procedural_continuation,other,,route_deliberation,high,state_readout,"[40] Also row0 and row8 walls.
+[41] Goal at (2,1).
+[42] Agent at (6,7).
+[43] Need to get to (2,1).
+[44] The door at (4,3) blocks crossing between lower half and upper half?
+[45] Let's see connectivity.
+[46] There is a corridor of open cells from row6 to row2 through columns 1-3?
+[47] Let's check:","From agent at (6,7).",,,
+cal_04021e14b9405ba3,keepdoor_36__step_008__sentence_173,keepdoor_36,8,173,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_36_step_008,0.575,general_random,,,,state_readout,high,route_deliberation,"[165] But we could go up to (5,1) then right to (5,2) then up to (4,2) then up to (3,2) then up to (2,2) then up to (1,2) then right to (1,3) then right to (1,4) blocked.
+[166] So no.
+
+Alternatively from (3,2) we could go right to (3,3) then right to (3,4) door cannot step into.
+[167] But we could go down to (4,3) blocked.
+[168] So stuck.
+
+Maybe we need to open door to get to the right side of grid, because door at (3,4) connects left side to right side at row3.
+[169] But we can't pass through door unless we open it.
+[170] Since we have key, we can open it.
+[171] To open door, we need to be adjacent to it.
+[172] Adjacent cells: (3,3), (3,5), (2,4), (4,4).","Among these, (3,3) '_' accessible from left side; (3,5) '_' accessible from right side; (2,4) '#' blocked; (4,4) '#' blocked.",,,
+cal_02516a403b5d3e00,keepdoor_57__step_003__sentence_040,keepdoor_57,3,40,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_003,0.3910891089108911,general_random,,,,state_readout,high,route_deliberation,"[32] Path from key to goal: maybe go up along column 6 to row1?
+[33] Let's examine obstacles:
+[34] Rows 2-7 at column 6: Row2 col6 '_' (open), row3 col6 '_' (open), row4 col6 '#', row5 col6 '_'?
+[35] Wait row5: ""# _ _ _ # _ _ _ #"".
+[36] col6 index: 0 '#',1 '_',2 '_',3 '_',4 '#',5 '_',6 '_',7 '_',8 '#'.
+[37] So row5 col6 '_' open.
+[38] Row6 col6 '_' open.
+[39] Row7 col6 'K' open.","So column 6 has a wall at row4 col6 '#', but that's at row4.",,,
+cal_b5d7ea6aa6e39b05,keepdoor_33__step_003__sentence_004,keepdoor_33,3,4,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_003,0.0194444444444444,matched_reference_stress,state_reconstruction,state_readout,,route_deliberation,high,state_readout,"[1] We need to compute shortest path from agent at (2,6?) Let's check coordinates: grid indices: rows 0-8, cols 0-8.
+[2] Row2: "" # _ _ _ # _ A _ # "" positions: col0 '#', col1 '_', col2 '_', col3 '_', col4 '#', col5 '_', col6 'A', col7 '_', col8 '#'.
+[3] So agent at (2,6).",Goal G at row5 col3?,,,
+cal_5d85ed2529438156,keepdoor_33__step_002__sentence_020,keepdoor_33,2,20,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_002,0.1363636363636363,matched_reference_stress,state_reconstruction,state_readout,,other,high,route_deliberation,"[12] Row7: ""# _ _ _ # _ _ _ #""
+[13] Row8: all #.
+[14] Agent at row2 col7 (since 0-index).
+[15] Goal at row5 col3.
+[16] Door at row4 col7.
+[17] Key at row3 col7.
+[18] Agent not carrying key.
+[19] Need to reach key first.",Let's map open spaces.,,,
+cal_007c94aec4777b53,keepdoor_57__step_004__sentence_083,keepdoor_57,4,83,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_004,0.6066176470588235,general_random,,,,state_readout,high,route_deliberation,"[75] Up to row4 col5 '#', wall.
+[76] So need alternative.
+[77] Maybe go left to col4?
+[78] Row7 col4 '#' wall.
+[79] So cannot.
+[80] Maybe go right from (7,6) to (7,7) '_'?
+[81] row7 col7 '_' yes.
+[82] Up to (6,7) '_' yes.","Up to (5,7) '_' yes.",,,
+cal_0576a3fc71cfd391,keepdoor_88__step_010__sentence_164,keepdoor_88,10,164,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_88_step_010,0.5967153284671532,general_random,,,,other,high,route_deliberation,"[156] Can we reach (6,3)?
+[157] Let's see.
+[158] From agent at (3,2), we can go down?
+[159] (4,2) wall cannot.
+[160] So we must go to column5 then down to row6 col5 then left to row6 col3?
+[161] But column5 left to column4 blocked.
+[162] But maybe we can go from (6,5) to (6,4) wall cannot.
+[163] So cannot.",So maybe we cannot reach goal at all?,,,
+cal_0432034f2c71069c,keepdoor_88__step_010__sentence_110,keepdoor_88,10,110,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_88_step_010,0.3996350364963503,general_random,,,,state_readout,high,route_deliberation,"[102] But we cannot go down from column5?
+[103] Let's check column5: row2 col5 open; row3 col5 open; row4 col5 open; row5 col5 open; row6 col5 open; row7 col5 open.
+[104] So column5 is fully open except maybe row0,8 walls.
+[105] So we can cross via column5.
+[106] But to get to column5 from agent at (3,2), we need to cross the wall at column4?
+[107] Wait we can go up to row1, then right to column5, then down.
+[108] But we can't cross column4 because it's blocked.
+[109] However we can go from row1 col5 to row2 col5?",Yes because row2 col5 open.,,,
+cal_05db53d9b8a265de,keepdoor_33__step_001__sentence_083,keepdoor_33,1,83,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_001,0.3148854961832061,general_random,,,,state_readout,high,route_deliberation,"[75] Let's trace.
+[76] From agent (2,6) to goal (5,3).
+[77] Let's consider region of open cells:
+[78] Row2: open at 1-3,5,7.
+[79] Row3: open at 1-3,5-6,7.
+[80] Row4: open at 3 only, and 7 door.
+[81] Row5: open at 1-2,3,5-7.
+[82] Row6: open 1-7.","Row7: open 1-3,5-7.",,,
+cal_086a7b81a34c77a1,keepdoor_34__step_007__sentence_298,keepdoor_34,7,298,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_34_step_007,0.9850993377483444,general_random,,,,other,high,summary_or_restatement,"[290] So both equal.
+[291] But we need to choose one.
+[292] Which is more natural?
+[293] Usually choose RIGHT because it's directly towards key.
+[294] But we should confirm that moving RIGHT is not blocked by wall at (6,7) which is open.
+[295] So fine.
+
+Thus answer: { ""action"": ""RIGHT"" }.
+[296] But let's check if there is any path that picks up key earlier by moving down first?
+[297] Actually moving down then right also picks up key.",So both same.,,,
+cal_0208b41cce9675f8,keepdoor_50__step_009__sentence_052,keepdoor_50,9,52,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_50_step_009,0.4768518518518518,general_random,,,,state_readout,high,route_deliberation,"[44] The door at (4,3) blocks crossing between lower half and upper half?
+[45] Let's see connectivity.
+[46] There is a corridor of open cells from row6 to row2 through columns 1-3?
+[47] Let's check:
+[48] From agent at (6,7).
+[49] There is open cells to left: (6,6), (6,5), (6,4)# cannot pass.
+[50] So left path blocked at col4.
+[51] Upwards: (5,7), (4,7)#, (3,7), (2,7), (1,7), (0,7)#.",So going up from agent leads to row4 col7 wall.,,,
+cal_e875dcefa65fb4e2,keepdoor_59__step_002__sentence_029,keepdoor_59,2,29,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_59_step_002,0.2175572519083969,matched_reference_stress,verification,route_deliberation,,other,high,route_deliberation,"[21] When adjacent with key, door removed.
+[22] So after picking key at (3,2), we need to be adjacent to (4,2) to open.
+[23] We can be at (3,2) (the key cell) itself adjacent up?
+[24] Actually door is at (4,2).
+[25] The cell (3,2) is above door.
+[26] So if we are at (3,2) and have key, we are adjacent to door.
+[27] According to rule: door is automatically opened and removed from the grid when the agent is adjacent to the door (in front of it) and has already picked up the key.
+[28] So from key cell we can open door.",So we can just pick key and then move to door location?,,,
+cal_2abc4bcaf3bf7c63,keepdoor_11__step_004__sentence_075,keepdoor_11,4,75,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_004,0.5321428571428571,general_random,,,cal_0355cca2b42e952d,route_deliberation,high,state_readout,"[67] So can't go left directly.
+[68] Alternative: go down to row4?
+[69] Row4 has D at col1 but rest are walls.
+[70] So cannot go down.
+[71] So we need to go around?
+[72] Let's examine entire grid for connectivity.
+[73] Row1: ""# _ _ _ # _ _ _ #"".
+[74] Row2: ""# _ _ _ _ _ A _ #"".","Row3: ""# _ _ _ # _ K _ #"".",,,
+cal_a012430d21d4f1e4,keepdoor_10__step_001__sentence_028,keepdoor_10,1,28,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_001,0.0753424657534246,matched_reference_stress,new_inference,route_deliberation,,state_readout,high,route_deliberation,"[20] Yes door directly above agent.
+[21] There's a wall at (4,3) maybe?
+[22] Let's examine grid: row4: ""# # D # # # _ # #"" => columns:0#,1#,2D,3#,4#,5#,6_,7#,8#.
+[23] So door at (4,2).
+[24] Surroundings: left (4,1)#, right (4,3)#, up (3,2) is?
+[25] row3 col2 is ""_"" (open).
+[26] down (5,2) agent.
+[27] So door is north of agent; door is locked.","Agent must pick up key at (5,1).",,,
+cal_02b3063ef69e383b,keepdoor_10__step_001__sentence_340,keepdoor_10,1,340,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_001,0.93013698630137,general_random,,,,other,high,route_deliberation,"[332] So cannot.
+[333] Thus unreachable.
+[334] Maybe the grid representation uses # as wall, but maybe '_' is also wall?
+[335] No.
+
+Alternatively, maybe the door at (4,2) is actually a door that opens to corridor at (4,6).
+[336] But there is no path.
+[337] Thus I suspect the intended path is: LEFT to key, RIGHT to original cell, UP to door, then UP to (3,2), UP to (2,2), RIGHT to (2,3), RIGHT to (2,4)??
+[338] Wait (2,4) is wall.
+[339] So no.
+
+Thus maybe the goal is at (2,3)?","But it's G at (2,6).",,,
+cal_03624af7a3db663d,keepdoor_11__step_005__sentence_086,keepdoor_11,5,86,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_005,0.2529585798816568,general_random,,,,state_readout,high,route_deliberation,"[78] but col4 is wall.
+[79] So cannot go through col4.
+[80] Instead go left to (3,3).
+[81] But need to go from col6 to col3.
+[82] Path: (3,6)->(3,5)->(3,4?) can't.
+[83] So need to go down or up to bypass wall.
+[84] Let's check if we can go down to row4 col6?
+[85] row4 col6 is wall.","Row4 col5 wall, col6 wall.",,,
+cal_21d7cd10cd9c2934,keepdoor_33__step_003__sentence_060,keepdoor_33,3,60,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_003,0.3305555555555555,matched_reference_stress,state_reconstruction,state_readout,,state_readout,high,route_deliberation,"[52] Let's find path: maybe (2,6) -> left to (2,5) -> left to (2,4) but row2 col4 '#' wall.
+[53] So can't go that way.
+[54] Down path: (2,6) down to (3,6) -> down to (4,6) row4 col6 '#' wall.
+[55] So cannot go directly down.
+[56] Right to (2,7) -> down to (3,7) key at (3,7).
+[57] Then down to (4,7) door (locked).
+[58] So door blocks path if we go that way.
+[59] Maybe we can go around door.",Let's analyze connectivity of open cells: The open area includes region left of column 4?,,,
+cal_ae37e9199f67e039,keepdoor_92__step_004__sentence_016,keepdoor_92,4,16,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_92_step_004,0.0837837837837837,matched_reference_stress,procedural_continuation,other,,other,high,route_deliberation,"[8] Goal at row 2, column 7?
+[9] Let's see row 2: ""# _ _ _ _ _ _ G #"".
+[10] So G at (2,7).
+[11] There's a door D at row 4, column 3.
+[12] The agent is carrying key (True).
+[13] So door can be opened automatically when adjacent.
+[14] The agent should go to goal.
+[15] Need to find shortest path.",Let's map obstacles (#).,,,
+cal_034635b3e683459d,keepdoor_11__step_005__sentence_028,keepdoor_11,5,28,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_005,0.0813609467455621,general_random,,,,state_readout,high,route_deliberation,"[20] So we already have key.
+[21] Goal at (6,1).
+[22] We need shortest path from (3,6) to (6,1) while avoiding walls.
+[23] Let's map open cells.
+[24] Walls at row0, row8, col0, col8 all walls.
+[25] Row1: walls at col0, col4, col8.
+[26] Row2: walls at col0, col8.
+[27] Row3: walls at col0, col4, col8.","Row4: walls at col0, col2,3,4,5,6,7,8?",,,
+cal_01b7f3ec48069fd0,keepdoor_10__step_001__sentence_030,keepdoor_10,1,30,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_001,0.0808219178082191,general_random,,,,state_readout,high,route_deliberation,"[22] Let's examine grid: row4: ""# # D # # # _ # #"" => columns:0#,1#,2D,3#,4#,5#,6_,7#,8#.
+[23] So door at (4,2).
+[24] Surroundings: left (4,1)#, right (4,3)#, up (3,2) is?
+[25] row3 col2 is ""_"" (open).
+[26] down (5,2) agent.
+[27] So door is north of agent; door is locked.
+[28] Agent must pick up key at (5,1).
+[29] The key is left of agent.","So path: move left to key, pick up.",,,
+cal_49f5e855b19b36d4,keepdoor_37__step_003__sentence_096,keepdoor_37,3,96,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_37_step_003,0.418859649122807,matched_reference_stress,restatement,summary_or_restatement,,state_readout,high,route_deliberation,"[88] - Col2: row1 col2 _, row2 col2 _, row3 col2 _, row4 col2 #, row5 col2 _, row6 col2 _, row7 col2 _.
+[89] So col2 blocked at row4.
+[90] - Col3: row1 col3 _, row2 col3 _, row3 col3 _, row4 col3 #, row5 col3 _, row6 col3 _, row7 col3 _.
+[91] So blocked at row4.
+[92] - Col4: row1 col4 #, row2 col4 _, row3 col4 #, row4 col4 #, row5 col4 #, row6 col4 D, row7 col4 #.
+[93] So col4 mostly walls.
+[94] - Col5: row1 col5 _, row2 col5 _, row3 col5 _, row4 col5 #, row5 col5 _, row6 col5 _, row7 col5 _.
+[95] So col5 blocked at row4.","- Col6: row1 col6 _, row2 col6 _, row3 col6 _, row4 col6 _, row5 col6 _, row6 col6 _, row7 col6 _.",,,
+cal_0b7d9f40b50cec1a,keepdoor_68__step_007__sentence_046,keepdoor_68,7,46,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_68_step_007,0.2645348837209302,general_random,,,,route_deliberation,high,state_readout,"[38] Check positions:
+[39] - (3,6) open.
+[40] - (4,6) # wall.
+[41] So cannot go down through column 6 at row4.
+[42] Check alternative path: go right or left then down.
+[43] At (2,6), can go right to (2,7) open.
+[44] Then down to (3,7) open, (4,7) #, can't.
+[45] Left to (2,5) open.","Down to (3,5) open, (4,5) D (door).",,,
+cal_d58e392d390a361d,keepdoor_88__step_010__sentence_022,keepdoor_88,10,22,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_88_step_010,0.0784671532846715,matched_reference_stress,state_reconstruction,state_readout,,route_deliberation,high,state_readout,"[14] Door is to the right of goal.
+[15] Agent must open door if it blocks path?
+[16] The goal is adjacent to door but not behind.
+[17] The door might block path if the agent path to goal goes through door cell?
+[18] But we don't need to pass through door to reach goal; we just need to step onto G cell.
+[19] So door not needed.
+[20] But door might be in the way of path?
+[21] Let's analyze shortest path from agent to goal.","Agent at (3,2).",,,
+cal_89471c39915e7d28,keepdoor_10__step_002__sentence_117,keepdoor_10,2,117,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_002,0.706060606060606,matched_reference_stress,new_inference,route_deliberation,,route_deliberation,high,state_readout,"[109] Row6: columns 1-3 open, 4 wall, 5-7 open.
+[110] Row7: columns 1-3 open, 4 wall, 5-7 open.
+[111] Goal at (2,6).
+[112] We need to go from (5,1) to (2,6).
+[113] The wall column 4 blocks crossing.
+[114] But we can go around via row1?
+[115] Wait column4 at row1 is open?
+[116] Actually row1 col4 is '_'?","Let's check row1: ""# _ _ _ _ _ _ _ #"": columns 1-7 are open.",,,
+cal_052daaff876b81b3,keepdoor_33__step_001__sentence_153,keepdoor_33,1,153,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_001,0.5820610687022901,general_random,,,,route_deliberation,high,other,"[145] We need minimal steps.
+[146] Let's compute.
+[147] Option 1: Without key?
+[148] Is there path that avoids door?
+[149] Let's check possibility: maybe go up to row1, left to column1, down to row5 col1-2, then across to goal.
+[150] Let's examine connectivity: from agent at (2,6), we can go up to (1,6) open, left to (1,5) open, left to (1,4) '#', cannot.
+[151] But we can go left to (1,3) open, left to (1,2) open, left to (1,1) open.
+[152] From there down to row5 col1?",Let's see.,,,
+cal_000564bce5e44824,keepdoor_11__step_005__sentence_206,keepdoor_11,5,206,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_005,0.6079881656804734,general_random,,,,other,high,route_deliberation,"[198] After door opens, we can then move into door cell or go around.
+[199] But we don't need to step onto door cell.
+[200] But we need to go to goal at (6,1).
+[201] From (5,1) adjacent to goal?
+[202] Actually goal at (6,1) is down from (5,1).
+[203] So we can go down to goal directly.
+[204] So we might not need to go onto door cell at all.
+[205] So path to (5,1) adjacent to door, open door, then go down to goal.",That might be shorter.,,,
+cal_02e3909480a0faa4,keepdoor_56__step_007__sentence_003,keepdoor_56,7,3,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_56_step_007,0.0162337662337662,general_random,,,,other,high,state_readout,"[1] We need to decide next move.
+[2] Let's map grid.","Coordinates: row, col.",,,
+cal_096639c4ada6720e,keepdoor_11__step_005__sentence_326,keepdoor_11,5,326,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_005,0.96301775147929,general_random,,,,other,high,route_deliberation,"[318] The question: ""Your final answer should be a valid JSON object ..."".
+[319] They want the next action.
+[320] We should choose one action.
+[321] Let's choose ""UP"" because it's symmetrical and simple.
+[322] But is there any hidden rule about ""the agent should aim to reach the goal using the least amount of steps possible""?
+[323] Both are equal.
+[324] So any is fine.
+[325] But maybe we should consider that moving left to (3,5) might be better because from there we go up to (2,5).",But moving up first also fine.,,,
+cal_00d9a441b7d192a8,keepdoor_12__step_003__sentence_025,keepdoor_12,3,25,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_12_step_003,0.875,general_random,,,,state_readout,high,route_deliberation,"[17] Key K at (5,2).
+[18] Door D at (2,4).
+[19] Walls block.
+[20] We need to find shortest path.
+[21] Since agent doesn't have key, must pick up key first.
+[22] Key at (5,2) adjacent to agent?
+[23] Agent at (5,1).
+[24] So left? Actually agent at col1, key at col2.",So moving right will pick up key.,,,
+cal_001a8606b36a6153,keepdoor_34__step_006__sentence_010,keepdoor_34,6,10,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_34_step_006,0.0508021390374331,general_random,,,,state_readout,high,route_deliberation,"[2] Grid size 9x9 indices 0-8 rows and columns.
+[3] Let's map coordinates.
+[4] Grid:
+
+Row 0: all walls
+Row1: col0#, col1 _,2 _,3 _,4#,5_,6_,7_,8#
+Row2: 0#,1_,2_,3 G,4#,5_,6_,7_,8#
+Row3: 0#,1_,2_,3_,4 D,5_,6_,7_,8#
+Row4: 0#,1#,2#,3#,4#,5#,6#,7_,8#
+Row5: 0#,1_,2_,3_,4#,5_,6_,7_,8#
+Row6: 0#,1_,2_,3_,4_,5#,6_,7_,8 A
+Row7: 0#,1_,2_,3_,4_,5_,6_,7 K,8#
+Row8: all walls
+[5] Agent at (6,8).
+[6] Goal at (2,3).
+[7] Door at (3,4).
+[8] Key at (7,7).
+[9] Agent not carrying key.",We need path.,,,
+cal_2c27ddc00cfcb74f,keepdoor_30__step_005__sentence_001,keepdoor_30,5,1,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_30_step_005,0.0045045045045045,matched_reference_stress,procedural_continuation,other,,route_deliberation,high,other,,We need to decide next move.,,,
+cal_0619d56812cbf52b,keepdoor_10__step_002__sentence_029,keepdoor_10,2,29,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_002,0.1727272727272727,general_random,,,,state_readout,high,route_deliberation,"[21] So to get from left side to right side (col 5-6-7-8), we need to pass through door at (4,2) or go around?
+[22] Let's check column 4 is blocked, but door at (4,2) is in column 2.
+[23] So to reach goal at column 6, we need to cross the wall column 4 somewhere.
+[24] The only opening is at door D at (4,2).
+[25] Actually door at (4,2) is in column 2, not column 4.
+[26] Wait we need to cross from left side (col 1-2-3) to right side (col 5-6-7).
+[27] The walls at column 4 block, but we can open door at (4,2) to pass through?
+[28] But door is at (4,2) which is on left side; opening door likely allows passage through that cell?","Let's analyze: The door D at (4,2) is a locked door cell.",,,
+cal_7e9b745d3444f27a,keepdoor_41__step_000__sentence_021,keepdoor_41,0,21,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_41_step_000,0.1073298429319371,matched_reference_stress,procedural_continuation,other,,route_deliberation,high,other,"[13] Yes G at (5,5).
+[14] Key at (2,1).
+[15] Door D at (4,1).
+[16] Wait row4: ""# D # # # # # _ #"".
+[17] So col1:D.
+[18] Agent at (2,2).
+[19] We need to reach goal.
+[20] There is a door at (4,1).",Let's examine path.,,,
+cal_0764fb6c1fb3c4d2,keepdoor_33__step_001__sentence_164,keepdoor_33,1,164,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_001,0.6240458015267175,general_random,,,,route_deliberation,high,state_readout,"[156] But maybe go down via column2: from (1,2) down to (2,2) open, down to (3,2) open, down to (4,2) '#', blocked.
+[157] So cannot go past row3 into row4 via columns 1-3 because row4 col1-2 are walls.
+[158] Only open at row4 col3.
+[159] So we need to reach row4 col3 to go down to goal.
+[160] So we need to get to (4,3) from agent.
+[161] Let's see if we can reach (4,3) without passing through door or key.
+[162] From agent (2,6).
+[163] Maybe go down to row3, then left to column3?",But row3 col4 is wall.,,,
+cal_099ce8e549f1a8d5,keepdoor_11__step_004__sentence_122,keepdoor_11,4,122,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_004,0.8678571428571429,general_random,,,,state_readout,high,route_deliberation,"[114] So can't. Up to (2,6) which is open.
+[115] From there, left to (2,5),(2,4),(2,3),(2,2),(2,1).
+[116] That path goes through (2,4) which is open.
+[117] So we can go up then left to (2,1).
+[118] Then down to (3,1).
+[119] So path: (3,6)->(2,6)->(2,5)->(2,4)->(2,3)->(2,2)->(2,1)->(3,1).
+[120] That's fine.
+[121] So after picking key, we can go to door adjacency.",Thus minimal steps: from A to key: 1 step down.,,,
+cal_0355cca2b42e952d,keepdoor_11__step_004__sentence_075,keepdoor_11,4,75,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_004,0.5321428571428571,general_random,,,,route_deliberation,high,state_readout,"[67] So can't go left directly.
+[68] Alternative: go down to row4?
+[69] Row4 has D at col1 but rest are walls.
+[70] So cannot go down.
+[71] So we need to go around?
+[72] Let's examine entire grid for connectivity.
+[73] Row1: ""# _ _ _ # _ _ _ #"".
+[74] Row2: ""# _ _ _ _ _ A _ #"".","Row3: ""# _ _ _ # _ K _ #"".",,,
+cal_092ba4af27e34acc,keepdoor_41__step_000__sentence_080,keepdoor_41,0,80,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_41_step_000,0.4162303664921466,general_random,,,,route_deliberation,high,state_readout,"[72] Then right: (7,5) (8).
+[73] Then up: (6,5) (9).
+[74] Then up: (5,5) goal (10).
+[75] That's 10 steps.
+[76] Alternatively, we could go to key first then maybe open door to find shorter path?
+[77] Let's examine door at (4,1).
+[78] If we pick up key at (2,1) then door at (4,1) could be opened.
+[79] But door might provide a shorter route across column4 earlier?","Let's analyze door location: (4,1).",,,
+cal_043ef95ccae2243a,keepdoor_57__step_001__sentence_069,keepdoor_57,1,69,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_001,0.4308176100628931,general_random,,,,state_readout,high,route_deliberation,"[61] Row5 col6 '_' open.
+[62] Up to (4,6) row4 col6 '#' wall.
+[63] So cannot go directly up that column.
+[64] Alternative: go left to column5 then up.
+[65] From (7,6) left to (7,5) open?
+[66] Row7 col5 '_' open.
+[67] Up to (6,5) row6 col5 '_' open.
+[68] Up to (5,5) row5 col5 '_' open.","Up to (4,5) row4 col5 '#' wall.",,,
+cal_009459ab470adfda,keepdoor_34__step_007__sentence_262,keepdoor_34,7,262,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_34_step_007,0.8658940397350994,general_random,,,,route_deliberation,high,state_readout,"[254] Let's double-check distances: maybe there is a shorter path from key to door adjacent cell (3,5).
+[255] Let's compute BFS distance from (7,7) to (3,5).
+[256] Let's trace manually.
+[257] Coordinates:
+[258] (7,7) K.
+
+Neighbors: (6,7) open, (8,7) wall, (7,6) open, (7,8) wall.
+[259] From (6,7) neighbors: (5,7), (7,7), (6,6), (6,8).
+[260] (6,6) A originally but open now after moving.
+[261] So path to (5,7).","From (5,7): neighbors (4,7), (6,7), (5,6), (5,8).",,,
+cal_00eb75ee6da09d09,keepdoor_10__step_002__sentence_073,keepdoor_10,2,73,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_002,0.4393939393939394,general_random,,,,route_deliberation,high,state_readout,"[65] But agent at (5,1) left side.
+[66] So maybe the door is not blocking but we need to go around via the top or bottom?
+[67] Let's see boundaries: top row 0 all walls; bottom row 8 all walls.
+[68] So cannot go around via top or bottom.
+[69] So the only path to goal may be impossible.
+[70] Wait maybe the door at (4,2) opens to allow passage from left side to right side via a path that goes up to row4?
+[71] Let's check if there is a gap at row4 column3?
+[72] It's '#', but maybe door opens to right side?","But right side cell (4,3) is '#', so cannot go right.",,,
+cal_036602581b3a3f7b,keepdoor_88__step_010__sentence_132,keepdoor_88,10,132,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_88_step_010,0.47992700729927,general_random,,,,state_readout,high,route_deliberation,"[124] We cannot step onto door.
+[125] So we need to be adjacent to door to open it, then we can step onto goal.
+[126] But we cannot step onto door cell.
+[127] We can step onto goal cell from adjacent cell that is not door.
+[128] For example, from (5,2) left to (5,3) goal.
+[129] So we can avoid door entirely.
+[130] But we need to get to (5,2).
+[131] Path from (5,5) to (5,2): left to (5,4) door; left to (5,3) goal; left to (5,2) open.",But we cannot step onto door.,,,
+cal_04d2da6eb3d956cc,keepdoor_57__step_002__sentence_051,keepdoor_57,2,51,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_002,0.2537688442211055,general_random,,,,route_deliberation,high,state_readout,"[43] Let's see if there's a path from agent to (2,3) that avoids door.
+[44] Let's examine grid: At row2 col3 is _; row3 col3 is _; row4 col3 is _; row5 col3 is _; row6 col3 is _; row7 col3 is _.
+[45] So there's vertical corridor along column3 from row1 to row7.
+[46] But at row1 col3 is G.
+[47] So we can go up along column3.
+[48] Starting at (7,7) need to reach (7,3) then up.
+[49] But column4 is wall at row7 col4 (#).
+[50] So we can't cross from col7 to col3 directly?","Let's check row7: ""# _ _ _ # _ K A #"" => positions: col1 _, col2 _, col3 _, col4 #, col5 _, col6 K, col7 A.",,,
+cal_0affc7035fd0fc1a,keepdoor_10__step_002__sentence_137,keepdoor_10,2,137,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_002,0.8272727272727273,general_random,,,,state_readout,high,route_deliberation,"[129] Path: (5,1) -> up to (4,1) but (4,1) is '#', cannot.
+[130] So need to go around: maybe go left?
+[131] but left of (5,1) is (5,0) '#'.
+[132] So can't go left or up.
+[133] So from (5,1) we must go right to (5,2).
+[134] Then up to (4,2) which is door D.
+[135] But door is locked?
+[136] We have key so door will open when adjacent.","We are at (5,2) adjacent to door (4,2).",,,
+cal_08dbcad99bf92001,keepdoor_77__step_003__sentence_119,keepdoor_77,3,119,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_77_step_003,0.7796052631578947,general_random,,,,state_readout,high,route_deliberation,"[111] So that path works.
+[112] That leads to (3,5).
+[113] So we can get adjacent to door at (4,5) from (3,5).
+[114] So we can open door.
+[115] That's likely shortest.
+[116] Let's compute steps: (1,1) to (1,2) step1, (1,3) step2, (2,3) step3, (2,4) step4, (2,5) step5, (3,5) step6.
+[117] So 6 steps to adjacent to door.
+[118] Then door opens automatically.","Now we need to go to goal at (5,7).",,,
+cal_8ec2e22ce7d68487,keepdoor_21__step_009__sentence_014,keepdoor_21,9,14,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_21_step_009,0.1007462686567164,matched_reference_stress,new_inference,route_deliberation,,state_readout,high,route_deliberation,"[6] Row1: ""# _ _ _ # K _ _ #"".
+[7] So positions: col0 #, col1 _, col2 _, col3 _, col4 #, col5 K, col6 _, col7 _, col8 #.
+[8] So key at (1,5).
+[9] Row2: ""# _ _ _ # A _ _ #"".
+[10] So agent at (2,5).
+[11] Good.
+
+Row3: ""# _ _ _ _ _ _ _ #"".
+[12] Open spaces row3 col1-col7.
+[13] Row4: ""# _ # # # # # # #"".",So walls at col2-8?,,,
+cal_027c7a9c7937d1ff,keepdoor_57__step_002__sentence_155,keepdoor_57,2,155,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_002,0.7763819095477387,general_random,,,,state_readout,high,route_deliberation,"[147] Actually we need to pick key: step left to (7,6) to pick key.
+[148] Then continue.
+[149] So first step: LEFT to (7,6).
+[150] That picks key.
+[151] Now we need to plan next moves to reach door adjacent (1,5).
+[152] Let's compute shortest path from (7,6) to (1,5) while avoiding walls.
+[153] Let's map grid open cells.
+[154] The walls: column4 all rows except row1 door.",Also column0 and 8 all walls.,,,
+cal_3807e7458bf26cea,keepdoor_11__step_004__sentence_016,keepdoor_11,4,16,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_004,0.1107142857142857,matched_reference_stress,restatement,summary_or_restatement,,other,high,state_readout,"[8] Key K at row3 col6?
+[9] Row3: ""# _ _ _ # _ K _ #"".
+[10] So K at (3,6).
+[11] Door D at row4 col1?
+[12] Row4: ""# D # # # # # # #"".
+[13] So D at (4,1).
+[14] Goal G at row6 col1?
+[15] Row6: ""# G _ _ _ _ _ _ #"".","So G at (6,1).",,,
+cal_049a0527de528d40,keepdoor_16__step_010__sentence_024,keepdoor_16,10,24,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_010,0.1910569105691057,general_random,,,,state_readout,high,route_deliberation,"[16] After opening, we can pass through.
+[17] Let's find shortest path.
+[18] We need to avoid walls.
+[19] Walls are at row 0 all, row 8 all, column 0 all, column 8 all.
+[20] So interior is open.
+[21] But door at (7,4).
+[22] Is there any other obstacles?
+[23] None. So we need to get to goal (7,7).",The door blocks that cell?,,,
+cal_334e00b948f46ddb,keepdoor_20__step_008__sentence_004,keepdoor_20,8,4,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_008,0.0275590551181102,matched_reference_stress,state_reconstruction,state_readout,,state_readout,high,route_deliberation,"[1] We need to plan next move.
+[2] Grid 9x9. Agent at (6,7).
+[3] Goal at (5,1).","There is door at (4,1).",,,
+cal_003d0772d6fcaa5a,keepdoor_33__step_002__sentence_053,keepdoor_33,2,53,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_002,0.3671328671328671,general_random,,,,other,high,route_deliberation,"[45] Then we can move into (4,7) cell?
+[46] Wait door removed from grid.
+[47] After opening, door is removed, so cell becomes open space?
+[48] The door is removed and replaced by '_'?
+[49] Usually after opening, the door cell becomes open.
+[50] So we can move into that cell.
+[51] So path: Down to key, door opens, then down to (4,7), then down to (5,7) maybe, but goal at (5,3).
+[52] Actually we need to go to goal (5,3).",Let's map rest.,,,
+cal_0821ea2e4b751784,keepdoor_33__step_002__sentence_134,keepdoor_33,2,134,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_002,0.9335664335664337,general_random,,,,other,high,route_deliberation,"[126] Alternatively, go up or other?
+[127] Let's compute shortest path: from (2,7) to (5,3).
+[128] Manhattan distance = |5-2|+|3-7|=3+4=7.
+[129] So 7 steps minimal.
+[130] So we need to produce next move that is part of shortest path.
+[131] We need to choose direction.
+[132] Starting at (2,7).
+[133] We can go left to (2,6) or down to (3,7) (key).",But key not needed.,,,
+cal_b02a9cfe19b602e7,keepdoor_26__step_007__sentence_047,keepdoor_26,7,47,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_26_step_007,0.7265625,matched_reference_stress,restatement,summary_or_restatement,,state_readout,high,summary_or_restatement,"[39] So we can go from agent (7,2) to (1,3) or (1,5).
+[40] Let's find shortest path.
+[41] We have walls at column4 rows2-7.
+[42] So left side columns 0-3 from rows1-7.
+[43] Right side columns5-8 from rows1-7.
+[44] There are no connections between sides except at row1 col4 door.
+[45] So to get to door, we must go up to row1 on left side, then move right to col4 to open.
+[46] Let's compute.","Agent at (7,2).",,,
+cal_08622417df77ab8b,keepdoor_77__step_003__sentence_020,keepdoor_77,3,20,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_77_step_003,0.1282894736842105,general_random,,,,other,high,route_deliberation,"[12] Let's check grid for those cells: (3,5) row3 col5: row3: ""# _ _ _ # _ _ _ #"".
+[13] Indices: 0#,1_,2_,3_,4#,5_,6_,7_,8#.
+[14] So (3,5) is '_' open.
+[15] (5,5): row5: ""# _ _ _ _ _ _ G #"": indices: 0#,1_,2_,3_,4_,5_,6_,7G,8#.
+[16] So (5,5) is '_' open.
+[17] (4,4): row4 ""# # # # # D # # #"": indices:0#,1#,2#,3#,4#,5D,6#,7#,8#.
+[18] So (4,4) is '#'.
+[19] (4,6): '#'.","So we can approach from (3,5) or (5,5).",,,
+cal_0659dee10810364d,keepdoor_26__step_008__sentence_072,keepdoor_26,8,72,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_26_step_008,0.3095238095238095,general_random,,,,route_deliberation,high,state_readout,"[64] So can't go further right on row7.
+[65] But we can go up from (7,3) to (6,3) etc.
+[66] Let's consider exploring above row6.
+[67] From (6,2) we can go up to (5,2).
+[68] From (5,2) go up to (4,2) which is '_'?
+[69] row4 col2 is '_'?
+[70] Wait row4: ""# _ # # # _ # # #"" columns: 0 '#',1 '_',2 '#',3 '#',4 '#',5 '_',6 '#',7 '#',8 '#'.
+[71] So col2 is '#', blocked.",So can't go to row4.,,,
+cal_b567c1c14640d84c,keepdoor_15__step_007__sentence_001,keepdoor_15,7,1,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_007,0.0086206896551724,matched_reference_stress,state_reconstruction,state_readout,,state_readout,high,route_deliberation,,We have grid 9x9 with coordinates.,,,
+cal_026ff4f8dcc2f44d,keepdoor_26__step_008__sentence_210,keepdoor_26,8,210,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_26_step_008,0.9069264069264068,general_random,,,,state_readout,high,route_deliberation,"[202] So we need to get to col5 from left side via row5?
+[203] We can go from (5,3) up or down?
+[204] Actually from (5,3) we can't go right because (5,4) blocked.
+[205] So we can't get to col5 from row5.
+[206] So we need to go up to row4 or 3 etc?
+[207] But row4 col5 is open.
+[208] But we need to get to row4 col5.
+[209] Let's see path: start (6,2) -> (6,1) -> (5,1) -> (4,1) -> (3,1) -> (2,1) -> (1,1) -> (1,2) -> (1,3) -> (1,4) (door) -> (1,5) -> (2,5) -> (3,5) -> (4,5).",That is longer.,,,
+cal_9401545b86c1919c,keepdoor_0__step_001__sentence_083,keepdoor_0,1,83,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.3409090909090909,matched_reference_stress,verification,route_deliberation,,state_readout,high,route_deliberation,"[75] Path via left side: Starting (3,6).
+[76] Steps:
+
+1. LEFT to (3,5).
+[77] 2. LEFT to (3,4) but #.
+[78] So can't. Instead we can go left to (3,5) then left to (3,4) blocked.
+[79] So maybe go left to (3,5) then left to (3,4) cannot.
+[80] So need to go left further via row3?
+[81] Actually (3,4) is # so cannot go that way.
+[82] So we can't go from (3,5) to left beyond.",So left side path blocked.,,,
+cal_0393ec7818dd14cc,keepdoor_92__step_004__sentence_029,keepdoor_92,4,29,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_92_step_004,0.154054054054054,general_random,,,,state_readout,high,route_deliberation,"[21] The agent must be adjacent to open it.
+[22] After that, path to goal.
+[23] Let's plot grid coordinates with obstacles:
+[24] Row0: all '#'
+Row1: col0 '#', col1 '_', col2 '_', col3 '_', col4 '#', col5 '_', col6 '_', col7 '_', col8 '#'
+Row2: col0 '#', col1 '_', col2 '_', col3 '_', col4 '_', col5 '_', col6 '_', col7 'G', col8 '#'
+Row3: col0 '#', col1 '_', col2 '_', col3 '_', col4 '#', col5 '_', col6 '_', col7 '_', col8 '#'
+Row4: col0 '#', col1 '#', col2 '#', col3 'D', col4 '#', col5 '#', col6 '#', col7 '#', col8 '#'
+Row5: col0 '#', col1 '_', col2 '_', col3 '_', col4 '#', col5 '_', col6 '_', col7 '_', col8 '#'
+Row6: col0 '#', col1 '_', col2 '_', col3 '_', col4 '_', col5 '_', col6 '_', col7 '_', col8 '#'
+Row7: col0 '#', col1 '_', col2 '_', col3 '_', col4 '#', col5 'A', col6 '_', col7 '_', col8 '#'
+Row8: all '#'
+[25] Goal at (2,7).
+[26] Door at (4,3).
+[27] We must be adjacent to door to open.
+[28] So we need to get to one of its neighbors: (3,3), (5,3), (4,2), (4,4).","But (4,4) is '#', (4,2) '#', (5,3) '_' available, (3,3) '_' available.",,,
+cal_03556491975a0791,keepdoor_33__step_003__sentence_176,keepdoor_33,3,176,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_003,0.975,general_random,,,,route_deliberation,high,other,"[168] -> goal. Steps: 1 (right) + 1 (down) + ...
+[169] 7 = 9? Wait let's compute: right (1), down (2) to key; then to door (3), then 7 steps to goal (10 total).
+[170] So 10.
+
+If first move down: (2,6) -> (3,6) (1) -> (3,7) (2) -> (4,7) (3) -> 7 steps to goal (10 total).
+[171] So both same.
+[172] So we can choose either.
+[173] But maybe one path leads to fewer steps because after picking key we might open door adjacent; but both adjacent.
+[174] So no difference.
+[175] Thus choose either.",Which direction is more natural?,,,
+cal_05a5c106481dd30e,keepdoor_36__step_008__sentence_079,keepdoor_36,8,79,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_36_step_008,0.2616666666666666,general_random,,,,state_readout,high,route_deliberation,"[71] From (1,2) we can go right to (1,3) '_' -> (1,4) '#' blocked.
+[72] So cannot go further right.
+[73] Up from (1,3) to (0,3) '#' no.
+[74] We need to reach goal at (6,5).
+[75] Maybe we can go to (6,5) via path: (7,1) up to (6,1) -> up to (5,1) -> right to (5,2) -> up to (4,2) -> up to (3,2) -> up to (2,2) -> up to (1,2) -> right to (1,3) -> down to (2,3) -> down to (3,3) -> down to (4,3) blocked '#', so can't.
+[76] Maybe go to (3,4) door?
+[77] But door at (3,4).
+[78] From (3,3) we could go right to (3,4) D.",But door is locked?,,,
+cal_7f5cc12c07ff4bbf,keepdoor_26__step_008__sentence_136,keepdoor_26,8,136,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_26_step_008,0.5865800865800865,matched_reference_stress,new_inference,route_deliberation,,state_readout,high,route_deliberation,"[128] (2,4) is '#'.
+[129] So we can be adjacent from (1,3) or (1,5).
+[130] So we need to go to (1,3) or (1,5).
+[131] We can go to (1,3) then open door by being adjacent?
+[132] Wait we need to be adjacent to door.
+[133] If we are at (1,3), door at (1,4) is to the right.
+[134] Since we have key, door will automatically open when adjacent.
+[135] So we can move from (1,3) to (1,4) after door opens?","But door cell becomes empty after opening, so we can step onto it.",,,
+cal_05c8bd8a502f9d51,keepdoor_11__step_005__sentence_147,keepdoor_11,5,147,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_005,0.4334319526627219,general_random,,,,state_readout,high,route_deliberation,"[139] That's 8 steps to (5,1) (since 7 to (3,1), then down to (4,1) open, then down to (5,1)).
+[140] But we can also go from (3,1) to (5,1) directly?
+[141] There's no direct adjacency; need to go through (4,1).
+[142] So same 8 steps.
+[143] But maybe we can go to (5,1) via a different path: from (3,6) go down to (4,6)?
+[144] but row4 col6 wall.
+[145] So no.
+
+Alternative: go to (5,2) etc. But still need to reach column 1 eventually.
+[146] Let's compute Manhattan distance from start to goal: 8 steps.",Our path found 10 steps.,,,
+cal_b8c435d4cb37ce72,keepdoor_34__step_006__sentence_097,keepdoor_34,6,97,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_34_step_006,0.516042780748663,matched_reference_stress,new_inference,route_deliberation,,state_readout,high,route_deliberation,"[89] But down from (6,7) to (7,7) is open?
+[90] Row7 col7 is K.
+[91] So yes. So we can get key quickly.
+[92] Thus we need to plan: pick up key then go to door to open it, then proceed to goal.
+[93] Goal path after door open: from door at (3,4) open, we can go through to goal.
+[94] Let's find path from door to goal.
+[95] Door at (3,4).
+[96] After open, we can move onto that cell?","Actually door removed, so cell becomes open space.",,,
+cal_04b0a3a4f9280355,keepdoor_92__step_004__sentence_012,keepdoor_92,4,12,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_92_step_004,0.0621621621621621,general_random,,,,state_readout,high,route_deliberation,"[4] Columns 0-8.
+[5] So A at row 7, column 5?
+[6] Let's index: row 7: column 0 '#', 1 '_', 2 '_', 3 '_', 4 '#', 5 'A', 6 '_', 7 '_', 8 '#'.
+[7] So agent at (7,5).
+[8] Goal at row 2, column 7?
+[9] Let's see row 2: ""# _ _ _ _ _ _ G #"".
+[10] So G at (2,7).
+[11] There's a door D at row 4, column 3.",The agent is carrying key (True).,,,
+cal_0254ba6d2cf3c424,keepdoor_16__step_010__sentence_116,keepdoor_16,10,116,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_010,0.9390243902439024,general_random,,,,route_deliberation,high,state_readout,"[108] So total 9.
+[109] That's shorter.
+[110] So we can go downwards path.
+[111] But we must ensure there are no walls in columns 1 and 7 along those rows: Let's check.
+[112] Row5 col1 open, row6 col1 open, row7 col1 open.
+[113] Row5 col7 open, row6 col7 open, row7 col7 G.
+[114] So yes.
+
+Thus minimal steps 9.
+[115] We need to decide next move.","Starting at (4,1).",,,
+cal_02ec53f67e26cd25,keepdoor_33__step_003__sentence_085,keepdoor_33,3,85,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_003,0.4694444444444444,general_random,,,,route_deliberation,high,state_readout,"[77] But maybe we can go from (3,7) left to (3,6) -> left to (3,5) -> left to (3,4) '#' can't.
+[78] So cannot get to column4 left side.
+[79] Thus agent cannot reach goal at (5,3) without passing through door at (4,7) or some other route?
+[80] Let's examine if there's a path from agent to goal through bottom region row6 and row7 circumventing door.
+[81] But we need to reach column3 region.
+[82] The door at (4,7) maybe blocks corridor but maybe we can go around via row6?
+[83] Let's check open cells near door.
+[84] Row4: ""# # # _ # # # D #"" so only open cells at col3 '_' and col7 'D'.","Row5: ""# _ _ G # _ _ _ #"" open cells at col1 '_', col2 '_', col3 'G', col5 '_', col6 '_', col7 '_'.",,,
+cal_09193c15ca0f3cdf,keepdoor_20__step_008__sentence_027,keepdoor_20,8,27,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_008,0.2086614173228346,general_random,,,,state_readout,high,route_deliberation,"[19] Row1: ""# _ _ _ # _ _ _ #"" => columns 0#,1_,2_,3_,4#,5_,6_,7_,8#.
+[20] Row2 same.
+[21] Row3: ""# _ _ _ _ _ _ _ #"" => columns 0#,1_,2_,3_,4_,5_,6_,7_,8#.
+[22] So open spaces around.
+[23] Goal at (5,1).
+[24] Door at (4,1).
+[25] Agent at (6,7).
+[26] Need to go to goal.",Path: need to go up to row5 col7 then left to col1.,,,
+cal_09103f8ac368be4d,keepdoor_20__step_008__sentence_065,keepdoor_20,8,65,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_008,0.5078740157480315,general_random,,,,state_readout,high,route_deliberation,"[57] At (5,5) left to (5,4)#.
+[58] So can't go left further on row5.
+[59] Could go up from (5,5) to (4,5)#.
+[60] Down from (5,5) to (6,5) open.
+[61] From (6,5) left to (6,4)#.
+[62] So can't get to left side from row5.
+[63] Thus need to go up to row3 or 2 and then left then down.
+[64] Let's find path: Starting at (6,7).","Up to (5,7).",,,
+cal_f68827e1114d57fd,keepdoor_33__step_001__sentence_069,keepdoor_33,1,69,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_001,0.2614503816793893,general_random,,,cal_06aeb0c7b66fa431,route_deliberation,high,state_readout,"[61] So maybe go from (2,6) down to (3,6) '_' open, left to (3,5) '_' open, down to (4,5) '#' blocked, left to (3,4) '#', can't.
+[62] So maybe go from (3,6) down to (4,6) '#', blocked.
+[63] So that path blocked.
+[64] Alternatively from (2,6) go right to (2,7) '_' open, down to (3,7) K, but that leads to key.
+[65] But maybe we can go to key first.
+[66] After key, we may open door at (4,7) to pass through maybe.
+[67] But we might find path to goal without door?
+[68] Let's examine open cells near goal.","Goal at (5,3).",,,
+cal_680e4477121580ad,keepdoor_75__step_002__sentence_013,keepdoor_75,2,13,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_75_step_002,0.2016129032258064,matched_reference_stress,procedural_continuation,other,,route_deliberation,high,other,"[5] Row0: 0 # # # # # # # # # 
+Row1: 1 # _ _ _ _ _ _ _ # 
+Row2: 2 # _ _ _ # _ _ _ # 
+Row3: 3 # _ _ _ # _ _ _ # 
+Row4: 4 # # _ # # # # # # 
+Row5: 5 # _ _ _ # _ _ _ # 
+Row6: 6 # _ _ _ D _ _ _ # 
+Row7: 7 # _ _ G # A _ _ # 
+Row8: 8 # # # # # # # # #
+[6] Agent at (7,5) (row7 col5).
+[7] Goal at (7,3).
+[8] Door at (6,4).
+[9] Key? Not specified but agent status says carrying key True.
+[10] So key already collected earlier.
+[11] So door can be opened by being adjacent to it.
+[12] We need to reach goal (7,3).",Let's analyze path.,,,
+cal_046f78ca715c5011,keepdoor_10__step_001__sentence_017,keepdoor_10,1,17,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_001,0.0452054794520547,general_random,,,,route_deliberation,high,state_readout,"[9] Goal at row2 col6?
+[10] Wait G at row2 col6?
+[11] Let's check: row2: ""# _ _ _ # _ G _ #"" -> columns: 0#,1_,2_,3_,4#,5_,6G,7_,8#.
+[12] So G at (2,6).
+[13] Yes.
+
+Goal (2,6).
+[14] Agent at (5,2).
+[15] Key at (5,1).
+[16] Door at (4,2).",So door is north of agent?,,,
+cal_0568687b9770e089,keepdoor_0__step_001__sentence_221,keepdoor_0,1,221,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.9111570247933884,general_random,,,,state_readout,high,route_deliberation,"[213] Good.
+
+From key (2,6) to (3,5): need to go down to (3,6) (1 step), left to (3,5) (1 step).
+[214] So 2 steps.
+[215] From (3,5) to (4,5): 1 step down.
+[216] Good.
+
+From (4,5) to (5,5): 1 step down.
+[217] From (5,5) to (5,6): 1 step right.
+[218] From (5,6) to (5,7): 1 step right.
+[219] Total steps: 1+2+1+1+1+1 = 7 steps.
+[220] But we can maybe do better by not returning to (3,6) after key?","Actually we had to go from (2,6) to (3,5).",,,
+cal_0733b9b98af166c6,keepdoor_26__step_008__sentence_039,keepdoor_26,8,39,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_26_step_008,0.1666666666666666,general_random,,,,state_readout,high,route_deliberation,"[31] Row6 col3 is '_' yes.
+[32] Goal is at (7,6).
+[33] Let's map open cells near goal: row7 col6 is G.
+[34] Adjacent cells: (6,6), (7,5), (7,7), (8,6).
+[35] Row6 col6 open?
+[36] row6 col6 is '_' yes.
+[37] Row7 col5 is '_' yes.
+[38] Row7 col7 is '_' yes.","Row8 col6 is '#', not open.",,,
+cal_01818bb89e9770e1,keepdoor_31__step_005__sentence_046,keepdoor_31,5,46,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_31_step_005,0.337037037037037,general_random,,,,state_readout,high,route_deliberation,"[38] Row6 col1 is '_' open, row6 col3 is '_' open.
+[39] Row5 col2 is '_' open, row7 col2 is '_' open.
+[40] So goal reachable.
+[41] But door D at (6,4) is between goal and agent?
+[42] Let's map: Agent at (7,7).
+[43] Path to goal: we need to navigate around walls.
+[44] We can go up to row6, then left to goal.
+[45] But need to pass door at (6,4) maybe?","Let's see: Path: from (7,7) up to (6,7), left to (6,6), left to (6,5), left to (6,4) door, left to (6,3), left to (6,2) goal.",,,
+cal_8bb6e07e4be68c1a,keepdoor_0__step_001__sentence_098,keepdoor_0,1,98,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.402892561983471,matched_reference_stress,procedural_continuation,other,,route_deliberation,high,other,"[90] So we must go around the door via row4 col1 open.
+[91] But we need to go from (3,6) to (4,1).
+[92] But from (3,6) we cannot go directly left because (3,5) then (3,4) blocked.
+[93] We could go up or down?
+[94] Up from (3,6) to (2,6) which is key.
+[95] That might be beneficial to pick key.
+[96] But key is at (2,6).
+[97] But we don't need key if we can go around.",Let's analyze possible path to goal without door.,,,
+cal_078a59911de24afc,keepdoor_10__step_002__sentence_026,keepdoor_10,2,26,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_002,0.1545454545454545,general_random,,,,route_deliberation,high,state_readout,"[18] But we can go around?
+[19] Let's check obstacles: Walls (#) at boundaries and some internal walls: at (2,4) is '#', at (3,4) '#', at (4,1) '#', (4,3) '#', (4,4) '#', (4,5) '#', (5,4) '#', (6,4) '#', (7,4) '#', etc. So there's a column of walls at column 4 from row2 to row7 inclusive.
+[20] That blocks crossing that column.
+[21] So to get from left side to right side (col 5-6-7-8), we need to pass through door at (4,2) or go around?
+[22] Let's check column 4 is blocked, but door at (4,2) is in column 2.
+[23] So to reach goal at column 6, we need to cross the wall column 4 somewhere.
+[24] The only opening is at door D at (4,2).
+[25] Actually door at (4,2) is in column 2, not column 4.",Wait we need to cross from left side (col 1-2-3) to right side (col 5-6-7).,,,
+cal_0838b79a267fcc15,keepdoor_92__step_004__sentence_028,keepdoor_92,4,28,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_92_step_004,0.1486486486486486,general_random,,,,state_readout,high,route_deliberation,"[20] The door at (4,3).
+[21] The agent must be adjacent to open it.
+[22] After that, path to goal.
+[23] Let's plot grid coordinates with obstacles:
+[24] Row0: all '#'
+Row1: col0 '#', col1 '_', col2 '_', col3 '_', col4 '#', col5 '_', col6 '_', col7 '_', col8 '#'
+Row2: col0 '#', col1 '_', col2 '_', col3 '_', col4 '_', col5 '_', col6 '_', col7 'G', col8 '#'
+Row3: col0 '#', col1 '_', col2 '_', col3 '_', col4 '#', col5 '_', col6 '_', col7 '_', col8 '#'
+Row4: col0 '#', col1 '#', col2 '#', col3 'D', col4 '#', col5 '#', col6 '#', col7 '#', col8 '#'
+Row5: col0 '#', col1 '_', col2 '_', col3 '_', col4 '#', col5 '_', col6 '_', col7 '_', col8 '#'
+Row6: col0 '#', col1 '_', col2 '_', col3 '_', col4 '_', col5 '_', col6 '_', col7 '_', col8 '#'
+Row7: col0 '#', col1 '_', col2 '_', col3 '_', col4 '#', col5 'A', col6 '_', col7 '_', col8 '#'
+Row8: all '#'
+[25] Goal at (2,7).
+[26] Door at (4,3).
+[27] We must be adjacent to door to open.","So we need to get to one of its neighbors: (3,3), (5,3), (4,2), (4,4).",,,
+cal_e2d1bb71aa9f1877,keepdoor_59__step_002__sentence_008,keepdoor_59,2,8,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_59_step_002,0.0572519083969465,matched_reference_stress,procedural_continuation,other,,state_readout,high,other,"[1] We need to plan minimal steps from A at (2,2) to G at (7,3).
+[2] There is a door D at (4,2).
+[3] Key K at (3,2).
+[4] Walls at various.
+[5] Need to pick key before door.
+[6] Let's map grid coordinates: rows 0-8, cols 0-8.
+[7] Walls (#) at many.",Let's chart open spaces:,,,
+cal_4a3c7502cc6ee080,keepdoor_10__step_001__sentence_003,keepdoor_10,1,3,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_001,0.0068493150684931,matched_reference_stress,route_planning,route_deliberation,,state_readout,high,route_deliberation,"[1] We need to compute next move from current position A at (5,2).
+[2] Wait coordinates: grid rows 0-8, columns 0-8.",Provided grid:,,,
+cal_02311a77db77b405,keepdoor_75__step_002__sentence_038,keepdoor_75,2,38,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_75_step_002,0.6048387096774194,general_random,,,,other,high,route_deliberation,"[30] We are at (6,5).
+[31] Adjacent to door at (6,4) to the left.
+[32] So door will open automatically.
+[33] So we can then go left to door cell?
+[34] Actually door removed when adjacent?
+[35] The rule: ""A locked door (D) is automatically opened and removed from the grid when the agent is adjacent to the door (in front of it) and has already picked up the key.
+[36] The agent does not need to be on the same cell as the door to open it."" So when agent is adjacent to door, door removed.
+[37] So after moving to (6,5), door at (6,4) will be removed.","Then we can move left into (6,4) as open space.",,,
+cal_00e8a97b82f8b1cf,keepdoor_57__step_002__sentence_170,keepdoor_57,2,170,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_002,0.8517587939698492,general_random,,,,state_readout,high,route_deliberation,"[162] We need to go from (7,6) to (1,5).
+[163] Let's consider path: go up along column6?
+[164] Column6 at row7 K, row6 col6 _, row5 col6 _, row4 col6 # (wall), row3 col6 _, row2 col6 _, row1 col6 _.
+[165] So there's a wall at (4,6).
+[166] So cannot go straight up column6 to row1 because of wall at row4 col6.
+[167] So we need to circumvent.
+[168] Let's consider going up along column5?
+[169] Column5: row7 col5 _, row6 col5 _, row5 col5 _, row4 col5 #, row3 col5 _, row2 col5 _, row1 col5 _.","There's wall at (4,5).",,,
+cal_e6001081297690b1,keepdoor_80__step_004__sentence_078,keepdoor_80,4,78,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_80_step_004,0.5916030534351145,matched_reference_stress,state_reconstruction,state_readout,,route_deliberation,high,state_readout,"[70] Maybe go up to row3 and then right to col7.
+[71] Let's see: from (6,1) go up to (5,1) '_' -> (4,1) '#', blocked.
+[72] So cannot go up beyond row5.
+[73] So need to go up to row5, then left?
+[74] Actually we can go right to col7 on row5?
+[75] Row5 col7 '_' yes.
+[76] But door at (5,4) blocks.
+[77] Path from (6,1) to (5,7) would require passing through door?",Let's see row5: positions: col1 '_' col2 '_' col3 '_' col4 'D' col5 '_' col6 '_' col7 '_' .,,,
+cal_01c8b421cbd4a4bc,keepdoor_11__step_004__sentence_022,keepdoor_11,4,22,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_004,0.1535714285714285,general_random,,,,other,high,route_deliberation,"[14] Goal G at row6 col1?
+[15] Row6: ""# G _ _ _ _ _ _ #"".
+[16] So G at (6,1).
+[17] Walls (#).
+[18] Let's map open spaces: all '_' except walls.
+[19] We must get key first to open door.
+[20] Path from A to K: A at (2,6).
+[21] K at (3,6).",Straight down one step?,,,
+cal_086c6f770d1d60ed,keepdoor_37__step_003__sentence_120,keepdoor_37,3,120,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_37_step_003,0.5241228070175439,general_random,,,,other,high,route_deliberation,"[112] So we must go to (7,3).
+[113] Then up to (6,3) free.
+[114] Then up to (5,3) free.
+[115] Then up to (4,3) is wall.
+[116] So cannot go up from row5 col3 to row4.
+[117] So we need to go to col4?
+[118] But row5 col4 is wall.
+[119] So need to go to col6.",Let's think.,,,
+cal_06aeb0c7b66fa431,keepdoor_33__step_001__sentence_069,keepdoor_33,1,69,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_001,0.2614503816793893,general_random,,,,route_deliberation,high,state_readout,"[61] So maybe go from (2,6) down to (3,6) '_' open, left to (3,5) '_' open, down to (4,5) '#' blocked, left to (3,4) '#', can't.
+[62] So maybe go from (3,6) down to (4,6) '#', blocked.
+[63] So that path blocked.
+[64] Alternatively from (2,6) go right to (2,7) '_' open, down to (3,7) K, but that leads to key.
+[65] But maybe we can go to key first.
+[66] After key, we may open door at (4,7) to pass through maybe.
+[67] But we might find path to goal without door?
+[68] Let's examine open cells near goal.","Goal at (5,3).",,,
+cal_0032ac8aa717562f,keepdoor_10__step_001__sentence_325,keepdoor_10,1,325,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_001,0.8890410958904109,general_random,,,,state_readout,high,route_deliberation,"[317] Starting at (4,2) we can move up to (3,2) or down to (5,2).
+[318] From (3,2), we can move up to (2,2).
+[319] From (2,2) we can move right to (2,3).
+[320] From (2,3) we can move up to (1,3).
+[321] From (1,3) we can move left to (1,2) etc. But no path to column5 because walls at column4.
+[322] So no.
+
+From (5,2) we can move right to (5,3).
+[323] From there, up to (4,3)#, right to (5,4)#, down to (6,3).
+[324] From (6,3) up to (5,3), down to (7,3).","From (7,3) up to (6,3).",,,
+cal_0a83c86956a7b8e9,keepdoor_31__step_005__sentence_008,keepdoor_31,5,8,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_31_step_005,0.0555555555555555,matched_reference_stress,restatement,summary_or_restatement,,state_readout,high,route_deliberation,"[1] We have a grid 9x9.
+[2] Coordinates: row 0-8, col 0-8.
+[3] Agent at (7,7).
+[4] Goal G at (6,2).
+[5] Door D at (6,4).
+[6] Key K? Not mentioned?
+[7] Agent carrying key True.",So key already picked.,,,
+cal_09a43aa52fc10144,keepdoor_80__step_004__sentence_086,keepdoor_80,4,86,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_80_step_004,0.6526717557251909,general_random,,,,state_readout,high,route_deliberation,"[78] Let's see row5: positions: col1 '_' col2 '_' col3 '_' col4 'D' col5 '_' col6 '_' col7 '_' .
+[79] So to go from col1 to col7, must cross col4.
+[80] So door blocks.
+[81] So cannot reach goal without opening door.
+[82] Thus must open door.
+[83] To open door, need to be adjacent at (5,3) or (5,5).
+[84] Let's plan shortest path from agent to either adjacent cell.
+[85] Agent at (6,1).",Let's compute distances.,,,
+cal_03fd8d2eb5773dc3,keepdoor_13__step_001__sentence_011,keepdoor_13,1,11,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_13_step_001,0.2692307692307692,general_random,,,,route_deliberation,high,state_readout,"[3] Walls around edges.
+[4] Agent A at (5,2).
+[5] Carrying key: True.
+[6] Goal G at (3,1).
+[7] Door D at (4,1).
+[8] So door is between agent and goal?
+[9] Let's see path: From agent at (5,2) to goal at (3,1).
+[10] Path likely up-left.","But door at (4,1) is just above goal?",,,
+cal_06240bc7b3bf29bb,keepdoor_10__step_002__sentence_081,keepdoor_10,2,81,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_002,0.4878787878787878,general_random,,,,state_readout,high,route_deliberation,"[73] But right side cell (4,3) is '#', so cannot go right.
+[74] So door cannot help.
+[75] So maybe the map is such that the door is at (4,2) but the goal is to the left side?
+[76] Wait goal at (2,6) which is right side.
+[77] So maybe there is misinterpretation: The door cell D may be considered a door that blocks passage between left and right sides; but if you open it, maybe you can pass through it to the right side?
+[78] But the cell right of door is wall, but maybe door is at column2 and there is open space at column3?
+[79] But column3 at row4 is '#', as per row4 ""# # D # # # _ # #"".
+[80] Actually row4: positions: 0 '#',1 '#',2 'D',3 '#',4 '#',5 '#',6 '_',7 '#',8 '#'.","So column3 is '#', column4 '#', column5 '#', column6 '_' open.",,,

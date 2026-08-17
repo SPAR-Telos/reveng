@@ -1,0 +1,9 @@
+{
+  "candidate_rows_path": "/root/reveng/data/behavioral_probes/reasoning_belief_action_cohorts/matched_46_candidates.csv",
+  "candidate_rows_sha256": "e1b810b23bd819f0e476a1fb7b731585d097c21641809ce90b6963d327cbf84c",
+  "drift_run_dir": "/root/reveng/data/behavioral_probes/step_reasoning_drift_matched_46_behavioral",
+  "model_name": "together_ai/openai/gpt-oss-20b",
+  "prefix_action_rows_sha256": "89fd5cec38a032af2a50d47e797e8b845d685a01f6f693f75be192ab4a56f42f",
+  "prompt_preset": "cardinal_action_explicit",
+  "question_panel": "core_six_coordinates_and_recommended_action_effects_v1"
+}

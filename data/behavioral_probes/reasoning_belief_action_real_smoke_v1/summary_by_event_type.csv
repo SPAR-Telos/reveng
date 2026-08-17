@@ -1,0 +1,2 @@
+event_type,failure_category,n_events,n_nearby_belief_shifts,n_belief_shifts_leading,n_belief_shifts_coinciding,n_belief_shifts_lagging,n_persistent_belief_error_onsets
+suboptimal_to_optimal_recovery,none,1,2,0,2,0,0

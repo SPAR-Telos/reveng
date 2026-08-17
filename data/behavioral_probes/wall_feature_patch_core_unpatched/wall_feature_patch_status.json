@@ -1,0 +1,16 @@
+{
+  "status": "pending_patch_results",
+  "n_candidate_rows": 185,
+  "n_selected_states": 4,
+  "n_dropped_no_donor_states": 4,
+  "n_template_rows": 16,
+  "n_patch_result_rows": 0,
+  "patch_results_path": null,
+  "run_unpatched_queries": true,
+  "dropped_no_donor_example_ids": [
+    "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_000",
+    "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_34_step_006",
+    "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_002",
+    "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_001"
+  ]
+}

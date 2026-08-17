@@ -1,0 +1,9 @@
+reasoning_split,question_id,n_rows,blackbox_greedy_accuracy,whitebox_accuracy,whitebox_blackbox_agreement,both_correct_count
+post,wall_down,6,1.0,0.8333333333333334,0.8333333333333334,5
+post,wall_left,6,1.0,0.5,0.5,3
+post,wall_right,6,1.0,1.0,1.0,6
+post,wall_up,6,1.0,0.8333333333333334,0.8333333333333334,5
+pre,wall_down,6,1.0,0.6666666666666666,0.6666666666666666,4
+pre,wall_left,6,1.0,0.5,0.5,3
+pre,wall_right,6,1.0,1.0,1.0,6
+pre,wall_up,6,1.0,1.0,1.0,6

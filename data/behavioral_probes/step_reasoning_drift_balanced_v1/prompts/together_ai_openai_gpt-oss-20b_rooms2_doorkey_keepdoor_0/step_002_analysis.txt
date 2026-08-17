@@ -1,0 +1,42 @@
+We need to plan minimal steps to goal from current position, with key already carried. The grid is 9x9. Let's map coordinates. Rows 0-8, columns 0-8.
+
+Grid:
+
+Row0: all #.
+
+Row1: col0#, col1_, col2_, col3_, col4#, col5_, col6_, col7_, col8#.
+
+Row2: col0#, col1_, col2_, col3_, col4#, col5_, col6_A, col7_, col8#.
+
+Row3: # _ _ _ # _ _ _ #.
+
+Row4: # _ # # # D # # #.
+
+Row5: # _ _ _ _ _ _ G #.
+
+Row6: # _ _ _ # _ _ _ #.
+
+Row7: # _ _ _ # _ _ _ #.
+
+Row8: all #.
+
+Agent at (2,6). Goal at (5,7). Key status: carrying key True, so door at (4,5) is D, but door opens when adjacent. The door is at (4,5). The agent has key, so when adjacent to door, door will automatically open. But we need to get to goal. Let's find shortest path. The door might block path; check if door is between agent and goal. Let's see coordinates: agent at (2,6). Goal at (5,7). Path maybe goes down and right. Let's see if door blocks. Door at (4,5). That is somewhere left of goal. But maybe the direct path from agent to goal goes around. Let's map open cells.
+
+We need to avoid walls (#). Let's list open cells:
+
+Row1: (1,1),(1,2),(1,3),(1,5),(1,6),(1,7)
+Row2: (2,1),(2,2),(2,3),(2,5),(2,6),(2,7)
+Row3: (3,1),(3,2),(3,3),(3,5),(3,6),(3,7)
+Row4: (4,1),(4,4),(4,6),(4,7),(4,8?) Wait row4: pattern "# _ # # # D # # #". So col0#, col1_, col2#, col3#, col4#, col5_D, col6_, col7_, col8#. So open: (4,1),(4,6),(4,7). D at (4,5).
+Row5: "# _ _ _ _ _ _ G #": open: (5,1),(5,2),(5,3),(5,4),(5,5),(5,6),(5,7).
+Row6: "# _ _ _ # _ _ _ #": open: (6,1),(6,2),(6,3),(6,5),(6,6),(6,7).
+Row7: "# _ _ _ # _ _ _ #": open: (7,1),(7,2),(7,3),(7,5),(7,6),(7,7).
+Row8 all walls.
+
+Goal at (5,7). Agent at (2,6). Need shortest path. Let's attempt BFS mentally.
+
+We can treat door as open when adjacent. But we can also go around it. Let's see if there's a direct path: from (2,6) down to (3,6) -> (4,6) -> (5,6) -> (5,7). That is 4 steps: down, down, down, right. But check if any obstacles: (3,6) is open, (4,6) open, (5,6) open, (5,7) goal. So path length 4. Is there any shorter? Maybe down, right, down, down? Let's see: from (2,6) right to (2,7) -> (3,7) -> (4,7) -> (5,7). That's also 4 steps: right, down, down, down? Wait (2,7) open, (3,7) open, (4,7) open, (5,7) goal. That's 4 moves. Could we do 3? From (2,6) down to (3,6) -> (4,6) -> (5,7) but need to go to (5,7) from (4,6) maybe diagonal not allowed. So need at least 4 steps. So we can choose either path. Let's pick down, down, down, right? Actually from (2,6) down to (3,6) (1), down to (4,6) (2), down to (5,6) (3), right to (5,7) (4). That is 4. Or down, down, right, down? Let's check: (2,6) down to (3,6), down to (4,6), right to (4,7), down to (5,7). Also 4. Either is fine. We'll pick first.
+
+But must consider door at (4,5). That is not in path. So no need to open door. So answer: action DOWN.
+
+We need to output JSON with action: "DOWN".

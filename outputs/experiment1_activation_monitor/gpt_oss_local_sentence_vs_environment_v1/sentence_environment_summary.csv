@@ -1,0 +1,3 @@
+analysis_unit,trajectory_states,source_trajectories,measurement_positions,mean_action_confidence,mean_action_entropy_bits,mean_state_belief_entropy_bits,mean_primary_belief_error_rate,recommendation_changes,optimal_to_suboptimal,suboptimal_to_optimal,commitment_onsets
+Sentence prefixes,46,31,7084,0.8637846809559997,0.4891277851416391,0.4221286672826038,0.159867306606437,682,161,182,46
+Environment steps,1276,95,1276,0.9999837806699418,0.00023758978539648783,0.2349182608477184,0.18834900731452453,511,20,22,0

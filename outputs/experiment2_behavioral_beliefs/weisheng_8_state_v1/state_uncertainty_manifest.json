@@ -1,0 +1,19 @@
+{
+  "model_name": "together_ai/openai/gpt-oss-20b",
+  "n_event_rows": 21,
+  "n_position_rows": 250,
+  "n_regression_coefficients": 16,
+  "n_uncertainty_rows": 1500,
+  "primary_question_ids": [
+    "wall_left",
+    "wall_right",
+    "wall_up",
+    "wall_down",
+    "has_key",
+    "door_open"
+  ],
+  "seed": 0,
+  "temperature": 0.0,
+  "top_logprobs": 20,
+  "uncertainty_definition": "Shannon entropy in bits over logprob-normalized yes/no/unknown probabilities, excluding invalid probability mass."
+}

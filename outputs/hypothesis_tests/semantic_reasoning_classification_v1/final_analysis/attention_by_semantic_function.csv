@@ -1,0 +1,5 @@
+broad_label,pairs,trajectories,mean_attention_difference_in_differences,trajectory_mean_standard_error
+state_readout,9,4,-4.2306550312793556e-05,0.00043007894364488155
+route_deliberation,44,25,0.000725371680098082,0.00023139591013856203
+summary_or_restatement,14,10,0.0022420598883659574,0.00044744445105451684
+other,0,0,,

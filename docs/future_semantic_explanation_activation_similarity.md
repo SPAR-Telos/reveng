@@ -1,5 +1,9 @@
 # Future Test: Semantic Explanation for Activation Similarity
 
+Implementation status: annotation preparation is complete under
+`outputs/hypothesis_tests/semantic_reasoning_classification_v1/`. Human
+calibration and independent judge labels are pending.
+
 ## Question
 
 Higher similarity to preceding sentence activations modestly distinguishes

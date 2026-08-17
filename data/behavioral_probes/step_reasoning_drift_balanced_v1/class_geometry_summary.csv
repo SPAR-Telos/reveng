@@ -1,0 +1,37 @@
+layer,representation_kind,outcome_class,metric,n_states,mean,standard_deviation,minimum,maximum
+8,mean_pool,sustained optimal-to-suboptimal recommendation transition,aligned_change,5,0.040758418289339474,0.004884215760399444,0.03573667447050206,0.04892722185606289
+8,mean_pool,sustained optimal-to-suboptimal recommendation transition,adjacent_step_cosine,5,0.9291191443969806,0.01482153467036549,0.908031087187928,0.9497082467372674
+8,mean_pool,sustained optimal-to-suboptimal recommendation transition,optimality_anchor_cosine,5,0.9439514264199297,0.014249063727842393,0.9188434954924867,0.952652643860682
+8,mean_pool,sustained optimal-to-suboptimal recommendation transition,update_norm,5,203.2861096468019,36.28160538520989,149.18096312172085,251.33759345496543
+8,mean_pool,mixed/transient suboptimal recommendations,aligned_change,10,0.04143623825667089,0.010840613717205998,0.026691480318035334,0.06112722381633933
+8,mean_pool,mixed/transient suboptimal recommendations,adjacent_step_cosine,10,0.9272695179038106,0.016195215000771677,0.893494570858244,0.9430490792366222
+8,mean_pool,mixed/transient suboptimal recommendations,optimality_anchor_cosine,10,0.9465281412245123,0.01534742891416955,0.9073824602332481,0.9593742651972339
+8,mean_pool,mixed/transient suboptimal recommendations,update_norm,10,207.23360237907656,37.467378108675206,170.0911676816763,287.8016501120133
+8,mean_pool,all valid prefix-elicited actions planner-optimal,aligned_change,9,0.04154855178287365,0.003688982043963285,0.03663463631635358,0.04658087197751363
+8,mean_pool,all valid prefix-elicited actions planner-optimal,adjacent_step_cosine,9,0.9248205586276538,0.015201851563225701,0.897778669517716,0.9394332962282788
+8,mean_pool,all valid prefix-elicited actions planner-optimal,optimality_anchor_cosine,9,0.9479144845112991,0.01563163873886153,0.9159366064266655,0.9582764450180871
+8,mean_pool,all valid prefix-elicited actions planner-optimal,update_norm,9,212.7951085573263,35.81061700448059,175.5592907602797,274.6677227347176
+15,mean_pool,sustained optimal-to-suboptimal recommendation transition,aligned_change,5,0.04349119565404714,0.004456542124778777,0.03840115250985312,0.04927978903806052
+15,mean_pool,sustained optimal-to-suboptimal recommendation transition,adjacent_step_cosine,5,0.9499032257310545,0.012584078905664979,0.9328703402790137,0.9676181587019237
+15,mean_pool,sustained optimal-to-suboptimal recommendation transition,optimality_anchor_cosine,5,0.9601399357194825,0.009900452312459668,0.9429861620403706,0.9683637756417124
+15,mean_pool,sustained optimal-to-suboptimal recommendation transition,update_norm,5,791.6510036166995,141.72585636694404,583.330625463684,977.626679042219
+15,mean_pool,mixed/transient suboptimal recommendations,aligned_change,10,0.046506042486994595,0.012293881411220418,0.033983088220613425,0.0735358965344075
+15,mean_pool,mixed/transient suboptimal recommendations,adjacent_step_cosine,10,0.9501961725493195,0.010524134245712588,0.9293582829713998,0.961462349022494
+15,mean_pool,mixed/transient suboptimal recommendations,optimality_anchor_cosine,10,0.963127107435354,0.009766455234799657,0.9381456434894558,0.9709503726202819
+15,mean_pool,mixed/transient suboptimal recommendations,update_norm,10,797.3874739040997,124.25967658827334,660.9984093296204,1059.4745929256092
+15,mean_pool,all valid prefix-elicited actions planner-optimal,aligned_change,9,0.04702779206019053,0.005521297225340008,0.039082781625589307,0.05630076717201608
+15,mean_pool,all valid prefix-elicited actions planner-optimal,adjacent_step_cosine,9,0.9490537704220559,0.011854980761849111,0.9293079753222804,0.9633488040541063
+15,mean_pool,all valid prefix-elicited actions planner-optimal,optimality_anchor_cosine,9,0.9646929621514926,0.010888454932674057,0.9412894379509621,0.9711427493883927
+15,mean_pool,all valid prefix-elicited actions planner-optimal,update_norm,9,808.617127997683,131.82806704300324,644.6222268479545,1026.387182938637
+23,mean_pool,sustained optimal-to-suboptimal recommendation transition,aligned_change,5,0.04177169554345555,0.0061483557492312225,0.03515028112558728,0.051564336819436306
+23,mean_pool,sustained optimal-to-suboptimal recommendation transition,adjacent_step_cosine,5,0.9746844797157147,0.007380590981030382,0.9650917924732191,0.9848431505413022
+23,mean_pool,sustained optimal-to-suboptimal recommendation transition,optimality_anchor_cosine,5,0.9811292010170117,0.006363719095630255,0.9701627561545235,0.9867788376690951
+23,mean_pool,sustained optimal-to-suboptimal recommendation transition,update_norm,5,5580.571201507917,1072.3264507301226,3928.2286170045086,6826.104348202075
+23,mean_pool,mixed/transient suboptimal recommendations,aligned_change,10,0.04374615915377612,0.012437633980160005,0.0315625419658257,0.07124970406675538
+23,mean_pool,mixed/transient suboptimal recommendations,adjacent_step_cosine,10,0.9716048911410872,0.009354762168270525,0.9539669048123406,0.9820308836595628
+23,mean_pool,mixed/transient suboptimal recommendations,optimality_anchor_cosine,10,0.9805743436764887,0.008098089925103694,0.96021723042388,0.9875085170011267
+23,mean_pool,mixed/transient suboptimal recommendations,update_norm,10,5807.462261080662,980.7695040665462,4571.714850739551,7602.041932394008
+23,mean_pool,all valid prefix-elicited actions planner-optimal,aligned_change,9,0.04622058110902526,0.00970962030101163,0.030955280607517413,0.0605233790825887
+23,mean_pool,all valid prefix-elicited actions planner-optimal,adjacent_step_cosine,9,0.9723759439200935,0.00800386786588188,0.9574646795584872,0.9814312193089914
+23,mean_pool,all valid prefix-elicited actions planner-optimal,optimality_anchor_cosine,9,0.9818146823430148,0.007761155692152414,0.96542185218338,0.9871879848400916
+23,mean_pool,all valid prefix-elicited actions planner-optimal,update_norm,9,5811.461664053823,864.3156895420489,4599.473758006845,7314.222658169969

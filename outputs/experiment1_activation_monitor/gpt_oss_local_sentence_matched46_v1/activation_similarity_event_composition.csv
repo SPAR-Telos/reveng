@@ -1,0 +1,4 @@
+recommendation_change_class,n_positions,proportion,commitment_overlap_n,commitment_overlap_note
+Other recommendation change,193,0.5105820105820106,31,Commitment is reported separately because it can coincide with any class.
+Optimal to suboptimal,93,0.24603174603174602,31,Commitment is reported separately because it can coincide with any class.
+Suboptimal to optimal,92,0.24338624338624337,31,Commitment is reported separately because it can coincide with any class.

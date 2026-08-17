@@ -1,0 +1,13 @@
+# Figure Captions
+
+## `commitment_timing.png`
+Action commitment timing for the 8 Weisheng activation-backed DoorKey states. Commitment is the first chunk-prefix position where the elicited action matches the final full-trace action and remains stable. The y-axis is the commitment position as a fraction of reasoning chunks. The labels report the number of control and failure states.
+
+## `action_entropy_events.png`
+Change in sampled action entropy at decision events. For each reasoning prefix, entropy is calculated from 10 next-action samples at temperature 0.7 over UP, DOWN, LEFT, and RIGHT. Each bar is the mean entropy at the first prefix showing the event minus entropy at the immediately preceding prefix. Negative values mean that sampled actions became more concentrated; positive values mean that they became more varied. “Any action change” overlaps with the optimality-loss and recovery categories.
+
+## `event_aligned_activation_metric_curves.png`
+Activation metrics in reasoning chunks before and after decision events, using layer-8 GPT-OSS-20B activations averaged over the stride-2 token samples available inside each chunk. Offset zero is the first chunk prefix where the new action or optimality status is observed; minus one is the preceding chunk prefix and plus one is the following prefix. It is not a token offset. Each metric is standardized within an environment state before averaging, so zero on the y-axis is that state’s average value and one is one state-specific standard deviation above it. The lines are descriptive averages over the event counts shown in the legend.
+
+## `event_aligned_geometry.png`
+Activation metric changes at action events. Metrics are computed from chunk-mean GPT-OSS-20B activations where available. Each bar shows the event value minus the mean of the previous three chunks. The four panels show activation metric changes at action events. The y-axis is the event activation metric minus the mean of the same metric over the previous three chunks. `Update direction vs. net trace direction` is cosine similarity between the current chunk update vector h_t - h_(t-1) and the net trace displacement h_last - h_first. It is a direction similarity, not a mean or sum. `Activation update size` is the norm of h_t - h_(t-1). `Similarity to previous chunk` is cosine similarity between h_t and h_(t-1). `Similarity to always-optimal prefix traces` is cosine similarity to an empirical anchor: the mean activation, within the same progress bucket, from reasoning traces whose prefix-elicited actions remain planner-optimal. It is not a BFS/A* trajectory and not an oracle full-trajectory-change vector.

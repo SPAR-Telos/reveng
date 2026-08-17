@@ -1,0 +1,15 @@
+{
+  "activation_spans_valid": true,
+  "adjacent_span_overlaps": 0,
+  "behavioral_queries_rerun": false,
+  "layers": [
+    8,
+    15,
+    23
+  ],
+  "local_model_name_or_path": "/root/.cache/huggingface/hub/models--openai--gpt-oss-20b/snapshots/6cee5e81ee83917806bbde320786a8fb61efebee",
+  "n_activation_rows": 2157,
+  "n_examples": 24,
+  "source_run_dir": "data/behavioral_probes/step_reasoning_drift_balanced_v1",
+  "status": "completed"
+}

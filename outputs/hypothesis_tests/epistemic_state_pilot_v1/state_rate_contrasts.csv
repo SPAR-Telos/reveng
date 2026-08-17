@@ -1,0 +1,7 @@
+confidence_threshold,comparison_regime,reference_regime,outcome,comparison_rate,reference_rate,rate_difference,rate_difference_ci_low,rate_difference_ci_high,comparative_claim_allowed,is_primary_comparison
+0.8,confidently_wrong,confidently_correct,current_suboptimal,0.2753623188405797,0.43947730398899587,-0.16411498514841616,-0.43010740528537267,0.07483625864283745,True,False
+0.8,confidently_wrong,confidently_correct,next3_optimality_loss,0.10967741935483871,0.07460732984293193,0.03507008951190678,-0.03344143815754546,0.1006087763057521,True,True
+0.8,confidently_wrong,confidently_correct,next3_recovery,0.22813688212927757,0.2109500805152979,0.017186801613979674,-0.1433839935056581,0.19976211776473823,True,False
+0.8,unresolved,confidently_correct,current_suboptimal,0.12817739318550567,0.43947730398899587,-0.3112999108034902,-0.5048158800224855,-0.15661220509150742,True,False
+0.8,unresolved,confidently_correct,next3_optimality_loss,0.04611497157296273,0.07460732984293193,-0.028492358269969202,-0.08326890086493037,0.029139923471251425,True,False
+0.8,unresolved,confidently_correct,next3_recovery,0.26371308016877637,0.2109500805152979,0.05276299965347847,-0.09487536779455953,0.19099202122997871,True,False

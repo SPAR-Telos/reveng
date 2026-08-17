@@ -1,0 +1,10 @@
+{
+  "analysis": "reasoningflow_transfer_pilot_v1",
+  "inventory": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/sentence_inventory.csv",
+  "inventory_sha256": "88c4fc661ce376f56b6ac0112b398f59f4dcdede35305d61131a4626792cd093",
+  "sample_size": 120,
+  "seed": 42,
+  "selection_uses_only_text_and_identifiers": true,
+  "selection_version": "text_structure_v2",
+  "stage": "prepare"
+}

@@ -1,0 +1,103 @@
+{
+  "status": "completed",
+  "interpretation": "trajectory_and_matched_pair_grouped_predictive_not_causal",
+  "n_complete_case_positions": 241,
+  "n_trajectories": 1,
+  "n_validation_groups": 1,
+  "global_beliefs": [
+    "wall_left",
+    "wall_right",
+    "wall_up",
+    "wall_down",
+    "has_key"
+  ],
+  "excluded_primary_beliefs": {
+    "door_open": "Ground-truth door state is constant in the analyzed cohort, so errors are not informative state variation."
+  },
+  "models": [
+    "prevalence_baseline",
+    "baseline",
+    "global_beliefs",
+    "belief_dynamics",
+    "global_beliefs_and_dynamics",
+    "action_conditioned",
+    "combined",
+    "belief_action_chain"
+  ],
+  "prevalence_baseline_note": "Uses the cohort event rate as a constant descriptive null; all learned models hold out source trajectories and exact-matched pairs.",
+  "model_feature_definitions": {
+    "prevalence_baseline": [
+      "intercept_only"
+    ],
+    "baseline": [
+      "reasoning_progress"
+    ],
+    "global_beliefs": [
+      "reasoning_progress",
+      "error_wall_left",
+      "error_wall_right",
+      "error_wall_up",
+      "error_wall_down",
+      "error_has_key"
+    ],
+    "belief_dynamics": [
+      "reasoning_progress",
+      "n_global_belief_changes",
+      "n_global_error_onsets",
+      "n_global_error_recoveries"
+    ],
+    "global_beliefs_and_dynamics": [
+      "reasoning_progress",
+      "error_wall_left",
+      "error_wall_right",
+      "error_wall_up",
+      "error_wall_down",
+      "error_has_key",
+      "n_global_belief_changes",
+      "n_global_error_onsets",
+      "n_global_error_recoveries"
+    ],
+    "action_conditioned": [
+      "reasoning_progress",
+      "chosen_wall_error",
+      "chosen_wall_reports_blocked",
+      "chosen_effect_error",
+      "chosen_effect_reports_hit"
+    ],
+    "combined": [
+      "reasoning_progress",
+      "error_wall_left",
+      "error_wall_right",
+      "error_wall_up",
+      "error_wall_down",
+      "error_has_key",
+      "chosen_wall_error",
+      "chosen_wall_reports_blocked",
+      "chosen_effect_error",
+      "chosen_effect_reports_hit"
+    ],
+    "belief_action_chain": [
+      "reasoning_progress",
+      "error_wall_left",
+      "error_wall_right",
+      "error_wall_up",
+      "error_wall_down",
+      "error_has_key",
+      "chosen_wall_error",
+      "chosen_wall_reports_blocked",
+      "chosen_effect_error",
+      "chosen_effect_reports_hit",
+      "blocked_report*predicted_hit",
+      "chosen_wall_error*chosen_effect_error"
+    ]
+  },
+  "parameters": {
+    "optimizer": "LBFGS",
+    "n_folds": 5,
+    "epochs": 300,
+    "learning_rate": 1.0,
+    "weight_decay": 0.01,
+    "seed": 42,
+    "n_bootstrap": 1000
+  }
+}

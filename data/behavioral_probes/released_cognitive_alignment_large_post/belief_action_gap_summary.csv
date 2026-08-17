@@ -1,0 +1,5 @@
+question_id,direction,n_rows,greedy_accuracy,greedy_repeated_modal_accuracy,mc_yes_no_accuracy,local_gap_count,local_consistent_count,local_gap_denominator,local_belief_action_gap_rate,mc_local_gap_count,mc_local_consistent_count,mc_local_gap_denominator,mc_local_belief_action_gap_rate,greedy_astar_gap_count,greedy_astar_consistent_count,greedy_astar_gap_denominator,greedy_astar_gap_rate,mc_astar_gap_count,mc_astar_consistent_count,mc_astar_gap_denominator,mc_astar_gap_rate
+wall_left,LEFT,11,1.0,1.0,1.0,0,1,1,0.0,0,1,1,0.0,0,1,1,0.0,0,1,1,0.0
+wall_right,RIGHT,11,1.0,1.0,1.0,0,3,3,0.0,0,3,3,0.0,0,3,3,0.0,0,3,3,0.0
+wall_up,UP,11,1.0,1.0,1.0,0,0,0,0.0,0,0,0,0.0,0,0,0,0.0,0,0,0,0.0
+wall_down,DOWN,11,1.0,1.0,1.0,0,7,7,0.0,0,7,7,0.0,0,7,7,0.0,0,7,7,0.0

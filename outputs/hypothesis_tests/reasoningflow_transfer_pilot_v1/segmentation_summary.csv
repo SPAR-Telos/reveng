@@ -1,0 +1,5 @@
+sample_stratum,segmentation_group,sentences,trajectories
+random,one_node,54,31
+random,unlabelled,6,6
+structure_enriched,one_node,42,27
+structure_enriched,unlabelled,18,14

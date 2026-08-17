@@ -1,0 +1,11 @@
+{
+  "hypothesis": "reasoning degrades long-horizon planning information while sharpening local action-readiness",
+  "joint_supports_target_hypothesis": false,
+  "local_action_readiness_delta_prefix_1": -0.12656467315716272,
+  "long_horizon_delta_prefix_5": 0.0013908205841446453,
+  "longest_horizon_delta_prefix_10": 0.0,
+  "status": "completed",
+  "supports_local_sharpening": false,
+  "supports_long_horizon_degradation_prefix_10": false,
+  "supports_long_horizon_degradation_prefix_5": false
+}

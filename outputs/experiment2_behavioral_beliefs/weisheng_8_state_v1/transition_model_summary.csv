@@ -1,0 +1,3 @@
+transition_family,model_type,n_trajectories,n_rows,n_positive,positive_rate,roc_auc,brier_score,log_loss,roc_auc_ci_low,roc_auc_ci_high,brier_score_ci_low,brier_score_ci_high,log_loss_ci_low,log_loss_ci_high
+optimal_to_suboptimal,prevalence_baseline,1,165,3,0.01818181818181818,0.5,0.01785123966942149,0.09087612133300153,0.5,0.5,0.01785123966942149,0.01785123966942149,0.09087612133300153,0.09087612133300153
+suboptimal_to_optimal,prevalence_baseline,1,6,3,0.5,0.5,0.25,0.6931471805599453,0.5,0.5,0.25,0.25,0.6931471805599453,0.6931471805599453

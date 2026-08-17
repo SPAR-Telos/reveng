@@ -212,6 +212,7 @@ __marimo__/
 .env/
 
 **/.DS_Store
+*.pid
 # Data outputs (default ignore)
 data/
 # Reproducibility-critical counterfactual inputs/manifests (track these)
@@ -249,6 +250,54 @@ outputs/activation_collection_pilot/
 outputs/**/shards/
 outputs/**/state_records/
 outputs/**/*.safetensors
+
+# Generated activation/tensor payloads belong in external artifact storage.
+data/behavioral_probes/**/*.pt
+data/behavioral_probes/**/*.bf16
+data/behavioral_probes/**/*.safetensors
+data/behavioral_probes/**/*.npz
+data/behavioral_probes/**/*.pkl
+outputs/**/*.pt
+outputs/**/*.bf16
+outputs/**/*.npz
+outputs/**/*.pkl
+
+# Bulky row-level experiment exports; retain compact summaries and manifests.
+data/behavioral_probes/**/belief_rows.csv
+data/behavioral_probes/**/belief_rows.jsonl
+data/behavioral_probes/**/example_checkpoints.jsonl
+data/behavioral_probes/**/prefix_action_rows.csv
+data/behavioral_probes/**/*_rows.csv
+data/behavioral_probes/**/*_rows.jsonl
+data/behavioral_probes/**/*_predictions.csv
+data/behavioral_probes/**/prefix_query_checkpoints.jsonl
+data/behavioral_probes/**/completed_examples.jsonl
+data/behavioral_probes/doorkey_chunking_validation/sentence_token_boundaries_gpt_oss_20b.csv
+data/behavioral_probes/doorkey_chunking_validation/sentences.csv
+data/behavioral_probes/doorkey_chunking_validation/chunked_trajectories*.csv
+outputs/**/belief_rows.csv
+outputs/**/belief_rows.jsonl
+outputs/**/position_readouts.jsonl
+outputs/**/*_rows.csv
+outputs/**/*_rows.jsonl
+outputs/**/*_rows.parquet
+outputs/**/example_checkpoints.jsonl
+outputs/**/prefix_query_checkpoints.jsonl
+outputs/**/state_belief_uncertainty_rows.csv
+outputs/**/state_belief_uncertainty_rows.jsonl
+outputs/**/transition_model_predictions.csv
+outputs/**/*_predictions.csv
+outputs/**/*_predictions.parquet
+outputs/**/*_readouts.jsonl
+outputs/**/position_change_probabilities.csv
+outputs/**/attention_head_event_rows.csv
+outputs/**/predictive_improvement_predictions.csv
+outputs/**/supervised_activation_monitor_predictions.csv
+outputs/**/next_sentence_boundary_predictions.csv
+
+# Local Hugging Face upload staging directories.
+hf_action_distribution_dataset/
+hf_datasets/
 
 # Raw resumable model readout logs can be regenerated from scripts/manifests.
 outputs/**/agent_location_after_readouts.jsonl

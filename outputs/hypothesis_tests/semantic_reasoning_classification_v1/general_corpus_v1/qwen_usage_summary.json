@@ -1,0 +1,11 @@
+{
+  "completion_tokens": 27964,
+  "estimated_cost_usd_at_run_prices": 1.9045437500000002,
+  "high_confidence_rows": 332,
+  "input_price_usd_per_million_tokens": 1.25,
+  "model": "Qwen/Qwen3.7-Max",
+  "one_attempt_rows": 332,
+  "output_price_usd_per_million_tokens": 3.75,
+  "prompt_tokens": 1439743,
+  "rows": 332
+}

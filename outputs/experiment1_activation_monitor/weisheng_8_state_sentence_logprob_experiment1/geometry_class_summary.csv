@@ -1,0 +1,9 @@
+layer,representation_kind,outcome_class,metric,n_rows,mean,minimum,maximum
+8,sentence_sampled_token_mean,all valid recommendations optimal,adjacent_step_cosine,190,0.8537464508136231,0.5942432736276326,0.9677842687366824
+8,sentence_sampled_token_mean,all valid recommendations optimal,aligned_change,190,0.02599537542743877,-0.2849085154883714,0.8377563921316481
+8,sentence_sampled_token_mean,all valid recommendations optimal,optimality_anchor_cosine,194,0.9078014326727526,0.7724476057275521,0.9667892731485777
+8,sentence_sampled_token_mean,all valid recommendations optimal,update_norm,190,342.2798181888854,150.61515864674544,642.5706328780402
+8,sentence_sampled_token_mean,mixed or transient suboptimality,adjacent_step_cosine,456,0.8662988151076468,0.6706170730493979,0.9822231309737693
+8,sentence_sampled_token_mean,mixed or transient suboptimality,aligned_change,456,0.0115251498514177,-0.36399984002440305,0.6551727394605499
+8,sentence_sampled_token_mean,mixed or transient suboptimality,optimality_anchor_cosine,460,0.8827635792663385,0.7536733670586061,0.9749376440794691
+8,sentence_sampled_token_mean,mixed or transient suboptimality,update_norm,456,315.08145085360917,106.9569140322413,584.0100822847489

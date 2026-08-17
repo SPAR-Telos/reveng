@@ -1,0 +1,29 @@
+{
+  "labelled_sentences": 96,
+  "multiple_node_sentences": 0,
+  "nodes": 96,
+  "pilot_sentences": 120,
+  "reasoningflow_labels": [
+    "planning",
+    "fact",
+    "reasoning",
+    "restatement",
+    "assumption",
+    "example",
+    "reflection",
+    "conclusion"
+  ],
+  "reviewed_metrics": {
+    "boundary_reasonable": {
+      "rate": null,
+      "reviewed": 0,
+      "yes": 0
+    },
+    "labels_reasonable": {
+      "rate": null,
+      "reviewed": 0,
+      "yes": 0
+    }
+  },
+  "schema_gap_rows": 0
+}

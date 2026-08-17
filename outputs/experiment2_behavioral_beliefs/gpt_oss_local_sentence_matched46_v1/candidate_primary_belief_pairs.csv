@@ -1,0 +1,6 @@
+event_family,belief_a,belief_b,n_events_with_pair,event_coverage,n_occurrences
+suboptimal_to_optimal,has_key,wall_left,1,0.005494505494505495,1
+suboptimal_to_optimal,wall_left,wall_right,1,0.005494505494505495,1
+optimal_to_suboptimal,wall_left,wall_right,1,0.006211180124223602,1
+suboptimal_to_optimal,wall_left,wall_up,1,0.005494505494505495,1
+optimal_to_suboptimal,wall_left,wall_up,1,0.006211180124223602,1

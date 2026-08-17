@@ -1,0 +1,36 @@
+{
+  "generated_artifacts": [
+    "figs/semantic_labels_across_analyses.png",
+    "figs/semantic_labels_across_analyses.pdf",
+    "semantic_cross_analysis_decision_table.csv",
+    "semantic_intervention_candidates.csv",
+    "SEMANTIC_CROSS_ANALYSIS_SYNTHESIS.md",
+    "SEMANTIC_INTERVENTION_CANDIDATES.md",
+    "SEMANTIC_PAPER_INSERT.tex"
+  ],
+  "generated_by": "scripts/build_belief_action_reasoning_summary.py",
+  "headline_metrics": {
+    "activation_min_q": 0.1063893610638936,
+    "attention_p": 0.05349465053494651,
+    "attention_summary_pp": 0.22420598883659001,
+    "entropy_q": 0.0083991600839916,
+    "entropy_route_mean": 0.4934293875183901,
+    "exact_action_min_q": 0.4059594040595939,
+    "primary_change_points": 152,
+    "primary_optimality_losses": 18,
+    "primary_pairs": 152,
+    "zero_error_loss_candidates": 7,
+    "zero_error_loss_fraction": 0.3888888888888889
+  },
+  "scope": "retrospective BEAST change-point sentences and same-state matched comparison sentences",
+  "semantic_taxonomy": "four-way calibrated AI-assisted sentence function",
+  "sources": [
+    "outputs/hypothesis_tests/semantic_reasoning_classification_v1/final_analysis/sentence_label_cpd_analysis_table.csv",
+    "outputs/hypothesis_tests/semantic_reasoning_classification_v1/final_analysis/matched_semantic_comparisons.csv",
+    "outputs/hypothesis_tests/semantic_reasoning_classification_v1/final_analysis/incremental_model_comparison.csv",
+    "outputs/hypothesis_tests/semantic_reasoning_classification_v1/final_analysis/semantic_event_composition.csv",
+    "outputs/hypothesis_tests/semantic_reasoning_classification_v1/final_analysis/semantic_outcome_omnibus_tests.csv",
+    "outputs/hypothesis_tests/semantic_reasoning_classification_v1/final_analysis/attention_by_semantic_function.csv",
+    "outputs/hypothesis_tests/semantic_reasoning_classification_v1/final_analysis/attention_semantic_omnibus_test.json"
+  ]
+}

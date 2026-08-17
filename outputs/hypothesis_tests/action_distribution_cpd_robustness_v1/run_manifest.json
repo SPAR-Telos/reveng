@@ -1,0 +1,17 @@
+{
+  "analysis": "offline_beast_action_distribution_cpd_robustness",
+  "input_positions": "outputs/experiment1_activation_monitor/gpt_oss_local_sentence_matched46_v1/position_rows.csv",
+  "input_positions_sha256": "5cea57ad68f5b7ff8624c06a1dd2616151952a5185a8fb806f39a0d0d02a4195",
+  "input_events": "outputs/experiment1_activation_monitor/gpt_oss_local_sentence_matched46_v1/event_rows.csv",
+  "input_events_sha256": "f8374eaac8f1067368d2578963f0a53895c8bfa72e81e0db2e438446fd39e17a",
+  "n_analysis_setups": 16,
+  "empirical_beast_samples": 8000,
+  "synthetic_beast_samples": 2000,
+  "synthetic_repeats_per_scenario": 20,
+  "original_synthetic_repeats_per_scenario": 100,
+  "bootstrap_repeats": 2000,
+  "event_window_sentences": 3,
+  "location_tolerance_sentences": 3,
+  "all_checks_for_abrupt_shift_claim_pass": true,
+  "all_checks_for_gradual_change_claim_pass": false
+}

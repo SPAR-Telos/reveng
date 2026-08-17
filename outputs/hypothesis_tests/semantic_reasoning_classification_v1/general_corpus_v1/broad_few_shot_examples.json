@@ -1,0 +1,114 @@
+[
+  {
+    "broad_label": "state_readout",
+    "confidence": "high",
+    "context_before": "[27] Agent at (3,3).\n[28] Need path.\n[29] Let's find shortest path avoiding walls.\n[30] Let's map accessible cells.\n[31] We can treat walls as obstacles.\n[32] Let's compute distances manually.\n[33] From (3,3) to (1,7).\n[34] Path options: maybe go up to row1 then right to col7.",
+    "rationale": "The sentence simply reports that the cell (2,3) is open, which is a direct transcription of visible grid information, fitting the state_reconstruction label and outranking other options.",
+    "target_sentence": "From (3,3) up to (2,3) open."
+  },
+  {
+    "broad_label": "state_readout",
+    "confidence": "high",
+    "context_before": "[35] But those rows are all walls.\n[36] So no path.\n[37] So maybe there is a door that we can open?\n[38] But no D. So maybe the assumption is that the agent can cross the wall?\n[39] But grid says walls are impassable.\n[40] So maybe it's unsolvable.\n[41] But we still must output an action.\n[42] Could be \"RIGHT\" from (4,3) goes to (4,4) which is '#', cannot.",
+    "rationale": "The sentence simply reports the state of a grid cell (3,3) as open, which is a direct transcription of visible state information, fitting the state_reconstruction label and outranking other options.",
+    "target_sentence": "Up to (3,3) which is '_' open."
+  },
+  {
+    "broad_label": "state_readout",
+    "confidence": "high",
+    "context_before": "[1] We need to plan next move.\n[2] Grid 9x9. Agent at (6,7).\n[3] Goal at (5,1).",
+    "rationale": "The sentence simply reports a visible grid fact (door at (4,1)) without evaluating a route or proposing a move, fitting the state_reconstruction label per the precedence rules.",
+    "target_sentence": "There is door at (4,1)."
+  },
+  {
+    "broad_label": "state_readout",
+    "confidence": "high",
+    "context_before": "[15] Row5: \"# _ _ G # _ _ _ #\"\n[16] col0 '#',1 '_' ,2 '_' ,3 'G',4 '#',5 '_' ,6 '_' ,7 '_' ,8 '#'.\n[17] Row6: \"# _ _ _ _ _ _ _ #\"\n[18] col0 '#',1 '_' ,2 '_' ,3 '_' ,4 '_' ,5 '_' ,6 '_' ,7 '_' ,8 '#'.\n[19] Row7: \"# _ _ _ # _ _ _ #\"\n[20] col0 '#',1 '_' ,2 '_' ,3 '_' ,4 '#',5 '_' ,6 '_' ,7 '_' ,8 '#'.\n[21] Row8: walls.\n[22] Goal G at (5,3).",
+    "rationale": "The sentence simply states the agent\u2019s current coordinates, which is a direct transcription of visible state information, fitting the state_reconstruction label and outranking any other label.",
+    "target_sentence": "Agent A at (2,6)."
+  },
+  {
+    "broad_label": "route_deliberation",
+    "confidence": "high",
+    "context_before": "[73] So need to go up to row5, then left?\n[74] Actually we can go right to col7 on row5?\n[75] Row5 col7 '_' yes.\n[76] But door at (5,4) blocks.\n[77] Path from (6,1) to (5,7) would require passing through door?\n[78] Let's see row5: positions: col1 '_' col2 '_' col3 '_' col4 'D' col5 '_' col6 '_' col7 '_' .\n[79] So to go from col1 to col7, must cross col4.\n[80] So door blocks.",
+    "rationale": "The sentence explicitly rejects the earlier claim that a path exists, thereby revising prior reasoning, which makes it a correction rather than a verification or other label.",
+    "target_sentence": "So cannot reach goal without opening door."
+  },
+  {
+    "broad_label": "route_deliberation",
+    "confidence": "high",
+    "context_before": "[1] We need to compute next move from current position A at (5,2).\n[2] Wait coordinates: grid rows 0-8, columns 0-8.\n[3] Provided grid:\n[4] Row 0: 0 1 2 3 4 5 6 7 8: all #.\n[5] Row 1: \"# _ _ _ _ _ _ _ #\"\nRow 2: \"# _ _ _ # _ G _ #\"\nRow 3: \"# _ _ _ # _ _ _ #\"\nRow 4: \"# # D # # # _ # #\"\nRow 5: \"# K A _ # _ _ _ #\"\nRow 6: \"# _ _ _ # _ _ _ #\"\nRow 7: \"# _ _ _ # _ _ _ #\"\nRow 8: all #.\n[6] Agent at row5 col2.",
+    "rationale": "The sentence states a new fact about the key\u2019s location, which is not a direct transcription of visible state, nor an evaluation or plan, so it is a new inference.",
+    "target_sentence": "Key at row5 col1."
+  },
+  {
+    "broad_label": "route_deliberation",
+    "confidence": "high",
+    "context_before": "[95] Let's see if we can go via row4: from (6,2) go up to (5,2)->(4,2) blocked.\n[96] So can't go to row4 col2.\n[97] But maybe go up to (5,2)->(5,3) -> up to (4,3) blocked.\n[98] So can't reach column5 that way.\n[99] Maybe we need to go through row7: from (6,2) go down to (7,2)->(7,3).\n[100] From (7,3) up to (6,3) open.\n[101] So same issue.\n[102] Maybe we need to go to column5 via column1?",
+    "rationale": "The sentence proposes a new potential route (examining column1), which is a route_planning action, and does not revise, evaluate, or repeat earlier content.",
+    "target_sentence": "Let's examine column1 path: row6 col1 open."
+  },
+  {
+    "broad_label": "route_deliberation",
+    "confidence": "high",
+    "context_before": "[118] But we can't reach (5,5).\n[119] So we must go to (5,3) to open door.\n[120] But door opens when adjacent; we can be at (5,3) to open.\n[121] After door opens, we can then go to (5,5) or (5,4) etc.\n[122] Thus the shortest path to open door: go from (6,1) to (5,3).\n[123] That is 3 steps: (5,1),(5,2),(5,3).\n[124] But we need to decide next action: the first step.\n[125] Starting at (6,1).",
+    "rationale": "The sentence asks whether to move up or right, directly evaluating the next step of the previously discussed route, fitting the verification label.",
+    "target_sentence": "We need to move up or right?"
+  },
+  {
+    "broad_label": "summary_or_restatement",
+    "confidence": "high",
+    "context_before": "[1] We have a grid 9x9.\n[2] Coordinates: row index 0-8, col index 0-8.\n[3] Provided grid:\n[4] Row 0: 0 # # # # # # # # # \nRow 1: 1 # _ _ _ D _ _ _ # \nRow 2: 2 # _ _ G # _ _ A # \nRow 3: 3 # _ _ _ # _ _ _ # \nRow 4: 4 # _ # # # # _ # # \nRow 5: 5 # _ _ _ # _ _ _ # \nRow 6: 6 # _ _ _ # _ _ _ # \nRow 7: 7 # _ _ _ # _ _ _ # \nRow 8: 8 # # # # # # # # #",
+    "rationale": "The sentence merely restates the agent\u2019s current coordinates, matching the earlier state without adding, evaluating, or correcting any prior claim.",
+    "target_sentence": "The agent at (2,7) (row 2, col 7)."
+  },
+  {
+    "broad_label": "summary_or_restatement",
+    "confidence": "high",
+    "context_before": "[5] Agent at (3,2).\n[6] Already carrying key: True.\n[7] So key already picked up earlier.\n[8] There is a door D at (5,4).\n[9] Goal G at (5,3).\n[10] We need to get to goal.\n[11] But door is adjacent to goal?\n[12] Let's see: door D at (5,4).",
+    "rationale": "The target sentence merely restates the goal location already mentioned in the preceding reasoning, fitting the restatement label, which outranks any other label because it does not introduce new information, evaluate a route, or propose a plan.",
+    "target_sentence": "Goal at (5,3)."
+  },
+  {
+    "broad_label": "summary_or_restatement",
+    "confidence": "high",
+    "context_before": "[5] Goal at (1,3).\n[6] Door at (1,4).\n[7] Key at (7,6).\n[8] Agent doesn't have key.\n[9] Path: need to get key first, then go to door to open, then to goal.\n[10] Let's analyze layout.\n[11] Grid representation:\n[12] Row0 all walls.",
+    "rationale": "The sentence merely restates the current grid row, matching the state_reconstruction pattern but without new inference or evaluation, so it is a restatement.",
+    "target_sentence": "Row1: \"# _ _ G D _ _ _ #\"\nIndices: 0:#,1:_,2:_,3:G,4:D,5:_,6:_,7:_,8:#"
+  },
+  {
+    "broad_label": "summary_or_restatement",
+    "confidence": "high",
+    "context_before": "[123] That is 3 steps: (5,1),(5,2),(5,3).\n[124] But we need to decide next action: the first step.\n[125] Starting at (6,1).\n[126] We need to move up or right?\n[127] Let's compute.\n[128] Option: move up to (5,1).\n[129] That is step 1.\n[130] That seems good.",
+    "rationale": "The sentence merely restates the previously decided action \"UP\" without adding new information, evaluating a route, or correcting earlier reasoning.",
+    "target_sentence": "Thus answer: action \"UP\"."
+  },
+  {
+    "broad_label": "other",
+    "confidence": "high",
+    "context_before": "[8] Goal at row 2, column 7?\n[9] Let's see row 2: \"# _ _ _ _ _ _ G #\".\n[10] So G at (2,7).\n[11] There's a door D at row 4, column 3.\n[12] The agent is carrying key (True).\n[13] So door can be opened automatically when adjacent.\n[14] The agent should go to goal.\n[15] Need to find shortest path.",
+    "rationale": "Announces obstacle mapping without yet transcribing any obstacle.",
+    "target_sentence": "Let's map obstacles (#)."
+  },
+  {
+    "broad_label": "other",
+    "confidence": "high",
+    "context_before": "[4] Agent at (5,1).\n[5] Key is already carried (True).\n[6] There is a door at (4,2).\n[7] Goal at (2,6).\n[8] Need to reach goal.\n[9] Need to open door if blocking path.\n[10] Let's find path.\n[11] We can move freely in open spaces.",
+    "rationale": "Meta-level transition announcing coordinate bookkeeping.",
+    "target_sentence": "Let's map coordinates:"
+  },
+  {
+    "broad_label": "other",
+    "confidence": "high",
+    "context_before": "[5] Row0: 0 # # # # # # # # # \nRow1: 1 # _ _ _ _ _ _ _ # \nRow2: 2 # _ _ _ # _ _ _ # \nRow3: 3 # _ _ _ # _ _ _ # \nRow4: 4 # # _ # # # # # # \nRow5: 5 # _ _ _ # _ _ _ # \nRow6: 6 # _ _ _ D _ _ _ # \nRow7: 7 # _ _ G # A _ _ # \nRow8: 8 # # # # # # # # #\n[6] Agent at (7,5) (row7 col5).\n[7] Goal at (7,3).\n[8] Door at (6,4).\n[9] Key? Not specified but agent status says carrying key True.\n[10] So key already collected earlier.\n[11] So door can be opened by being adjacent to it.\n[12] We need to reach goal (7,3).",
+    "rationale": "Generic transition into path analysis without yet performing it.",
+    "target_sentence": "Let's analyze path."
+  },
+  {
+    "broad_label": "other",
+    "confidence": "high",
+    "context_before": NaN,
+    "rationale": "Meta-level transition announcing the next reasoning operation.",
+    "target_sentence": "We need to decide next move."
+  }
+]

@@ -1,0 +1,17 @@
+question_id,question_family,n_positions,error_and_next_suboptimal,error_and_next_optimal,correct_and_next_suboptimal,correct_and_next_optimal,odds_ratio,fisher_exact_p,fdr_bh_q
+agent_location,coordinates,19,0,0,0,19,nan,1.0,1.0
+door_location,coordinates,19,0,0,0,19,nan,1.0,1.0
+door_open,core,19,0,4,0,15,nan,1.0,1.0
+door_open_after_right,action_effects,11,0,0,0,11,nan,1.0,1.0
+door_open_after_up,action_effects,8,0,0,0,8,nan,1.0,1.0
+goal_location,coordinates,19,0,0,0,19,nan,1.0,1.0
+has_key,core,19,0,0,0,19,nan,1.0,1.0
+has_key_after_right,action_effects,11,0,0,0,11,nan,1.0,1.0
+has_key_after_up,action_effects,8,0,0,0,8,nan,1.0,1.0
+hit_wall_after_right,action_effects,11,0,1,0,10,nan,1.0,1.0
+hit_wall_after_up,action_effects,8,0,1,0,7,nan,1.0,1.0
+key_location,coordinates,19,0,0,0,19,nan,1.0,1.0
+wall_down,wall_directional,19,0,0,0,19,nan,1.0,1.0
+wall_left,wall_directional,19,0,0,0,19,nan,1.0,1.0
+wall_right,wall_directional,19,0,0,0,19,nan,1.0,1.0
+wall_up,wall_directional,19,0,0,0,19,nan,1.0,1.0

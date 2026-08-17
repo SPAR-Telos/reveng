@@ -1,0 +1,2 @@
+failure_category,n_trajectories,n_with_identifiable_wrong_turn,median_wrong_turn_step,mean_aligned_change_at_wrong_turn,fraction_geometric_signal_precedes_behavioral_wrongness
+wall_hit,1,1,1,,0.0

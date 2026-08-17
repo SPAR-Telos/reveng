@@ -534,34 +534,79 @@ def build_supervised_activation_monitor(exp1: Path, activation_index_path: Path,
 
     fig_rows = [r for r in summary if str(r["model_type"]).startswith("activation_pca")]
     if fig_rows:
-        fig_df = pd.DataFrame(fig_rows)
-        best = fig_df.sort_values("roc_auc", ascending=False).groupby("target", as_index=False).first()
-        fig, ax = plt.subplots(figsize=(9.4, 4.8))
-        y_labels = [
-            f"{row.target.replace('_', ' ')}\n"
-            f"n={int(row.n_rows):,}, events={int(row.n_positive):,}"
-            for row in best.itertuples()
+        frame = pd.DataFrame(summary)
+        best = (
+            pd.DataFrame(fig_rows)
+            .sort_values("roc_auc", ascending=False)
+            .groupby("target", as_index=False)
+            .first()
+            .set_index("target")
+        )
+        by_model = frame.set_index(["target", "model_type"])
+        targets = [
+            "action_change",
+            "optimal_to_suboptimal",
+            "suboptimal_to_optimal",
+            "commitment_onset",
         ]
-        y_pos = np.arange(len(best))
-        auc_values = best["roc_auc"].astype(float).to_numpy()
-        ax.barh(y_pos, auc_values, color=BLUE)
-        ax.set_yticks(y_pos, labels=y_labels)
-        ax.axvline(0.5, color="#777777", linestyle="--", linewidth=1)
-        for y_i, value in zip(y_pos, auc_values, strict=True):
-            ax.text(
-                min(value + 0.01, 0.98),
-                y_i,
-                f"{value:.3f}",
-                va="center",
-                fontsize=9,
-                color=DARK,
+        labels = [
+            "Recommendation change",
+            "Optimal to suboptimal",
+            "Suboptimal to optimal",
+            "Retrospective commitment",
+        ]
+        y_pos = np.arange(len(targets))
+        fig, ax = plt.subplots(figsize=(10.0, 5.2))
+        for offset, legend_label, color in [
+            (-0.22, "Best activation monitor", BLUE),
+            (0.0, "Reasoning progress", LIGHT_BLUE),
+            (0.22, "Behavioral readouts", DARK),
+        ]:
+            values = []
+            low = []
+            high = []
+            for target in targets:
+                if legend_label == "Best activation monitor":
+                    row = best.loc[target]
+                elif legend_label == "Reasoning progress":
+                    row = by_model.loc[(target, "reasoning_progress")]
+                else:
+                    row = by_model.loc[(target, "scalar_readouts")]
+                values.append(float(row.roc_auc))
+                low.append(float(row.roc_auc_ci_low))
+                high.append(float(row.roc_auc_ci_high))
+            values_arr = np.asarray(values)
+            ax.errorbar(
+                values_arr,
+                y_pos + offset,
+                xerr=np.vstack([values_arr - low, np.asarray(high) - values_arr]),
+                fmt="o",
+                color=color,
+                ecolor=color,
+                capsize=3,
+                markersize=6,
+                label=legend_label,
             )
-        ax.set_xlim(0.45, 0.75)
-        ax.set_xlabel("Held-out AUROC for event prediction")
+        y_labels = [
+            f"{label}\n{int(best.loc[target].n_positive):,} events in "
+            f"{int(best.loc[target].n_rows):,} positions"
+            for target, label in zip(targets, labels, strict=True)
+        ]
+        ax.set_yticks(y_pos, labels=y_labels)
+        ax.invert_yaxis()
+        ax.axvline(0.5, color="#777777", linestyle="--", linewidth=1, label="Chance")
+        ax.set_xlim(0.38, 0.88)
+        ax.set_xlabel("Trajectory-held-out AUROC")
         ax.set_ylabel("Action event")
-        ax.set_title("Best Activation-Only Monitor by Event")
+        ax.set_title("Activation Monitors Do Not Outperform Behavioral Readouts")
+        ax.legend(
+            frameon=False,
+            ncol=4,
+            loc="upper center",
+            bbox_to_anchor=(0.5, -0.11),
+        )
         ax.grid(axis="x", color=GRID)
-        fig.tight_layout()
+        fig.tight_layout(rect=(0, 0.08, 1, 1))
         (out / "figs").mkdir(exist_ok=True)
         fig.savefig(out / "figs" / "supervised_activation_monitor_auc.png", dpi=220)
         plt.close(fig)

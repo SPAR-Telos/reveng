@@ -1,0 +1,25 @@
+annotation_id,context_before,target_sentence,target_sentence_characters,explicitly_revises_prior_reasoning,evaluates_prior_route_or_claim,repeats_prior_content,introduces_new_information_or_plan,primary_label,confidence,rationale,judge_model,judge_provider,judge_prompt_version,judge_prompt_sha256,judge_temperature,judge_seed,reasoning_enabled,prompt_tokens,completion_tokens,total_tokens,raw_response,attempts,error
+cal_01dc4620834b6bef,"[217] Thus goal unreachable?
+[218] But maybe door can be opened to allow passage?
+[219] The door at (5,4) might open to the left side?
+[220] Actually door is adjacent to goal at (5,3).
+[221] When adjacent to door, the door is removed.
+[222] But the door is not blocking goal; it's adjacent.
+[223] But door might be blocking path to goal from right side.
+[224] But we can approach goal from left side (5,2) to (5,3) if we can get to (5,2).",But cannot.,11,,,,,,,,Qwen/Qwen3.5-397B-A17B,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,0,0,0,,4,"BadRequestError: Error code: 400 - {'id': 'ourS2Tj-2kFHot-a25de03cd8861bec', 'error': {'message': 'Unable to access non-serverless model Qwen/Qwen3.5-397B-A17B. Please visit https://api.together.ai/models/Qwen/Qwen3.5-397B-A17B to create and start a new dedicated endpoint for the model.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_available'}}"
+cal_0809aa55f1f5725d,"[12] So D at (3,4).
+[13] Key K at row7 col7?
+[14] Row7: ""# _ _ _ _ _ _ K #"".
+[15] So K at (7,7).
+[16] Walls: many.
+[17] Need find path.
+[18] We must avoid walls (#).
+[19] We have open spaces.",Let's map accessible cells.,27,,,,,,,,Qwen/Qwen3.5-397B-A17B,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,0,0,0,,4,"BadRequestError: Error code: 400 - {'id': 'ourS75c-2kFHot-a25de0a108fbc676', 'error': {'message': 'Unable to access non-serverless model Qwen/Qwen3.5-397B-A17B. Please visit https://api.together.ai/models/Qwen/Qwen3.5-397B-A17B to create and start a new dedicated endpoint for the model.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_available'}}"
+cal_961a7ec8909e58d5,"[37] Up from (6,5) to (5,5).
+[38] Up from (5,5) to (4,5) is #.
+[39] So cannot go up that way.
+[40] Up from (6,6) to (5,6) open.
+[41] Up from (5,6) to (4,6) open.
+[42] Up from (4,6) to (3,6) open.
+[43] Up from (3,6) to (2,6) open.
+[44] Up from (2,6) to (1,6) open.","Up from (1,6) to (0,6) #.",25,,,,,,,,Qwen/Qwen3.5-397B-A17B,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,0,0,0,,4,"BadRequestError: Error code: 400 - {'id': 'ourSBgd-2kFHot-a25de101a8a46ab7', 'error': {'message': 'Unable to access non-serverless model Qwen/Qwen3.5-397B-A17B. Please visit https://api.together.ai/models/Qwen/Qwen3.5-397B-A17B to create and start a new dedicated endpoint for the model.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_available'}}"

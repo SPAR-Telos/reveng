@@ -1,0 +1,10 @@
+{
+  "completed_rows": 0,
+  "max_new_tokens": 40,
+  "model_path": "/root/.cache/huggingface/hub/models--openai--gpt-oss-20b/snapshots/6cee5e81ee83917806bbde320786a8fb61efebee",
+  "pending_rows": 7084,
+  "planned_rows": 7084,
+  "probe": "agent_location_after_recommended_action",
+  "probe_scope": "recommended_action_only",
+  "status": "running"
+}

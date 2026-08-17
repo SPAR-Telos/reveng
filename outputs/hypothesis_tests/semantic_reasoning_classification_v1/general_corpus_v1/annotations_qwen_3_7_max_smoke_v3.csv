@@ -1,0 +1,10 @@
+annotation_id,context_before,target_sentence,target_sentence_characters,explicitly_revises_prior_reasoning,evaluates_prior_route_or_claim,repeats_prior_content,introduces_new_information_or_plan,primary_label,confidence,rationale,judge_model,judge_provider,judge_prompt_version,judge_prompt_sha256,judge_temperature,judge_seed,reasoning_enabled,prompt_tokens,completion_tokens,total_tokens,raw_response,attempts,error
+cal_01dc4620834b6bef,"[217] Thus goal unreachable?
+[218] But maybe door can be opened to allow passage?
+[219] The door at (5,4) might open to the left side?
+[220] Actually door is adjacent to goal at (5,3).
+[221] When adjacent to door, the door is removed.
+[222] But the door is not blocking goal; it's adjacent.
+[223] But door might be blocking path to goal from right side.
+[224] But we can approach goal from left side (5,2) to (5,3) if we can get to (5,2).",But cannot.,11,,,,,,,,Qwen/Qwen3.7-Max,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,0,0,0,"<think>
+{""explicitly_revises_prior_reasoning"": ""yes"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""no"", ""introduces_new_information_or_plan"": ""no"", ""primary_label"": ""correction"", ""confidence"": ""high"", ""rationale"": ""The sentence explicitly rejects the earlier claim that the goal can be approached from the left side, thereby correcting the prior reasoning.""}",4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)

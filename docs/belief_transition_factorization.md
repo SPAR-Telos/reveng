@@ -1,5 +1,10 @@
 # Belief Indicators and Action Transitions
 
+For the proposed distinction between probe-expressed ignorance, unresolved
+belief, confident error, and belief-utilization failure, including threshold
+selection and the supporting literature, see
+`docs/epistemic_state_thresholding.md`.
+
 ## Current Observational Result
 
 The 24-state behavioral pilot contains 25 optimal-to-suboptimal transitions and

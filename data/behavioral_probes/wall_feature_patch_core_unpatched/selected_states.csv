@@ -1,0 +1,77 @@
+example_id,trajectory_id,source_file,model_name,step_index,grid_text,carrying_key,observed_action,is_optimal_action,wall_hit,current_position,next_position,canonical_state,current_optimal_distance,next_optimal_distance,trajectory_actual_length,trajectory_recomputed_optimal_length,trajectory_length_delta,trajectory_reached_goal,stored_astar_distance,stored_astar_suspicious,trajectory_class,primary_step_failure_mode,is_failure_onset,is_terminal_failure_tail,is_pre_failure_context,pre_failure_for_step_index,selection_stage,selected_for_probe,selection_reason,probe_truths_json,optimal_actions_json,legacy_optimal_actions_json,failure_modes_json,optimal_actions,probe_truths,target_wall_question,ground_truth_label
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_016,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16.json,together_ai/openai/gpt-oss-20b,16,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # _ # # # # # # # 
+5 # _ _ _ # _ _ _ # 
+6 # _ _ A # _ _ _ # 
+7 # _ _ _ D _ _ G # 
+8 # # # # # # # # # ",True,RIGHT,False,True,"3,6","3,6","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # _ # # # # # # #
+5 # _ _ _ # _ _ _ #
+6 # _ _ A # _ _ _ #
+7 # _ _ _ D _ _ G #
+8 # # # # # # # # #",5,5,22,19,3,True,30,True,suboptimal_success,wall_hit,False,False,False,,failure,True,"suboptimal_success_failure_step,wall_hit","{""agent_location"": {""col"": 3, ""row"": 6}, ""agent_location_after_down"": {""col"": 3, ""row"": 7}, ""agent_location_after_left"": {""col"": 2, ""row"": 6}, ""agent_location_after_right"": {""col"": 3, ""row"": 6}, ""agent_location_after_up"": {""col"": 3, ""row"": 5}, ""door_location"": {""col"": 4, ""row"": 7}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 7, ""row"": 7}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""yes"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""yes"", ""wall_up"": ""no""}","[""DOWN""]","[""DOWN""]","[""wall_hit""]",['DOWN'],"{'agent_location': {'col': 3, 'row': 6}, 'agent_location_after_down': {'col': 3, 'row': 7}, 'agent_location_after_left': {'col': 2, 'row': 6}, 'agent_location_after_right': {'col': 3, 'row': 6}, 'agent_location_after_up': {'col': 3, 'row': 5}, 'door_location': {'col': 4, 'row': 7}, 'door_open': 'no', 'door_open_after_down': 'no', 'door_open_after_left': 'no', 'door_open_after_right': 'no', 'door_open_after_up': 'no', 'goal_location': {'col': 7, 'row': 7}, 'has_key': 'yes', 'has_key_after_down': 'yes', 'has_key_after_left': 'yes', 'has_key_after_right': 'yes', 'has_key_after_up': 'yes', 'hit_wall_after_down': 'no', 'hit_wall_after_left': 'no', 'hit_wall_after_right': 'yes', 'hit_wall_after_up': 'no', 'is_door_down': 'no', 'is_door_left': 'no', 'is_door_right': 'no', 'is_door_up': 'no', 'is_goal_down': 'no', 'is_goal_left': 'no', 'is_goal_right': 'no', 'is_goal_up': 'no', 'is_key_down': 'no', 'is_key_left': 'no', 'is_key_right': 'no', 'is_key_up': 'no', 'key_location': {'col': -1, 'row': -1}, 'wall_down': 'no', 'wall_left': 'no', 'wall_right': 'yes', 'wall_up': 'no'}",wall_right,yes
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_009,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20.json,together_ai/openai/gpt-oss-20b,9,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ _ _ # 
+3 # _ _ _ _ _ _ _ # 
+4 # D # # # # _ # # 
+5 # G _ _ # _ _ A # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",True,UP,False,True,"7,5","7,5","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ # _ _ _ #
+3 # _ _ _ _ _ _ _ #
+4 # D # # # # _ # #
+5 # G _ _ # _ _ A #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",10,10,20,19,1,True,30,True,suboptimal_success,wall_hit,True,False,False,,failure,True,"suboptimal_success_failure_step,wall_hit","{""agent_location"": {""col"": 7, ""row"": 5}, ""agent_location_after_down"": {""col"": 7, ""row"": 6}, ""agent_location_after_left"": {""col"": 6, ""row"": 5}, ""agent_location_after_right"": {""col"": 7, ""row"": 5}, ""agent_location_after_up"": {""col"": 7, ""row"": 5}, ""door_location"": {""col"": 1, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 1, ""row"": 5}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""yes"", ""hit_wall_after_up"": ""yes"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""no"", ""wall_right"": ""yes"", ""wall_up"": ""yes""}","[""LEFT""]","[""LEFT""]","[""wall_hit""]",['LEFT'],"{'agent_location': {'col': 7, 'row': 5}, 'agent_location_after_down': {'col': 7, 'row': 6}, 'agent_location_after_left': {'col': 6, 'row': 5}, 'agent_location_after_right': {'col': 7, 'row': 5}, 'agent_location_after_up': {'col': 7, 'row': 5}, 'door_location': {'col': 1, 'row': 4}, 'door_open': 'no', 'door_open_after_down': 'no', 'door_open_after_left': 'no', 'door_open_after_right': 'no', 'door_open_after_up': 'no', 'goal_location': {'col': 1, 'row': 5}, 'has_key': 'yes', 'has_key_after_down': 'yes', 'has_key_after_left': 'yes', 'has_key_after_right': 'yes', 'has_key_after_up': 'yes', 'hit_wall_after_down': 'no', 'hit_wall_after_left': 'no', 'hit_wall_after_right': 'yes', 'hit_wall_after_up': 'yes', 'is_door_down': 'no', 'is_door_left': 'no', 'is_door_right': 'no', 'is_door_up': 'no', 'is_goal_down': 'no', 'is_goal_left': 'no', 'is_goal_right': 'no', 'is_goal_up': 'no', 'is_key_down': 'no', 'is_key_left': 'no', 'is_key_right': 'no', 'is_key_up': 'no', 'key_location': {'col': -1, 'row': -1}, 'wall_down': 'no', 'wall_left': 'no', 'wall_right': 'yes', 'wall_up': 'yes'}",wall_up,yes
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_002,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10.json,together_ai/openai/gpt-oss-20b,2,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ _ _ _ _ # 
+2 # _ _ _ # _ G _ # 
+3 # _ _ _ # _ _ _ # 
+4 # # D # # # _ # # 
+5 # A _ _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",True,RIGHT,True,False,"1,5","2,5","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ _ _ _ _ #
+2 # _ _ _ # _ G _ #
+3 # _ _ _ # _ _ _ #
+4 # # D # # # _ # #
+5 # A _ _ # _ _ _ #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",10,9,12,12,0,True,15,True,optimal_success,backtrack,True,False,False,,failure,True,backtrack,"{""agent_location"": {""col"": 1, ""row"": 5}, ""agent_location_after_down"": {""col"": 1, ""row"": 6}, ""agent_location_after_left"": {""col"": 1, ""row"": 5}, ""agent_location_after_right"": {""col"": 2, ""row"": 5}, ""agent_location_after_up"": {""col"": 1, ""row"": 5}, ""door_location"": {""col"": 2, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 6, ""row"": 2}, ""has_key"": ""yes"", ""has_key_after_down"": ""yes"", ""has_key_after_left"": ""yes"", ""has_key_after_right"": ""yes"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""no"", ""hit_wall_after_left"": ""yes"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""yes"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""no"", ""key_location"": {""col"": -1, ""row"": -1}, ""wall_down"": ""no"", ""wall_left"": ""yes"", ""wall_right"": ""no"", ""wall_up"": ""yes""}","[""RIGHT""]","[""RIGHT""]","[""backtrack""]",['RIGHT'],"{'agent_location': {'col': 1, 'row': 5}, 'agent_location_after_down': {'col': 1, 'row': 6}, 'agent_location_after_left': {'col': 1, 'row': 5}, 'agent_location_after_right': {'col': 2, 'row': 5}, 'agent_location_after_up': {'col': 1, 'row': 5}, 'door_location': {'col': 2, 'row': 4}, 'door_open': 'no', 'door_open_after_down': 'no', 'door_open_after_left': 'no', 'door_open_after_right': 'no', 'door_open_after_up': 'no', 'goal_location': {'col': 6, 'row': 2}, 'has_key': 'yes', 'has_key_after_down': 'yes', 'has_key_after_left': 'yes', 'has_key_after_right': 'yes', 'has_key_after_up': 'yes', 'hit_wall_after_down': 'no', 'hit_wall_after_left': 'yes', 'hit_wall_after_right': 'no', 'hit_wall_after_up': 'yes', 'is_door_down': 'no', 'is_door_left': 'no', 'is_door_right': 'no', 'is_door_up': 'no', 'is_goal_down': 'no', 'is_goal_left': 'no', 'is_goal_right': 'no', 'is_goal_up': 'no', 'is_key_down': 'no', 'is_key_left': 'no', 'is_key_right': 'no', 'is_key_up': 'no', 'key_location': {'col': -1, 'row': -1}, 'wall_down': 'no', 'wall_left': 'yes', 'wall_right': 'no', 'wall_up': 'yes'}",wall_right,no
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0,data/hf/trajectories_key_door_100/trajectories_key_door/together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0.json,together_ai/openai/gpt-oss-20b,1,"  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ # _ K _ # 
+3 # _ _ _ # _ A _ # 
+4 # _ # # # D # # # 
+5 # _ _ _ _ _ _ G # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ # _ _ _ # 
+8 # # # # # # # # # ",False,UP,True,False,"6,3","6,2","  0 1 2 3 4 5 6 7 8
+0 # # # # # # # # #
+1 # _ _ _ # _ _ _ #
+2 # _ _ _ # _ K _ #
+3 # _ _ _ # _ A _ #
+4 # _ # # # D # # #
+5 # _ _ _ _ _ _ G #
+6 # _ _ _ # _ _ _ #
+7 # _ _ _ # _ _ _ #
+8 # # # # # # # # #",7,6,8,8,0,True,8,False,optimal_success,baseline_optimal,False,False,True,2,context,True,pre_failure_context,"{""agent_location"": {""col"": 6, ""row"": 3}, ""agent_location_after_down"": {""col"": 6, ""row"": 3}, ""agent_location_after_left"": {""col"": 5, ""row"": 3}, ""agent_location_after_right"": {""col"": 7, ""row"": 3}, ""agent_location_after_up"": {""col"": 6, ""row"": 2}, ""door_location"": {""col"": 5, ""row"": 4}, ""door_open"": ""no"", ""door_open_after_down"": ""no"", ""door_open_after_left"": ""no"", ""door_open_after_right"": ""no"", ""door_open_after_up"": ""no"", ""goal_location"": {""col"": 7, ""row"": 5}, ""has_key"": ""no"", ""has_key_after_down"": ""no"", ""has_key_after_left"": ""no"", ""has_key_after_right"": ""no"", ""has_key_after_up"": ""yes"", ""hit_wall_after_down"": ""yes"", ""hit_wall_after_left"": ""no"", ""hit_wall_after_right"": ""no"", ""hit_wall_after_up"": ""no"", ""is_door_down"": ""no"", ""is_door_left"": ""no"", ""is_door_right"": ""no"", ""is_door_up"": ""no"", ""is_goal_down"": ""no"", ""is_goal_left"": ""no"", ""is_goal_right"": ""no"", ""is_goal_up"": ""no"", ""is_key_down"": ""no"", ""is_key_left"": ""no"", ""is_key_right"": ""no"", ""is_key_up"": ""yes"", ""key_location"": {""col"": 6, ""row"": 2}, ""wall_down"": ""yes"", ""wall_left"": ""no"", ""wall_right"": ""no"", ""wall_up"": ""no""}","[""UP""]","[""LEFT""]",[],['UP'],"{'agent_location': {'col': 6, 'row': 3}, 'agent_location_after_down': {'col': 6, 'row': 3}, 'agent_location_after_left': {'col': 5, 'row': 3}, 'agent_location_after_right': {'col': 7, 'row': 3}, 'agent_location_after_up': {'col': 6, 'row': 2}, 'door_location': {'col': 5, 'row': 4}, 'door_open': 'no', 'door_open_after_down': 'no', 'door_open_after_left': 'no', 'door_open_after_right': 'no', 'door_open_after_up': 'no', 'goal_location': {'col': 7, 'row': 5}, 'has_key': 'no', 'has_key_after_down': 'no', 'has_key_after_left': 'no', 'has_key_after_right': 'no', 'has_key_after_up': 'yes', 'hit_wall_after_down': 'yes', 'hit_wall_after_left': 'no', 'hit_wall_after_right': 'no', 'hit_wall_after_up': 'no', 'is_door_down': 'no', 'is_door_left': 'no', 'is_door_right': 'no', 'is_door_up': 'no', 'is_goal_down': 'no', 'is_goal_left': 'no', 'is_goal_right': 'no', 'is_goal_up': 'no', 'is_key_down': 'no', 'is_key_left': 'no', 'is_key_right': 'no', 'is_key_up': 'yes', 'key_location': {'col': 6, 'row': 2}, 'wall_down': 'yes', 'wall_left': 'no', 'wall_right': 'no', 'wall_up': 'no'}",wall_up,no

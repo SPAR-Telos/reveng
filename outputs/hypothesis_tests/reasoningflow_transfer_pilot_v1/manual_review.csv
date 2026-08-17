@@ -1,0 +1,337 @@
+pilot_id,sentence_id,sample_stratum,context_before,target_sentence,predicted_node_count,priority_review,model_nodes_json,boundary_reasonable,labels_reasonable,missing_doorkey_function,manual_nodes_json,reviewer,review_notes
+rf_3ada309b5bc7de4e,keepdoor_30__step_005__sentence_082,structure_enriched,"[74] Then down to (2,3).
+[75] That's 5 steps.
+[76] Check any shorter path?
+[77] Let's try: (2,6)->(2,5)->(2,4) wall can't.
+[78] (2,6)->(3,6)->(3,5)->(3,4) wall?
+[79] (3,4) is #.
+[80] So not good.
+[81] Maybe go up to (1,6) then left to (1,5) then left to (1,4) door open, then left to (1,3) then down to (2,3).","5 steps.
+
+Could we go up to (1,6) then left to (1,5) then left to (1,4) door open, then down to (2,4) but it's wall can't.",0,True,[],,,,,,
+rf_019fe112aac861a5,keepdoor_59__step_002__sentence_068,random,"[60] That's 1+1+3+1 = 6 steps.
+[61] Wait count: Step1: down to key.
+[62] Step2: down to door (now open).
+[63] Step3: down to (5,2).
+[64] Step4: down to (6,2).
+[65] Step5: down to (7,2).
+[66] Step6: right to (7,3).
+[67] Yes 6 steps.",Could there be a shorter path?,0,True,[],,,,,,
+rf_d99439ba7d67e713,keepdoor_15__step_000__sentence_045,structure_enriched,"[37] So door blocks vertical passage at column 3 between rows 3 and 5?
+[38] Actually door is at (4,3).
+[39] But door is a locked door; we need key to open.
+[40] But we may circumvent door by going around via column 2 or 4?
+[41] But both sides are walls.
+[42] So door blocks path between row 3 and 5 along column 3.
+[43] However we might go around via row 4 col 7?
+[44] Wait door at (4,3) is in the middle of a corridor.",But maybe we can bypass door by going to row 4 col 7 (open) and then up to row 1 col 7?,0,True,[],,,,,,
+rf_b3861752aeaecdaf,keepdoor_16__step_010__sentence_061,structure_enriched,"[53] So we can choose any shortest path.
+[54] Let's compute possible shortest path: from (4,1) to (6,7) maybe via (4,1)->(4,7)->(6,7).
+[55] But we must avoid walls.
+[56] Let's see grid interior: rows 1-7, columns 1-7.
+[57] All open except door at (7,4).
+[58] So we can go along row 4?
+[59] Wait row 4 has agent at col1.
+[60] Row 4 columns 2-7 are '#'?","Wait row 4: ""# A # # # # # # #"" Actually row 4: ""# A # # # # # # #"" means at row 4, columns 1 is A, columns 2-7 are '#', walls.",0,True,[],,,,,,
+rf_ae0f22d4de041d42,keepdoor_0__step_001__sentence_109,structure_enriched,"[101] Actually row2 col5 is _.
+[102] Then left to (2,4) is #.
+[103] So can't go left.
+[104] We could go up to (1,6) then left to (1,5) then left to (1,4) which is #.
+[105] So blocked.
+[106] Maybe go up to (1,6) then left to (1,5) then left to (1,4) #.
+[107] So can't cross that column.
+[108] Maybe go up to (1,6) then left to (1,5) then left to (1,4) #.","So no.
+
+Alternatively, from (3,6) go right to (3,7) then up to (2,7) then up to (1,7) then left to (1,6) etc but maybe blocked by # at (1,4).",0,True,[],,,,,,
+rf_1761325f579f7e76,keepdoor_34__step_007__sentence_275,structure_enriched,"[267] (3,6) open.
+[268] From (2,7): neighbors (1,7), (3,7), (2,6), (2,8).
+[269] (1,7) open, (2,6) open.
+[270] From (3,6): neighbors (2,6), (4,6), (3,5), (3,7).
+[271] (3,5) open.
+[272] So distance from (7,7) to (3,5):
+[273] 7,7 -> 6,7 (1) -> 5,7 (2) -> 4,7 (3) -> 3,7 (4) -> 3,6 (5) -> 3,5 (6).
+[274] So 6 steps indeed.","But maybe we can reach (3,3) via different route: maybe go to (2,6) then up to (1,6) etc then left to (1,3) then down to (2,3).",0,True,[],,,,,,
+rf_e64bf57cc66796e4,keepdoor_19__step_002__sentence_043,structure_enriched,"[35] Then move right back to (5,3) to open door.
+[36] After door opens, we can go through?
+[37] Actually door removed.
+[38] We need to get to goal at (7,7).
+[39] Let's check path after door.
+[40] After door removed at (5,4), we can traverse.
+[41] Let's plan route: From (5,3) after opening door, we can go right to (5,4) (door removed) to (5,5) to (5,6) to (5,7) maybe.
+[42] Let's see if those cells open: row5 col5 '_' open, col6 '_' open, col7 '_' open.","Then from (5,7) go down to (6,7) '_' open, then to (7,7) goal.",0,True,[],,,,,,
+rf_f83c9f9c4f96b5fa,keepdoor_10__step_001__sentence_298,structure_enriched,"[290] But between col3 and col5 there is col4 wall.
+[291] So no. Row6: same.
+[292] Row7: same.
+[293] Thus indeed no path.
+[294] Thus maybe the problem intentionally includes unreachable goal, but we still need to output next move?
+[295] The instructions: ""Your objective is to navigate from the current position (A) to the goal location (G) while avoiding walls (#).
+[296] Importantly, the agent should aim to reach the goal using the least amount of steps possible."" So if unreachable, maybe we output nothing?
+[297] But we must provide JSON action.","However, maybe we misinterpret door mechanics: ""A locked door (D) is automatically opened and removed from the grid when the agent is adjacent to the door (in front of it) and has already picked up the key."" So door opens when agent adjacent, but door remains a cell that becomes open.",0,True,[],,,,,,
+rf_ac6fe3f8edfb74f4,keepdoor_31__step_005__sentence_129,structure_enriched,"[121] But we need to decide one move.
+[122] Usually choose UP or LEFT?
+[123] Let's analyze if left then up path might be blocked by walls?
+[124] From (7,6) up to (6,6) open.
+[125] Then left to (6,5).
+[126] So same. So either is fine.
+[127] But maybe there is a shorter path if we go left first?
+[128] Let's check if any other path: (7,7) left to (7,6) left to (7,5) left to (7,4) but wall.",So can't. So left first then up is fine.,0,True,[],,,,,,
+rf_002f443794cc4c19,keepdoor_33__step_003__sentence_116,random,"[108] Thus we need to plan: go to key at (3,7), pick it up, then go adjacent to door (4,7) to open it, then go to goal at (5,3).
+[109] But we might open door from other side?
+[110] Actually we need to be adjacent to door; we can be at (4,6) (left of door) or (3,7) (above door) or (5,7) (below door) or (4,8) (right of door).
+[111] Which of those are reachable?
+[112] (3,7) is key location; we will be there after picking up key.
+[113] So we can open door from there.
+[114] That seems easiest.
+[115] After door opens, we can go from (3,7) down to (4,7) (door cell now open), then down to (5,7), then left to (5,6), left to (5,5), left to (5,4) '#', can't.","So left to (5,3) goal?",0,True,[],,,,,,
+rf_fcbcfce4bed3bcbc,keepdoor_36__step_008__sentence_121,structure_enriched,"[113] So door only connects left and right cells.
+[114] So it blocks crossing between left side (col <=3) and right side (col >=5) at row3.
+[115] But maybe we can cross at other rows: For example at row4: (4,4) is '#', but (4,5) is '#' as well.
+[116] So vertical barrier?
+[117] Let's check row4 col4 '#', col5 '#', so vertical barrier extends.
+[118] But maybe there is opening elsewhere: row5 col4 '#' and col5 '_' open.
+[119] So we can cross at row5: from left side (col3) to right side (col5) via row5: (5,3) '_' -> (5,4) '#' blocked; (5,3) can't cross.
+[120] But maybe from (5,2) to (5,3) to (5,4) blocked.","So no.
+
+Row6: col4 '#' but col5 'G', so maybe cross at row6?",0,True,[],,,,,,
+rf_033e02f7477c7854,keepdoor_36__step_008__sentence_052,random,"[44] Let's try other route: from (5,1) right to (5,2) -> right to (5,3) -> right to (5,4)# can't.
+[45] So maybe from (5,3) up to (4,3)# no.
+[46] So can't go to (5,5) via that route.
+[47] Alternate: from (5,1) up?
+[48] can't. So maybe from (6,1) go right?
+[49] Row6 col1 '_' -> (6,2) '_' -> (6,3) '_' -> (6,4) '#' (since row6 col4 is '#').
+[50] So can't go to col5 via that row.
+[51] But from (6,3) up to (5,3) open?","yes. Then from (5,3) right to (5,4) blocked.",0,True,[],,,,,,
+rf_5aea04d1489db8cb,keepdoor_33__step_001__sentence_144,structure_enriched,"[136] From (5,5) left to (5,4) blocked.
+[137] So cannot reach goal from that side.
+[138] Alternatively from (4,7) down to (5,7) open, left to (5,6) open, left to (5,5) open, left to (5,4) '#', can't.
+[139] Maybe go down to row6 from (5,7).
+[140] Let's check row6: col7 '_' open.
+[141] From (5,7) down to (6,7) open, left to (6,6) open, left to (6,5) open, left to (6,4) open, left to (6,3) open, up to (5,3) G.
+[142] So path: after opening door, go down to row6, traverse left to column3, then up to goal.
+[143] Let's confirm walls: Row6 all open 1-7.","So yes.
+
+Thus path: from agent to key, then open door, then go down to row6, left to col3, up to goal.",0,True,[],,,,,,
+rf_9634ca45bdf7239f,keepdoor_26__step_008__sentence_114,structure_enriched,"[106] row3 col1 open.
+[107] row2 col1 open.
+[108] row1 col1 open.
+[109] So we can go up along column1 to row1.
+[110] Then go right to column5?
+[111] Let's see row1: at col5 is '_' open.
+[112] But we need to go down from row1 col5 to reach goal.
+[113] Let's check column5: row1 col5 open, row2 col5 open, row3 col5 open, row4 col5 open, row5 col5 open, row6 col5 open, row7 col5 open.","So we can go up to row1 col5 then go down along column5 to row7 col5, then step right to goal.",0,True,[],,,,,,
+rf_ace976973dd16378,keepdoor_75__step_002__sentence_035,structure_enriched,"[27] Let's map path.
+[28] From (7,5) up to (6,5), left to (6,4) is door D.
+[29] But we can open door if adjacent and have key.
+[30] We are at (6,5).
+[31] Adjacent to door at (6,4) to the left.
+[32] So door will open automatically.
+[33] So we can then go left to door cell?
+[34] Actually door removed when adjacent?","The rule: ""A locked door (D) is automatically opened and removed from the grid when the agent is adjacent to the door (in front of it) and has already picked up the key.",0,True,[],,,,,,
+rf_00e69ae4eb9c6c2f,keepdoor_80__step_004__sentence_111,random,"[103] So the only way to go above row5 is via column 7 maybe?
+[104] Let's see: from agent at (6,1) go right to (6,3), then up to (5,3) but door at (5,4) not relevant.
+[105] But to reach row3, we need to cross row4 somewhere.
+[106] Row4 only open at col7.
+[107] So to get to row3, we need to go to col7 first, then up to row3.
+[108] So path: (6,1)->(6,2)->(6,3)->(5,3)->(5,4?) can't.
+[109] So can't go to col7 via row5.
+[110] Another way: from (6,1) go up to (5,1), right to (5,2), up to (4,2) '#', blocked.","So no.
+
+Thus only reachable cells from agent without passing through door are within the region below door: rows 5-7, columns 1-3,5-6?",0,True,[],,,,,,
+rf_ae37bce0cc85541b,keepdoor_10__step_002__sentence_090,structure_enriched,"[82] So after door, there are walls at 3-5, but open at 6.
+[83] So door at (4,2) cannot lead to column6 directly.
+[84] Thus maybe the goal is actually reachable via open path circumventing the wall column 4?
+[85] Wait column4 is blocked across all rows.
+[86] So no. So maybe the goal is left side?
+[87] But it's at column6.
+[88] So maybe the agent is on the right side initially?
+[89] But agent at (5,1) left side.","So maybe there is a mistake: maybe the door is at (4,2) but we can open it and then step onto it, and then from there we can go up to row3 col2, then to row2 col2, then to row2 col3, etc. But column3 at row2 is '#', so cannot cross.",0,True,[],,,,,,
+rf_b1ab905477a5f274,keepdoor_15__step_000__sentence_076,structure_enriched,"[68] We may or may not need key.
+[69] The door at (4,3) is not on this path.
+[70] So we don't need to pick up key.
+[71] The agent status says not carrying key.
+[72] So we can ignore key and door.
+[73] So next move: from (1,1) we could go DOWN to (2,1).
+[74] That seems good.
+[75] Alternatively, we could go RIGHT to (1,2).","But from (1,2) we cannot go to (1,3) because it's key but we don't need it.",0,True,[],,,,,,
+rf_01219f290ea05c87,keepdoor_77__step_003__sentence_030,random,"[22] So plan: from start (1,1) to either (3,5) or (5,5).
+[23] Let's find shortest path.
+[24] Compute distances.
+[25] We can move through open spaces.
+[26] Let's map open cells.
+[27] We'll compute a path to (3,5).
+[28] Starting at (1,1).
+[29] We can go right to (1,2),(1,3),(1,4) but (1,4) is '#'.","So can't. Let's go down to (2,1),(3,1),(4,1?) row4 col1 is '#', can't.",0,True,[],,,,,,
+rf_f445dbfa0c982a56,keepdoor_11__step_005__sentence_292,structure_enriched,"[284] Let's check: from start, we can go down to row5 col6?
+[285] But row4 col6 wall.
+[286] So no. So we must go up to row2 first.
+[287] Thus path to goal likely requires going up to row2, left to col1, down to row5, then to goal.
+[288] That is 10 steps.
+[289] Let's double-check if we can reduce steps by going to (3,1) then directly down to goal skipping door?
+[290] Wait door at (4,1) is in the way.
+[291] But we can open it automatically by being adjacent.","But maybe we can open door while at (3,1) and then step onto door cell (4,1), then down to (5,1), then down to goal.",0,True,[],,,,,,
+rf_02735c05a60e6f7d,keepdoor_20__step_008__sentence_045,random,"[37] Up from (6,5) to (5,5).
+[38] Up from (5,5) to (4,5) is #.
+[39] So cannot go up that way.
+[40] Up from (6,6) to (5,6) open.
+[41] Up from (5,6) to (4,6) open.
+[42] Up from (4,6) to (3,6) open.
+[43] Up from (3,6) to (2,6) open.
+[44] Up from (2,6) to (1,6) open.","Up from (1,6) to (0,6) #.",1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 25, ""node_text"": ""Up from (1,6) to (0,6) #."", ""reasoningflow_label"": ""fact"", ""confidence"": ""high"", ""short_rationale"": ""States a grid cell status.""}]",,,,,,
+rf_0c20d5e2d22c4b49,keepdoor_21__step_009__sentence_116,random,"[108] The door is removed, so we can move onto (6,4) or maybe we can move into (6,4) as normal open space.
+[109] But we need to go to goal at (6,6).
+[110] So after door opens, we can move right to (6,5), (6,6).
+[111] But we are at (6,3) after opening.
+[112] So we need to go right twice.
+[113] But we might also go to (6,5) directly from (5,5) maybe.
+[114] But (5,5) is _.
+[115] Actually row5 col5 is _.","So we could go to (5,5) then down to (6,5).",1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 43, ""node_text"": ""So we could go to (5,5) then down to (6,5)."", ""reasoningflow_label"": ""reasoning"", ""confidence"": ""high"", ""short_rationale"": ""Derives a path from prior state.""}]",,,,,,
+rf_00bff50e5512bef7,keepdoor_37__step_003__sentence_138,random,"[130] But door at (6,4).
+[131] But we have key, so door can open when adjacent.
+[132] But we cannot pass through door cell itself?
+[133] The rule: door automatically opens and removed when agent adjacent and has key.
+[134] That means we can step into door cell after opening?
+[135] The door cell becomes open space.
+[136] So we can move onto (6,4) after opening.
+[137] But we need to be adjacent to door.","So if we are at (6,3) or (6,5) or (5,4) or (7,4).",1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 49, ""node_text"": ""So if we are at (6,3) or (6,5) or (5,4) or (7,4)."", ""reasoningflow_label"": ""reasoning"", ""confidence"": ""high"", ""short_rationale"": ""Derives adjacency conditions from prior rule.""}]",,,,,,
+rf_047849d223054604,keepdoor_0__step_001__sentence_171,structure_enriched,"[163] (3,7) open -> down?
+[164] (4,7 #) blocked.
+[165] So no.
+
+Thus we cannot reach column1 via row1 or row2 or row3 or row4?
+[166] Let's check other path: from (3,6) go left to (3,5) -> up to (2,5) -> up to (1,5) -> left to (1,4 #) blocked.
+[167] So no.
+
+Thus seems we cannot reach column1 from start without passing through door at (4,5) or circumventing walls at column4.
+[168] But door is at (4,5) which is adjacent to (3,5) and (5,5).
+[169] So if we can open door, we can go from (3,5) down to (4,5) (door) then to (5,5).
+[170] But door is locked initially, we need key at (2,6).","So we must go to key, then open door, then go down to (5,5) then to goal.",1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 73, ""node_text"": ""So we must go to key, then open door, then go down to (5,5) then to goal."", ""reasoningflow_label"": ""planning"", ""confidence"": ""high"", ""short_rationale"": ""Outlines next steps to reach goal.""}]",,,,,,
+rf_f87cbe6f68d56b6c,keepdoor_37__step_003__sentence_072,structure_enriched,"[64] So we must go to col6, then up to row1 col6?
+[65] But goal at col1.
+[66] So we might need to go to col6 then left to col1 via row1 or row2 or row3?
+[67] But row1 col2-3 free, but col4 blocked.
+[68] Row2 col2-3-4-5-6-7 free.
+[69] Row3 col2-3-4 blocked, but col5-7 free.
+[70] So to get to goal at col1, we need to go leftwards eventually.
+[71] But row4 blocks left side.","So we might need to go around via row4 col6, then up to row3 col6, row2 col6, row1 col6, then left to col1?",1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 107, ""node_text"": ""So we might need to go around via row4 col6, then up to row3 col6, row2 col6, row1 col6, then left to col1?"", ""reasoningflow_label"": ""reasoning"", ""confidence"": ""high"", ""short_rationale"": ""Derives a path plan from earlier state analysis.""}]",,,,,,
+rf_53c3203c82de439a,keepdoor_26__step_008__sentence_115,structure_enriched,"[107] row2 col1 open.
+[108] row1 col1 open.
+[109] So we can go up along column1 to row1.
+[110] Then go right to column5?
+[111] Let's see row1: at col5 is '_' open.
+[112] But we need to go down from row1 col5 to reach goal.
+[113] Let's check column5: row1 col5 open, row2 col5 open, row3 col5 open, row4 col5 open, row5 col5 open, row6 col5 open, row7 col5 open.
+[114] So we can go up to row1 col5 then go down along column5 to row7 col5, then step right to goal.","That seems path length: from start (6,2) to (6,1) to (5,1) to (4,1) to (3,1) to (2,1) to (1,1) to (1,2) to (1,3) to (1,4) but (1,4) is 'D', but we can step onto door?",1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 166, ""node_text"": ""That seems path length: from start (6,2) to (6,1) to (5,1) to (4,1) to (3,1) to (2,1) to (1,1) to (1,2) to (1,3) to (1,4) but (1,4) is 'D', but we can step onto door?"", ""reasoningflow_label"": ""reasoning"", ""confidence"": ""high"", ""short_rationale"": ""Derives path steps from prior reasoning.""}]",,,,,,
+rf_9e6521cb92d0ea63,keepdoor_56__step_007__sentence_082,structure_enriched,"[74] But again stuck.
+[75] So we need to go around the wall at column4.
+[76] The wall forms a vertical barrier from row1 to row5 at column4: (1,4),(2,4),(3,4),(4,4),(5,4).
+[77] So to cross from left side to right side, must go around either top or bottom.
+[78] Top: row0 all walls, can't.
+[79] Bottom: row6 has door at (6,4) but door might open.
+[80] So we need to go around via bottom: go down to row6, cross at column4 after opening door, then up to goal?
+[81] But goal at row5, col7.","So maybe route: go down to row6 from left side, cross door, then go right to col7, then up to row5.",1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 99, ""node_text"": ""So maybe route: go down to row6 from left side, cross door, then go right to col7, then up to row5."", ""reasoningflow_label"": ""planning"", ""confidence"": ""high"", ""short_rationale"": ""Proposes next steps to reach goal.""}]",,,,,,
+rf_24ce56cd95cf1794,keepdoor_23__step_006__sentence_009,random,"[1] We need to plan next move.
+[2] Let's parse grid.
+[3] Coordinates: rows 0-8, cols 0-8.
+[4] Grid:
+Row0 all walls.
+[5] Row1: col0 #, col1 _, col2 _, col3 K, col4 #, col5 _, col6 _, col7 _, col8 #
+Row2: col0 #, col1 _, col2 _, col3 A, col4 #, col5 _, col6 _, col7 _, col8 #
+Row3: col0 #, col1 _, col2 _, col3 _, col4 _, col5 _, col6 _, col7 _, col8 #
+Row4: col0 #, col1 #, col2 #, col3 #, col4 #, col5 _, col6 #, col7 #, col8 #
+Row5: col0 #, col1 G, col2 _, col3 _, col4 D, col5 _, col6 _, col7 _, col8 #
+Row6: col0 #, col1 _, col2 _, col3 _, col4 #, col5 _, col6 _, col7 _, col8 #
+Row7: col0 #, col1 _, col2 _, col3 _, col4 #, col5 _, col6 _, col7 _, col8 #
+Row8: all walls.
+[6] Goal G at (5,1).
+[7] Door D at (5,4).
+[8] Key K at (1,3).","Agent A at (2,3).",1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 17, ""node_text"": ""Agent A at (2,3)."", ""reasoningflow_label"": ""restatement"", ""confidence"": ""high"", ""short_rationale"": ""Repeats the agent’s location from prior grid description.""}]",,,,,,
+rf_347a3bb4bc07c389,keepdoor_57__step_002__sentence_122,structure_enriched,"[114] So only open adjacent cells: (1,3) and (1,5).
+[115] But (1,3) is goal; we could open door from there but we need to reach goal anyway.
+[116] But we can't reach goal until door open?
+[117] Actually we can reach goal from below if we can get to (2,3).
+[118] But we cannot get to (2,3) because we can't cross column4.
+[119] So we must open door to pass through (1,4).
+[120] But we could open door from (1,3) after reaching goal?
+[121] Wait we need to open door to pass through, but goal is at (1,3) adjacent to door.","We could open door from goal cell (1,3) and then step into (1,4) but goal is achieved when we reach goal; door opening not necessary.",1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 133, ""node_text"": ""We could open door from goal cell (1,3) and then step into (1,4) but goal is achieved when we reach goal; door opening not necessary."", ""reasoningflow_label"": ""reasoning"", ""confidence"": ""high"", ""short_rationale"": ""Derives that door opening is unnecessary for goal attainment.""}]",,,,,,
+rf_05e9ad8cf8dbd599,keepdoor_68__step_007__sentence_100,random,"[92] Option B: go to (5,5) first: Path from (2,6) to (5,5).
+[93] Let's compute.
+[94] Could go: (2,6) left to (2,5), down to (3,5), down to (4,5) door?
+[95] But cannot step on door until open.
+[96] So cannot go through.
+[97] So need alternate route: from (3,5) left to (3,4), left to (3,3), down to (4,3) # blocked.
+[98] So can't. Instead, maybe go right?
+[99] From (3,5) right to (3,6) open, down to (4,6) # blocked.","So can't go to (5,5) via that route.",1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 36, ""node_text"": ""So can't go to (5,5) via that route."", ""reasoningflow_label"": ""conclusion"", ""confidence"": ""high"", ""short_rationale"": ""States final result of analysis.""}]",,,,,,
+rf_0f0ea1d75a84673c,keepdoor_13__step_001__sentence_005,random,"[1] We need to decide next move.
+[2] Let's map grid coordinates: rows 0-8, cols 0-8.
+[3] Walls around edges.
+[4] Agent A at (5,2).",Carrying key: True.,1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 19, ""node_text"": ""Carrying key: True."", ""reasoningflow_label"": ""fact"", ""confidence"": ""high"", ""short_rationale"": ""States a factual property of the agent.""}]",,,,,,
+rf_50278927756414ce,keepdoor_12__step_003__sentence_028,structure_enriched,"[20] We need to find shortest path.
+[21] Since agent doesn't have key, must pick up key first.
+[22] Key at (5,2) adjacent to agent?
+[23] Agent at (5,1).
+[24] So left? Actually agent at col1, key at col2.
+[25] So moving right will pick up key.
+[26] So first action: RIGHT.
+[27] But check obstacles: (5,2) is K, open.","So yes.
+
+Thus next move: RIGHT.",1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 31, ""node_text"": ""So yes.\n\nThus next move: RIGHT."", ""reasoningflow_label"": ""conclusion"", ""confidence"": ""high"", ""short_rationale"": ""States final decision and action.""}]",,,,,,
+rf_8650c8c05be69a58,keepdoor_20__step_008__sentence_063,structure_enriched,"[55] Let's examine.
+[56] From (5,7) left to (5,6) left to (5,5).
+[57] At (5,5) left to (5,4)#.
+[58] So can't go left further on row5.
+[59] Could go up from (5,5) to (4,5)#.
+[60] Down from (5,5) to (6,5) open.
+[61] From (6,5) left to (6,4)#.
+[62] So can't get to left side from row5.",Thus need to go up to row3 or 2 and then left then down.,1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 56, ""node_text"": ""Thus need to go up to row3 or 2 and then left then down."", ""reasoningflow_label"": ""reasoning"", ""confidence"": ""high"", ""short_rationale"": ""Derives next move sequence from prior state.""}]",,,,,,
+rf_001f54bd1966abaf,keepdoor_20__step_008__sentence_068,random,"[60] Down from (5,5) to (6,5) open.
+[61] From (6,5) left to (6,4)#.
+[62] So can't get to left side from row5.
+[63] Thus need to go up to row3 or 2 and then left then down.
+[64] Let's find path: Starting at (6,7).
+[65] Up to (5,7).
+[66] Up to (4,7)# cannot.
+[67] So maybe from (5,7) left to (5,6) left to (5,5).","Up from (5,5) blocked.",1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 22, ""node_text"": ""Up from (5,5) blocked."", ""reasoningflow_label"": ""fact"", ""confidence"": ""high"", ""short_rationale"": ""States a factual condition.""}]",,,,,,
+rf_f30b90a25e1989f1,keepdoor_59__step_002__sentence_121,structure_enriched,"[113] Is there path of 5 steps?
+[114] Let's attempt: from (2,2) down to (3,2) (1), right to (3,3) (2), down to (4,3) (3), down to (5,3) (4), down to (6,3) (5), down to (7,3) (6).
+[115] That's 6 again.
+[116] What about going right to (2,3) (1), right to (2,4) but (2,4) is '#', wall.
+[117] So cannot.
+[118] What about left?
+[119] (2,1) open; then down to (3,1), down to (4,1), down to (5,1), down to (6,1), down to (7,1), right to (7,2), right to (7,3).
+[120] That's 8 steps.","What about right from (2,2) to (2,3), then down to (3,3), then down to (4,3), then down to (5,3), then right to (5,4) but (5,4) is '#', can't.",1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 142, ""node_text"": ""What about right from (2,2) to (2,3), then down to (3,3), then down to (4,3), then down to (5,3), then right to (5,4) but (5,4) is '#', can't."", ""reasoningflow_label"": ""reasoning"", ""confidence"": ""high"", ""short_rationale"": ""Derives a path and notes a block.""}]",,,,,,
+rf_e744fb0428d75246,keepdoor_21__step_009__sentence_079,structure_enriched,"[71] row4 col6 is #.
+[72] So cannot.
+[73] Maybe go left to (3,4).
+[74] Then down to (4,4) is #.
+[75] So cannot.
+[76] Let's consider path to (6,5).
+[77] We need to go from (3,5) to (5,5) maybe.
+[78] But (4,5) is #, so cannot pass through that column.","So we must go around via row3 left or right, then down, then around.",1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 68, ""node_text"": ""So we must go around via row3 left or right, then down, then around."", ""reasoningflow_label"": ""reasoning"", ""confidence"": ""high"", ""short_rationale"": ""Derives a path strategy from prior constraints.""}]",,,,,,
+rf_221fe776a9de6c0e,keepdoor_31__step_005__sentence_120,structure_enriched,"[112] That is 6 moves.
+[113] Yes.
+
+Thus first move: from (7,7) we can go UP or LEFT.
+[114] Which leads to same distance?
+[115] Let's check if any obstacles that might make one better.
+[116] Starting at (7,7).
+[117] Up to (6,7) open.
+[118] Left to (7,6) open.
+[119] Both are open.",But maybe left then up then left leads to same distance.,1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 56, ""node_text"": ""But maybe left then up then left leads to same distance."", ""reasoningflow_label"": ""reasoning"", ""confidence"": ""high"", ""short_rationale"": ""Derives equivalence of path lengths from prior checks.""}]",,,,,,
+rf_03c7819acba9d0d1,keepdoor_19__step_002__sentence_003,random,"[1] We need to produce next move.
+[2] Let's analyze grid.","Grid coordinates: rows 0-8, cols 0-8.",1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 37, ""node_text"": ""Grid coordinates: rows 0-8, cols 0-8."", ""reasoningflow_label"": ""fact"", ""confidence"": ""high"", ""short_rationale"": ""States external grid bounds.""}]",,,,,,
+rf_c78d233d9a7d749a,keepdoor_33__step_001__sentence_203,structure_enriched,"[195] From (5,7) to (6,7): 1 step.
+[196] From (6,7) to (6,6): 1 step.
+[197] From (6,6) to (6,5): 1 step.
+[198] From (6,5) to (6,4): 1 step.
+[199] From (6,4) to (6,3): 1 step.
+[200] From (6,3) to (5,3): 1 step.
+[201] Total steps after door: 7 steps.
+[202] Total from start: 2 (to key) + 1 (down to door) + 7 = 10 steps.","But maybe there is shorter path: After picking key at (3,7), maybe we can go to (5,7) via (4,7) down, then left to (5,6) then left to (5,5) etc. But we counted that path: (4,7)->(5,7) -> (5,6) -> (5,5) -> (5,4) blocked.",1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 219, ""node_text"": ""But maybe there is shorter path: After picking key at (3,7), maybe we can go to (5,7) via (4,7) down, then left to (5,6) then left to (5,5) etc. But we counted that path: (4,7)->(5,7) -> (5,6) -> (5,5) -> (5,4) blocked."", ""reasoningflow_label"": ""reflection"", ""confidence"": ""high"", ""short_rationale"": ""Expresses doubt and re-evaluates path length.""}]",,,,,,
+rf_ce539bd24f0ee498,keepdoor_41__step_000__sentence_130,structure_enriched,"[122] That's longer than 10.
+[123] But we could also go from key to goal via different path maybe shorter?
+[124] Let's think: after opening door, we might cross the wall at row5?
+[125] Wait column4 wall at row5 is '#', so can't cross at row5.
+[126] So crossing at row7 is still required.
+[127] So 11 steps.
+[128] But maybe we can go from agent to key, then to goal via a different route that doesn't go down to row7?
+[129] Let's analyze grid: maybe there's a path from left side to right side via door at (4,1) then to column4 at some row above?","Wait door at column1, but after door opens we can go to column2,3 etc. But column4 wall still blocks.",1,False,"[{""node_number"": 1, ""start_character"": 0, ""end_character"": 101, ""node_text"": ""Wait door at column1, but after door opens we can go to column2,3 etc. But column4 wall still blocks."", ""reasoningflow_label"": ""reasoning"", ""confidence"": ""high"", ""short_rationale"": ""Derives consequence of door opening on path feasibility.""}]",,,,,,

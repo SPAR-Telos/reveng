@@ -1,0 +1,13 @@
+{
+  "broad_candidate_passes": false,
+  "checks": {
+    "all_four_broad_categories_predicted": false,
+    "duplicate_broad_agreement_at_least_95_percent": true,
+    "general_broad_agreement_at_least_80_percent": false,
+    "parse_success_at_least_99_percent": true,
+    "reference_broad_accuracy_at_least_75_percent": false,
+    "within_three_points_of_teacher_broad_accuracy": false
+  },
+  "manual_disagreement_review_required": true,
+  "status": "complete"
+}

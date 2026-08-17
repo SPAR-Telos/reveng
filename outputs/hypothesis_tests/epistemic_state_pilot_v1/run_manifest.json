@@ -1,0 +1,17 @@
+{
+  "analysis": "behavioral_epistemic_state_pilot",
+  "belief_rows_path": "outputs/experiment2_behavioral_beliefs/gpt_oss_local_sentence_matched46_v1/belief_rows.csv",
+  "position_rows_path": "outputs/experiment1_activation_monitor/gpt_oss_local_sentence_matched46_v1/position_rows.csv",
+  "confidence_threshold": 0.8,
+  "sensitivity_thresholds": [
+    0.7,
+    0.8,
+    0.9
+  ],
+  "bootstrap_repeats": 5000,
+  "seed": 42,
+  "n_positions": 7084,
+  "n_trajectories": 31,
+  "used_gpu": false,
+  "made_model_calls": false
+}

@@ -1,0 +1,11 @@
+{
+  "attempted_this_invocation": 9344,
+  "current_key": null,
+  "failed_queries_recorded": 0,
+  "malformed_checkpoint_lines_ignored": 0,
+  "remaining_queries": 0,
+  "resume_enabled": true,
+  "status": "completed",
+  "successful_queries": 9344,
+  "total_planned_queries": 9344
+}

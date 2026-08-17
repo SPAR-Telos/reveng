@@ -1,0 +1,2 @@
+example_id,trajectory_id,step_index,failure_category,selection_stage,source_dataset,n_reasoning_steps,final_action,observed_action,optimal_actions_json,trajectory_group,n_reasoning_prefixes,trajectory_remains_optimal,commitment_step,recovery_step,wrong_turn_step_strict,wrong_turn_step_majority,wrong_turn_detected
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_016,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16,16,wall_hit,failure,focused_failure,96,RIGHT,RIGHT,"[""DOWN""]",recover,97,False,52,2,50,1,True

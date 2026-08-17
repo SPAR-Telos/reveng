@@ -1,0 +1,6 @@
+event_family,candidate_chain,n_events_with_chain,event_coverage,n_occurrences
+optimal_to_suboptimal,has_key_after_up -> agent_location,1,0.2,1
+suboptimal_to_optimal,door_open -> has_key_after_up -> agent_location,1,0.16666666666666666,1
+suboptimal_to_optimal,door_open -> hit_wall_after_left,1,0.16666666666666666,1
+optimal_to_suboptimal,door_open -> hit_wall_after_down,1,0.2,1
+optimal_to_suboptimal,hit_wall_after_down -> agent_location,1,0.2,1

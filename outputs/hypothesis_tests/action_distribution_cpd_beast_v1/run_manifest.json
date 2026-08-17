@@ -1,0 +1,32 @@
+{
+  "analysis": "offline_beast_action_distribution_change_points",
+  "bootstrap_repeats": 2000,
+  "config": {
+    "burnin": 200,
+    "chains": 3,
+    "location_probability_threshold": 0.7,
+    "max_change_points": 10,
+    "min_segment_length": 3,
+    "minimum_dynamic_range": 1e-08,
+    "samples": 8000,
+    "seed": 42,
+    "thinning": 5,
+    "trace_bayes_factor_threshold": 9.0
+  },
+  "event_window_sentences": 3,
+  "examples": [
+    "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_000",
+    "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_88_step_010"
+  ],
+  "implementation_version": "beast_action_cpd_v1_exact_sentence_probability",
+  "input_events": "outputs/experiment1_activation_monitor/gpt_oss_local_sentence_matched46_v1/event_rows.csv",
+  "input_events_sha256": "f8374eaac8f1067368d2578963f0a53895c8bfa72e81e0db2e438446fd39e17a",
+  "input_positions": "outputs/experiment1_activation_monitor/gpt_oss_local_sentence_matched46_v1/position_rows.csv",
+  "input_positions_sha256": "5cea57ad68f5b7ff8624c06a1dd2616151952a5185a8fb806f39a0d0d02a4195",
+  "n_detected_change_points": 160,
+  "n_detected_states": 44,
+  "n_positions": 7084,
+  "n_states": 46,
+  "n_trajectories": 31,
+  "null_repeats": 2000
+}

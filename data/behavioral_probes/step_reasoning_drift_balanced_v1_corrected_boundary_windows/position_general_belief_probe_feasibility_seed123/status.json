@@ -1,0 +1,36 @@
+{
+  "status": "completed",
+  "interpretation": "feasibility_pilot_only",
+  "layer": 15,
+  "n_independent_states": 24,
+  "n_positions": 719,
+  "n_folds": 5,
+  "grouping_contract": "all positions from one state remain in one fold",
+  "representations": [
+    "last_token",
+    "sentence_mean",
+    "boundary_window_mean"
+  ],
+  "questions_evaluated": [
+    "has_key",
+    "wall_down",
+    "wall_left",
+    "wall_right",
+    "wall_up"
+  ],
+  "questions_skipped": [
+    {
+      "question_id": "door_open",
+      "reason": "only one class is present across independent states",
+      "class_counts_json": "{\"0\": 24}"
+    }
+  ],
+  "training_parameters": {
+    "model": "linear_logistic_probe",
+    "epochs": 100,
+    "learning_rate": 0.01,
+    "weight_decay": 0.0001,
+    "state_and_class_weighted_loss": true,
+    "seed": 123
+  }
+}

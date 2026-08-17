@@ -1,0 +1,4 @@
+model_name,outcome,predictors,n,events,non_events,converged,warning
+action_change_next_main,action_change_next,"['reasoning_progress', 'action_entropy_bits', 'state_belief_entropy_per_0p01_bits', 'primary_belief_error_rate', 'chosen_action_conflicts_with_reported_state']",653,61,592,True,
+optimality_loss_next_compact,optimality_loss_next,"['reasoning_progress', 'action_entropy_bits', 'state_belief_entropy_per_0p01_bits', 'primary_belief_error_rate']",653,12,641,True,
+optimality_recovery_next_compact,optimality_recovery_next,"['reasoning_progress', 'action_entropy_bits', 'state_belief_entropy_per_0p01_bits', 'primary_belief_error_rate']",653,15,638,True,near-perfect fitted probabilities; possible separation

@@ -1,0 +1,79 @@
+We need to produce next move. Let's analyze grid. Coordinates: rows 0-8, columns 0-8. Agent A at (3,3). Goal G at (1,6). Agent carrying key: True. So door not present? Wait there is no door in grid. But key is picked. The goal is at (1,6). Need shortest path from (3,3) to (1,6). Let's map obstacles: walls '#'. Represent open '_' or 'G'. Let's list grid:
+
+Row0: all walls
+Row1: col0 '#', col1 '_' , col2 '_' , col3 '_' , col4 '#', col5 '_' , col6 '_' , col7 'G', col8 '#'.
+Row2: col0 '#', col1 '_' , col2 '_' , col3 '_' , col4 '#', col5 '_' , col6 '_' , col7 '_' , col8 '#'.
+Row3: col0 '#', col1 '_' , col2 '_' , col3 'A', col4 '#', col5 '_' , col6 '_' , col7 '_' , col8 '#'.
+Row4: col0 '#', col1 '#', col2 '#', col3 '_' , col4 '#', col5 '#', col6 '#', col7 '_' , col8 '#'.
+Row5: col0 '#', col1 '_' , col2 '_' , col3 '_' , col4 '#', col5 '_' , col6 '_' , col7 '_' , col8 '#'.
+Row6: col0 '#', col1 '_' , col2 '_' , col3 '_' , col4 '#', col5 '_' , col6 '_' , col7 '_' , col8 '#'.
+Row7: col0 '#', col1 '_' , col2 '_' , col3 '_' , col4 '_' , col5 '_' , col6 '_' , col7 '_' , col8 '#'.
+Row8: all walls.
+
+Goal at (1,7). Wait earlier described G at (1,6). Let's check row1 col7 is 'G'. So coordinates (1,7). Agent at (3,3). Need path.
+
+Let's find shortest path avoiding walls. Let's map accessible cells.
+
+We can treat walls as obstacles.
+
+Let's compute distances manually.
+
+From (3,3) to (1,7). Path options: maybe go up to row1 then right to col7.
+
+From (3,3) up to (2,3) open. Up to (1,3) open. Then right to (1,4) is wall '#', cannot. So need to go around.
+
+Alternate: from (3,3) go right to (3,4) wall '#', cannot. So must go left first? From (3,3) left to (3,2) open. Up to (2,2) open. Up to (1,2) open. Right to (1,3) open. Then right to (1,4) wall. So cannot go that way.
+
+We might need to go around via row2/row3 etc.
+
+Consider path: (3,3) -> (3,2) -> (3,1) -> (2,1) -> (1,1) -> (1,2) -> (1,3) -> (2,3) -> (2,4) is wall. Hmm.
+
+Maybe go via row5 or row6.
+
+Let's analyze grid connectivity.
+
+Open cells:
+
+Row1: col1,2,3,5,6,7
+Row2: col1,2,3,5,6,7
+Row3: col1,2,3,5,6,7
+Row4: col3,7
+Row5: col1,2,3,5,6,7
+Row6: col1,2,3,5,6,7
+Row7: col1,2,3,4,5,6,7
+
+Walls at many positions.
+
+Goal at (1,7). So we need to reach that.
+
+Let's check connectivity: From agent at (3,3). Let's see if there is a path that goes down to row4? Row4 has open at col3. So from (3,3) down to (4,3) open. From there down to (5,3) open. Down to (6,3) open. Down to (7,3) open. Then right to (7,4),(7,5),(7,6),(7,7). Up from (7,7) to (6,7) open. Up to (5,7) open. Up to (4,7) open. Up to (3,7) open. Up to (2,7) open. Up to (1,7) goal. That seems a path.
+
+Let's count steps: from (3,3) to (4,3) (1), (5,3) (2), (6,3) (3), (7,3) (4), (7,4) (5), (7,5) (6), (7,6) (7), (7,7) (8), (6,7) (9), (5,7) (10), (4,7) (11), (3,7) (12), (2,7) (13), (1,7) goal (14). So 14 steps.
+
+Could there be a shorter path? Let's see if we can go up earlier.
+
+Maybe go up to row2, then right to col7 then up? Let's examine.
+
+From (3,3) up to (2,3) (1), up to (1,3) (2). Then from (1,3) we cannot go right due to wall at (1,4). So need to go up to row0? But row0 is walls. So can't.
+
+From (1,3), we can go left to (1,2) (3), left to (1,1) (4). Then from (1,1) we could go down? Not to goal.
+
+Alternatively, go from (3,3) left to (3,2) (1), left to (3,1) (2), up to (2,1) (3), up to (1,1) (4), right to (1,2) (5), right to (1,3) (6). But again stuck.
+
+From (3,3) left to (3,2) (1), up to (2,2) (2), up to (1,2) (3), right to (1,3) (4). Same.
+
+Maybe go right from (3,3) is blocked by wall at (3,4). So can't.
+
+Thus the path via bottom row seems necessary. Let's check if there is any shorter path via row5/6 but not down to row7. Maybe go to (4,3) then right to (4,4) wall. So can't go right at row4. So must go down to row5 or 6.
+
+At (5,3) we can go right to (5,4) wall. So can't go right. So must go down to (6,3). At (6,3) right to (6,4) wall. So still can't go right. So must go down to (7,3). At (7,3) we can go right to (7,4). So the path is forced to go to bottom row before right.
+
+Thus minimal steps likely 14.
+
+Check if there is path via left side to row7 then right to goal? From (3,3) left to (3,2) (1), left to (3,1) (2), down to (4,1) wall. So can't go down there. So only down via column3.
+
+Thus minimal path is as described.
+
+So next move: from (3,3) down to (4,3). So action: DOWN.
+
+Return JSON.

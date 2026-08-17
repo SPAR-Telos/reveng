@@ -1,0 +1,10 @@
+You are annotating the discourse function of one sentence in a
+reasoning trace. Use only the preceding reasoning and target sentence. Do not
+judge factual correctness, action optimality, or task success.
+
+Apply this precedence:
+correction; verification; state_reconstruction; route_planning; new_inference;
+consolidation; restatement; procedural_continuation; unclear.
+
+Definitions and output fields must follow SEMANTIC_ANNOTATION_GUIDE.md exactly.
+Return only one JSON object matching required_output. Do not add markdown.

@@ -1,0 +1,15 @@
+{
+  "candidate": "qwen_3_7_max",
+  "candidate_passes": false,
+  "checks": {
+    "all_four_broad_categories_predicted": true,
+    "duplicate_broad_agreement_at_least_95_percent": true,
+    "general_broad_agreement_with_gpt_oss_at_least_80_percent": false,
+    "parse_success_at_least_99_percent": true,
+    "reference_broad_agreement_at_least_75_percent": false,
+    "reference_fine_agreement_at_least_50_percent": true
+  },
+  "manual_disagreement_review_required": true,
+  "reference_is_independent_human_gold": false,
+  "status": "complete"
+}

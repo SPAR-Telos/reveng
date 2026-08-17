@@ -1,0 +1,15 @@
+{
+  "activation_source": "outputs/activation_collection/gpt_oss_20b_boundary_v1/activation_index.parquet",
+  "belief_rows": 11484,
+  "belief_shifts": 686,
+  "entropy_source": "candidate-token logprobs; no repeated sampling",
+  "events": {
+    "action_change": 511,
+    "suboptimal_to_optimal": 22,
+    "sustained_optimal_to_suboptimal": 2,
+    "transient_optimal_to_suboptimal": 18
+  },
+  "geometry_rows": 11484,
+  "positions": 1276,
+  "status": "completed"
+}

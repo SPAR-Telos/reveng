@@ -1,0 +1,8 @@
+{
+  "expected_rows": 3,
+  "input": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/calibration_items.csv",
+  "labeled_rows": 0,
+  "model_name": "Qwen/Qwen3.5-397B-A17B",
+  "output": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/annotations_qwen_3_5_397b_smoke.csv",
+  "status": "incomplete"
+}

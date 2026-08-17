@@ -1,0 +1,26 @@
+We need to produce next action. Let's analyze grid. Coordinates: row, column. Grid 9x9 indices 0-8.
+
+We have walls (#) border. Inside. Agent at (4,1) (row 4 col1). Key status: carrying key true. So key already collected. Door at (7,4). Goal at (7,8). Need shortest path from agent to goal, with door already open if adjacent? But door is locked; we can open if adjacent and have key. Agent can open door from adjacent cell. So we need to get adjacent to door, open it, then proceed to goal. Since we have key, door will open when adjacent. So we must move adjacent to door, then to goal. The door is at (7,4). Adjacent cells: (6,4), (8,4), (7,3), (7,5). But (8,4) is wall border (#). (6,4) is at row6 col4: check grid row6 col4: row6 line: "# _ _ _ # _ _ _ #" => indices: 0#,1_,2_,3_,4#,5_,6_,7_,8#. So (6,4) is wall (#). So cannot be adjacent from above. (7,3) is row7 col3: row7 line "# _ _ _ D _ _ G #" indices: 0#,1_,2_,3_,4D,5_,6_,7G,8#. So (7,3) is open. (7,5) is row7 col5: open. So we need to get to either (7,3) or (7,5). Then door opens automatically when adjacent? According to rule: door opens when agent is adjacent to door and has key. So once we step onto (7,3) or (7,5), door opens. Then we can move onto door cell? Wait door removed after opening. So we can then go through. So path: from (4,1) to (7,3) or (7,5) shortest.
+
+Let's find shortest path. The grid interior open spaces except walls at row/col edges and at some positions (#). Let's map open cells coordinates.
+
+Row1: (1,1),(1,2),(1,3),(1,5),(1,6),(1,7)
+Row2: (2,1),(2,2),(2,3),(2,5),(2,6),(2,7)
+Row3: (3,1),(3,2),(3,3),(3,4),(3,5),(3,6),(3,7)
+Row4: (4,1) agent, (4,2) is #? Wait row4 line "# A # # # # # # #" indices: 0#,1A,2#,3#,4#,5#,6#,7#,8#. So only open at (4,1). Others are walls. Row5: (5,1),(5,2),(5,3),(5,5),(5,6),(5,7)
+Row6: (6,1),(6,2),(6,3),(6,5),(6,6),(6,7)
+Row7: (7,1),(7,2),(7,3),(7,5),(7,6),(7,7)
+
+Goal at (7,8) is open? Actually G at (7,8) but that's open cell with G. So we need to reach there.
+
+We need to navigate from (4,1). Let's find shortest path to (7,3) or (7,5). Compute distances.
+
+From (4,1) to (7,3):
+Path: (4,1)->(5,1)->(6,1)->(7,1)->(7,2)->(7,3). That's 5 moves (right? actually moves: down, down, down, right, right). Wait check: start at (4,1). Down to (5,1). Down to (6,1). Down to (7,1). Right to (7,2). Right to (7,3). That's 5 moves. Good.
+
+Alternatively to (7,5):
+From (4,1) -> (5,1)->(6,1)->(7,1)->(7,2)->(7,3)->(7,4)?? Wait door at (7,4) not open yet. We could go to (7,5) via (7,4) but door blocks. So cannot go through door. Need to go around. Maybe go up to row3 and then across? Let's compute alternative: from (4,1) up to row3? But row3 open at (3,1),(3,2),(3,3),(3,4),(3,5),(3,6),(3,7). We could go to (3,7) then down to (7,7) then left to (7,5). That might be longer. Let's compute length: (4,1)->(3,1) up (1), (3,2) right (2), (3,3) right (3), (3,4) right (4), (3,5) right (5), (3,6) right (6), (3,7) right (7), (4,7) down (8), (5,7) down (9), (6,7) down (10), (7,7) down (11), (7,6) left (12), (7,5) left (13). That's 13 moves. So (7,3) is shorter.
+
+Thus next action should head toward (5,1). So move DOWN. Let's confirm no obstacle at (5,1). Row5 col1 is open. So action: DOWN.
+
+Thus output JSON: { "action": "DOWN" }

@@ -1,0 +1,16 @@
+{
+  "action_candidate_coverage": 1.0,
+  "activation_geometry_reused": true,
+  "categorical_candidate_coverage": 0.9981537428667338,
+  "combined_candidate_coverage": 0.9983383685800604,
+  "failures": [],
+  "maximum_behavioral_belief_queries": 8606,
+  "maximum_state_uncertainty_queries": 3972,
+  "n_behavioral_belief_queries": 8606,
+  "n_categorical_belief_queries": 5958,
+  "n_coordinate_belief_queries": 2648,
+  "n_prefix_positions": 662,
+  "n_state_uncertainty_queries": 3972,
+  "n_states": 8,
+  "status": "passed"
+}

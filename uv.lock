@@ -2776,6 +2776,35 @@ wheels = [
 ]
 
 [[package]]
+name = "rbeast"
+version = "0.1.25"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ac/7f/63f53b63d1fdc6fe854b9241c68f8aa0ae83616f142a95134fed733f2b28/rbeast-0.1.25.tar.gz", hash = "sha256:8265bd53f9c16bdb1ab103de047288ea1af6875415394abf3ac0104cfb2917ec", size = 747648, upload-time = "2026-04-15T03:31:33.997Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d9/a7/f4ac836fa634583d25d5a4e23e3c0200028c4daa6d7403d24f3ea51fc332/rbeast-0.1.25-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:a8f1b545f1af1e67f502408a35110b22672f1f26d20549f9115faf796b21833c", size = 610044, upload-time = "2026-04-15T01:20:29.52Z" },
+    { url = "https://files.pythonhosted.org/packages/03/ac/f193c3359ad3e56e41d540b893bff33d00e4ddf420247409d75b7fdf807c/rbeast-0.1.25-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:d150828140dab2c6bd2b42d8d281b24e65173b43943e9b799e5a4e993b3f18cd", size = 526226, upload-time = "2026-04-15T01:20:30.523Z" },
+    { url = "https://files.pythonhosted.org/packages/a6/af/fa38a14c1557ad93ffca72abf933b29b4f9ee430a95bda90e183a9dcb33f/rbeast-0.1.25-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:1bde99a4c3b6cc8b130c8cd2d179385c50dbba6b00d82917ecb2475b0083eab5", size = 1621391, upload-time = "2026-04-15T01:20:32.056Z" },
+    { url = "https://files.pythonhosted.org/packages/9c/9e/e2671e3205d08d4a61f7c674519fecb44efc8c6e285bf94efd30c27599fa/rbeast-0.1.25-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:6499cf27d67e10a05599dc194e8fd90ff667efa7ed557408c5ac823bb458f8ca", size = 1271279, upload-time = "2026-04-15T01:20:33.318Z" },
+    { url = "https://files.pythonhosted.org/packages/87/8c/1a2626096c2e58c696d93b53fcfdf5a5f167ced989090e89c36819c6b5d3/rbeast-0.1.25-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:c65b262a8917671a3d1e3eb3c4fdfe85d32be4691893b845be0ba0c668e8f646", size = 1563768, upload-time = "2026-04-15T01:20:34.476Z" },
+    { url = "https://files.pythonhosted.org/packages/2c/db/8736a278f62019693b6035945de04ac829d0bc819a803655a4891b493618/rbeast-0.1.25-cp312-cp312-win_amd64.whl", hash = "sha256:3679a359ccde0ca5a3dc452fc0c114fa34ebc7bd1469afcd43ae3315a95401a6", size = 526378, upload-time = "2026-04-15T01:20:35.961Z" },
+    { url = "https://files.pythonhosted.org/packages/9f/61/21beca1d68e1a48b43000e38e86f0fb17fe764ef25a50966829def2161c5/rbeast-0.1.25-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:c7d017bd248aa79c9fcd1bff78a064da39e6fe4dbddc7f1a2553dddc545f775b", size = 610041, upload-time = "2026-04-15T01:20:37.371Z" },
+    { url = "https://files.pythonhosted.org/packages/23/b0/22aeb3ae988cb6378090150904c1577780a79c32152869275ac682ebc7a1/rbeast-0.1.25-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:c7373e0a3b5eb35ee1ae7eb1b0753bfe196399c344db40cf44dc7d232216b415", size = 526225, upload-time = "2026-04-15T01:20:38.418Z" },
+    { url = "https://files.pythonhosted.org/packages/92/fc/c41132beaff55f156eb448ce15a68936c40d57bed37fd8d6faf08a7ad707/rbeast-0.1.25-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:7ba05ed03f3da0d2dbd88ddf70f89a54450f34ffc1650db80a9b11091b723c71", size = 1619260, upload-time = "2026-04-15T01:20:39.473Z" },
+    { url = "https://files.pythonhosted.org/packages/12/af/eeb9f415482aa15d4773891a371b8991204c008692ca0c78aa14e0c0a034/rbeast-0.1.25-cp313-cp313-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:41ec195d92f23431da861e420808a4035dfadd6668431a7b04bd6a9b7d7cbd30", size = 1271274, upload-time = "2026-04-15T01:20:40.997Z" },
+    { url = "https://files.pythonhosted.org/packages/2b/0d/16ca6615dfa47ce5623adc321b36a7ada68815c48d2c567556f8f020e628/rbeast-0.1.25-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:ba3a5bfb9dfdd2ab80a4f99e4d2f3b3ff8797516bce762ebae2d309596cd5005", size = 1563973, upload-time = "2026-04-15T01:20:42.804Z" },
+    { url = "https://files.pythonhosted.org/packages/85/35/86a55faa25e6bcd52b892dfe4f25b738ac7936b339997442618770a6e031/rbeast-0.1.25-cp313-cp313-win_amd64.whl", hash = "sha256:c8c510b12203f4b1957a1297a687f30195f5268a6e8cf26673d536461651adab", size = 526384, upload-time = "2026-04-15T01:20:43.902Z" },
+    { url = "https://files.pythonhosted.org/packages/8b/e7/d42f8e4d5077f8e9006d71f1afb4e0b79f92ce93a18f151f979364a72360/rbeast-0.1.25-cp314-cp314-macosx_10_15_x86_64.whl", hash = "sha256:644a5fda1cff4acff052feb4faad48e53ca78f976e76129094c7574ef0943f32", size = 610572, upload-time = "2026-04-15T01:20:45.034Z" },
+    { url = "https://files.pythonhosted.org/packages/7b/2d/7582ea6ca0cb0c1906f979cf716c8182a57f0d8b4877a56174a296ab0da2/rbeast-0.1.25-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:35e0e7d635fe3f4bf6318942fef05b197d8ac8f84961385044c2805bae654d6d", size = 526284, upload-time = "2026-04-15T01:20:46.144Z" },
+    { url = "https://files.pythonhosted.org/packages/9d/ed/a83e2126dcaf4b23b00e7c5c5625b380583bb0a3657344ad788c04333394/rbeast-0.1.25-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:4b71d82991e2b035acaaf136e0a80a5bb2aea6312da1e8e3cb509842f26f1a56", size = 1619421, upload-time = "2026-04-15T01:20:47.203Z" },
+    { url = "https://files.pythonhosted.org/packages/35/69/1e35ed46e3f7f7f8d20212392a22602aad06d3da18f881402d6b0c0a06ca/rbeast-0.1.25-cp314-cp314-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:c1a594c2c908750dcb06fad4d58bf334b81f36c18352286a63f66ae093a79f2e", size = 1271401, upload-time = "2026-04-15T01:20:48.703Z" },
+    { url = "https://files.pythonhosted.org/packages/59/e7/8836eac3acded697934182745b85cb820a92ce7501d614014c097f62c3b4/rbeast-0.1.25-cp314-cp314-musllinux_1_2_x86_64.whl", hash = "sha256:c8d9de7c28d880e6fd2b23aaa4194320bf861364846fd4fdcb539add771a73e7", size = 1564052, upload-time = "2026-04-15T01:20:49.79Z" },
+    { url = "https://files.pythonhosted.org/packages/bf/71/cc160df3645c3942c944c1a4e089f579b692475315095a91e5551017491a/rbeast-0.1.25-cp314-cp314-win_amd64.whl", hash = "sha256:c3110930f587b10248af1332cfa52dc2df9e57fc1c95b609a07fa90c5596509e", size = 534209, upload-time = "2026-04-15T01:20:50.843Z" },
+]
+
+[[package]]
 name = "referencing"
 version = "0.36.2"
 source = { registry = "https://pypi.org/simple" }
@@ -2917,6 +2946,7 @@ dependencies = [
     { name = "pydantic" },
     { name = "pytest" },
     { name = "python-dotenv" },
+    { name = "rbeast" },
     { name = "scikit-learn" },
     { name = "scipy" },
     { name = "seaborn" },
@@ -2950,6 +2980,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.0.0" },
     { name = "pytest", specifier = ">=8.4.2" },
     { name = "python-dotenv", specifier = ">=1.0.0" },
+    { name = "rbeast", specifier = "==0.1.25" },
     { name = "scikit-learn", specifier = ">=1.7.0" },
     { name = "scipy", specifier = ">=1.16.2" },
     { name = "seaborn", specifier = ">=0.13.2" },

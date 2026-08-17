@@ -1,0 +1,13 @@
+event,activation_metric,layer,representation,n_event_positions,n_other_positions,mean_at_event,mean_at_other_positions,monitor_auc,monitor_auc_ci_low,monitor_auc_ci_high
+Recommendation change,Euclidean distance between adjacent sentence representations,15,sentence mean,666,6326,1005.2707335784271,1018.9451692034239,0.48274626191161124,0.4552882586945943,0.5059406579614154
+Recommendation change,Cosine distance between adjacent sentence representations,15,sentence mean,666,6326,0.07175406392988141,0.07338868893289581,0.4829730536733382,0.45544132271569315,0.5108712220401004
+Recommendation change,Cosine similarity to the mean of earlier sentence representations,15,sentence mean,666,6326,0.9397325160446109,0.9344028147797852,0.5685332423792746,0.5396479708864216,0.5970928541004145
+Commitment onset,Euclidean distance between adjacent sentence representations,15,sentence mean,45,6947,1015.7341796875,1017.6550181169072,0.4931305279657086,0.4003808867588755,0.5832999027209306
+Commitment onset,Cosine distance between adjacent sentence representations,15,sentence mean,45,6947,0.0737563027275933,0.07322959826458302,0.5037954032915887,0.4025623044111534,0.600840840434448
+Commitment onset,Cosine similarity to the mean of earlier sentence representations,15,sentence mean,45,6947,0.9393901242150201,0.9348814605431057,0.5683268557170961,0.4851650709414829,0.6613694071865407
+Optimal to suboptimal,Euclidean distance between adjacent sentence representations,15,sentence mean,160,6832,984.9378200531006,1018.4085769519314,0.45429596018735363,0.4050136205159127,0.49583124025650155
+Optimal to suboptimal,Cosine distance between adjacent sentence representations,15,sentence mean,160,6832,0.06848305091261864,0.07334422784262017,0.44653514710187353,0.3913655213179953,0.49671529507523715
+Optimal to suboptimal,Cosine similarity to the mean of earlier sentence representations,15,sentence mean,160,6832,0.9414491862058639,0.9347573466319808,0.588266612997658,0.531795977429663,0.6421398229242682
+Suboptimal to optimal,Euclidean distance between adjacent sentence representations,15,sentence mean,173,6819,997.4542529155754,1018.1548413535265,0.4724685446224295,0.42276441791700403,0.5062398177427065
+Suboptimal to optimal,Cosine distance between adjacent sentence representations,15,sentence mean,173,6819,0.07089234156415641,0.07329237097465917,0.4762008905752119,0.42317724213505886,0.5111442370417784
+Suboptimal to optimal,Cosine similarity to the mean of earlier sentence representations,15,sentence mean,173,6819,0.9401062685630225,0.9347786592640018,0.568149856699277,0.5087878083074793,0.6179451230315981

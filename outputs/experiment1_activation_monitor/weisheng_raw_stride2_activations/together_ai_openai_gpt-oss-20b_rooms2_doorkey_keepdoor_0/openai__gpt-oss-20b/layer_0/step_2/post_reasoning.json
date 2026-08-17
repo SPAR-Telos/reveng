@@ -1,0 +1,1 @@
+{"format": "raw_bfloat16", "dtype": "torch.bfloat16", "shape": [3, 2880], "byte_order": "little", "category": "post_reasoning", "layer_idx": 0, "step_idx": 2, "token_indices": [{"relative_idx": 1111, "absolute_idx": 1882}, {"relative_idx": 1112, "absolute_idx": 1883}, {"relative_idx": 1113, "absolute_idx": 1884}]}

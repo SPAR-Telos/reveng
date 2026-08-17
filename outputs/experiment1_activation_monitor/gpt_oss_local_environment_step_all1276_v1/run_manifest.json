@@ -1,0 +1,19 @@
+{
+  "analysis_mode": "environment_step",
+  "belief_rows": 11484,
+  "candidate_rows_path": "/root/reveng/data/behavioral_probes/trajectory_instances_recomputed_optimal/trajectory_failure_modes.csv",
+  "completed_positions": 1276,
+  "coordinate_queries": "deferred stratified subset",
+  "elapsed_seconds_this_invocation": 2984.52121216,
+  "entropy_source": "candidate_token_logprobs; no repeated sampling",
+  "model_path": "/root/.cache/huggingface/hub/models--openai--gpt-oss-20b/snapshots/6cee5e81ee83917806bbde320786a8fb61efebee",
+  "model_revision": "6cee5e81ee83917806bbde320786a8fb61efebee",
+  "pending_positions": 0,
+  "planned_positions": 1276,
+  "protocol": "local_direct_final_answer_logprobs_v1",
+  "seconds_per_position": 2.338966467210031,
+  "seed": 42,
+  "status": "completed",
+  "temperature": 0.7,
+  "top_p": 0.95
+}

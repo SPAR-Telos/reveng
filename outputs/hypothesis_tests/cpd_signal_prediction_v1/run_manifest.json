@@ -1,0 +1,25 @@
+{
+  "beast_is_offline": true,
+  "bootstrap_repeats": 300,
+  "environment_states": 46,
+  "future_windows_sentences": [
+    1,
+    3
+  ],
+  "held_out_group": "trajectory_id",
+  "inner_folds": 3,
+  "input_files": {
+    "outputs/hypothesis_tests/action_distribution_cpd_beast_v1/detected_change_points.csv": "e72d3613b1f6bfabb47229a4783035a409d8f8336a92b4eb971d0029e825ae72",
+    "outputs/hypothesis_tests/action_distribution_cpd_beast_v1/position_change_probabilities.csv": "49db0bedaf5f008fdf129027e58c3157c2353989ee3c22588b5eddd988394e8a",
+    "outputs/hypothesis_tests/action_distribution_cpd_robustness_v1/original_point_stability.csv": "d226321a143ec24028a20f3f90b30771007673bc0f50faddb2c74084cbb28403",
+    "outputs/hypothesis_tests/practical_action_event_monitor_v1/prospective_feature_rows.parquet": "f61729b052431222357e9c14a4184080c72e35120f802769025c7a8bffe10a7b",
+    "outputs/hypothesis_tests/practical_action_event_monitor_v1/sentence_belief_features.parquet": "e5501c6f773655f3ecbe4179fbffd6cbf9173b9d3ef71a1d40888b38f77ec72a"
+  },
+  "outer_folds": 5,
+  "primary_change_points": 160,
+  "repeatedly_found_change_points": 127,
+  "seed": 42,
+  "sentence_positions": 6992,
+  "status": "complete",
+  "trajectories": 31
+}

@@ -1,0 +1,19 @@
+{
+  "analysis": "belief_replacement_action_pilot_v1",
+  "belief_ids": [
+    "wall_left",
+    "wall_right",
+    "wall_up",
+    "wall_down",
+    "has_key",
+    "door_open"
+  ],
+  "belief_rows_path": "/root/reveng/outputs/experiment1_activation_monitor/gpt_oss_local_sentence_matched46_v1/belief_rows.csv",
+  "belief_rows_sha256": "f0505f4005226c53751794c01b25e62061f42f4c6cc6632646e9337028f436a9",
+  "candidate_rows_path": "/root/reveng/data/behavioral_probes/reasoning_belief_action_cohorts/matched_46_candidates.csv",
+  "candidate_rows_sha256": "e1b810b23bd819f0e476a1fb7b731585d097c21641809ce90b6963d327cbf84c",
+  "prefix_action_rows_path": "/root/reveng/outputs/experiment1_activation_monitor/gpt_oss_local_sentence_matched46_v1/prefix_action_rows.csv",
+  "prefix_action_rows_sha256": "b29d2a0c2f40f59877cc6e00af5cdf28aa7cf99da234e40eac91a7d539bbe5e0",
+  "seed": 42,
+  "selection": "two_per_action_one_all_correct_one_any_incorrect_distinct_trajectories_lexicographic"
+}

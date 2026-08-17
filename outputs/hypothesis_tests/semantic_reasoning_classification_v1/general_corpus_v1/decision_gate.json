@@ -1,0 +1,16 @@
+{
+  "checks": {
+    "all_four_broad_categories_predicted": true,
+    "duplicate_broad_agreement_at_least_95_percent": true,
+    "general_broad_agreement_at_least_80_percent": false,
+    "parse_success_at_least_99_percent": true,
+    "reference_broad_accuracy_at_least_75_percent": false,
+    "reference_fine_accuracy_at_least_50_percent": false,
+    "within_three_points_of_teacher_broad_accuracy": false
+  },
+  "general_broad_agreement": 0.25,
+  "general_fine_agreement": 0.19166666666666668,
+  "manual_disagreement_review_required": true,
+  "smaller_model_passes": false,
+  "status": "complete"
+}

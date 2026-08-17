@@ -1,0 +1,14 @@
+{
+  "few_shots": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/few_shot_examples.json",
+  "few_shots_sha256": "3cb67b6ade20be09889b2d368bda98ecf488e786543513a78dfd53f3c89454bb",
+  "input": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/calibration_items.csv",
+  "input_sha256": "5c9cc64d7c3cc83ff960e3eec7636e6c5a904e8536dfd0d07045aa62036a3d7c",
+  "limit": null,
+  "max_new_tokens": 220,
+  "model_name": "openai/gpt-oss-20b",
+  "model_path": "/root/.cache/huggingface/hub/models--openai--gpt-oss-20b/snapshots/6cee5e81ee83917806bbde320786a8fb61efebee",
+  "model_revision": "6cee5e81ee83917806bbde320786a8fb61efebee",
+  "prompt_sha256": "8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912",
+  "prompt_version": "general_fewshot_v1",
+  "seed": 42
+}

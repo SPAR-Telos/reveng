@@ -1,0 +1,4 @@
+model_name,n_expected,n_parsed,parse_success_rate,reference_rows_scored,reference_fine_accuracy,reference_fine_macro_f1,reference_broad_accuracy,reference_broad_macro_f1,duplicate_fine_agreement,duplicate_broad_agreement,general_fine_categories_predicted,general_broad_categories_predicted
+llama_3_2_1b,332,332,1.0,80,0.225,0.12999473293590938,0.2375,0.21235994397759103,1.0,1.0,7,4
+gpt_oss_20b,332,332,1.0,80,0.4875,0.3314343561655389,0.625,0.591471028971029,1.0,1.0,8,4
+qwen_3_7_max,332,332,1.0,80,0.525,0.3377777777777778,0.6625,0.6437823466855725,1.0,1.0,8,4

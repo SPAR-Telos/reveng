@@ -1,0 +1,5 @@
+example_id,unpatched_wall_answer,unpatched_wall_raw,unpatched_action,unpatched_action_raw
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_016,yes,A,DOWN,"{""action"":""DOWN""}"
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_009,yes,A,LEFT,"{""action"":""LEFT""}"
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_002,no,B,RIGHT,"{""action"":""RIGHT""}"
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,no,B,UP,"{""action"":""UP""}"

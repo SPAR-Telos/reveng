@@ -1,0 +1,15 @@
+{
+  "positions": "outputs/hypothesis_tests/action_distribution_change_points_v1/position_distribution_metrics.csv",
+  "metadata": "data/behavioral_probes/reasoning_belief_action_cohorts/matched_46_candidates.csv",
+  "change_points": "outputs/hypothesis_tests/action_distribution_cpd_beast_v1/detected_change_points.csv",
+  "change_point_stability": "outputs/hypothesis_tests/action_distribution_cpd_robustness_v1/original_point_stability.csv",
+  "output_dir": "outputs/hypothesis_tests/action_probability_flow_v1",
+  "bootstrap_repeats": 5000,
+  "window": 3,
+  "seed": 42,
+  "n_positions": 7084,
+  "n_states": 46,
+  "n_trajectories": 31,
+  "n_matched_pairs": 23,
+  "n_change_point_pairs": 160
+}

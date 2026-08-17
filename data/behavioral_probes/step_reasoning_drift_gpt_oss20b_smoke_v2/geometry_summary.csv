@@ -1,0 +1,3 @@
+failure_category,layer,representation_kind,n_trajectories,n_with_identifiable_wrong_turn_and_geometry,median_wrong_turn_progress,mean_aligned_change_at_wrong_turn,mean_aligned_change_delta_vs_previous_3,mean_update_norm_delta_vs_previous_3
+wall_hit,15,last_token,1,1,0.09375,-0.004210935469282805,-0.29394901524671935,-1076.1432636742911
+wall_hit,15,mean_pool,1,1,0.09375,0.010248215310108996,-0.5346705324715841,-1152.0603090754294

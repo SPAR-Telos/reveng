@@ -1,0 +1,49 @@
+example_id,trajectory_id,step_index,grid_text,state_description_text,carrying_key,observed_action,optimal_actions,is_optimal_action,wall_hit,probe_truths,allowed_question_ids,reasoning_split,source_dataset
+together_ai_openai_gpt-oss-20b_size7_comp0.0_0_step0,together_ai_openai_gpt-oss-20b_size7_comp0.0_0,0,"  0 1 2 3 4 5 6 
+0 # # # # # # # 
+1 # _ _ _ _ _ # 
+2 # A _ _ _ _ # 
+3 # _ _ _ _ _ # 
+4 # _ _ _ G _ # 
+5 # _ _ _ _ _ # 
+6 # # # # # # # ",,False,DOWN,[],,,"{'wall_left': 'yes', 'wall_right': 'no', 'wall_up': 'no', 'wall_down': 'no'}","['wall_left', 'wall_right', 'wall_up', 'wall_down']",post,released_cognitive_map_probe_slice
+together_ai_openai_gpt-oss-20b_size7_comp0.0_0_step1,together_ai_openai_gpt-oss-20b_size7_comp0.0_0,1,"  0 1 2 3 4 5 6 
+0 # # # # # # # 
+1 # _ _ _ _ _ # 
+2 # _ _ _ _ _ # 
+3 # A _ _ _ _ # 
+4 # _ _ _ G _ # 
+5 # _ _ _ _ _ # 
+6 # # # # # # # ",,False,DOWN,[],,,"{'wall_left': 'yes', 'wall_right': 'no', 'wall_up': 'no', 'wall_down': 'no'}","['wall_left', 'wall_right', 'wall_up', 'wall_down']",post,released_cognitive_map_probe_slice
+together_ai_openai_gpt-oss-20b_size7_comp0.0_1_step0,together_ai_openai_gpt-oss-20b_size7_comp0.0_1,0,"  0 1 2 3 4 5 6 
+0 # # # # # # # 
+1 # _ _ _ _ _ # 
+2 # _ A _ _ _ # 
+3 # _ _ _ _ _ # 
+4 # _ _ _ _ _ # 
+5 # _ _ _ G _ # 
+6 # # # # # # # ",,False,DOWN,[],,,"{'wall_left': 'no', 'wall_right': 'no', 'wall_up': 'no', 'wall_down': 'no'}","['wall_left', 'wall_right', 'wall_up', 'wall_down']",post,released_cognitive_map_probe_slice
+together_ai_openai_gpt-oss-20b_size7_comp0.0_1_step1,together_ai_openai_gpt-oss-20b_size7_comp0.0_1,1,"  0 1 2 3 4 5 6 
+0 # # # # # # # 
+1 # _ _ _ _ _ # 
+2 # _ _ _ _ _ # 
+3 # _ A _ _ _ # 
+4 # _ _ _ _ _ # 
+5 # _ _ _ G _ # 
+6 # # # # # # # ",,False,RIGHT,[],,,"{'wall_left': 'no', 'wall_right': 'no', 'wall_up': 'no', 'wall_down': 'no'}","['wall_left', 'wall_right', 'wall_up', 'wall_down']",post,released_cognitive_map_probe_slice
+together_ai_openai_gpt-oss-20b_size7_comp0.0_2_step0,together_ai_openai_gpt-oss-20b_size7_comp0.0_2,0,"  0 1 2 3 4 5 6 
+0 # # # # # # # 
+1 # _ _ _ _ _ # 
+2 # _ _ _ _ _ # 
+3 # A _ _ _ _ # 
+4 # _ G _ _ _ # 
+5 # _ _ _ _ _ # 
+6 # # # # # # # ",,False,DOWN,[],,,"{'wall_left': 'yes', 'wall_right': 'no', 'wall_up': 'no', 'wall_down': 'no'}","['wall_left', 'wall_right', 'wall_up', 'wall_down']",post,released_cognitive_map_probe_slice
+together_ai_openai_gpt-oss-20b_size7_comp0.0_2_step1,together_ai_openai_gpt-oss-20b_size7_comp0.0_2,1,"  0 1 2 3 4 5 6 
+0 # # # # # # # 
+1 # _ _ _ _ _ # 
+2 # _ _ _ _ _ # 
+3 # _ _ _ _ _ # 
+4 # A G _ _ _ # 
+5 # _ _ _ _ _ # 
+6 # # # # # # # ",,False,RIGHT,[],,,"{'wall_left': 'yes', 'wall_right': 'no', 'wall_up': 'no', 'wall_down': 'no'}","['wall_left', 'wall_right', 'wall_up', 'wall_down']",post,released_cognitive_map_probe_slice

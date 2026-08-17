@@ -1,0 +1,2 @@
+event_family,belief_a,belief_b,n_events_with_pair,event_coverage,n_occurrences
+suboptimal_to_optimal,wall_down,wall_left,1,0.06666666666666667,1

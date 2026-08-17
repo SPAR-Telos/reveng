@@ -1,0 +1,3 @@
+boundary_type,n_states,n_prefix_positions,n_action_identity_changes,n_sustained_optimality_losses,n_transient_optimality_losses,n_optimality_recoveries,n_commitment_onsets,mean_commitment_character_progress,mean_action_entropy_bits,mean_primary_belief_error_rate,mean_state_belief_entropy_bits
+Packed units,8,257,26,1,5,9,8,0.2132158844540895,9.319668918976867e-08,0.14137483787289234,0.0021773641372751363
+Sentences,8,662,61,3,9,15,8,0.2473570798184013,6.133564995351464e-07,0.14224572004028196,0.0017127691871800228

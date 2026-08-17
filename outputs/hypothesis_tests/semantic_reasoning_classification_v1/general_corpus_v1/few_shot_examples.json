@@ -1,0 +1,134 @@
+[
+  {
+    "confidence": "high",
+    "context_before": "[10] Wait row5 col5?\n[11] Let's check row5: \"# _ _ _ # G _ _ #\".\n[12] So col0:#,1:_,2:_,3:_,4:#,5:G,6:_,7:_,8:#.\n[13] Yes G at (5,5).\n[14] Key at (2,1).\n[15] Door D at (4,1).\n[16] Wait row4: \"# D # # # # # _ #\".\n[17] So col1:D.",
+    "evaluates_prior_route_or_claim": "no",
+    "explicitly_revises_prior_reasoning": "no",
+    "introduces_new_information_or_plan": "yes",
+    "primary_label": "state_reconstruction",
+    "rationale": "The sentence simply states the agent\u2019s current coordinates, which is a direct transcription of visible state information, fitting the state_reconstruction label and outranking any other label.",
+    "repeats_prior_content": "no",
+    "target_sentence": "Agent at (2,2)."
+  },
+  {
+    "confidence": "high",
+    "context_before": "[91] But maybe go up to row4 col3?\n[92] blocked. Maybe go up to row4 col5?\n[93] Let's see: from (6,3) go up to (5,3) back.\n[94] So we need to reach column5.\n[95] Let's see if we can go via row4: from (6,2) go up to (5,2)->(4,2) blocked.\n[96] So can't go to row4 col2.\n[97] But maybe go up to (5,2)->(5,3) -> up to (4,3) blocked.\n[98] So can't reach column5 that way.",
+    "evaluates_prior_route_or_claim": "no",
+    "explicitly_revises_prior_reasoning": "no",
+    "introduces_new_information_or_plan": "yes",
+    "primary_label": "route_planning",
+    "rationale": "The sentence proposes a new move (down to row7) to reach column5, which is a route proposal, so it is labeled route_planning, outranking any other label.",
+    "repeats_prior_content": "no",
+    "target_sentence": "Maybe we need to go through row7: from (6,2) go down to (7,2)->(7,3)."
+  },
+  {
+    "confidence": "high",
+    "context_before": "[118] But we can't reach (5,5).\n[119] So we must go to (5,3) to open door.\n[120] But door opens when adjacent; we can be at (5,3) to open.\n[121] After door opens, we can then go to (5,5) or (5,4) etc.\n[122] Thus the shortest path to open door: go from (6,1) to (5,3).\n[123] That is 3 steps: (5,1),(5,2),(5,3).\n[124] But we need to decide next action: the first step.\n[125] Starting at (6,1).",
+    "evaluates_prior_route_or_claim": "yes",
+    "explicitly_revises_prior_reasoning": "no",
+    "introduces_new_information_or_plan": "unsure",
+    "primary_label": "verification",
+    "rationale": "The sentence asks whether to move up or right, directly evaluating the next step of the previously discussed route, fitting the verification label.",
+    "repeats_prior_content": "no",
+    "target_sentence": "We need to move up or right?"
+  },
+  {
+    "confidence": "high",
+    "context_before": "[76] The wall forms a vertical barrier from row1 to row5 at column4: (1,4),(2,4),(3,4),(4,4),(5,4).\n[77] So to cross from left side to right side, must go around either top or bottom.\n[78] Top: row0 all walls, can't.\n[79] Bottom: row6 has door at (6,4) but door might open.\n[80] So we need to go around via bottom: go down to row6, cross at column4 after opening door, then up to goal?\n[81] But goal at row5, col7.\n[82] So maybe route: go down to row6 from left side, cross door, then go right to col7, then up to row5.\n[83] Let's evaluate.",
+    "evaluates_prior_route_or_claim": "no",
+    "explicitly_revises_prior_reasoning": "yes",
+    "introduces_new_information_or_plan": "no",
+    "primary_label": "correction",
+    "rationale": "The sentence explicitly states that the wall at (4,1) invalidates the previously suggested downward path, directly correcting the earlier plan.",
+    "repeats_prior_content": "no",
+    "target_sentence": "From agent (1,1) go down to (2,1),(3,1),(4,1) but wall at (4,1)."
+  },
+  {
+    "confidence": "high",
+    "context_before": "[77] Alternative: from key, left to row7 col5, up to row6 col5, up to row5 col5, up to row4 col5 '#', cannot.\n[78] So maybe go up to row3 col5, left to row3 col4 '#', can't.\n[79] So maybe go up to row3 col5, left to row3 col4 blocked.\n[80] So maybe go up to row2 col5, left to row2 col4 '#', blocked.\n[81] So maybe go up to row1 col5, left to row1 col4 D (door).\n[82] But door is locked; we need key to open it.\n[83] So we can approach door at row1 col4 from adjacent cells to open it.\n[84] We need to open door D at (1,4).",
+    "evaluates_prior_route_or_claim": "no",
+    "explicitly_revises_prior_reasoning": "no",
+    "introduces_new_information_or_plan": "yes",
+    "primary_label": "new_inference",
+    "rationale": "The sentence introduces a new consequence\u2014 that adjacency and key possession are required to open the door\u2014 which was not previously stated, so it is a new inference rather than a correction, verification, or state reconstruction.",
+    "repeats_prior_content": "no",
+    "target_sentence": "To open, agent must be adjacent to door and have key."
+  },
+  {
+    "confidence": "high",
+    "context_before": "[191] Row1 col5 open.\n[192] So path is clear.\n[193] Thus total steps from start: 1 left (key), 1 right, 6 up, 2 left = 10 steps to reach door adjacent.\n[194] But we only need to output next action.\n[195] The next action after picking up key is \"RIGHT\".\n[196] Because we moved left to key, next step is right.\n[197] So the answer should be \"RIGHT\".\n[198] But we must confirm that the key is at (7,6).",
+    "evaluates_prior_route_or_claim": "no",
+    "explicitly_revises_prior_reasoning": "no",
+    "introduces_new_information_or_plan": "no",
+    "primary_label": "restatement",
+    "rationale": "The target sentence merely repeats the earlier conclusion that the next action is RIGHT, without adding new information, evaluating a route, or correcting prior reasoning.",
+    "repeats_prior_content": "yes",
+    "target_sentence": "Yes.\n\nThus the next action is RIGHT."
+  },
+  {
+    "confidence": "high",
+    "context_before": "[5] Row0: all #.\n[6] Row1: \"# _ _ _ # _ _ _ #\"\nRow2: \"# G _ _ # _ _ _ #\"\nRow3: \"# _ _ _ _ _ _ _ #\"\nRow4: \"# # # D # # # # #\"\nRow5: \"# _ _ _ _ _ _ _ #\"\nRow6: \"# _ _ _ # _ _ A #\"\nRow7: \"# _ _ _ # _ _ _ #\"\nRow8: all #.\n[7] Agent at (6,7).\n[8] Goal at (2,1).\n[9] Key: carried true (already picked up).\n[10] There's a door at (4,3).\n[11] Since agent has key, door can be opened automatically when adjacent.\n[12] But door may block path?",
+    "evaluates_prior_route_or_claim": "unsure",
+    "explicitly_revises_prior_reasoning": "unsure",
+    "introduces_new_information_or_plan": "unsure",
+    "primary_label": "procedural_continuation",
+    "rationale": "Generic transition into analysis without yet checking or proposing a route.",
+    "repeats_prior_content": "unsure",
+    "target_sentence": "Let's analyze."
+  },
+  {
+    "confidence": "high",
+    "context_before": "[27] Agent at (3,3).\n[28] Need path.\n[29] Let's find shortest path avoiding walls.\n[30] Let's map accessible cells.\n[31] We can treat walls as obstacles.\n[32] Let's compute distances manually.\n[33] From (3,3) to (1,7).\n[34] Path options: maybe go up to row1 then right to col7.",
+    "evaluates_prior_route_or_claim": "no",
+    "explicitly_revises_prior_reasoning": "no",
+    "introduces_new_information_or_plan": "yes",
+    "primary_label": "state_reconstruction",
+    "rationale": "The sentence simply reports that the cell (2,3) is open, which is a direct transcription of visible grid information, fitting the state_reconstruction label and outranking other options.",
+    "repeats_prior_content": "no",
+    "target_sentence": "From (3,3) up to (2,3) open."
+  },
+  {
+    "confidence": "high",
+    "context_before": "[58] Row4 has open at col3.\n[59] So from (3,3) down to (4,3) open.\n[60] From there down to (5,3) open.\n[61] Down to (6,3) open.\n[62] Down to (7,3) open.\n[63] Then right to (7,4),(7,5),(7,6),(7,7).\n[64] Up from (7,7) to (6,7) open.\n[65] Up to (5,7) open.",
+    "evaluates_prior_route_or_claim": "no",
+    "explicitly_revises_prior_reasoning": "no",
+    "introduces_new_information_or_plan": "yes",
+    "primary_label": "route_planning",
+    "rationale": "The sentence proposes a new move\u2014going up to (4,7)\u2014which is a route planning action, not a correction, verification, or state reconstruction.",
+    "repeats_prior_content": "no",
+    "target_sentence": "Up to (4,7) open."
+  },
+  {
+    "confidence": "high",
+    "context_before": "[15] But agent has key, so can open door by being adjacent to it.\n[16] Adjacent means any of four neighbors?\n[17] The rule: \"door is automatically opened and removed from the grid when the agent is adjacent to the door (in front of it) and has already picked up the key.\" So if agent is adjacent to door, door opens.\n[18] So if agent moves to (5,1) (left), that's adjacent to door (4,1)?\n[19] Wait door at (4,1).\n[20] Agent at (5,1) is below door.\n[21] That's adjacent.\n[22] Then door opens.",
+    "evaluates_prior_route_or_claim": "yes",
+    "explicitly_revises_prior_reasoning": "no",
+    "introduces_new_information_or_plan": "no",
+    "primary_label": "verification",
+    "rationale": "The sentence asks whether the agent can move into the door's cell after the door has opened, which evaluates the validity of that move given the earlier claim that the door opens when adjacent.",
+    "repeats_prior_content": "no",
+    "target_sentence": "Then agent can move into door's cell?"
+  },
+  {
+    "confidence": "high",
+    "context_before": "[22] Check if door blocks path?\n[23] From (6,8) to (2,3) we can go left/up through open spaces.\n[24] Let's find a path ignoring door.\n[25] We can go up from (6,8) to (5,8)?\n[26] but (5,8) is #?\n[27] Wait row5 col8 is #?\n[28] Row5: 0#,1_,2_,3_,4#,5_,6_,7_,8#.\n[29] yes col8 is #.",
+    "evaluates_prior_route_or_claim": "no",
+    "explicitly_revises_prior_reasoning": "yes",
+    "introduces_new_information_or_plan": "no",
+    "primary_label": "correction",
+    "rationale": "The sentence explicitly rejects the earlier claim that moving up from (6,8) to (5,8) is possible, thereby correcting the prior reasoning.",
+    "repeats_prior_content": "no",
+    "target_sentence": "So cannot go up from (6,8) to (5,8)."
+  },
+  {
+    "confidence": "high",
+    "context_before": "[84] - Col1: free rows 1-7?\n[85] row1 col1 G, row2 col1 _, row3 col1 _, row4 col1 #, row5 col1 _, row6 col1 _, row7 col1 A.\n[86] So col1 blocked at row4.\n[87] So vertical path via col1 stops at row4.\n[88] - Col2: row1 col2 _, row2 col2 _, row3 col2 _, row4 col2 #, row5 col2 _, row6 col2 _, row7 col2 _.\n[89] So col2 blocked at row4.\n[90] - Col3: row1 col3 _, row2 col3 _, row3 col3 _, row4 col3 #, row5 col3 _, row6 col3 _, row7 col3 _.\n[91] So blocked at row4.",
+    "evaluates_prior_route_or_claim": "no",
+    "explicitly_revises_prior_reasoning": "no",
+    "introduces_new_information_or_plan": "yes",
+    "primary_label": "new_inference",
+    "rationale": "The sentence provides new state information about column\u202f4 that was not previously mentioned, so it introduces a new inference rather than revising, evaluating, or restating earlier content.",
+    "repeats_prior_content": "no",
+    "target_sentence": "- Col4: row1 col4 #, row2 col4 _, row3 col4 #, row4 col4 #, row5 col4 #, row6 col4 D, row7 col4 #."
+  }
+]

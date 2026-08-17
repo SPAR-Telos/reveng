@@ -1,0 +1,32 @@
+{
+  "activation_span_validation": {
+    "n_overlaps": 0,
+    "reason": "step_activation_rows.csv is absent",
+    "valid": false
+  },
+  "belief_valid_parse_rate": 1.0,
+  "candidate_rows_path": "data/behavioral_probes/trajectory_instances_recomputed_optimal/trajectory_selection_candidates.csv",
+  "drift_run_dir": "data/behavioral_probes/reasoning_belief_action_real_smoke_input",
+  "max_positions": null,
+  "minimum_required_parse_rate": 0.95,
+  "mixed_effects_model_status": "not_fit_in_pilot; use feature_association_fdr.csv for trajectory-position descriptive screening and fit the prespecified mixed-effects model only after scaling",
+  "model_name": "together_ai/openai/gpt-oss-20b",
+  "n_action_events": 1,
+  "n_belief_queries": 26,
+  "n_belief_shifts": 2,
+  "n_positions": 2,
+  "parse_rate_gate_passed": true,
+  "representational_probe_gate": "blocked_until_activation_spans_are_regenerated",
+  "status": "completed",
+  "usage_summary": {
+    "completion_tokens": 0,
+    "cost_usd": 0.0,
+    "prompt_tokens": 0,
+    "reasoning_tokens": 0,
+    "requests": 0,
+    "requests_with_retry": 0,
+    "retry_count": 0,
+    "retry_sleep_seconds": 0.0,
+    "total_tokens": 0
+  }
+}

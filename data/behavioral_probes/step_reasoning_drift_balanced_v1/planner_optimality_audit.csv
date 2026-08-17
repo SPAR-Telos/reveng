@@ -1,0 +1,25 @@
+example_id,selection_stage,failure_category,carrying_key,closed_door_visible,key_visible,shortest_distance,stored_optimal_actions_json,recomputed_optimal_actions_json,stored_matches_recomputed,n_tied_optimal_first_actions,n_distinct_optimal_path_property_profiles,any_shortest_path_acquires_key,every_shortest_path_acquires_key,any_shortest_path_opens_initial_closed_door,every_shortest_path_opens_initial_closed_door,any_shortest_path_steps_on_initial_door_cell,every_shortest_path_steps_on_initial_door_cell
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,context,none,False,True,True,7,"[""UP""]","[""UP""]",True,1,1,True,True,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_002,failure,backtrack,True,True,False,6,"[""DOWN"", ""LEFT""]","[""DOWN"", ""LEFT""]",True,2,1,False,False,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_003,failure,short_loop,True,True,False,5,"[""LEFT""]","[""LEFT""]",True,1,1,False,False,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_001,context,none,False,True,True,11,"[""LEFT""]","[""LEFT""]",True,1,1,True,True,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_002,failure,backtrack,True,True,False,10,"[""RIGHT""]","[""RIGHT""]",True,1,1,False,False,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_004,context,none,False,True,True,11,"[""DOWN""]","[""DOWN""]",True,1,1,True,True,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_006,failure,short_loop,True,True,False,9,"[""LEFT""]","[""LEFT""]",True,1,1,False,False,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_12_step_003,context,none,False,True,True,10,"[""RIGHT""]","[""RIGHT""]",True,1,1,True,True,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_13_step_000,context,none,False,True,True,4,"[""RIGHT""]","[""RIGHT""]",True,1,1,True,True,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_000,failure,avoidable_detour,False,True,True,18,"[""RIGHT""]","[""RIGHT""]",True,1,1,True,True,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_006,context,none,True,False,False,14,"[""DOWN""]","[""DOWN""]",True,1,1,False,False,False,False,False,False
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_007,failure,backtrack,True,False,False,13,"[""DOWN""]","[""DOWN""]",True,1,1,False,False,False,False,False,False
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_010,context,none,True,True,False,9,"[""DOWN""]","[""DOWN""]",True,1,1,False,False,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_012,failure,oscillation_2cycle,True,True,False,9,"[""DOWN""]","[""DOWN""]",True,1,1,False,False,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_016,failure,wall_hit,True,True,False,5,"[""DOWN""]","[""DOWN""]",True,1,1,False,False,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_19_step_002,context,none,False,True,True,8,"[""LEFT""]","[""LEFT""]",True,1,1,True,True,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_008,context,none,True,True,False,11,"[""LEFT"", ""UP""]","[""LEFT"", ""UP""]",True,2,1,False,False,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_009,failure,wall_hit,True,True,False,10,"[""LEFT""]","[""LEFT""]",True,1,1,False,False,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_010,failure,freeze_repeat,True,True,False,10,"[""LEFT""]","[""LEFT""]",True,1,1,False,False,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_21_step_009,context,none,False,True,True,15,"[""UP""]","[""UP""]",True,1,1,True,True,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_23_step_006,context,none,False,True,True,11,"[""UP""]","[""UP""]",True,1,1,True,True,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_25_step_004,context,none,False,True,True,10,"[""UP""]","[""UP""]",True,1,1,True,True,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_003,failure,oscillation_2cycle,False,True,True,10,"[""DOWN"", ""RIGHT""]","[""DOWN"", ""RIGHT""]",True,2,1,True,True,True,True,True,True
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_003,failure,freeze_repeat,False,True,True,12,"[""LEFT""]","[""LEFT""]",True,1,1,True,True,True,True,True,True

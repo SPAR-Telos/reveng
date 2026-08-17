@@ -1,0 +1,15 @@
+{
+  "analysis": "reasoningflow_transfer_pilot_v1",
+  "few_shots_sha256": "766f33c50528733dbc867e16220e306d27c04417200fa76d1e2eecec2c2a5bac",
+  "input": "outputs/hypothesis_tests/reasoningflow_transfer_pilot_v1/pilot_items.csv",
+  "input_sha256": "e49f334ccf9d394b9aea7d763bfce32cdf672c5349f957c26a045f70dc149801",
+  "limit": null,
+  "max_new_tokens": 1200,
+  "model_name": "openai/gpt-oss-20b",
+  "model_path": "/root/.cache/huggingface/hub/models--openai--gpt-oss-20b/snapshots/6cee5e81ee83917806bbde320786a8fb61efebee",
+  "model_revision": "6cee5e81ee83917806bbde320786a8fb61efebee",
+  "prompt_sha256": "e48791c377bc7210b9f54e974bcfc85d6ad54302b7ae1764e2406ac2b5f57ffe",
+  "prompt_version": "reasoningflow_transfer_v1",
+  "reasoning_effort": "medium",
+  "seed": 42
+}

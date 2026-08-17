@@ -1,0 +1,25 @@
+{
+  "matched_wall_rows_path": "data/cognitive_map_probe_reasoning_eval_public_slice_repeat10/matched_wall_rows.csv",
+  "model_name": "together_ai/openai/gpt-oss-20b",
+  "n_examples": 15,
+  "n_long_rows": 300,
+  "reveal_pcts": [
+    0,
+    25,
+    50,
+    75,
+    100
+  ],
+  "status": "completed",
+  "tokenization_method": "hf_tokenizer_local",
+  "usage_summary": {
+    "completion_tokens": 25462.0,
+    "cost_usd": 0.05153460000000005,
+    "model_name": "together_ai/openai/gpt-oss-20b",
+    "prompt_tokens": 146320.0,
+    "reasoning_tokens": 0.0,
+    "requests": 375,
+    "tokenization_method": "hf_tokenizer_local",
+    "total_tokens": 171782.0
+  }
+}

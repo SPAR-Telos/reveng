@@ -1,0 +1,40 @@
+{
+  "activation_join_missing": 0,
+  "activation_join_outside_scope": 0,
+  "analysis_unit": "sentence",
+  "event_counts": {
+    "action_change": 61,
+    "commitment_onset": 5,
+    "optimality_loss": 9,
+    "optimality_recovery": 15,
+    "sustained_optimality_loss": 3
+  },
+  "n_activation_backed_sentences": 654,
+  "n_nonzero_sentence_prefixes": 654,
+  "n_prefix_positions": 662,
+  "n_primary_event_aligned_rows": 93,
+  "n_primary_geometry_rows": 654,
+  "n_sensitivity_geometry_rows": 15042,
+  "prefix_zero_has_activation": false,
+  "primary_layer": 8,
+  "primary_representation": "sentence_sampled_token_mean",
+  "sensitivity_layers": [
+    0,
+    2,
+    4,
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20,
+    22
+  ],
+  "sensitivity_representations": [
+    "sentence_last_up_to_3_sampled_token_mean",
+    "sentence_sampled_token_mean"
+  ],
+  "status": "completed"
+}

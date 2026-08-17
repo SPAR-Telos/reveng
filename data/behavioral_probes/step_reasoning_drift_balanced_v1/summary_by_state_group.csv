@@ -1,0 +1,3 @@
+state_group,n_states,sustained_optimal_to_suboptimal_transition_states,sustained_transition_rate,mixed_or_transient_suboptimal_recommendation_states,mixed_or_transient_rate,all_valid_prefix_actions_planner_optimal_states,all_valid_prefix_actions_planner_optimal_rate,valid_prefixes,total_prefixes,valid_prefix_rate
+Failure states,12,4,0.3333333333333333,6,0.5,2,0.16666666666666666,359,360,0.9972222222222222
+Non-failure controls,12,1,0.08333333333333333,4,0.3333333333333333,7,0.5833333333333334,359,359,1.0

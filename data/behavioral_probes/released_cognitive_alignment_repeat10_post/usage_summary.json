@@ -1,0 +1,71 @@
+{
+  "model_name": "together_ai/openai/gpt-oss-20b",
+  "by_phase": {
+    "logprob_t0": {
+      "requests": 60,
+      "cost_usd": 0.007324200000000002,
+      "prompt_tokens": 20400,
+      "completion_tokens": 4014,
+      "total_tokens": 24414,
+      "reasoning_tokens": 0,
+      "retry_count": 0,
+      "requests_with_retry": 0,
+      "retry_sleep_seconds": 0.0
+    },
+    "logprob_t07": {
+      "requests": 60,
+      "cost_usd": 0.007309499999999999,
+      "prompt_tokens": 20400,
+      "completion_tokens": 3965,
+      "total_tokens": 24365,
+      "reasoning_tokens": 0,
+      "retry_count": 0,
+      "requests_with_retry": 0,
+      "retry_sleep_seconds": 0.0
+    },
+    "logprob_t1": {
+      "requests": 60,
+      "cost_usd": 0.0074604,
+      "prompt_tokens": 20400,
+      "completion_tokens": 4468,
+      "total_tokens": 24868,
+      "reasoning_tokens": 0,
+      "retry_count": 0,
+      "requests_with_retry": 0,
+      "retry_sleep_seconds": 0.0
+    },
+    "greedy_repeated_t0": {
+      "requests": 540,
+      "cost_usd": 0.06630509999999988,
+      "prompt_tokens": 183600,
+      "completion_tokens": 37417,
+      "total_tokens": 221017,
+      "reasoning_tokens": 0,
+      "retry_count": 0,
+      "requests_with_retry": 0,
+      "retry_sleep_seconds": 0.0
+    },
+    "mc": {
+      "requests": 600,
+      "cost_usd": 0.0740649,
+      "prompt_tokens": 204000,
+      "completion_tokens": 42883,
+      "total_tokens": 246883,
+      "reasoning_tokens": 0,
+      "retry_count": 0,
+      "requests_with_retry": 0,
+      "retry_sleep_seconds": 0.0
+    }
+  },
+  "total": {
+    "requests": 1320,
+    "cost_usd": 0.16246410000000003,
+    "prompt_tokens": 448800,
+    "completion_tokens": 92747,
+    "total_tokens": 541547,
+    "reasoning_tokens": 0,
+    "retry_count": 0,
+    "requests_with_retry": 0,
+    "retry_sleep_seconds": 0.0
+  }
+}

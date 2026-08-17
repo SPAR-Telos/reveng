@@ -1,0 +1,8 @@
+{
+  "attention_rows": 67,
+  "permutation_repeats": 10000,
+  "semantic_groups_observed": 3,
+  "trajectories": 28,
+  "weighted_between_group_variance": 5.14122426511514e-07,
+  "within_trajectory_permutation_p": 0.05349465053494651
+}

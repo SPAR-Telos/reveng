@@ -2,7 +2,7 @@
 
 ## supervised_activation_monitor_auc.png
 
-Held-out event prediction from GPT-OSS-20B sentence activations in the matched 46-state run. Each bar is the best activation-only monitor for that event across layers 8, 15, and 23 and sentence-mean or sentence-final representations. The monitor is a ridge logistic classifier trained on PCA-reduced activations, with PCA fit inside each training fold. Validation holds out complete matched pairs or trajectories. AUROC 0.5 indicates chance discrimination. Sample sizes are shown on the y-axis. The evaluated set contains 7,038 sentence positions after excluding the initial no-reasoning position, from 46 environment states and 31 trajectories.
+Held-out event classification in the matched 46-state run. The figure compares the best ridge logistic activation monitor across GPT-OSS-20B layers 8, 15, and 23 with reasoning progress and scalar behavioral action and belief readouts. PCA is fit only inside each activation monitor's training fold, and validation holds out complete trajectories or matched pairs. Points show AUROC and bars show 95% trajectory-bootstrap intervals; 0.5 indicates chance discrimination. Sample sizes are shown on the y-axis. The evaluated set contains 7,038 sentence positions from 46 environment states and 31 trajectories. This is contemporaneous classification, not advance prediction.
 
 ## commitment_boundary_tail_length.png
 

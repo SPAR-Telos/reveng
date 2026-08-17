@@ -1,0 +1,10 @@
+{
+  "adjudicated_items": 40,
+  "broad_cohen_kappa": 0.534282018111255,
+  "broad_exact_agreement": 0.775,
+  "duplicate_broad_agreement": 1.0,
+  "duplicate_fine_agreement": 1.0,
+  "duplicate_pairs": 4,
+  "fine_cohen_kappa": 0.4171779141104295,
+  "fine_exact_agreement": 0.525
+}

@@ -1,0 +1,54 @@
+{
+  "activation_prompt_mode": "original_trace",
+  "activation_source": "local",
+  "balanced_failure_rows_per_mode": 2,
+  "candidate_rows_path": "data/behavioral_probes/trajectory_instances_recomputed_optimal/trajectory_selection_candidates.csv",
+  "collect_activations": true,
+  "device_map": "auto",
+  "forward_chunk_size": 256,
+  "layers": [
+    8,
+    15,
+    23
+  ],
+  "local_model_name_or_path": "/root/.cache/huggingface/hub/models--openai--gpt-oss-20b/snapshots/6cee5e81ee83917806bbde320786a8fb61efebee",
+  "low_cpu_mem_usage": true,
+  "max_reasoning_steps": 32,
+  "n_examples": 24,
+  "non_failure_control_rows": 8,
+  "persistence_threshold": 0.5,
+  "resume": true,
+  "segmentation_mode": "paragraph_or_sentence",
+  "slice_mode": "trajectory_candidates",
+  "status": "completed",
+  "torch_dtype": "auto",
+  "trajectory_dir": "data/hf/trajectories_key_door_100/trajectories_key_door",
+  "trajectory_slice_type": "balanced_failure_modes_with_controls",
+  "usage_summary": {
+    "by_phase": {
+      "prefix_action": {
+        "completion_tokens": 143736,
+        "cost_usd": 0.37144470000000024,
+        "prompt_tokens": 1094413,
+        "reasoning_tokens": 0,
+        "requests": 719,
+        "requests_with_retry": 0,
+        "retry_count": 1,
+        "retry_sleep_seconds": 5.0,
+        "total_tokens": 1238149
+      }
+    },
+    "model_name": "together_ai/openai/gpt-oss-20b",
+    "total": {
+      "completion_tokens": 143736,
+      "cost_usd": 0.37144470000000024,
+      "prompt_tokens": 1094413,
+      "reasoning_tokens": 0,
+      "requests": 719,
+      "requests_with_retry": 0,
+      "retry_count": 1,
+      "retry_sleep_seconds": 5.0,
+      "total_tokens": 1238149
+    }
+  }
+}

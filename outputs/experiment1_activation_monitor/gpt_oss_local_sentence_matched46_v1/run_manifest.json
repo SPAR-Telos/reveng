@@ -1,0 +1,19 @@
+{
+  "analysis_mode": "sentence",
+  "belief_rows": 63756,
+  "candidate_rows_path": "/root/reveng/data/behavioral_probes/reasoning_belief_action_cohorts/matched_46_candidates.csv",
+  "completed_positions": 7084,
+  "coordinate_queries": "deferred stratified subset",
+  "elapsed_seconds_this_invocation": 6839.978322810999,
+  "entropy_source": "candidate_token_logprobs; no repeated sampling",
+  "model_path": "/root/.cache/huggingface/hub/models--openai--gpt-oss-20b/snapshots/6cee5e81ee83917806bbde320786a8fb61efebee",
+  "model_revision": "6cee5e81ee83917806bbde320786a8fb61efebee",
+  "pending_positions": 0,
+  "planned_positions": 7084,
+  "protocol": "local_direct_final_answer_logprobs_v1",
+  "seconds_per_position": 2.0879054709435283,
+  "seed": 42,
+  "status": "completed",
+  "temperature": 0.7,
+  "top_p": 0.95
+}

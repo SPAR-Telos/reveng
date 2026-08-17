@@ -1,0 +1,4 @@
+condition,n_traces,n_disagree_with_full_cot,disagreement_rate,mean_total_variation_from_full_cot,mean_js_divergence_from_full_cot_bits,belief_rescue_denominator,belief_rescue_n,belief_rescue_rate
+grid_only,8,6,0.75,0.7308557544587626,0.6179984880815103,,,
+six_state_beliefs,8,5,0.625,0.7498403037009203,0.6306058568298816,6.0,1.0,0.16666666666666666
+five_state_beliefs,8,5,0.625,0.7337920079533391,0.609672515639738,6.0,1.0,0.16666666666666666

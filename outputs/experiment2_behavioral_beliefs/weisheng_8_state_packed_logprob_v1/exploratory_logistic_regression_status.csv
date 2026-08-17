@@ -1,0 +1,4 @@
+model_name,outcome,predictors,n,events,non_events,converged,warning
+action_change_next_main,action_change_next,"['reasoning_progress', 'action_entropy_bits', 'state_belief_entropy_per_0p01_bits', 'primary_belief_error_rate', 'chosen_action_conflicts_with_reported_state']",249,26,223,True,
+optimality_loss_next_compact,optimality_loss_next,"['reasoning_progress', 'action_entropy_bits', 'state_belief_entropy_per_0p01_bits', 'primary_belief_error_rate']",249,6,243,True,rare event model: only 6 rows in the smaller class; coefficients and p-values are unstable
+optimality_recovery_next_compact,optimality_recovery_next,"['reasoning_progress', 'action_entropy_bits', 'state_belief_entropy_per_0p01_bits', 'primary_belief_error_rate']",249,9,240,True,rare event model: only 9 rows in the smaller class; coefficients and p-values are unstable; near-perfect fitted probabilities; possible separation

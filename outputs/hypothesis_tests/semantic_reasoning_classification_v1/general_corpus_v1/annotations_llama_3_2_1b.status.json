@@ -1,0 +1,14 @@
+{
+  "expected_rows": 332,
+  "free_gib": 21.8448486328125,
+  "gpu_index": 0,
+  "gpu_name": "NVIDIA L4",
+  "input": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/calibration_items.csv",
+  "labeled_rows": 332,
+  "minimum_free_gib": 3.0,
+  "model_name": "meta-llama/Llama-3.2-1B-Instruct",
+  "model_path": "/root/.cache/huggingface/hub/models--meta-llama--Llama-3.2-1B-Instruct/snapshots/9213176726f574b556790deb65791e0c5aa438b6",
+  "output": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/annotations_llama_3_2_1b.csv",
+  "status": "complete",
+  "total_gib": 22.0343017578125
+}

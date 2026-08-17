@@ -1,0 +1,20 @@
+{
+  "status": "no_valid_probe_applications",
+  "activation_artifact": "data/behavioral_probes/step_reasoning_drift_balanced_v1_corrected_activations",
+  "n_examples": 24,
+  "n_reasoning_positions": 719,
+  "activation_layer": 15,
+  "saved_representation_shapes": {
+    "last_token": [
+      2880
+    ],
+    "mean_pool": [
+      2880
+    ]
+  },
+  "n_probe_checkpoints_audited": 4,
+  "n_valid_probe_applications": 0,
+  "n_skipped_applications": 2876,
+  "validation_result": "The corrected tensors are valid for step geometry but incompatible with all released white-box checkpoints because three-token windows were not saved and intermediate positions are outside the checkpoints fixed pre/post training contract.",
+  "required_next_step": "Collect three-token windows at each boundary and train or validate probes specifically for intermediate reasoning positions."
+}

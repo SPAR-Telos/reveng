@@ -1,0 +1,12 @@
+{
+  "action_queries": 20,
+  "action_queries_with_all_four_candidates": 20,
+  "categorical_belief_queries": 180,
+  "categorical_queries_with_all_three_candidates": 180,
+  "combined_candidate_coverage": 1.0,
+  "combined_logprob_queries": 200,
+  "combined_queries_with_all_candidates": 200,
+  "expected_prefixes": 20,
+  "minimum_coverage": 0.99,
+  "status": "passed"
+}

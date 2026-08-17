@@ -1,0 +1,105 @@
+<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.
+Knowledge cutoff: 2024-06
+Current date: 2026-01-22
+
+Reasoning: medium
+
+# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|># Instructions
+
+You are controlling an agent in a grid-based environment with full observability. The agent can move in four directions: up, down, left, and right. The environment contains walls, open spaces, a goal location, and may include doors and keys. The following symbols are used in the grid representation:
+
+Legend:
+---------------
+#: Wall
+_: Open Space (can be visited)
+G: Goal
+A: Current agent position
+D: Door (locked)
+K: Key (can unlock doors)
+----------------
+
+Your objective is to navigate from the current position (A) to the goal (G) while avoiding walls (#). Importantly, the agent should aim to reach the goal using the least amount of steps possible. You must decide your next move based on the provided information.
+
+## Key and Door Mechanics
+
+- **Key Pickup**: The key is automatically picked up when the agent moves to the same cell as the key (K). Once picked up, the agent carries the key with them.
+- **Door Opening**: A locked door (D) is automatically opened and removed from the grid when the agent is adjacent to the door (in front of it) and has already picked up the key. The agent does not need to be on the same cell as the door to open it.
+- **Important**: You must pick up the key before you can open the door. If a door blocks your path to the goal, you need to first navigate to the key, pick it up, then navigate to be adjacent to the door to open it.
+
+You will receive the current state of the grid as a NxM matrix of symbols separated by whitespaces, and with coordinates for each row and column. For example, given the 6x7 grid:
+
+  0 1 2 3 4 5 6
+0 # # # # # # #
+1 # _ _ _ _ _ #
+2 # A _ _ _ K #
+3 # _ # D # _ #
+4 # _ # G # _ #
+5 # # # # # # #
+
+The goal is in position (4,3), the agent's position A is (2,1), the door D is at (3,3), and the key K is at (2,5).
+
+The agent's possible actions at each step are:
+
+Actions:
+- UP: Move Up
+- DOWN: Move Down
+- LEFT: Move Left
+- RIGHT: Move Right
+
+Your final answer should be a valid JSON object provided in the following form:
+
+```
+{
+  "action": "<UP|DOWN|LEFT|RIGHT>",
+}
+```
+
+DO NOT INCLUDE ANY `json` or `jsonb` in your response NOR TICK MARKS LIKE THIS: ```json ```. Start with { and end with } exactly.
+
+# Inputs
+
+Current grid state:
+
+  0 1 2 3 4 5 6 7 8 
+0 # # # # # # # # # 
+1 # _ _ _ # _ _ _ # 
+2 # _ _ _ D _ G _ # 
+3 # _ _ _ # _ _ _ # 
+4 # _ # # # # # # # 
+5 # A K _ # _ _ _ # 
+6 # _ _ _ # _ _ _ # 
+7 # _ _ _ _ _ _ _ # 
+8 # # # # # # # # # 
+
+Agent status:
+- Carrying key: {{carrying_key}}<|end|><|start|>assistant<|channel|>analysis<|message|>We need to decide next move. Let's parse grid. Coordinates: row, col. Grid size 9x9.
+
+Let's mark.
+
+Row0: all walls.
+
+Row1: col0 wall, col1 '_' col2 '_' col3 '_' col4 '#' col5 '_' col6 '_' col7 '_' col8 wall.
+
+Row2: col0 wall, col1 '_' col2 '_' col3 '_' col4 'D' col5 '_' col6 'G' col7 '_' col8 wall.
+
+Row3: row3: col0 wall, col1 '_' col2 '_' col3 '_' col4 '#' col5 '_' col6 '_' col7 '_' col8 wall.
+
+Row4: row4: col0 wall, col1 '_' col2 '#' col3 '#' col4 '#' col5 '#' col6 '#' col7 '#' col8 wall.
+
+Row5: row5: col0 wall, col1 'A' col2 'K' col3 '_' col4 '#' col5 '_' col6 '_' col7 '_' col8 wall.
+
+Row6: row6: col0 wall, col1 '_' col2 '_' col3 '_' col4 '#' col5 '_' col6 '_' col7 '_' col8 wall.
+
+Row7: row7: col0 wall, col1 '_' col2 '_' col3 '_' col4 '_' col5 '_' col6 '_' col7 '_' col8 wall.
+
+Row8: all walls.
+
+Goal G at (2,6). Agent A at (5,1). Key K at (5,2). Door D at (2,4). Walls block.
+
+We need to find shortest path. Since agent doesn't have key, must pick up key first. Key at (5,2) adjacent to agent? Agent at (5,1). So left? Actually agent at col1, key at col2. So moving right will pick up key. So first action: RIGHT.
+
+But check obstacles: (5,2) is K, open. So yes.
+
+Thus next move: RIGHT.<|end|><|start|>assistant<|channel|>final<|message|>{
+  "action": "RIGHT"
+}<|return|>

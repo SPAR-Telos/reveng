@@ -1,0 +1,25 @@
+example_id,state_group,failure_category,outcome_class,sustained_transition_step,sustained_transition_progress,n_prefixes,n_valid_prefixes,n_invalid_prefixes,n_optimal_recommendations,n_suboptimal_recommendations,prefix_outcome_sequence
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_000,Failure states,avoidable_detour,sustained optimal-to-suboptimal recommendation transition,14,0.5384615384615384,27,27,0,17,10,OOOOOOOOOOOOOOSOOOSSSSSSSSS
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_002,Failure states,backtrack,mixed/transient suboptimal recommendations,,,23,23,0,22,1,OOOOOOOOOOOOSOOOOOOOOOO
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_002,Failure states,backtrack,mixed/transient suboptimal recommendations,,,33,33,0,27,6,SSSOOOOOOOOSOOOOOOOOOOOSSOOOOOOOO
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_007,Failure states,backtrack,sustained optimal-to-suboptimal recommendation transition,5,0.15625,33,33,0,5,28,SSOOOSSOSSOSSSSSSSSSSSSSSSSSSSSSS
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_010,Failure states,freeze_repeat,mixed/transient suboptimal recommendations,,,33,33,0,29,4,OOSOSOOSOOSOOOOOOOOOOOOOOOOOOOOOO
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_003,Failure states,freeze_repeat,all valid prefix-elicited actions planner-optimal,,,27,27,0,27,0,OOOOOOOOOOOOOOOOOOOOOOOOOOO
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_012,Failure states,oscillation_2cycle,mixed/transient suboptimal recommendations,,,27,27,0,26,1,OOOOOOOOSOOOOOOOOOOOOOOOOOO
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_003,Failure states,oscillation_2cycle,mixed/transient suboptimal recommendations,,,33,33,0,31,2,SOOOOOOOSOOOOOOOOOOOOOOOOOOOOOOOO
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_003,Failure states,short_loop,mixed/transient suboptimal recommendations,,,30,30,0,24,6,SOOOSOOOOOSSSOOSOOOOOOOOOOOOOO
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_006,Failure states,short_loop,all valid prefix-elicited actions planner-optimal,,,29,28,1,28,0,OOOOOOOOOOOOOOOOOOOOOOOOOOOO?
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_016,Failure states,wall_hit,sustained optimal-to-suboptimal recommendation transition,3,0.09375,33,33,0,13,20,OOOSOOOOOOOOOSSOSSSSSSSSSSSSSSSSS
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_009,Failure states,wall_hit,sustained optimal-to-suboptimal recommendation transition,24,0.7741935483870968,32,32,0,28,4,OOOOOOOOOOOOOOOOOOOOOOOOSSOOOOSS
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,Non-failure controls,none,mixed/transient suboptimal recommendations,,,31,31,0,30,1,SOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_001,Non-failure controls,none,all valid prefix-elicited actions planner-optimal,,,33,33,0,33,0,OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_004,Non-failure controls,none,all valid prefix-elicited actions planner-optimal,,,31,31,0,31,0,OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_12_step_003,Non-failure controls,none,all valid prefix-elicited actions planner-optimal,,,31,31,0,31,0,OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_13_step_000,Non-failure controls,none,all valid prefix-elicited actions planner-optimal,,,27,27,0,27,0,OOOOOOOOOOOOOOOOOOOOOOOOOOO
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_006,Non-failure controls,none,mixed/transient suboptimal recommendations,,,28,28,0,26,2,SOOOOOOOOOSOOOOOOOOOOOOOOOOO
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_010,Non-failure controls,none,sustained optimal-to-suboptimal recommendation transition,1,0.03333333333333333,31,31,0,10,21,OSSSSSSSSSSSSSSSOOSSSSSSOOOOOOO
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_19_step_002,Non-failure controls,none,all valid prefix-elicited actions planner-optimal,,,33,33,0,33,0,OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_008,Non-failure controls,none,all valid prefix-elicited actions planner-optimal,,,28,28,0,28,0,OOOOOOOOOOOOOOOOOOOOOOOOOOOO
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_21_step_009,Non-failure controls,none,all valid prefix-elicited actions planner-optimal,,,33,33,0,33,0,OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_23_step_006,Non-failure controls,none,mixed/transient suboptimal recommendations,,,21,21,0,20,1,SOOOOOOOOOOOOOOOOOOOO
+together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_25_step_004,Non-failure controls,none,mixed/transient suboptimal recommendations,,,32,32,0,31,1,SOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO

@@ -1,0 +1,11 @@
+{
+  "pre_alignment_path": "data/behavioral_probes/released_cognitive_alignment_repeat10_pre/probe_alignment_rows.csv",
+  "post_alignment_path": "data/behavioral_probes/released_cognitive_alignment_repeat10_post/probe_alignment_rows.csv",
+  "pre_behavioral_rows_path": "data/behavioral_probes/released_cognitive_alignment_repeat10_pre/behavioral_probe_rows.csv",
+  "post_behavioral_rows_path": "data/behavioral_probes/released_cognitive_alignment_repeat10_post/behavioral_probe_rows.csv",
+  "failure_paper_slice_path": "data/behavioral_probes/gradual_cot_alignment_failure_wall_core_light/gradual_cot_alignment_rows.csv",
+  "n_pre_alignment_rows": 60,
+  "n_post_alignment_rows": 60,
+  "n_acted_direction_rows": 120,
+  "failure_slice_note": "Failure-slice white-box comparison not included: the exact paper failure slice currently has zero non-empty `whitebox_prediction_pre/post` values, so a comparable white-box analysis requires backfilling those predictions first."
+}

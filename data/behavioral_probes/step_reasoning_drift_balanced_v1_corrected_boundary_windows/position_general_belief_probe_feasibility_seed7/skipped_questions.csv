@@ -1,0 +1,2 @@
+question_id,reason,class_counts_json
+door_open,only one class is present across independent states,"{""0"": 24}"

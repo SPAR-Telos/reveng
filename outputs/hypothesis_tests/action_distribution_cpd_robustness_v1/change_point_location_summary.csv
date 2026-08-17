@@ -1,0 +1,17 @@
+analysis_setup_id,analysis_setup_family,distance_metric,min_segment_length,location_probability_threshold,trace_bayes_factor_threshold,seed,perturbation_sd_fraction,perturbation_seed,original_change_point_count,change_point_count_in_this_setup,original_points_found_again_within_tolerance,fraction_of_original_points_found_again,fraction_of_this_setups_points_matching_original,typical_location_difference_sentences
+original,original,l2,3,0.7,9.0,42,0.0,,160,160,160,1.0,1.0,0.0
+distance_total_variation,distance_calculation,total_variation,3,0.7,9.0,42,0.0,,160,168,140,0.875,0.8333333333333334,0.0
+distance_hellinger,distance_calculation,hellinger,3,0.7,9.0,42,0.0,,160,172,126,0.7875,0.7325581395348837,0.0
+distance_jensen_shannon,distance_calculation,jensen_shannon,3,0.7,9.0,42,0.0,,160,171,128,0.8,0.7485380116959064,0.0
+minimum_segment_5,minimum_segment_length,l2,5,0.7,9.0,42,0.0,,160,135,111,0.69375,0.8222222222222222,0.0
+minimum_segment_10,minimum_segment_length,l2,10,0.7,9.0,42,0.0,,160,74,62,0.3875,0.8378378378378378,0.0
+location_cutoff_0_50,location_cutoff,l2,3,0.5,9.0,42,0.0,,160,206,160,1.0,0.7766990291262136,0.0
+location_cutoff_0_90,location_cutoff,l2,3,0.9,9.0,42,0.0,,160,111,111,0.69375,1.0,0.0
+evidence_cutoff_3,evidence_cutoff,l2,3,0.7,3.0,42,0.0,,160,160,160,1.0,1.0,0.0
+evidence_cutoff_20,evidence_cutoff,l2,3,0.7,20.0,42,0.0,,160,160,160,1.0,1.0,0.0
+random_seed_7,random_seed,l2,3,0.7,9.0,7,0.0,,160,154,148,0.925,0.961038961038961,0.0
+random_seed_19,random_seed,l2,3,0.7,9.0,19,0.0,,160,157,147,0.91875,0.9363057324840764,0.0
+random_seed_73,random_seed,l2,3,0.7,9.0,73,0.0,,160,160,152,0.95,0.95,0.0
+random_seed_101,random_seed,l2,3,0.7,9.0,101,0.0,,160,163,148,0.925,0.9079754601226994,0.0
+small_noise_check_1,input_noise_check,l2,3,0.7,9.0,42,0.03,1.0,160,138,125,0.78125,0.9057971014492754,0.0
+small_noise_check_2,input_noise_check,l2,3,0.7,9.0,42,0.03,2.0,160,149,129,0.80625,0.8657718120805369,0.0

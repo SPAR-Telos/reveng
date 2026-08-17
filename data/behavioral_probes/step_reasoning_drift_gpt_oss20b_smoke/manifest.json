@@ -1,0 +1,47 @@
+{
+  "activation_prompt_mode": "original_trace",
+  "activation_source": "local",
+  "candidate_rows_path": "data/behavioral_probes/trajectory_instances_recomputed_optimal/trajectory_selection_candidates.csv",
+  "collect_activations": true,
+  "device_map": "auto",
+  "layers": [
+    15
+  ],
+  "local_model_name_or_path": "/root/.cache/huggingface/hub/models--openai--gpt-oss-20b/snapshots/6cee5e81ee83917806bbde320786a8fb61efebee",
+  "low_cpu_mem_usage": true,
+  "n_examples": 1,
+  "persistence_threshold": 0.5,
+  "segmentation_mode": "paragraph_or_sentence",
+  "slice_mode": "focused_failure",
+  "status": "completed",
+  "torch_dtype": "auto",
+  "trajectory_dir": "data/hf/trajectories_key_door_100/trajectories_key_door",
+  "trajectory_slice_type": "",
+  "usage_summary": {
+    "by_phase": {
+      "prefix_action": {
+        "completion_tokens": 15954,
+        "cost_usd": 0.0413481,
+        "prompt_tokens": 121873,
+        "reasoning_tokens": 0,
+        "requests": 97,
+        "requests_with_retry": 0,
+        "retry_count": 0,
+        "retry_sleep_seconds": 0.0,
+        "total_tokens": 137827
+      }
+    },
+    "model_name": "together_ai/openai/gpt-oss-20b",
+    "total": {
+      "completion_tokens": 15954,
+      "cost_usd": 0.0413481,
+      "prompt_tokens": 121873,
+      "reasoning_tokens": 0,
+      "requests": 97,
+      "requests_with_retry": 0,
+      "retry_count": 0,
+      "retry_sleep_seconds": 0.0,
+      "total_tokens": 137827
+    }
+  }
+}

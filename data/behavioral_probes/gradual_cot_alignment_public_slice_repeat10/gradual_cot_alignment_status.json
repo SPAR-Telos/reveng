@@ -1,0 +1,96 @@
+{
+  "failure_candidate_rows_path": "",
+  "greedy_repeats": 10,
+  "matched_wall_rows_path": "data/cognitive_map_probe_reasoning_eval_public_slice_repeat10/matched_wall_rows.csv",
+  "mc_sample_repeats": 10,
+  "mc_temperature": 0.7,
+  "model_name": "together_ai/openai/gpt-oss-20b",
+  "n_examples": 15,
+  "n_failure_breakdown_rows": 0,
+  "n_gradual_rows": 5,
+  "n_long_rows": 300,
+  "n_revised_rows": 4,
+  "reveal_pcts": [
+    0,
+    25,
+    50,
+    75,
+    100
+  ],
+  "slice_mode": "clean_matched",
+  "status": "completed",
+  "tokenization_method": "hf_tokenizer_local",
+  "trajectory_dir": "",
+  "usage_summary": {
+    "by_phase": {
+      "action_greedy": {
+        "completion_tokens": 41093,
+        "cost_usd": 0.11087489999999986,
+        "prompt_tokens": 328490,
+        "reasoning_tokens": 0,
+        "requests": 750,
+        "requests_with_retry": 0,
+        "retry_count": 0,
+        "retry_sleep_seconds": 0.0,
+        "total_tokens": 369583
+      },
+      "action_mc": {
+        "completion_tokens": 42495,
+        "cost_usd": 0.11129550000000002,
+        "prompt_tokens": 328490,
+        "reasoning_tokens": 0,
+        "requests": 750,
+        "requests_with_retry": 0,
+        "retry_count": 0,
+        "retry_sleep_seconds": 0.0,
+        "total_tokens": 370985
+      },
+      "wall_greedy": {
+        "completion_tokens": 214926,
+        "cost_usd": 0.4190657999999975,
+        "prompt_tokens": 1181960,
+        "reasoning_tokens": 0,
+        "requests": 3000,
+        "requests_with_retry": 0,
+        "retry_count": 0,
+        "retry_sleep_seconds": 0.0,
+        "total_tokens": 1396886
+      },
+      "wall_logprob": {
+        "completion_tokens": 22186,
+        "cost_usd": 0.0418446,
+        "prompt_tokens": 117296,
+        "reasoning_tokens": 0,
+        "requests": 300,
+        "requests_with_retry": 0,
+        "retry_count": 0,
+        "retry_sleep_seconds": 0.0,
+        "total_tokens": 139482
+      },
+      "wall_mc": {
+        "completion_tokens": 224273,
+        "cost_usd": 0.42163439999999913,
+        "prompt_tokens": 1181175,
+        "reasoning_tokens": 0,
+        "requests": 2998,
+        "requests_with_retry": 0,
+        "retry_count": 0,
+        "retry_sleep_seconds": 0.0,
+        "total_tokens": 1405448
+      }
+    },
+    "model_name": "together_ai/openai/gpt-oss-20b",
+    "tokenization_method": "hf_tokenizer_local",
+    "total": {
+      "completion_tokens": 544973,
+      "cost_usd": 1.1047152000000116,
+      "prompt_tokens": 3137411,
+      "reasoning_tokens": 0,
+      "requests": 7798,
+      "requests_with_retry": 0,
+      "retry_count": 0,
+      "retry_sleep_seconds": 0.0,
+      "total_tokens": 3682384
+    }
+  }
+}

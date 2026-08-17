@@ -90,6 +90,16 @@ def _longest_common_prefix(sequences: Sequence[Sequence[int]]) -> int:
     return limit
 
 
+def _cacheable_prefix_length(sequences: Sequence[Sequence[int]]) -> int:
+    """Retain at least one branch token, including when scoring one question."""
+    if not sequences or any(not sequence for sequence in sequences):
+        raise ValueError("candidate sequences must be non-empty")
+    return min(
+        _longest_common_prefix(sequences),
+        min(len(sequence) - 1 for sequence in sequences),
+    )
+
+
 def _analysis_text(output_text: str) -> str:
     if ANALYSIS_START not in output_text or FINAL_START not in output_text:
         raise ValueError("Trajectory output lacks analysis/final channel markers.")
@@ -207,7 +217,7 @@ class LocalImmediateReadout:
                 raise ValueError(f"Candidate labels are not single tokens: {labels}")
             candidate_ids.append(ids)
 
-        common_length = _longest_common_prefix(sequences)
+        common_length = _cacheable_prefix_length(sequences)
         if common_length == 0:
             raise ValueError("Questions have no common token prefix.")
         common_ids = torch.tensor([sequences[0][:common_length]], device=self.device)
@@ -236,7 +246,7 @@ class LocalImmediateReadout:
                     and not question_id.endswith(selected_action.lower())
                 ):
                     continue
-                suffix = torch.tensor([sequence[common_length:]], device=self.device)
+                suffix = torch.tensor([sequence[common_length:]], device=self.device, dtype=torch.long)
                 # Cache layers append by assigning newly concatenated tensors. A
                 # shallow structural fork therefore shares the immutable prefix
                 # tensors without mutating the reusable base cache.

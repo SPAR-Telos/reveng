@@ -1,0 +1,10 @@
+{
+  "adjudicated_omnibus_p": 0.21897810218978103,
+  "adjudicated_semantic_delta_auroc": 0.02856648199445977,
+  "adjudicated_semantic_log_loss_improvement": 0.0009224473483074869,
+  "adjudicated_total_variation_distance": 0.07236842105263161,
+  "raw_judge_omnibus_p": 0.24117588241175883,
+  "raw_judge_semantic_delta_auroc": 0.02631578947368418,
+  "raw_judge_semantic_log_loss_improvement": -0.0003947995075456179,
+  "raw_judge_total_variation_distance": 0.0789473684210526
+}

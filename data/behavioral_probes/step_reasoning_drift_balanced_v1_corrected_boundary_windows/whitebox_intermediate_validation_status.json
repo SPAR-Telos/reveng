@@ -1,0 +1,31 @@
+{
+  "status": "validation_failed_do_not_use_as_primary_whitebox_measurements",
+  "n_states": 24,
+  "n_reasoning_positions": 719,
+  "activation_window": "three tokens ending at each corrected reasoning boundary, layer 15",
+  "probe_families_evaluated": [
+    "released cognitive-map MLP pre/post",
+    "released plan decoder pre/post"
+  ],
+  "cognitive_map_supported_outputs": [
+    "agent location",
+    "wall occupancy",
+    "goal location",
+    "open cell",
+    "padding"
+  ],
+  "unsupported_beliefs_left_missing": [
+    "key possession",
+    "door open status",
+    "action consequences"
+  ],
+  "validation_reasons": [
+    "cognitive-map overall grid accuracy is far below the released fixed-position reference",
+    "cognitive-map agent-location exact accuracy is zero",
+    "intermediate directional-wall accuracy is near chance",
+    "plan-decoder next-action and sequence-prefix accuracy are far below the released fixed-position reference",
+    "the same-state pre-boundary window also underperforms, so position shift is not the only transfer problem"
+  ],
+  "allowed_use": "exploratory diagnostics only",
+  "required_for_primary_use": "train and held-out validate probes on the same per-position activation and prompt distribution"
+}

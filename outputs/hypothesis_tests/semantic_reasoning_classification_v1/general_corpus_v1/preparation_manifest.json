@@ -1,0 +1,35 @@
+{
+  "analysis": "general_semantic_labeling_calibration_v1",
+  "context_character_limit": 1800,
+  "context_sentences": 8,
+  "duplicate_rows": 12,
+  "full_inventory_rows": 7038,
+  "general_calibration_rows": 240,
+  "inputs": {
+    "canonical_sentences": {
+      "path": "data/behavioral_probes/doorkey_chunking_validation/sentences.csv",
+      "sha256": "e418211fd104b67f967dfb70aa6cb45e2c44bdd4d12522268b40892bae1c4453"
+    },
+    "existing_labels": {
+      "path": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/final_analysis/sentence_label_table.csv",
+      "sha256": "f21dfceb22a57051549174bdb6b988a658d2bd765bad2bea45a054738e23c8b7"
+    },
+    "source_inventory": {
+      "path": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/final_analysis/all_reasoning_sentence_inventory.csv",
+      "sha256": "8bf9fa8709f2a0638b87d72393a171e45d4b7995ca52cad489bce5870c769e08"
+    }
+  },
+  "model_input_is_blinded": true,
+  "outputs": {
+    "broad_few_shots": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/broad_few_shot_examples.json",
+    "calibration_items": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/calibration_items.csv",
+    "calibration_key": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/calibration_key.csv",
+    "few_shots": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/few_shot_examples.json",
+    "inventory": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/sentence_inventory.csv",
+    "manifest": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/preparation_manifest.json",
+    "report": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/PREPARATION_REPORT.md",
+    "runbook": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/RUNBOOK.md"
+  },
+  "reference_stress_rows": 80,
+  "seed": 42
+}

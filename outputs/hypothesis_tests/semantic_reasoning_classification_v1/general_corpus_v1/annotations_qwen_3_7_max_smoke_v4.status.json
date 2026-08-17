@@ -1,0 +1,8 @@
+{
+  "expected_rows": 3,
+  "input": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/calibration_items.csv",
+  "labeled_rows": 3,
+  "model_name": "Qwen/Qwen3.7-Max",
+  "output": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/annotations_qwen_3_7_max_smoke_v4.csv",
+  "status": "complete"
+}

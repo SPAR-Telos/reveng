@@ -1,0 +1,25 @@
+We need to produce next move. Let's analyze grid.
+
+Grid coordinates: rows 0-8, cols 0-8.
+
+Walls '#' at borders and some interior.
+
+Agent A at row 5, col 3? Wait: row 5: "# _ K A D _ _ _ #". Let's parse: row 5: column indices: 0 '#', 1 '_', 2 'K', 3 'A', 4 'D', 5 '_', 6 '_', 7 '_', 8 '#'. So A at (5,3). Key K at (5,2). Door D at (5,4). Goal G at row 7 col 7? Row 7: "# _ _ _ # _ _ G #". Columns: 0 '#', 1 '_', 2 '_', 3 '_', 4 '#', 5 '_', 6 '_', 7 'G', 8 '#'. So G at (7,7).
+
+We need to find shortest path. Let's consider map.
+
+We can pick key at (5,2). We need to get to door at (5,4). But we need to have key to open door. We can pick key, then move adjacent to door to open. The door is at (5,4). Adjacent cells: (5,3) (our current pos), (5,5), (4,4), (6,4). But note (4,4) row 4 col 4? Row 4: "# # # # # # # _ #". So row 4 col 4 is '#', wall. (6,4) row 6 col 4? Row 6: "# _ _ _ # _ _ _ #". So col 4 is '#', wall. (5,5) row 5 col 5 is '_' open. (5,3) is current pos. So we can open door by moving to either (5,5) or (5,3). Since we are at (5,3) adjacent to door. We need key before opening. So steps: move left to key at (5,2). Then move right back to (5,3) to open door. After door opens, we can go through? Actually door removed. We need to get to goal at (7,7). Let's check path after door.
+
+After door removed at (5,4), we can traverse. Let's plan route: From (5,3) after opening door, we can go right to (5,4) (door removed) to (5,5) to (5,6) to (5,7) maybe. Let's see if those cells open: row5 col5 '_' open, col6 '_' open, col7 '_' open. Then from (5,7) go down to (6,7) '_' open, then to (7,7) goal. Check if any walls block: row6 col7 '_' open, row7 col7 G. Good.
+
+So total moves: from (5,3) to (5,2) left (1 step). Then back to (5,3) right (2). Then open door automatically. Then right to (5,4) (3). Right to (5,5) (4). Right to (5,6) (5). Right to (5,7) (6). Down to (6,7) (7). Down to (7,7) goal (8). So 8 steps.
+
+But maybe there is alternative route with fewer steps? Let's consider maybe moving up or down instead of back to (5,3). But we need to be adjacent to door to open. We could go left to key, then right to door adjacent (5,3) or (5,5). Suppose we go left to key (5,2). Then right back to (5,3) (2). Then right to (5,4) (door removed) (3). Then go to goal. That's what we did. Could we open door from (5,5) after picking key? That would require moving from key to (5,5). Path: from (5,2) to (5,3) (1), to (5,4) (door) but door locked until key, can't go. So cannot. So must go back to (5,3). So minimal steps likely 8.
+
+But maybe we could go up/down to avoid door? Let's inspect map: There is also path around door? Let's see grid: Row4 has walls all except at col7? Row4: "# # # # # # # _ #". So only open at (4,7). That is near goal? Goal at (7,7). Path from (5,3) to (4,7) maybe? Let's check: (5,3) up to (4,3) but row4 col3 is '#'. So cannot go up. Down: (6,3) row6 col3 '_' open. Then from there maybe go to (6,7) via open cells? Let's map: Row6: "# _ _ _ # _ _ _ #". So columns 1-3 open, col4 wall, 5-7 open. So we can go from (5,3) down to (6,3), then right to (6,4) but wall. So we can go to (6,5) maybe via path: from (6,3) right to (6,4) blocked. So maybe go up to row4? But row4 col3 is wall. So maybe we need door to get to right side. So door seems necessary.
+
+Thus 8 steps minimal.
+
+We need to output next action: we are at (5,3). We need to go left to key. So action: LEFT.
+
+Return JSON.

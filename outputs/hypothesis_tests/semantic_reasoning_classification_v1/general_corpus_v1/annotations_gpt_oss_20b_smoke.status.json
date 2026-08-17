@@ -1,0 +1,14 @@
+{
+  "expected_rows": 2,
+  "free_gib": 21.8448486328125,
+  "gpu_index": 0,
+  "gpu_name": "NVIDIA L4",
+  "input": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/calibration_items.csv",
+  "labeled_rows": 2,
+  "minimum_free_gib": 16.0,
+  "model_name": "openai/gpt-oss-20b",
+  "model_path": "/root/.cache/huggingface/hub/models--openai--gpt-oss-20b/snapshots/6cee5e81ee83917806bbde320786a8fb61efebee",
+  "output": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/annotations_gpt_oss_20b_smoke.csv",
+  "status": "complete",
+  "total_gib": 22.0343017578125
+}

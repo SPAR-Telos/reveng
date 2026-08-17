@@ -1,0 +1,18 @@
+We need to plan next move. Let's parse grid. Coordinates: rows 0-8, cols 0-8.
+
+Grid:
+Row0 all walls.
+Row1: col0 #, col1 _, col2 _, col3 K, col4 #, col5 _, col6 _, col7 _, col8 #
+Row2: col0 #, col1 _, col2 _, col3 A, col4 #, col5 _, col6 _, col7 _, col8 #
+Row3: col0 #, col1 _, col2 _, col3 _, col4 _, col5 _, col6 _, col7 _, col8 #
+Row4: col0 #, col1 #, col2 #, col3 #, col4 #, col5 _, col6 #, col7 #, col8 #
+Row5: col0 #, col1 G, col2 _, col3 _, col4 D, col5 _, col6 _, col7 _, col8 #
+Row6: col0 #, col1 _, col2 _, col3 _, col4 #, col5 _, col6 _, col7 _, col8 #
+Row7: col0 #, col1 _, col2 _, col3 _, col4 #, col5 _, col6 _, col7 _, col8 #
+Row8: all walls.
+
+Goal G at (5,1). Door D at (5,4). Key K at (1,3). Agent A at (2,3). Not carrying key. Need to reach key first.
+
+We need shortest path to key. Let's compute.
+
+Agent at (2,3). Key at (1,3). One step up is directly adjacent? (1,3) is K. Is that cell open? Yes K. So move UP to pick up key. So action: UP.

@@ -1,0 +1,10 @@
+{
+  "context_sentences_shown_to_human": 8,
+  "detected_change_points": 160,
+  "exclusion_window_sentences": 3,
+  "full_annotation_rows": 320,
+  "matched_pairs": 160,
+  "pilot_hidden_duplicates": 4,
+  "pilot_rows": 44,
+  "seed": 42
+}

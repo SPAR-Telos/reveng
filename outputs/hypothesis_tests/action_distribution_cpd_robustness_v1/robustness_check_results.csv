@@ -1,0 +1,10 @@
+check_id,required_result,measured_result,passed,needed_for_abrupt_shift_claim,needed_for_gradual_change_claim
+false_alarm_rate_without_abrupt_shift,false alarms in no more than 5% of either kind of no-abrupt-shift trace,0.01,True,True,True
+known_abrupt_shifts_correctly_found,correctly find at least 80% of the known abrupt shifts,1.0,True,True,True
+known_abrupt_shifts_placed_accurately,typical location error no greater than 3 sentences,0.0,True,True,True
+gradual_slope_changes_correctly_found,correctly locate at least 80% of gradual slope changes,0.0,False,False,True
+similar_counts_with_different_random_seeds,changing the random seed changes the total count by no more than 10%,0.0375,True,True,True
+original_points_found_again_across_reruns,at least 70% of original points are found by 12 or more of the 16 analysis setups,0.79375,True,True,True
+original_points_found_with_every_distance,each distance calculation finds at least 70% of the original change points,0.7875,True,True,True
+closer_to_recommendation_changes_in_every_rerun,change points are closer to recommendation changes than matched sentences in all 16 analysis setups,1.0,True,True,True
+original_comparison_remains_above_zero,the entire 95% uncertainty range for the original comparison stays above zero,0.16752395922365512,True,True,True

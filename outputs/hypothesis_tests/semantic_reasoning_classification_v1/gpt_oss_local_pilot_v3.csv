@@ -1,0 +1,736 @@
+annotation_id,context_before,target_sentence,target_sentence_characters,explicitly_revises_prior_reasoning,evaluates_prior_route_or_claim,repeats_prior_content,introduces_new_information_or_plan,primary_label,confidence,rationale,judge_model,judge_revision,judge_temperature,judge_seed,judge_prompt_version,judge_prompt_sha256,judge_reasoning_effort,raw_response,error
+sem_974b1b9960e5bc01,"[71] Up to (0,7) wall.
+[72] So from (1,7) we can go left to (1,6) open.
+[73] Up to (0,6) wall.
+[74] So we can go left to (1,5) open.
+[75] Left to (1,4) wall.
+[76] So cannot go to column 3 from there.
+[77] Alternatively from (3,7) left to (3,6) open, left to (3,5) open, left to (3,4) D door.
+[78] So we could go to (3,5) then left to door at (3,4).",But door is locked; we don't have key.,38,no,no,no,yes,new_inference,high,"The sentence introduces a new constraint (door locked, no key) that is not a direct grid observation, route proposal, or test of an earlier claim, fitting the new_inference branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""new_inference"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence introduces a new constraint (door locked, no key) that is not a direct grid observation, route proposal, or test of an earlier claim, fitting the new_inference branch.""
+}",
+sem_72498844d328956c,"[1] We need to plan next action.
+[2] Grid size 9x9.
+[3] Coordinates: row, col.
+[4] Agent at (6,7).","Goal at (1,3).",14,no,no,no,yes,state_reconstruction,high,"The sentence provides a new grid fact (goal location) without testing or proposing a move, fitting the state_reconstruction branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""state_reconstruction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence provides a new grid fact (goal location) without testing or proposing a move, fitting the state_reconstruction branch.""
+}",
+sem_3cf18c8c91e4cbc8,"[60] Need to go around via row5 col2/3, then up to row4?
+[61] But row4 col2-5 all walls.
+[62] So cannot cross row4 via column1-5.
+[63] But row4 col6 is free.
+[64] So we must go to col6, then up to row1 col6?
+[65] But goal at col1.
+[66] So we might need to go to col6 then left to col1 via row1 or row2 or row3?
+[67] But row1 col2-3 free, but col4 blocked.",Row2 col2-3-4-5-6-7 free.,25,no,no,no,yes,state_reconstruction,high,"The sentence provides a direct observation of free cells in row2, fitting the state_reconstruction branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""state_reconstruction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence provides a direct observation of free cells in row2, fitting the state_reconstruction branch.""
+}",
+sem_eed3d0e438e3a299,"[109] Row6: columns 1-3 open, 4 wall, 5-7 open.
+[110] Row7: columns 1-3 open, 4 wall, 5-7 open.
+[111] Goal at (2,6).
+[112] We need to go from (5,1) to (2,6).
+[113] The wall column 4 blocks crossing.
+[114] But we can go around via row1?
+[115] Wait column4 at row1 is open?
+[116] Actually row1 col4 is '_'?","Let's check row1: ""# _ _ _ _ _ _ _ #"": columns 1-7 are open.",60,no,no,no,yes,state_reconstruction,high,"The sentence directly reads the grid state of row1, fitting the state_reconstruction branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""state_reconstruction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence directly reads the grid state of row1, fitting the state_reconstruction branch.""
+}",
+sem_3db27ebef4630b8e,"[2] Let's parse grid.
+[3] Coordinates: row, col.
+[4] A at row2 col6?
+[5] Wait grid shows row2: ""# _ _ _ _ _ A _ #"".
+[6] Indices 0-8.
+[7] So A at (2,6).
+[8] Key K at row3 col6?
+[9] Row3: ""# _ _ _ # _ K _ #"".","So K at (3,6).",14,no,no,no,yes,state_reconstruction,high,"The sentence directly states the coordinates of K, matching the hard exclusion that new coordinate info is state_reconstruction.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""state_reconstruction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence directly states the coordinates of K, matching the hard exclusion that new coordinate info is state_reconstruction.""
+}",
+sem_3b1e95e63d31d945,"[1] We need to decide next move.
+[2] Let's map grid coordinates: rows 0-8, cols 0-8.
+[3] Walls around edges.
+[4] Agent A at (5,2).
+[5] Carrying key: True.","Goal G at (3,1).",16,no,no,no,yes,state_reconstruction,high,"The sentence provides a new grid fact (goal location) without testing or proposing a move, fitting the state_reconstruction branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""state_reconstruction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence provides a new grid fact (goal location) without testing or proposing a move, fitting the state_reconstruction branch.""
+}",
+sem_dup_139d4e0a7621a430,"[145] So can't.
+
+From (5,2) go down to (6,2) -> down to (7,2) '_' -> right to (7,3) '_' -> right to (7,4) '#' blocked.
+[146] So no.
+
+Maybe go up to row4 then right via row4?
+[147] Row4 has '#' at col3 and col4 and col5.
+[148] So cannot.
+[149] Maybe go to row5 col5?
+[150] From (5,3) we can't go to 5,4.
+[151] So no.
+
+Thus seems impossible to reach (7,5) due to wall at (7,4).
+[152] Maybe we can approach from other side: go to (6,5) from above?","From (6,5) we can get from (5,5) or (6,6) or (7,5).",51,no,no,no,yes,route_planning,high,"The sentence proposes a new move (from (6,5) to adjacent cells), fitting the route_planning branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""route_planning"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence proposes a new move (from (6,5) to adjacent cells), fitting the route_planning branch.""
+}",
+sem_a0fa5231735d2d96,"[145] So can't.
+
+From (5,2) go down to (6,2) -> down to (7,2) '_' -> right to (7,3) '_' -> right to (7,4) '#' blocked.
+[146] So no.
+
+Maybe go up to row4 then right via row4?
+[147] Row4 has '#' at col3 and col4 and col5.
+[148] So cannot.
+[149] Maybe go to row5 col5?
+[150] From (5,3) we can't go to 5,4.
+[151] So no.
+
+Thus seems impossible to reach (7,5) due to wall at (7,4).
+[152] Maybe we can approach from other side: go to (6,5) from above?","From (6,5) we can get from (5,5) or (6,6) or (7,5).",51,no,no,no,yes,route_planning,high,"The sentence proposes a new move (from (6,5) to adjacent cells), fitting the route_planning branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""route_planning"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence proposes a new move (from (6,5) to adjacent cells), fitting the route_planning branch.""
+}",
+sem_7d33a7c6fc7307fd,"[50] So left path blocked at col4.
+[51] Upwards: (5,7), (4,7)#, (3,7), (2,7), (1,7), (0,7)#.
+[52] So going up from agent leads to row4 col7 wall.
+[53] So can't go up directly.
+[54] From agent we can go left to (6,6) then (6,5).
+[55] From (6,5) up to (5,5), (4,5)#, (3,5), etc. But row4 col5 is #.
+[56] So cannot cross to upper region via col5.
+[57] From agent left to (6,4) is wall.","So to reach upper area, we need to go via door at (4,3).",56,no,no,no,yes,route_planning,high,"The sentence proposes a new route via the door at (4,3), fitting branch D.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""route_planning"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence proposes a new route via the door at (4,3), fitting branch D.""
+}",
+sem_dup_504f3468468f7b8c,"[125] Let's find shortest path.
+[126] Compute Manhattan distance ignoring obstacles: from (5,1) to (2,6) distance 3 up +5 right =8.
+[127] But obstacles may add steps.
+[128] Let's plan.
+[129] Path: (5,1) -> up to (4,1) but (4,1) is '#', cannot.
+[130] So need to go around: maybe go left?
+[131] but left of (5,1) is (5,0) '#'.
+[132] So can't go left or up.","So from (5,1) we must go right to (5,2).",40,no,no,no,yes,route_planning,high,"The sentence proposes a new move (right to (5,2)) based on earlier constraints, fitting the route_planning branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""route_planning"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence proposes a new move (right to (5,2)) based on earlier constraints, fitting the route_planning branch.""
+}",
+sem_a970af5b253f9e74,"[27] Row0: #########
+Row1: # ___#___#
+Row2: # ___#A_ #
+Row3: # ___#__K#
+Row4: ###_###D#
+Row5: #__G#___#
+Row6: #_____##?
+[28] Wait row6: "" # _ _ _ _ _ _ _ #"" positions: col0 '#', col1 '_', col2 '_', col3 '_', col4 '_', col5 '_', col6 '_', col7 '_', col8 '#'.
+[29] So row6 all open from col1-7.
+[30] Row7: ""# _ _ _ # _ _ _ #"" positions: col0 '#', col1 '_', col2 '_', col3 '_', col4 '#', col5 '_', col6 '_', col7 '_', col8 '#'.
+[31] Row8: #########.
+[32] So open spaces are many.
+[33] The door at (4,7) might block some corridor but we can circumvent maybe.
+[34] We need to see if there's any path from agent to goal without needing to open door.",Let's analyze connectivity.,27,no,no,no,unsure,procedural_continuation,high,"The sentence is a meta-level transition that initiates analysis, fitting branch H.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""unsure"",
+  ""primary_label"": ""procedural_continuation"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence is a meta-level transition that initiates analysis, fitting branch H.""
+}",
+sem_2fc68efc823d7a89,"[77] Alternatively from (3,7) left to (3,6) open, left to (3,5) open, left to (3,4) D door.
+[78] So we could go to (3,5) then left to door at (3,4).
+[79] But door is locked; we don't have key.
+[80] So cannot pass through door unless we open it by being adjacent to it.
+[81] We could open it from (3,5) or (2,4) or (4,4) or (3,3).
+[82] But to open door, we need key.
+[83] So we need to get key at (7,7).
+[84] That seems reachable from start.","So path: from (6,8) go to key at (7,7).",39,no,no,no,yes,route_planning,high,"The sentence proposes a new move sequence (from (6,8) to (7,7)), fitting the route_planning branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""route_planning"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence proposes a new move sequence (from (6,8) to (7,7)), fitting the route_planning branch.""
+}",
+sem_1dc076867906d39b,"[67] So maybe from (1,3) go down to (2,3) then right?
+[68] But (2,3) open, but from there to (2,5) need to skip (2,4) wall.
+[69] So can't.
+
+Thus maybe go left side: from (1,1) down to (2,1),(3,1),(4,1) but (4,1) is wall?
+[70] Wait row4 col1 is #?
+[71] Row4: ""# # _ # # _ # # #"" so col0#, col1#, yes wall.
+[72] So can't go down to row4.
+[73] From (3,1) right to (3,2),(3,3).
+[74] But again stuck.",So we need to go around the wall at column4.,44,no,no,no,yes,new_inference,medium,"The sentence introduces a new inference about the need to navigate around a wall, which is not a direct observation, test, or plan, fitting branch E.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""new_inference"",
+  ""confidence"": ""medium"",
+  ""rationale"": ""The sentence introduces a new inference about the need to navigate around a wall, which is not a direct observation, test, or plan, fitting branch E.""
+}",
+sem_cf41b4cfd259cd0c,"[16] Door D at (4,5).
+[17] Goal G at (5,7).
+[18] Walls # block.
+[19] Open spaces _.
+[20] We need shortest path.
+[21] We need to pick up key before door.
+[22] The door is at (4,5).
+[23] The agent must be adjacent to door to open.","Adjacent squares: (3,5), (5,5), (4,4), (4,6).",45,no,no,no,yes,state_reconstruction,high,"The sentence lists adjacent squares, which is a direct observation of the grid state, fitting branch C.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""state_reconstruction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence lists adjacent squares, which is a direct observation of the grid state, fitting branch C.""
+}",
+sem_367e69932b89319d,"[46] From (2,6) we can go up to (1,6) row1 col6 '_'?
+[47] row1: ""# _ _ _ # _ _ _ #"": col6 '_' yes.
+[48] Down to (3,6) row3 col6 '_' yes.
+[49] Left to (2,5) row2 col5 '_' yes.
+[50] Right to (2,7) row2 col7 '_' yes.
+[51] Goal at (5,3).
+[52] Let's find path: maybe (2,6) -> left to (2,5) -> left to (2,4) but row2 col4 '#' wall.
+[53] So can't go that way.","Down path: (2,6) down to (3,6) -> down to (4,6) row4 col6 '#' wall.",67,no,yes,no,yes,verification,high,"The sentence tests the feasibility of a proposed move (down from (3,6) to (4,6)), which is a verification of a route claim.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""yes"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""verification"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence tests the feasibility of a proposed move (down from (3,6) to (4,6)), which is a verification of a route claim.""
+}",
+sem_e193bf9b309979b1,"[133] From (7,5) we can go left?
+[134] blocked. Up? (6,5) then up (5,5) then left (5,4) blocked.
+[135] So cannot.
+[136] Right? (7,6) then up (6,6) then left (6,5) then left (6,4) then left (6,3) then up (5,3) that's 6.
+[137] Maybe go up then right?
+[138] (6,5) right (6,6) up (5,6) left (5,5) left (5,4) blocked.
+[139] So no. Up then left?
+[140] (6,5) left (6,4) left (6,3) up (5,3) that's 4 steps?","Let's check: (7,5)->(6,5) [1], ->(6,4) [2], ->(6,3) [3], ->(5,3) [4].",69,no,yes,no,no,verification,high,"The sentence tests a previously discussed route by listing the steps, fitting branch B.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""yes"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""no"",
+  ""primary_label"": ""verification"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence tests a previously discussed route by listing the steps, fitting branch B.""
+}",
+sem_3c861816bae0d107,"[52] Let's find path: maybe (2,6) -> left to (2,5) -> left to (2,4) but row2 col4 '#' wall.
+[53] So can't go that way.
+[54] Down path: (2,6) down to (3,6) -> down to (4,6) row4 col6 '#' wall.
+[55] So cannot go directly down.
+[56] Right to (2,7) -> down to (3,7) key at (3,7).
+[57] Then down to (4,7) door (locked).
+[58] So door blocks path if we go that way.
+[59] Maybe we can go around door.",Let's analyze connectivity of open cells: The open area includes region left of column 4?,89,no,no,no,unsure,procedural_continuation,medium,"The sentence is a meta‑level transition that initiates a connectivity analysis, fitting branch H.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""unsure"",
+  ""primary_label"": ""procedural_continuation"",
+  ""confidence"": ""medium"",
+  ""rationale"": ""The sentence is a meta‑level transition that initiates a connectivity analysis, fitting branch H.""
+}",
+sem_1bd1810b1811689c,"[1] We need to decide next action.
+[2] Grid 9x9 (indices 0-8).
+[3] Agent at (7,2).","Goal at (2,6).",14,no,no,no,yes,state_reconstruction,high,"The sentence provides a new grid fact (goal location) without testing, correcting, or proposing a move.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""state_reconstruction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence provides a new grid fact (goal location) without testing, correcting, or proposing a move.""
+}",
+sem_3b9cf65a6a485da8,"[20] We need shortest path.
+[21] We need to pick up key before door.
+[22] The door is at (4,5).
+[23] The agent must be adjacent to door to open.
+[24] Adjacent squares: (3,5), (5,5), (4,4), (4,6).
+[25] But note (4,4) is #?
+[26] Row4 col4 is #.
+[27] (4,6) is #.","So only possible adjacent cells are (3,5) and (5,5).",52,no,no,no,yes,state_reconstruction,high,"The sentence lists the remaining adjacent cells, directly reconstructing grid state.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""state_reconstruction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence lists the remaining adjacent cells, directly reconstructing grid state.""
+}",
+sem_fbc0053ef4bb20de,"[118] But we can't reach (5,5).
+[119] So we must go to (5,3) to open door.
+[120] But door opens when adjacent; we can be at (5,3) to open.
+[121] After door opens, we can then go to (5,5) or (5,4) etc.
+[122] Thus the shortest path to open door: go from (6,1) to (5,3).
+[123] That is 3 steps: (5,1),(5,2),(5,3).
+[124] But we need to decide next action: the first step.
+[125] Starting at (6,1).",We need to move up or right?,28,no,no,no,yes,route_planning,high,The sentence proposes a new move (up or right) as part of a route plan.,openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""route_planning"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence proposes a new move (up or right) as part of a route plan.""
+}",
+sem_dup_ef643766a0ed7b34,"[149] Maybe go to row5 col5?
+[150] From (5,3) we can't go to 5,4.
+[151] So no.
+
+Thus seems impossible to reach (7,5) due to wall at (7,4).
+[152] Maybe we can approach from other side: go to (6,5) from above?
+[153] From (6,5) we can get from (5,5) or (6,6) or (7,5).
+[154] Let's see if we can reach (5,5).
+[155] To reach (5,5), we need to get to (5,5) open.
+[156] From left side: (5,4) '#' blocked.","From right side: (5,6) '_' -> left to (5,5).",44,no,yes,no,yes,verification,high,"The sentence tests the feasibility of a route from (5,6) to (5,5), which is a verification of a previously discussed path.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""yes"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""verification"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence tests the feasibility of a route from (5,6) to (5,5), which is a verification of a previously discussed path.""
+}",
+sem_bedd1bd3feedc437,"[103] Let's examine connectivity of area left of column 4.
+[104] Row1 col1-3 open.
+[105] Row2 col1-3 open.
+[106] Row3 col1-3 open.
+[107] Row4 col3 open.
+[108] Row5 col1-2 open, col3 G.
+[109] Row6 col1-7 open.
+[110] Row7 col1-3 open.",So there is a corridor from top to bottom through columns 1-3 and row4 col3.,76,no,no,no,yes,state_reconstruction,high,"The sentence restates observed connectivity of the grid, fitting the state_reconstruction branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""state_reconstruction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence restates observed connectivity of the grid, fitting the state_reconstruction branch.""
+}",
+sem_da71a689dbcc5d5d,"[8] Agent doesn't have key.
+[9] Path: need to get key first, then go to door to open, then to goal.
+[10] Let's analyze layout.
+[11] Grid representation:
+[12] Row0 all walls.
+[13] Row1: ""# _ _ G D _ _ _ #""
+Indices: 0:#,1:_,2:_,3:G,4:D,5:_,6:_,7:_,8:#
+[14] Row2: ""# _ _ _ # _ _ _ #""
+Row3: ""# _ _ _ # _ _ _ #""
+Row4: ""# # # _ # # # _ #""
+Row5: ""# _ _ _ # _ _ _ #""
+Row6: ""# _ _ _ # _ _ A #""
+Row7: ""# _ _ _ # _ K _ #""
+Row8: walls.
+[15] Key at (7,6).","Door at (1,4).",14,no,no,no,yes,state_reconstruction,high,"The sentence provides a new coordinate observation of the door, fitting the state_reconstruction branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""state_reconstruction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence provides a new coordinate observation of the door, fitting the state_reconstruction branch.""
+}",
+sem_d5016c06921eaa0e,"[41] So need to go around.
+[42] Alternative: from (5,5) left to (5,4) '#', can't.
+[43] Right to (5,6) '_' ok.
+[44] Up to (4,6) '#', no.
+[45] So maybe from (5,6) left to (5,5) back.
+[46] Let's consider path via (6,5) left to (6,4) '_' then up to (5,4) '#', no.
+[47] Up to (5,5) again.
+[48] Hmm.
+
+Maybe go from agent to (7,6) then up to (6,6) '_' then up to (5,6) '_' then left to (5,5) etc.","But we need to get adjacent to door at (4,3).",45,no,no,no,yes,route_planning,high,"The sentence proposes a new goal (adjacent to the door) and implicitly suggests a direction to move toward it, fitting the route_planning branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""route_planning"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence proposes a new goal (adjacent to the door) and implicitly suggests a direction to move toward it, fitting the route_planning branch.""
+}",
+sem_e5755cf0d1eab65d,"[2] Let's map grid coordinates: rows 0-8, cols 0-8.
+[3] Walls around edges.
+[4] Agent A at (5,2).
+[5] Carrying key: True.
+[6] Goal G at (3,1).
+[7] Door D at (4,1).
+[8] So door is between agent and goal?
+[9] Let's see path: From agent at (5,2) to goal at (3,1).",Path likely up-left.,20,no,no,no,yes,route_planning,high,"The sentence proposes a specific movement direction (up-left) as a plan to reach the goal, fitting the route_planning branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""route_planning"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence proposes a specific movement direction (up-left) as a plan to reach the goal, fitting the route_planning branch.""
+}",
+sem_a36ef3430de90460,"[3] Agent at (7,2).
+[4] Goal at (2,6).
+[5] Key is already carried.
+[6] Door at (4,6).
+[7] We can open door when adjacent to door.
+[8] We need path to goal.
+[9] Let's map open spaces: Walls '#'.
+[10] Let's list coordinates.",Row0 all walls.,15,no,no,no,yes,state_reconstruction,high,"The sentence provides a new observation of the grid (row 0 is all walls), fitting the state_reconstruction branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""state_reconstruction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence provides a new observation of the grid (row 0 is all walls), fitting the state_reconstruction branch.""
+}",
+sem_cf04fd139ea31f7b,"[71] Row4: ""# # _ # # _ # # #"" so col0#, col1#, yes wall.
+[72] So can't go down to row4.
+[73] From (3,1) right to (3,2),(3,3).
+[74] But again stuck.
+[75] So we need to go around the wall at column4.
+[76] The wall forms a vertical barrier from row1 to row5 at column4: (1,4),(2,4),(3,4),(4,4),(5,4).
+[77] So to cross from left side to right side, must go around either top or bottom.
+[78] Top: row0 all walls, can't.","Bottom: row6 has door at (6,4) but door might open.",51,no,no,no,yes,state_reconstruction,high,"The sentence provides a new observation about the bottom row (door at (6,4)), fitting the state_reconstruction branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""state_reconstruction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence provides a new observation about the bottom row (door at (6,4)), fitting the state_reconstruction branch.""
+}",
+sem_a8ba19f29ad87ec1,"[56] So cannot cross to upper region via col5.
+[57] From agent left to (6,4) is wall.
+[58] So to reach upper area, we need to go via door at (4,3).
+[59] Let's see path: From agent, go left to (6,6), left to (6,5), left to (6,4) wall; can't.
+[60] So maybe go up from agent: (5,7) up to (4,7) wall; can't.
+[61] So we must go around via door.
+[62] Let's find path to door.
+[63] Door at (4,3).","Adjacent cells: (3,3) open, (5,3) open, (4,2)#, (4,4)#.",55,no,no,no,yes,state_reconstruction,high,"The sentence lists the contents of adjacent cells, which is a direct observation of the grid state.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""state_reconstruction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence lists the contents of adjacent cells, which is a direct observation of the grid state.""
+}",
+sem_3a9d0dcd2d221352,"[125] Let's find shortest path.
+[126] Compute Manhattan distance ignoring obstacles: from (5,1) to (2,6) distance 3 up +5 right =8.
+[127] But obstacles may add steps.
+[128] Let's plan.
+[129] Path: (5,1) -> up to (4,1) but (4,1) is '#', cannot.
+[130] So need to go around: maybe go left?
+[131] but left of (5,1) is (5,0) '#'.
+[132] So can't go left or up.","So from (5,1) we must go right to (5,2).",40,no,no,no,yes,route_planning,high,"The sentence proposes a new move (right to (5,2)) based on earlier constraints, fitting the route_planning branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""route_planning"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence proposes a new move (right to (5,2)) based on earlier constraints, fitting the route_planning branch.""
+}",
+sem_dup_1d6eccd2c9e0dfcc,"[103] Let's examine connectivity of area left of column 4.
+[104] Row1 col1-3 open.
+[105] Row2 col1-3 open.
+[106] Row3 col1-3 open.
+[107] Row4 col3 open.
+[108] Row5 col1-2 open, col3 G.
+[109] Row6 col1-7 open.
+[110] Row7 col1-3 open.",So there is a corridor from top to bottom through columns 1-3 and row4 col3.,76,no,no,no,yes,state_reconstruction,high,"The sentence restates observed connectivity of the grid, fitting the state_reconstruction branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""state_reconstruction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence restates observed connectivity of the grid, fitting the state_reconstruction branch.""
+}",
+sem_7e55802ae0844faa,"[31] No D. So the vertical wall blocks.
+[32] But maybe there is a gap at row1 col4?
+[33] It's '#', row2 col4 '#', etc. So no path.
+[34] But maybe we can go around the wall via row0 or row8?
+[35] But those rows are all walls.
+[36] So no path.
+[37] So maybe there is a door that we can open?
+[38] But no D. So maybe the assumption is that the agent can cross the wall?",But grid says walls are impassable.,35,yes,no,no,no,correction,high,"The sentence explicitly corrects the earlier assumption that the agent could cross walls, fitting branch A.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""yes"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""no"",
+  ""primary_label"": ""correction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence explicitly corrects the earlier assumption that the agent could cross walls, fitting branch A.""
+}",
+sem_a03a52dbec7aebd5,"[107] Row4 col3 open.
+[108] Row5 col1-2 open, col3 G.
+[109] Row6 col1-7 open.
+[110] Row7 col1-3 open.
+[111] So there is a corridor from top to bottom through columns 1-3 and row4 col3.
+[112] From agent at (2,6) we need to get to that corridor.
+[113] But there are walls at row4 col4-6, but we can maybe go down to row6 then left to column 3.
+[114] Let's examine.","From (2,6) down to (3,6) open, down to (4,6) '#', blocked.",58,no,yes,no,yes,verification,high,"The sentence tests the feasibility of a specific move (down from (2,6) to (3,6) and then to (4,6)), which is a verification of a route under discussion.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"```json
+{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""yes"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""verification"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence tests the feasibility of a specific move (down from (2,6) to (3,6) and then to (4,6)), which is a verification of a route under discussion.""
+}
+```",
+sem_23e08a453c6935dc,"[101] So same issue.
+[102] Maybe we need to go to column5 via column1?
+[103] Let's examine column1 path: row6 col1 open.
+[104] row5 col1 open.
+[105] row4 col1 open.
+[106] row3 col1 open.
+[107] row2 col1 open.
+[108] row1 col1 open.",So we can go up along column1 to row1.,38,no,no,no,yes,route_planning,high,"The sentence proposes a new move (up along column1 to row1), fitting the route_planning branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""route_planning"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence proposes a new move (up along column1 to row1), fitting the route_planning branch.""
+}",
+sem_3bd287e341ae5266,"[123] That is 3 steps: (5,1),(5,2),(5,3).
+[124] But we need to decide next action: the first step.
+[125] Starting at (6,1).
+[126] We need to move up or right?
+[127] Let's compute.
+[128] Option: move up to (5,1).
+[129] That is step 1.
+[130] That seems good.","Thus answer: action ""UP"".",25,no,no,no,yes,consolidation,high,"The sentence declares the final action after prior reasoning, fitting the consolidation branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""consolidation"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence declares the final action after prior reasoning, fitting the consolidation branch.""
+}",
+sem_cd2fbb526e83fc93,"[8] Key K at row3 col6?
+[9] Row3: ""# _ _ _ # _ K _ #"".
+[10] So K at (3,6).
+[11] Door D at row4 col1?
+[12] Row4: ""# D # # # # # # #"".
+[13] So D at (4,1).
+[14] Goal G at row6 col1?
+[15] Row6: ""# G _ _ _ _ _ _ #"".","So G at (6,1).",14,no,no,yes,no,restatement,high,"The sentence merely restates the previously derived coordinate of G, fitting the restatement branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""yes"",
+  ""introduces_new_information_or_plan"": ""no"",
+  ""primary_label"": ""restatement"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence merely restates the previously derived coordinate of G, fitting the restatement branch.""
+}",
+sem_af890d4fdae2ab8a,"[95] Let's see if we can go via row4: from (6,2) go up to (5,2)->(4,2) blocked.
+[96] So can't go to row4 col2.
+[97] But maybe go up to (5,2)->(5,3) -> up to (4,3) blocked.
+[98] So can't reach column5 that way.
+[99] Maybe we need to go through row7: from (6,2) go down to (7,2)->(7,3).
+[100] From (7,3) up to (6,3) open.
+[101] So same issue.
+[102] Maybe we need to go to column5 via column1?",Let's examine column1 path: row6 col1 open.,43,no,no,no,yes,state_reconstruction,high,"The sentence reports a new observation about column1, fitting the state_reconstruction branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""state_reconstruction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence reports a new observation about column1, fitting the state_reconstruction branch.""
+}",
+sem_3d75cad527766c25,"[35] But those rows are all walls.
+[36] So no path.
+[37] So maybe there is a door that we can open?
+[38] But no D. So maybe the assumption is that the agent can cross the wall?
+[39] But grid says walls are impassable.
+[40] So maybe it's unsolvable.
+[41] But we still must output an action.
+[42] Could be ""RIGHT"" from (4,3) goes to (4,4) which is '#', cannot.","Up to (3,3) which is '_' open.",30,no,no,no,yes,state_reconstruction,high,"The sentence provides a new observation of a grid cell, fitting the state_reconstruction branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""state_reconstruction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence provides a new observation of a grid cell, fitting the state_reconstruction branch.""
+}",
+sem_fa1385cbe547dba6,"[121] Yes open. Then from row1 col5, we can go down to row2 col5, then right to goal at col6.
+[122] That path crosses the wall column4 only at row1 which is open.
+[123] But column4 at row2 is wall, but we don't need to cross at row2.
+[124] So path: from (5,1) up to row1, right across, then down to goal.
+[125] Let's find shortest path.
+[126] Compute Manhattan distance ignoring obstacles: from (5,1) to (2,6) distance 3 up +5 right =8.
+[127] But obstacles may add steps.
+[128] Let's plan.","Path: (5,1) -> up to (4,1) but (4,1) is '#', cannot.",52,no,no,no,yes,route_planning,high,"The sentence proposes a new move (up from (5,1) to (4,1)) that is part of a route plan, fitting branch D.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"```json
+{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""route_planning"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence proposes a new move (up from (5,1) to (4,1)) that is part of a route plan, fitting branch D.""
+}
+```",
+sem_65277fcc321e9740,"[116] Actually row1 col4 is '_'?
+[117] Let's check row1: ""# _ _ _ _ _ _ _ #"": columns 1-7 are open.
+[118] So column4 at row1 is open.
+[119] So we can go up to row1, then go right across columns 5-7, then down to goal at row2 col6.
+[120] But need to cross column4 at row1?
+[121] Yes open. Then from row1 col5, we can go down to row2 col5, then right to goal at col6.
+[122] That path crosses the wall column4 only at row1 which is open.
+[123] But column4 at row2 is wall, but we don't need to cross at row2.","So path: from (5,1) up to row1, right across, then down to goal.",64,no,no,no,yes,route_planning,high,"The sentence proposes a specific sequence of moves (up, right, down) to reach the goal, fitting the route_planning branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"```json
+{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""route_planning"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence proposes a specific sequence of moves (up, right, down) to reach the goal, fitting the route_planning branch.""
+}
+```",
+sem_e8070236d6cf3566,"[33] The door at (4,7) might block some corridor but we can circumvent maybe.
+[34] We need to see if there's any path from agent to goal without needing to open door.
+[35] Let's analyze connectivity.
+[36] Goal at (5,3).
+[37] Surrounding cells: (5,3) up (4,3) is '_'?
+[38] row4 col3 '_' yes.
+[39] Down (6,3) is '_' row6 col3 '_' yes.
+[40] Left (5,2) '_' yes.","Right (5,4) '#', wall.",22,no,no,no,yes,state_reconstruction,high,"The sentence reports a new observation of a wall at (5,4), fitting the state_reconstruction branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""state_reconstruction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence reports a new observation of a wall at (5,4), fitting the state_reconstruction branch.""
+}",
+sem_a4402eb355ce1d2f,"[45] So maybe from (5,6) left to (5,5) back.
+[46] Let's consider path via (6,5) left to (6,4) '_' then up to (5,4) '#', no.
+[47] Up to (5,5) again.
+[48] Hmm.
+
+Maybe go from agent to (7,6) then up to (6,6) '_' then up to (5,6) '_' then left to (5,5) etc.
+[49] But we need to get adjacent to door at (4,3).
+[50] Let's see route: from (5,6) left to (5,5) then left to (5,4) '#', cannot.
+[51] Up to (4,6) '#', cannot.
+[52] So maybe from (5,6) up to (4,6) blocked.","So maybe from (6,6) left to (6,5) etc.",38,no,no,no,yes,route_planning,high,"The sentence proposes a new move (from (6,6) left to (6,5)), fitting the route_planning branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""route_planning"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence proposes a new move (from (6,6) left to (6,5)), fitting the route_planning branch.""
+}",
+sem_2518063f974bdd82,"[138] (6,5) right (6,6) up (5,6) left (5,5) left (5,4) blocked.
+[139] So no. Up then left?
+[140] (6,5) left (6,4) left (6,3) up (5,3) that's 4 steps?
+[141] Let's check: (7,5)->(6,5) [1], ->(6,4) [2], ->(6,3) [3], ->(5,3) [4].
+[142] Wait but we moved left from 6,5 to 6,4 (open), left to 6,3 (open), up to 5,3 (open).
+[143] That is 4 moves.
+[144] Did we miss something?
+[145] Is (6,4) open?","Yes row6 col4 '_' (since row6: ""# _ _ _ _ _ _ _ #"": columns 1-7 all '_').",73,no,no,no,yes,state_reconstruction,high,"The sentence provides a direct observation of a grid cell, fitting the state_reconstruction branch.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""state_reconstruction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence provides a direct observation of a grid cell, fitting the state_reconstruction branch.""
+}",
+sem_85e09a68fb56a6be,"[53] From (7,1), options: up (6,1) is free.
+[54] right (7,2) free.
+[55] left (7,0) wall.
+[56] down (8,1) wall.
+[57] So can go up or right.
+[58] Goal at (1,1).
+[59] Let's see if we can go up to row6, row5, row4 blocked.
+[60] Need to go around via row5 col2/3, then up to row4?",But row4 col2-5 all walls.,26,no,no,no,yes,state_reconstruction,high,"The sentence reports a new observation about row4, fitting branch C.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"```json
+{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""no"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""state_reconstruction"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence reports a new observation about row4, fitting branch C.""
+}
+```",
+sem_7adb6c7cd656b833,"[149] Maybe go to row5 col5?
+[150] From (5,3) we can't go to 5,4.
+[151] So no.
+
+Thus seems impossible to reach (7,5) due to wall at (7,4).
+[152] Maybe we can approach from other side: go to (6,5) from above?
+[153] From (6,5) we can get from (5,5) or (6,6) or (7,5).
+[154] Let's see if we can reach (5,5).
+[155] To reach (5,5), we need to get to (5,5) open.
+[156] From left side: (5,4) '#' blocked.","From right side: (5,6) '_' -> left to (5,5).",44,no,yes,no,yes,verification,high,"The sentence tests the feasibility of a route from (5,6) to (5,5), which is a verification of a previously discussed path.",openai/gpt-oss-20b,6cee5e81ee83917806bbde320786a8fb61efebee,0.0,42,v3_strict,902f58b3a584320e2e247347b37e1ce261571dc5c39e7bc708394e0ac0b42ad8,low,"{
+  ""explicitly_revises_prior_reasoning"": ""no"",
+  ""evaluates_prior_route_or_claim"": ""yes"",
+  ""repeats_prior_content"": ""no"",
+  ""introduces_new_information_or_plan"": ""yes"",
+  ""primary_label"": ""verification"",
+  ""confidence"": ""high"",
+  ""rationale"": ""The sentence tests the feasibility of a route from (5,6) to (5,5), which is a verification of a previously discussed path.""
+}",

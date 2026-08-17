@@ -1,0 +1,41 @@
+{
+  "activation_span_validation": {
+    "n_overlaps": 0,
+    "reason": "step_activation_rows.csv is absent",
+    "valid": false
+  },
+  "analysis_unit": "sentence",
+  "belief_valid_parse_rate": 0.9994190099930281,
+  "candidate_rows_path": "outputs/experiment1_activation_monitor/weisheng_8_state_candidates/candidate_rows.csv",
+  "categorical_candidate_labels": [
+    "A",
+    "B",
+    "C"
+  ],
+  "categorical_logprob_temperature": 0.7,
+  "categorical_top_logprobs": 50,
+  "drift_run_dir": "outputs/experiment1_activation_monitor/weisheng_8_state_sentence_logprob_experiment1",
+  "max_positions": null,
+  "maximum_belief_queries": 8606,
+  "minimum_required_parse_rate": 0.95,
+  "mixed_effects_model_status": "not_fit_in_pilot; use feature_association_fdr.csv for trajectory-position descriptive screening and fit the prespecified mixed-effects model only after scaling",
+  "model_name": "together_ai/openai/gpt-oss-20b",
+  "n_action_events": 61,
+  "n_belief_queries": 8606,
+  "n_belief_shifts": 785,
+  "n_positions": 662,
+  "parse_rate_gate_passed": true,
+  "representational_probe_gate": "blocked_until_activation_spans_are_regenerated",
+  "status": "completed",
+  "usage_summary": {
+    "completion_tokens": 699045,
+    "cost_usd": 3.682749000000009,
+    "prompt_tokens": 11576785,
+    "reasoning_tokens": 0,
+    "requests": 8109,
+    "requests_with_retry": 0,
+    "retry_count": 0,
+    "retry_sleep_seconds": 0.0,
+    "total_tokens": 12275830
+  }
+}

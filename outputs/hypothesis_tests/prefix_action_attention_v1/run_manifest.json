@@ -1,0 +1,26 @@
+{
+  "attention_layer_types": [
+    "full_attention",
+    "full_attention"
+  ],
+  "completed_states": 44,
+  "last_completed_state": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_92_step_004",
+  "layers": [
+    15,
+    23
+  ],
+  "model_load_peak_rss_bytes": 6327316480,
+  "model_load_seconds": 5.435250124999584,
+  "model_path": "/root/.cache/huggingface/hub/models--openai--gpt-oss-20b/snapshots/6cee5e81ee83917806bbde320786a8fb61efebee",
+  "model_revision": "6cee5e81ee83917806bbde320786a8fb61efebee",
+  "pair_rows": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/matched_sentence_pairs.csv",
+  "pending_states": 0,
+  "prompts": 634,
+  "protocol": "immediate_action_query_attention_v1",
+  "query_position": "last prompt token immediately before the action label token; its logits score UP, DOWN, LEFT, and RIGHT",
+  "seed": 42,
+  "states": 44,
+  "status": "completed",
+  "temperature": 0.7,
+  "top_p": 0.95
+}
