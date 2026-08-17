@@ -183,6 +183,48 @@ reveng-cli run_behavioral_probe_case_studies \
   --slice-type non_optimal_action
 ```
 
+## Replay saved maze generations on a local checkpoint
+
+The API collection and local replay are separate. Copy the complete collection
+directory to the GPU instance; it must contain `config.lock.json` and
+`raw_api_calls.jsonl`. The replay path teacher-forces the saved completion and
+never samples replacement tokens.
+
+Validate tokenizer and chat-template compatibility before loading model weights:
+
+```bash
+uv sync
+uv run python -m reveng.experiments.maze_local_replay validate \
+  --input-dir data/maze_cot_120_m11_v1 \
+  --output-dir outputs/maze_replay/gpt_oss_validation \
+  --model GPT-OSS-20B
+```
+
+Run one record as a GPU/memory smoke test:
+
+```bash
+uv run python -m reveng.experiments.maze_local_replay replay \
+  --input-dir data/maze_cot_120_m11_v1 \
+  --output-dir outputs/maze_replay/gpt_oss \
+  --model GPT-OSS-20B \
+  --layers 8 15 23 \
+  --capture-scope reasoning \
+  --max-records 1
+```
+
+Remove `--max-records 1` for the full collection. The same commands accept
+`--model Gemma-4-31B-IT` and its collection directory. Replay is resumable from
+`replay_manifest.jsonl`; each completed call has a checksummed safetensors file.
+Use `--capture-scope completion` only when every completion-token activation is
+needed, because it requires substantially more storage. Provider log probabilities
+remain in `raw_api_calls.jsonl` as provenance and are not inputs to replay.
+
+Validation requires all of the following before weights are loaded: the exact
+frozen checkpoint revision, unchanged prompt hash, matching local/provider prompt
+token counts, matching completion token counts, and an exact completion-byte
+round trip. When tokenizer offsets are available, provider token boundaries are
+checked as well.
+
 ## Counterfactual Pipeline
 
 Scope:
