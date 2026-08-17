@@ -14,8 +14,8 @@ from reveng.experiments.maze_local_preflight import (
 )
 from reveng.experiments.maze_smoke_test import (
     DEFAULT_CONFIG,
-    apply_api_model_overrides,
     apply_action,
+    apply_api_model_overrides,
     build_schedule,
     check_configured_api_models,
     condition_summary,
@@ -114,6 +114,79 @@ def test_together_reasoning_field_and_usage_are_extracted():
     assert got["output_tokens"] == 7
     assert got["provider_returned_model_id"] == "provider/resolved-model"
     assert got["system_fingerprint"] == "fp_test"
+    assert got["token_sequence_complete"] is False
+
+
+def test_complete_generated_token_ids_are_extracted_for_replay():
+    response = {
+        "choices": [
+            {
+                "message": {"content": '{"action":"UP"}', "reasoning": "think"},
+                "finish_reason": "stop",
+                "logprobs": {
+                    "token_ids": [11, 12, 13],
+                    "tokens": ["think", " action", " UP"],
+                    "token_logprobs": [-0.1, -0.2, -0.3],
+                },
+            }
+        ],
+        "usage": {"completion_tokens": 3},
+    }
+    got = extract_response(response)
+    assert got["generated_token_ids"] == [11, 12, 13]
+    assert got["generated_tokens"] == ["think", " action", " UP"]
+    assert got["generated_token_logprobs"] == [-0.1, -0.2, -0.3]
+    assert got["token_sequence_complete"] is True
+    assert got["token_sequence_source"] == "provider_token_ids"
+
+    assert got["token_sequence_complete"] is True
+
+
+def test_gpt_oss_token_pieces_are_reconstructed_with_official_harmony_ids():
+    response = {
+        "model": "openai/gpt-oss-20b",
+        "choices": [
+            {
+                "message": {"content": "ok"},
+                "logprobs": {
+                    "content": [
+                        {
+                            "token": "<|channel|>",
+                            "bytes": list(b"<|channel|>"),
+                            "logprob": 0.0,
+                        },
+                        {
+                            "token": "analysis",
+                            "bytes": list(b"analysis"),
+                            "logprob": 0.0,
+                        },
+                    ]
+                },
+            }
+        ],
+        "usage": {"completion_tokens": 2},
+    }
+    got = extract_response(response)
+    assert got["generated_token_ids"] == [200005, 35644]
+    assert got["token_sequence_complete"] is True
+    assert got["token_sequence_source"] == "reconstructed_o200k_harmony"
+
+
+def test_complete_token_pieces_are_marked_replay_complete_without_ids():
+    response = {
+        "choices": [
+            {
+                "message": {"content": "ok"},
+                "logprobs": {"content": [{"token": "ok", "logprob": -0.1}]},
+            }
+        ],
+        "usage": {"completion_tokens": 1},
+    }
+    got = extract_response(response)
+    assert got["generated_tokens"] == ["ok"]
+    assert got["generated_token_ids"] == []
+    assert got["token_sequence_complete"] is True
+    assert got["token_sequence_source"] == "provider_token_pieces"
 
 
 def test_resumable_api_loop_and_analysis(tmp_path):

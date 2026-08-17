@@ -7,8 +7,8 @@ reduces resumable JSONL call records to trajectory- and condition-level results.
 
 from __future__ import annotations
 
-import csv
 import contextlib
+import csv
 import hashlib
 import io
 import json
@@ -18,12 +18,11 @@ import random
 import re
 import time
 from collections import defaultdict, deque
+from collections.abc import Callable, Iterable
 from pathlib import Path
-from statistics import median
-from typing import Any, Callable, Iterable
+from typing import Any
 
 from reveng.environment_generator.custom_minigrid import Simple2DNavigationEnv
-
 
 ACTIONS = ("LEFT", "RIGHT", "UP", "DOWN")
 ACTION_TO_INT = {name: index for index, name in enumerate(ACTIONS)}
@@ -198,6 +197,13 @@ CALL_COLUMNS = [
     "goal_reached_after_action",
     "response_text",
     "reasoning_content",
+    "prompt_text",
+    "generated_token_ids",
+    "generated_tokens",
+    "generated_token_logprobs",
+    "generated_token_bytes",
+    "token_sequence_complete",
+    "token_sequence_source",
     "response_id",
     "provider_returned_model_id",
     "system_fingerprint",
@@ -622,6 +628,29 @@ def _usage_int(usage: Any, key: str) -> int:
     return int(value or 0)
 
 
+def _reconstruct_gpt_oss_token_ids(
+    tokens: list[str], token_bytes: list[list[int]]
+) -> list[int]:
+    """Map provider token boundaries through OpenAI o200k_harmony."""
+    if len(tokens) != len(token_bytes):
+        return []
+    import tiktoken
+
+    encoding = tiktoken.get_encoding("o200k_harmony")
+    try:
+        token_ids = [
+            encoding.encode_single_token(bytes(byte_values) if byte_values else token)
+            for token, byte_values in zip(tokens, token_bytes, strict=True)
+        ]
+    except KeyError:
+        return []
+    if encoding.decode_bytes(token_ids) != b"".join(
+        bytes(byte_values) for byte_values in token_bytes
+    ):
+        return []
+    return token_ids
+
+
 def extract_response(response: Any) -> dict[str, Any]:
     choices = _get(response, "choices", []) or []
     if not choices:
@@ -641,14 +670,59 @@ def extract_response(response: Any) -> dict[str, Any]:
     reasoning_tokens = _usage_int(usage, "reasoning_tokens") or _usage_int(
         details, "reasoning_tokens"
     )
+    completion_tokens = _usage_int(usage, "completion_tokens")
+    logprobs = _get(choice, "logprobs", {}) or {}
+    token_ids = list(_get(logprobs, "token_ids", []) or [])
+    tokens = list(_get(logprobs, "tokens", []) or [])
+    token_logprobs = list(_get(logprobs, "token_logprobs", []) or [])
+    token_bytes = list(_get(logprobs, "bytes", []) or [])
+    content_logprobs = list(_get(logprobs, "content", []) or [])
+    if content_logprobs:
+        if not tokens:
+            tokens = [str(_get(item, "token", "") or "") for item in content_logprobs]
+        if not token_logprobs:
+            token_logprobs = [_get(item, "logprob", None) for item in content_logprobs]
+        if not token_bytes:
+            token_bytes = [
+                list(_get(item, "bytes", []) or []) for item in content_logprobs
+            ]
+        if not token_ids and all(
+            _get(item, "token_id", None) is not None for item in content_logprobs
+        ):
+            token_ids = [int(_get(item, "token_id")) for item in content_logprobs]
+    provider_model_id = str(_get(response, "model", "") or "")
+    provider_ids_complete = (
+        completion_tokens > 0 and len(token_ids) == completion_tokens
+    )
+    pieces_complete = completion_tokens > 0 and len(tokens) == completion_tokens
+    token_sequence_source = (
+        "provider_token_ids"
+        if provider_ids_complete
+        else ("provider_token_pieces" if pieces_complete else "incomplete")
+    )
+    if (
+        not provider_ids_complete
+        and pieces_complete
+        and "gpt-oss" in provider_model_id.lower()
+    ):
+        reconstructed_ids = _reconstruct_gpt_oss_token_ids(tokens, token_bytes)
+        if len(reconstructed_ids) == completion_tokens:
+            token_ids = reconstructed_ids
+            token_sequence_source = "reconstructed_o200k_harmony"
     return {
         "content": content,
         "reasoning_content": reasoning,
         "finish_reason": str(_get(choice, "finish_reason", "") or ""),
         "prompt_tokens": _usage_int(usage, "prompt_tokens"),
-        "output_tokens": _usage_int(usage, "completion_tokens"),
+        "output_tokens": completion_tokens,
         "reasoning_tokens": reasoning_tokens,
         "total_tokens": _usage_int(usage, "total_tokens"),
+        "generated_token_ids": [int(value) for value in token_ids],
+        "generated_tokens": tokens,
+        "generated_token_logprobs": token_logprobs,
+        "generated_token_bytes": token_bytes,
+        "token_sequence_complete": token_sequence_source != "incomplete",
+        "token_sequence_source": token_sequence_source,
         "response_id": str(_get(response, "id", "") or ""),
         "provider_returned_model_id": str(_get(response, "model", "") or ""),
         "system_fingerprint": str(_get(response, "system_fingerprint", "") or ""),
@@ -696,6 +770,7 @@ def make_together_query(api_key: str | None = None) -> Callable[..., Any]:
             "top_p": top_p,
             "max_tokens": max_tokens,
             "seed": seed,
+            "logprobs": 1,
         }
         if reasoning_setting != "native":
             kwargs["reasoning_effort"] = reasoning_setting
@@ -725,6 +800,10 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
                         f"Malformed JSONL at {path}:{line_number}"
                     ) from exc
     return rows
+
+
+class TokenSequenceUnavailable(RuntimeError):
+    """Provider did not return a replay-grade token sequence for every generated token."""
 
 
 def run_api_schedule(
@@ -789,8 +868,22 @@ def run_api_schedule(
                         reasoning_setting=str(spec["reasoning_setting"]),
                     )
                     response_data = extract_response(response)
+                    if (
+                        config.get("require_complete_token_sequence")
+                        and not response_data["token_sequence_complete"]
+                    ):
+                        raise TokenSequenceUnavailable(
+                            "Together did not return token IDs or token pieces for every completion token; "
+                            "aborting before the full collection continues."
+                        )
                     error = None
                     break
+                except TokenSequenceUnavailable as exc:
+                    error = exc
+                    if attempts < int(config["max_api_attempts"]):
+                        time.sleep(min(2 ** (attempts - 1), 30))
+                    else:
+                        raise
                 except (
                     Exception
                 ) as exc:  # API/network/provider errors are part of the smoke test
@@ -836,6 +929,7 @@ def run_api_schedule(
                 "max_output_tokens": int(config["max_output_tokens"]),
                 "context_mode": str(config["context_mode"]),
                 "prompt_sha256": hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
+                "prompt_text": prompt,
                 "sampling_condition": spec["sampling_condition"],
                 "grid_id": spec["grid_id"],
                 "grid_size": spec["grid_size"],
@@ -867,6 +961,18 @@ def run_api_schedule(
                 "trajectory_terminal": terminal,
                 "response_text": response_data.get("content", ""),
                 "reasoning_content": response_data.get("reasoning_content", ""),
+                "generated_token_ids": response_data.get("generated_token_ids", []),
+                "generated_tokens": response_data.get("generated_tokens", []),
+                "generated_token_logprobs": response_data.get(
+                    "generated_token_logprobs", []
+                ),
+                "generated_token_bytes": response_data.get("generated_token_bytes", []),
+                "token_sequence_complete": bool(
+                    response_data.get("token_sequence_complete", False)
+                ),
+                "token_sequence_source": response_data.get(
+                    "token_sequence_source", "incomplete"
+                ),
                 "response_id": response_data.get("response_id", ""),
                 "provider_returned_model_id": response_data.get(
                     "provider_returned_model_id", ""
@@ -1155,11 +1261,11 @@ def build_report(
         for row in summaries:
             lines.append(
                 f"| {row['model']} | {row['grid_size']} | {float(row['difficulty']):.1f} | {row['reasoning_setting']} | {float(row['temperature']):.1f} | "
-                f"{100*row['goal_success_rate']:.0f}% | {100*row['optimal_action_rate']:.0f}% | "
+                f"{100 * row['goal_success_rate']:.0f}% | {100 * row['optimal_action_rate']:.0f}% | "
                 f"{_fmt(row['p50_output_tokens_per_call'], 0)} / {_fmt(row['p95_output_tokens_per_call'], 0)} / {_fmt(row['max_output_tokens_per_call'], 0)} | "
                 f"{_fmt(row['p50_total_output_tokens_per_trajectory'], 0)} / {_fmt(row['p95_total_output_tokens_per_trajectory'], 0)} / {_fmt(row['max_total_output_tokens_per_trajectory'], 0)} | "
                 f"{_fmt(row['p50_trajectory_runtime_seconds'])} / {_fmt(row['p95_trajectory_runtime_seconds'])} | "
-                f"{100*row['invalid_output_rate']:.0f}% | {100*row['truncation_or_failure_rate']:.0f}% |"
+                f"{100 * row['invalid_output_rate']:.0f}% | {100 * row['truncation_or_failure_rate']:.0f}% |"
             )
         lines.append("")
 
@@ -1286,12 +1392,12 @@ def build_report(
                 ),
             )
             budgets.append(
-                f"{name}: {recommendation:,} tokens (observed p95 {percentile(tokens, .95):.0f})"
+                f"{name}: {recommendation:,} tokens (observed p95 {percentile(tokens, 0.95):.0f})"
             )
         else:
             budgets.append(f"{name}: pending")
         runtimes.append(
-            f"{name}: {_fmt(percentile([row['total_runtime_seconds'] for row in chosen_rows], .95))} s p95/trajectory"
+            f"{name}: {_fmt(percentile([row['total_runtime_seconds'] for row in chosen_rows], 0.95))} s p95/trajectory"
         )
         success = sum(bool(row["goal_reached"]) for row in chosen_rows) / len(
             chosen_rows

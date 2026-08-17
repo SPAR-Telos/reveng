@@ -1,8 +1,8 @@
-"""GPT-OSS-20B Maze CoT Collection: 120 Grids Pilot (7x7, m=3).
+"""GPT-OSS-20B Maze CoT Collection: 120 Grids (7x7, m=11).
 
 This module reuses core functions from maze_smoke_test.py but allows flexible
 grid counts and difficulty levels. The pilot focuses on 7x7 grids with 120 unique
-grids across 6 difficulty levels, with m=3 (3 sampled + 1 greedy) trajectories per grid.
+grids across 6 difficulty levels, with m=11 (10 sampled + 1 greedy) trajectories per grid.
 
 Core reuse:
 - generate_grid_rows() logic (copied to bypass rigid validation)
@@ -17,36 +17,32 @@ import argparse
 import contextlib
 import io
 import json
-import math
 import random
 import re
 import time
-from collections import defaultdict, deque
 from pathlib import Path
-from typing import Any, Callable, Iterable
+from typing import Any
 
 from dotenv import load_dotenv
 
 from reveng.environment_generator.custom_minigrid import Simple2DNavigationEnv
 from reveng.experiments.maze_smoke_test import (
-    ACTIONS,
-    ACTION_DELTAS,
-    build_schedule,
-    run_api_schedule,
-    trajectory_rows,
-    condition_summary,
-    build_report,
-    read_jsonl,
-    _write_csv,
     CALL_COLUMNS,
     TRAJECTORY_COLUMNS,
     _env_layout,
-    render_grid,
-    locate,
+    _write_csv,
+    build_report,
+    build_schedule,
+    condition_summary,
     distance_map,
+    locate,
     make_together_query,
+    TokenSequenceUnavailable,
+    read_jsonl,
+    render_grid,
+    run_api_schedule,
+    trajectory_rows,
 )
-
 
 PILOT_CONFIG: dict[str, Any] = {
     "schema_version": 1,
@@ -67,7 +63,10 @@ PILOT_CONFIG: dict[str, Any] = {
     "step_limit_multiplier": 2.0,
     "step_limit_slack": 8,
     "step_limit_hard_cap": 100,
-    "max_api_attempts": 3,
+    "max_api_attempts": 8,
+    "unattended_retry_rounds": 12,
+    "unattended_retry_delay_seconds": 60,
+    "require_complete_token_sequence": True,
     "models": [
         {
             "name": "GPT-OSS-20B",
@@ -83,6 +82,22 @@ PILOT_CONFIG: dict[str, Any] = {
             "input_usd_per_million_tokens": 0.05,
             "output_usd_per_million_tokens": 0.20,
         },
+        {
+            "name": "Gemma-4-31B-IT",
+            "api_model_id": "google/gemma-4-31B-it",
+            "local_checkpoint": "google/gemma-4-31B-it",
+            "revision": "842da3794eaa0b77d5f08bae87a17459d91ff475",
+            "local_model_class": "AutoModelForMultimodalLM",
+            "minimum_transformers_version": "5.5.0",
+            "local_dtype": "bfloat16",
+            "reasoning_settings": ["native"],
+            "reasoning_control": False,
+            "reasoning_trace_format": "before_action_json",
+            "chat_template_kwargs": {"enable_thinking": True},
+            "deployment": "serverless",
+            "input_usd_per_million_tokens": 0.20,
+            "output_usd_per_million_tokens": 0.50,
+        },
     ],
     "decision_thresholds": {
         "minimum_goal_success_rate": 0.50,
@@ -92,6 +107,41 @@ PILOT_CONFIG: dict[str, Any] = {
     },
     "pricing_note": "Per-token prices are planning values; verify Together pricing before running.",
 }
+
+
+def _same_collection_design(locked: dict[str, Any], current: dict[str, Any]) -> bool:
+    """Ignore retry-only changes while preserving scientific design locks."""
+    locked_design = json.loads(json.dumps(locked))
+    current_design = json.loads(json.dumps(current))
+    runtime_only_keys = {
+        "max_api_attempts",
+        "unattended_retry_rounds",
+        "unattended_retry_delay_seconds",
+    }
+    for key in runtime_only_keys:
+        locked_design.pop(key, None)
+        current_design.pop(key, None)
+    return locked_design == current_design
+
+
+def _validate_or_migrate_config_lock(output_dir: Path, config: dict[str, Any]) -> None:
+    config_path = output_dir / "config.lock.json"
+    if not config_path.exists():
+        raise ValueError("Missing config.lock.json; run plan first.")
+    locked = json.loads(config_path.read_text())
+    if locked == config:
+        return
+    if _same_collection_design(locked, config):
+        config_path.write_text(json.dumps(config, indent=2) + "\n")
+        print(
+            "Updated config.lock.json for retry-only runtime settings "
+            "(retry counts or delays)."
+        )
+        return
+    raise ValueError(
+        "Configuration changes affect the frozen collection design; use a new "
+        "output directory and run plan first."
+    )
 
 
 def validate_pilot_config(config: dict[str, Any]) -> None:
@@ -218,6 +268,22 @@ def plan_stage(
     """
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    config_path = output_dir / "config.lock.json"
+    if config_path.exists():
+        _validate_or_migrate_config_lock(output_dir, config)
+    else:
+        stale_artifacts = [
+            name
+            for name in ("trajectory_schedule.jsonl", "raw_api_calls.jsonl")
+            if (output_dir / name).exists()
+        ]
+        if stale_artifacts:
+            raise ValueError(
+                "Existing collection artifacts have no config.lock.json; use a new "
+                "output directory instead of mixing designs."
+            )
+        config_path.write_text(json.dumps(config, indent=2) + "\n")
+
     grid_manifest_path = output_dir / "grid_manifest.jsonl"
     schedule_path = output_dir / "trajectory_schedule.jsonl"
 
@@ -242,7 +308,7 @@ def plan_stage(
         print("Building schedule...")
         # Modify schedule to include multiple sampled conditions
         base_schedule = build_schedule(config, grids)
-        schedule = _expand_schedule_for_m3(base_schedule, config)
+        schedule = _expand_schedule_for_m11(base_schedule, config)
         print(f"Generated {len(schedule)} trajectory jobs")
         # Write schedule
         schedule_path.parent.mkdir(parents=True, exist_ok=True)
@@ -275,22 +341,22 @@ def plan_stage(
         for s in schedule
         if "t0" in s["trajectory_id"] and "t07" not in s["trajectory_id"]
     ]
-    print(f"\nTrajectory split:")
+    print("\nTrajectory split:")
     print(f"  Sampled (T=0.7): {len(sampled)}")
     print(f"  Greedy (T=0.0): {len(greedy)}")
 
     return grids, schedule
 
 
-def _expand_schedule_for_m3(
+def _expand_schedule_for_m11(
     base_schedule: list[dict[str, Any]], config: dict[str, Any]
 ) -> list[dict[str, Any]]:
-    """Build schedule with m=3 sampled + 1 greedy trajectories per grid.
+    """Build schedule with 10 sampled + 1 greedy trajectories per grid.
 
     Since we generate 20 grids per (size, difficulty) cell (unlike smoke-test's 2),
     we need to:
     1. Keep sampled trajectories as-is (one per grid from build_schedule)
-    2. Add 2 additional sampled trajectories per grid (to get m=3)
+    2. Add 9 additional sampled trajectories per grid (to get 10 sampled)
     3. Add 1 greedy trajectory per grid (only smoke-test replica 1 gets greedy by default)
     """
     expanded = []
@@ -298,10 +364,10 @@ def _expand_schedule_for_m3(
 
     # Group by grid_id
     for row in base_schedule:
-        grid_id = row["grid_id"]
-        by_grid.setdefault(grid_id, []).append(row)
+        group_key = (row["model"], row["reasoning_setting"], row["grid_id"])
+        by_grid.setdefault(group_key, []).append(row)
 
-    for grid_id, grid_rows in sorted(by_grid.items()):
+    for _group_key, grid_rows in sorted(by_grid.items()):
         # Should have exactly 1 sampled + 0 or 1 greedy from base_schedule
         sampled_rows = [r for r in grid_rows if r["sampling_condition"] == "sampled"]
         greedy_rows = [r for r in grid_rows if r["sampling_condition"] != "sampled"]
@@ -311,8 +377,8 @@ def _expand_schedule_for_m3(
             base_sampled = sampled_rows[0]
             expanded.append(base_sampled)
 
-            # Add 2 more sampled trajectories (sampled_rep2, sampled_rep3)
-            for rep_num in range(2, 4):
+            # Add 9 more sampled trajectories (10 independent T=0.7 draws total)
+            for rep_num in range(2, 11):
                 new_row = dict(base_sampled)
                 # Update trajectory_id to include replicate number
                 base_id = re.sub(r"_t07$|_t0$", "", new_row["trajectory_id"])
@@ -340,8 +406,10 @@ def query_stage(
     schedule: list[dict[str, Any]],
     output_dir: Path,
     api_key: str | None = None,
+    model_names: set[str] | None = None,
 ) -> list[dict[str, Any]]:
     """Run API queries and return call-level results."""
+    _validate_or_migrate_config_lock(output_dir, config)
     # Match the rest of the repository's CLI behavior: commands launched from
     # the project root should pick up provider credentials from ``.env``.
     # An explicit CLI value still takes precedence.
@@ -349,6 +417,8 @@ def query_stage(
     load_dotenv(env_path, override=False)
     query_fn = make_together_query(api_key=api_key)
 
+    if model_names:
+        schedule = [row for row in schedule if row["model"] in model_names]
     raw_path = output_dir / "raw_api_calls.jsonl"
     print(f"Running API schedule ({len(schedule)} jobs)...")
     print(f"Results will be appended to {raw_path}")
@@ -356,14 +426,27 @@ def query_stage(
     def progress_callback(msg: str) -> None:
         print(msg)
 
-    calls = run_api_schedule(
-        config,
-        schedule,
-        raw_path,
-        query_fn=query_fn,
-        progress_fn=progress_callback,
-    )
-    return calls
+    retry_rounds = int(config.get("unattended_retry_rounds", 1))
+    retry_delay = int(config.get("unattended_retry_delay_seconds", 60))
+    for retry_round in range(1, retry_rounds + 1):
+        try:
+            return run_api_schedule(
+                config,
+                schedule,
+                raw_path,
+                query_fn=query_fn,
+                progress_fn=progress_callback,
+            )
+        except TokenSequenceUnavailable as exc:
+            if retry_round >= retry_rounds:
+                raise
+            print(
+                f"Token-sequence validation failed in round {retry_round}/"
+                f"{retry_rounds}: {exc} Resuming from the JSONL checkpoint "
+                f"in {retry_delay} seconds."
+            )
+            time.sleep(retry_delay)
+    raise AssertionError("unreachable")
 
 
 def analyze_stage(
@@ -405,7 +488,7 @@ def analyze_stage(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="GPT-OSS-20B Maze CoT Collection: 7x7 Pilot (m=3)"
+        description="GPT-OSS-20B Maze CoT Collection: 7x7 (m=11)"
     )
     parser.add_argument(
         "stage",
@@ -428,6 +511,12 @@ def main():
         default=None,
         help="Together API key (default: read from env)",
     )
+    parser.add_argument(
+        "--model",
+        action="append",
+        choices=[model["name"] for model in PILOT_CONFIG["models"]],
+        help="Run only this model; repeat to select multiple models",
+    )
 
     args = parser.parse_args()
 
@@ -437,7 +526,7 @@ def main():
         print("=" * 80)
         print("PLAN STAGE: Grid Generation and Schedule Creation")
         print("=" * 80)
-        grids, schedule = plan_stage(PILOT_CONFIG, args.output_dir, args.overwrite)
+        _grids, schedule = plan_stage(PILOT_CONFIG, args.output_dir, args.overwrite)
         if args.stage == "plan":
             return
 
@@ -449,7 +538,13 @@ def main():
             # Load existing plan
             schedule_path = args.output_dir / "trajectory_schedule.jsonl"
             schedule = read_jsonl(schedule_path)
-        calls = query_stage(PILOT_CONFIG, schedule, args.output_dir, args.api_key)
+        query_stage(
+            PILOT_CONFIG,
+            schedule,
+            args.output_dir,
+            args.api_key,
+            set(args.model) if args.model else None,
+        )
         if args.stage == "query":
             return
 
