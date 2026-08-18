@@ -1,0 +1,293 @@
+annotation_id,sentence_id,environment_id,environment_step,sentence_number,example_id,reasoning_progress,context_before,target_sentence,target_sentence_characters,explicitly_revises_prior_reasoning,evaluates_prior_route_or_claim,repeats_prior_content,introduces_new_information_or_plan,primary_label,confidence,rationale,broad_label,judge_model,judge_provider,judge_prompt_version,judge_prompt_sha256,judge_temperature,judge_seed,reasoning_enabled,judge_reasoning_effort,prompt_tokens,completion_tokens,total_tokens,raw_response,attempts,error
+keepdoor_0__step_001__sentence_001,keepdoor_0__step_001__sentence_001,keepdoor_0,1,1,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0020661157024793,,We need to plan next move from current grid.,44,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_002,keepdoor_0__step_001__sentence_002,keepdoor_0,1,2,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.006198347107438,[1] We need to plan next move from current grid.,Let's map coordinates.,22,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_003,keepdoor_0__step_001__sentence_003,keepdoor_0,1,3,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0103305785123966,"[1] We need to plan next move from current grid.
+[2] Let's map coordinates.","Grid is 9x9 (rows 0-8, cols 0-8).",33,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_004,keepdoor_0__step_001__sentence_004,keepdoor_0,1,4,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0144628099173553,"[1] We need to plan next move from current grid.
+[2] Let's map coordinates.
+[3] Grid is 9x9 (rows 0-8, cols 0-8).",Provided grid:,14,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_005,keepdoor_0__step_001__sentence_005,keepdoor_0,1,5,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.018595041322314,"[1] We need to plan next move from current grid.
+[2] Let's map coordinates.
+[3] Grid is 9x9 (rows 0-8, cols 0-8).
+[4] Provided grid:",Row0: all #.,12,no,no,no,yes,state_reconstruction,high,Directly records visible state of row0.,state_readout,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,3700,277,3977,"{""explicitly_revises_prior_reasoning"":""no"",""evaluates_prior_route_or_claim"":""no"",""repeats_prior_content"":""no"",""introduces_new_information_or_plan"":""yes"",""primary_label"":""state_reconstruction"",""confidence"":""high"",""rationale"":""Directly records visible state of row0.""}",1,
+keepdoor_0__step_001__sentence_006,keepdoor_0__step_001__sentence_006,keepdoor_0,1,6,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0227272727272727,"[1] We need to plan next move from current grid.
+[2] Let's map coordinates.
+[3] Grid is 9x9 (rows 0-8, cols 0-8).
+[4] Provided grid:
+[5] Row0: all #.","Row1: ""# _ _ _ # _ _ _ #""
+Indices: 0 #, 1 _, 2 _, 3 _, 4 #, 5 _, 6 _, 7 _, 8 #.",79,no,no,no,yes,state_reconstruction,high,"States the content of row1, a direct transcription of visible grid state, fitting state_reconstruction.",state_readout,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,3748,271,4019,"{""explicitly_revises_prior_reasoning"":""no"",""evaluates_prior_route_or_claim"":""no"",""repeats_prior_content"":""no"",""introduces_new_information_or_plan"":""yes"",""primary_label"":""state_reconstruction"",""confidence"":""high"",""rationale"":""States the content of row1, a direct transcription of visible grid state, fitting state_reconstruction.""}",2,
+keepdoor_0__step_001__sentence_007,keepdoor_0__step_001__sentence_007,keepdoor_0,1,7,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0268595041322314,"[1] We need to plan next move from current grid.
+[2] Let's map coordinates.
+[3] Grid is 9x9 (rows 0-8, cols 0-8).
+[4] Provided grid:
+[5] Row0: all #.
+[6] Row1: ""# _ _ _ # _ _ _ #""
+Indices: 0 #, 1 _, 2 _, 3 _, 4 #, 5 _, 6 _, 7 _, 8 #.","Row2: ""# _ _ _ # _ K _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 K,7 _,8 #.",71,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_008,keepdoor_0__step_001__sentence_008,keepdoor_0,1,8,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.03099173553719,"[1] We need to plan next move from current grid.
+[2] Let's map coordinates.
+[3] Grid is 9x9 (rows 0-8, cols 0-8).
+[4] Provided grid:
+[5] Row0: all #.
+[6] Row1: ""# _ _ _ # _ _ _ #""
+Indices: 0 #, 1 _, 2 _, 3 _, 4 #, 5 _, 6 _, 7 _, 8 #.
+[7] Row2: ""# _ _ _ # _ K _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 K,7 _,8 #.","Row3: ""# _ _ _ # _ A _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 A,7 _,8 #.",71,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_009,keepdoor_0__step_001__sentence_009,keepdoor_0,1,9,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0351239669421487,"[1] We need to plan next move from current grid.
+[2] Let's map coordinates.
+[3] Grid is 9x9 (rows 0-8, cols 0-8).
+[4] Provided grid:
+[5] Row0: all #.
+[6] Row1: ""# _ _ _ # _ _ _ #""
+Indices: 0 #, 1 _, 2 _, 3 _, 4 #, 5 _, 6 _, 7 _, 8 #.
+[7] Row2: ""# _ _ _ # _ K _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 K,7 _,8 #.
+[8] Row3: ""# _ _ _ # _ A _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 A,7 _,8 #.","Row4: ""# _ # # # D # # #""
+Indices: 0 #,1 _,2 #,3 #,4 #,5 D,6 #,7 #,8 #.",71,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_010,keepdoor_0__step_001__sentence_010,keepdoor_0,1,10,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0392561983471074,"[2] Let's map coordinates.
+[3] Grid is 9x9 (rows 0-8, cols 0-8).
+[4] Provided grid:
+[5] Row0: all #.
+[6] Row1: ""# _ _ _ # _ _ _ #""
+Indices: 0 #, 1 _, 2 _, 3 _, 4 #, 5 _, 6 _, 7 _, 8 #.
+[7] Row2: ""# _ _ _ # _ K _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 K,7 _,8 #.
+[8] Row3: ""# _ _ _ # _ A _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 A,7 _,8 #.
+[9] Row4: ""# _ # # # D # # #""
+Indices: 0 #,1 _,2 #,3 #,4 #,5 D,6 #,7 #,8 #.","Row5: ""# _ _ _ _ _ _ G #""
+Indices: 0 #,1 _,2 _,3 _,4 _,5 _,6 _,7 G,8 #.",71,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_011,keepdoor_0__step_001__sentence_011,keepdoor_0,1,11,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0433884297520661,"[3] Grid is 9x9 (rows 0-8, cols 0-8).
+[4] Provided grid:
+[5] Row0: all #.
+[6] Row1: ""# _ _ _ # _ _ _ #""
+Indices: 0 #, 1 _, 2 _, 3 _, 4 #, 5 _, 6 _, 7 _, 8 #.
+[7] Row2: ""# _ _ _ # _ K _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 K,7 _,8 #.
+[8] Row3: ""# _ _ _ # _ A _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 A,7 _,8 #.
+[9] Row4: ""# _ # # # D # # #""
+Indices: 0 #,1 _,2 #,3 #,4 #,5 D,6 #,7 #,8 #.
+[10] Row5: ""# _ _ _ _ _ _ G #""
+Indices: 0 #,1 _,2 _,3 _,4 _,5 _,6 _,7 G,8 #.","Row6: ""# _ _ _ # _ _ _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 _,7 _,8 #.",71,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_012,keepdoor_0__step_001__sentence_012,keepdoor_0,1,12,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0475206611570247,"[4] Provided grid:
+[5] Row0: all #.
+[6] Row1: ""# _ _ _ # _ _ _ #""
+Indices: 0 #, 1 _, 2 _, 3 _, 4 #, 5 _, 6 _, 7 _, 8 #.
+[7] Row2: ""# _ _ _ # _ K _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 K,7 _,8 #.
+[8] Row3: ""# _ _ _ # _ A _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 A,7 _,8 #.
+[9] Row4: ""# _ # # # D # # #""
+Indices: 0 #,1 _,2 #,3 #,4 #,5 D,6 #,7 #,8 #.
+[10] Row5: ""# _ _ _ _ _ _ G #""
+Indices: 0 #,1 _,2 _,3 _,4 _,5 _,6 _,7 G,8 #.
+[11] Row6: ""# _ _ _ # _ _ _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 _,7 _,8 #.","Row7: ""# _ _ _ # _ _ _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 _,7 _,8 #.",71,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_013,keepdoor_0__step_001__sentence_013,keepdoor_0,1,13,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0516528925619834,"[5] Row0: all #.
+[6] Row1: ""# _ _ _ # _ _ _ #""
+Indices: 0 #, 1 _, 2 _, 3 _, 4 #, 5 _, 6 _, 7 _, 8 #.
+[7] Row2: ""# _ _ _ # _ K _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 K,7 _,8 #.
+[8] Row3: ""# _ _ _ # _ A _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 A,7 _,8 #.
+[9] Row4: ""# _ # # # D # # #""
+Indices: 0 #,1 _,2 #,3 #,4 #,5 D,6 #,7 #,8 #.
+[10] Row5: ""# _ _ _ _ _ _ G #""
+Indices: 0 #,1 _,2 _,3 _,4 _,5 _,6 _,7 G,8 #.
+[11] Row6: ""# _ _ _ # _ _ _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 _,7 _,8 #.
+[12] Row7: ""# _ _ _ # _ _ _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 _,7 _,8 #.",Row8: all #.,12,no,no,no,yes,new_inference,high,"States new grid state for row8, not revising or evaluating prior claims.",route_deliberation,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,3956,215,4171,"{""explicitly_revises_prior_reasoning"":""no"",""evaluates_prior_route_or_claim"":""no"",""repeats_prior_content"":""no"",""introduces_new_information_or_plan"":""yes"",""primary_label"":""new_inference"",""confidence"":""high"",""rationale"":""States new grid state for row8, not revising or evaluating prior claims.""}",3,
+keepdoor_0__step_001__sentence_014,keepdoor_0__step_001__sentence_014,keepdoor_0,1,14,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0557851239669421,"[6] Row1: ""# _ _ _ # _ _ _ #""
+Indices: 0 #, 1 _, 2 _, 3 _, 4 #, 5 _, 6 _, 7 _, 8 #.
+[7] Row2: ""# _ _ _ # _ K _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 K,7 _,8 #.
+[8] Row3: ""# _ _ _ # _ A _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 A,7 _,8 #.
+[9] Row4: ""# _ # # # D # # #""
+Indices: 0 #,1 _,2 #,3 #,4 #,5 D,6 #,7 #,8 #.
+[10] Row5: ""# _ _ _ _ _ _ G #""
+Indices: 0 #,1 _,2 _,3 _,4 _,5 _,6 _,7 G,8 #.
+[11] Row6: ""# _ _ _ # _ _ _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 _,7 _,8 #.
+[12] Row7: ""# _ _ _ # _ _ _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 _,7 _,8 #.
+[13] Row8: all #.","Agent A at (3,6).",17,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_015,keepdoor_0__step_001__sentence_015,keepdoor_0,1,15,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0599173553719008,"[7] Row2: ""# _ _ _ # _ K _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 K,7 _,8 #.
+[8] Row3: ""# _ _ _ # _ A _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 A,7 _,8 #.
+[9] Row4: ""# _ # # # D # # #""
+Indices: 0 #,1 _,2 #,3 #,4 #,5 D,6 #,7 #,8 #.
+[10] Row5: ""# _ _ _ _ _ _ G #""
+Indices: 0 #,1 _,2 _,3 _,4 _,5 _,6 _,7 G,8 #.
+[11] Row6: ""# _ _ _ # _ _ _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 _,7 _,8 #.
+[12] Row7: ""# _ _ _ # _ _ _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 _,7 _,8 #.
+[13] Row8: all #.
+[14] Agent A at (3,6).","Key K at (2,6).",15,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_016,keepdoor_0__step_001__sentence_016,keepdoor_0,1,16,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0640495867768595,"[8] Row3: ""# _ _ _ # _ A _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 A,7 _,8 #.
+[9] Row4: ""# _ # # # D # # #""
+Indices: 0 #,1 _,2 #,3 #,4 #,5 D,6 #,7 #,8 #.
+[10] Row5: ""# _ _ _ _ _ _ G #""
+Indices: 0 #,1 _,2 _,3 _,4 _,5 _,6 _,7 G,8 #.
+[11] Row6: ""# _ _ _ # _ _ _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 _,7 _,8 #.
+[12] Row7: ""# _ _ _ # _ _ _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 _,7 _,8 #.
+[13] Row8: all #.
+[14] Agent A at (3,6).
+[15] Key K at (2,6).","Door D at (4,5).",16,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,"{""explicitly_revises_prior_reasoning"":""no"",""evaluates_prior_route_or_claim"":""no"",""repeats_prior_content"":""yes",4,JSONDecodeError: Unterminated string starting at: line 1 column 106 (char 105)
+keepdoor_0__step_001__sentence_017,keepdoor_0__step_001__sentence_017,keepdoor_0,1,17,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0681818181818181,"[9] Row4: ""# _ # # # D # # #""
+Indices: 0 #,1 _,2 #,3 #,4 #,5 D,6 #,7 #,8 #.
+[10] Row5: ""# _ _ _ _ _ _ G #""
+Indices: 0 #,1 _,2 _,3 _,4 _,5 _,6 _,7 G,8 #.
+[11] Row6: ""# _ _ _ # _ _ _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 _,7 _,8 #.
+[12] Row7: ""# _ _ _ # _ _ _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 _,7 _,8 #.
+[13] Row8: all #.
+[14] Agent A at (3,6).
+[15] Key K at (2,6).
+[16] Door D at (4,5).","Goal G at (5,7).",16,no,no,yes,no,restatement,high,Repeats earlier fact about goal location.,summary_or_restatement,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,3861,196,4057,"{""explicitly_revises_prior_reasoning"":""no"",""evaluates_prior_route_or_claim"":""no"",""repeats_prior_content"":""yes"",""introduces_new_information_or_plan"":""no"",""primary_label"":""restatement"",""confidence"":""high"",""rationale"":""Repeats earlier fact about goal location.""}",4,
+keepdoor_0__step_001__sentence_018,keepdoor_0__step_001__sentence_018,keepdoor_0,1,18,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0723140495867768,"[10] Row5: ""# _ _ _ _ _ _ G #""
+Indices: 0 #,1 _,2 _,3 _,4 _,5 _,6 _,7 G,8 #.
+[11] Row6: ""# _ _ _ # _ _ _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 _,7 _,8 #.
+[12] Row7: ""# _ _ _ # _ _ _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 _,7 _,8 #.
+[13] Row8: all #.
+[14] Agent A at (3,6).
+[15] Key K at (2,6).
+[16] Door D at (4,5).
+[17] Goal G at (5,7).",Walls # block.,14,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_019,keepdoor_0__step_001__sentence_019,keepdoor_0,1,19,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0764462809917355,"[11] Row6: ""# _ _ _ # _ _ _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 _,7 _,8 #.
+[12] Row7: ""# _ _ _ # _ _ _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 _,7 _,8 #.
+[13] Row8: all #.
+[14] Agent A at (3,6).
+[15] Key K at (2,6).
+[16] Door D at (4,5).
+[17] Goal G at (5,7).
+[18] Walls # block.",Open spaces _.,14,no,no,yes,no,restatement,high,Repeats earlier fact that underscores denote open spaces.,summary_or_restatement,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,3789,290,4079,"{""explicitly_revises_prior_reasoning"":""no"",""evaluates_prior_route_or_claim"":""no"",""repeats_prior_content"":""yes"",""introduces_new_information_or_plan"":""no"",""primary_label"":""restatement"",""confidence"":""high"",""rationale"":""Repeats earlier fact that underscores denote open spaces.""}",1,
+keepdoor_0__step_001__sentence_020,keepdoor_0__step_001__sentence_020,keepdoor_0,1,20,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0805785123966942,"[12] Row7: ""# _ _ _ # _ _ _ #""
+Indices: 0 #,1 _,2 _,3 _,4 #,5 _,6 _,7 _,8 #.
+[13] Row8: all #.
+[14] Agent A at (3,6).
+[15] Key K at (2,6).
+[16] Door D at (4,5).
+[17] Goal G at (5,7).
+[18] Walls # block.
+[19] Open spaces _.",We need shortest path.,22,no,no,no,yes,new_inference,high,"States a new goal to find shortest path, not a correction or evaluation.",route_deliberation,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,3758,294,4052,"{""explicitly_revises_prior_reasoning"":""no"",""evaluates_prior_route_or_claim"":""no"",""repeats_prior_content"":""no"",""introduces_new_information_or_plan"":""yes"",""primary_label"":""new_inference"",""confidence"":""high"",""rationale"":""States a new goal to find shortest path, not a correction or evaluation.""}",4,
+keepdoor_0__step_001__sentence_021,keepdoor_0__step_001__sentence_021,keepdoor_0,1,21,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0847107438016528,"[13] Row8: all #.
+[14] Agent A at (3,6).
+[15] Key K at (2,6).
+[16] Door D at (4,5).
+[17] Goal G at (5,7).
+[18] Walls # block.
+[19] Open spaces _.
+[20] We need shortest path.",We need to pick up key before door.,35,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_022,keepdoor_0__step_001__sentence_022,keepdoor_0,1,22,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0888429752066115,"[14] Agent A at (3,6).
+[15] Key K at (2,6).
+[16] Door D at (4,5).
+[17] Goal G at (5,7).
+[18] Walls # block.
+[19] Open spaces _.
+[20] We need shortest path.
+[21] We need to pick up key before door.","The door is at (4,5).",21,no,no,yes,no,restatement,high,Repeats earlier fact about door location.,summary_or_restatement,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,3733,268,4001,"{""explicitly_revises_prior_reasoning"":""no"",""evaluates_prior_route_or_claim"":""no"",""repeats_prior_content"":""yes"",""introduces_new_information_or_plan"":""no"",""primary_label"":""restatement"",""confidence"":""high"",""rationale"":""Repeats earlier fact about door location.""}",1,
+keepdoor_0__step_001__sentence_023,keepdoor_0__step_001__sentence_023,keepdoor_0,1,23,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0929752066115702,"[15] Key K at (2,6).
+[16] Door D at (4,5).
+[17] Goal G at (5,7).
+[18] Walls # block.
+[19] Open spaces _.
+[20] We need shortest path.
+[21] We need to pick up key before door.
+[22] The door is at (4,5).",The agent must be adjacent to door to open.,43,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_024,keepdoor_0__step_001__sentence_024,keepdoor_0,1,24,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.0971074380165289,"[16] Door D at (4,5).
+[17] Goal G at (5,7).
+[18] Walls # block.
+[19] Open spaces _.
+[20] We need shortest path.
+[21] We need to pick up key before door.
+[22] The door is at (4,5).
+[23] The agent must be adjacent to door to open.","Adjacent squares: (3,5), (5,5), (4,4), (4,6).",45,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_025,keepdoor_0__step_001__sentence_025,keepdoor_0,1,25,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.1012396694214876,"[17] Goal G at (5,7).
+[18] Walls # block.
+[19] Open spaces _.
+[20] We need shortest path.
+[21] We need to pick up key before door.
+[22] The door is at (4,5).
+[23] The agent must be adjacent to door to open.
+[24] Adjacent squares: (3,5), (5,5), (4,4), (4,6).","But note (4,4) is #?",20,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_026,keepdoor_0__step_001__sentence_026,keepdoor_0,1,26,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.1053719008264462,"[18] Walls # block.
+[19] Open spaces _.
+[20] We need shortest path.
+[21] We need to pick up key before door.
+[22] The door is at (4,5).
+[23] The agent must be adjacent to door to open.
+[24] Adjacent squares: (3,5), (5,5), (4,4), (4,6).
+[25] But note (4,4) is #?",Row4 col4 is #.,15,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_027,keepdoor_0__step_001__sentence_027,keepdoor_0,1,27,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.1095041322314049,"[19] Open spaces _.
+[20] We need shortest path.
+[21] We need to pick up key before door.
+[22] The door is at (4,5).
+[23] The agent must be adjacent to door to open.
+[24] Adjacent squares: (3,5), (5,5), (4,4), (4,6).
+[25] But note (4,4) is #?
+[26] Row4 col4 is #.","(4,6) is #.",11,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_028,keepdoor_0__step_001__sentence_028,keepdoor_0,1,28,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.1136363636363636,"[20] We need shortest path.
+[21] We need to pick up key before door.
+[22] The door is at (4,5).
+[23] The agent must be adjacent to door to open.
+[24] Adjacent squares: (3,5), (5,5), (4,4), (4,6).
+[25] But note (4,4) is #?
+[26] Row4 col4 is #.
+[27] (4,6) is #.","So only possible adjacent cells are (3,5) and (5,5).",52,no,no,no,yes,new_inference,high,Derives new conclusion about adjacent cells from earlier facts.,route_deliberation,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,3769,295,4064,"{""explicitly_revises_prior_reasoning"":""no"",""evaluates_prior_route_or_claim"":""no"",""repeats_prior_content"":""no"",""introduces_new_information_or_plan"":""yes"",""primary_label"":""new_inference"",""confidence"":""high"",""rationale"":""Derives new conclusion about adjacent cells from earlier facts.""}",2,
+keepdoor_0__step_001__sentence_029,keepdoor_0__step_001__sentence_029,keepdoor_0,1,29,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.1177685950413223,"[21] We need to pick up key before door.
+[22] The door is at (4,5).
+[23] The agent must be adjacent to door to open.
+[24] Adjacent squares: (3,5), (5,5), (4,4), (4,6).
+[25] But note (4,4) is #?
+[26] Row4 col4 is #.
+[27] (4,6) is #.
+[28] So only possible adjacent cells are (3,5) and (5,5).",Those are open?,15,no,yes,no,no,verification,high,Question checks if earlier state claim about cells being open is correct.,route_deliberation,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,3768,295,4063,"{
+""explicitly_revises_prior_reasoning"": ""no"",
+""evaluates_prior_route_or_claim"": ""yes"",
+""repeats_prior_content"": ""no"",
+""introduces_new_information_or_plan"": ""no"",
+""primary_label"": ""verification"",
+""confidence"": ""high"",
+""rationale"": ""Question checks if earlier state claim about cells being open is correct.""
+}",1,
+keepdoor_0__step_001__sentence_030,keepdoor_0__step_001__sentence_030,keepdoor_0,1,30,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.1219008264462809,"[22] The door is at (4,5).
+[23] The agent must be adjacent to door to open.
+[24] Adjacent squares: (3,5), (5,5), (4,4), (4,6).
+[25] But note (4,4) is #?
+[26] Row4 col4 is #.
+[27] (4,6) is #.
+[28] So only possible adjacent cells are (3,5) and (5,5).
+[29] Those are open?",Row3 col5 is _.,15,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,"{""explicitly_revises_prior_reasoning"":""no"",""evaluates",4,JSONDecodeError: Unterminated string starting at: line 1 column 44 (char 43)
+keepdoor_0__step_001__sentence_031,keepdoor_0__step_001__sentence_031,keepdoor_0,1,31,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.1260330578512396,"[23] The agent must be adjacent to door to open.
+[24] Adjacent squares: (3,5), (5,5), (4,4), (4,6).
+[25] But note (4,4) is #?
+[26] Row4 col4 is #.
+[27] (4,6) is #.
+[28] So only possible adjacent cells are (3,5) and (5,5).
+[29] Those are open?
+[30] Row3 col5 is _.",Row5 col5 is _.,15,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+keepdoor_0__step_001__sentence_032,keepdoor_0__step_001__sentence_032,keepdoor_0,1,32,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.1301652892561983,"[24] Adjacent squares: (3,5), (5,5), (4,4), (4,6).
+[25] But note (4,4) is #?
+[26] Row4 col4 is #.
+[27] (4,6) is #.
+[28] So only possible adjacent cells are (3,5) and (5,5).
+[29] Those are open?
+[30] Row3 col5 is _.
+[31] Row5 col5 is _.","So agent can open door by being at (3,5) or (5,5) after picking key.",68,,,,,,,,,openai/gpt-oss-20b,together_ai,general_fewshot_v1,8b14d60b87d1bc4663749bf858a7befde08f28ad22b2a07fcdf491c282543912,0.0,42,True,medium,0,0,0,,4,JSONDecodeError: Expecting value: line 1 column 1 (char 0)

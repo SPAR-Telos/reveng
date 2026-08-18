@@ -1,0 +1,10 @@
+{
+  "checkpoint_every": 5,
+  "expected_rows": 32,
+  "input": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/sentence_inventory.csv",
+  "labeled_rows": 9,
+  "max_workers": 8,
+  "model_name": "openai/gpt-oss-20b",
+  "output": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/annotations_gpt_oss_20b_multilabel_smoke.csv",
+  "status": "incomplete"
+}
