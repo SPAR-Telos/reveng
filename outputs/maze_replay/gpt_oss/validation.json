@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "model": "GPT-OSS-20B",
+  "checkpoint": "openai/gpt-oss-20b",
+  "revision": "6cee5e81ee83917806bbde320786a8fb61efebee",
+  "input_dir": "data/maze_cot_120_m11_v1",
+  "raw_api_calls_sha256": "1cc8254fd8cffaaf907b04f8b790f419e196ed2867a7355d5bd32d733db9fa7b",
+  "selected_records": 1,
+  "validated_records": 1,
+  "reconstruction_sources": {
+    "provider_token_ids": 1
+  },
+  "boundary_validations": {
+    "provider_boundaries_match_local_offsets": 1
+  },
+  "failures": [],
+  "status": "PASS"
+}
