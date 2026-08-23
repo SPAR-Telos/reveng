@@ -31,5 +31,6 @@
     "ruff.path": [
         "uvx",
         "ruff"
-    ]
+    ],
+    "git.ignoreLimitWarning": true
 }

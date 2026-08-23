@@ -6,126 +6,34 @@ and moving work to another machine. The machine-readable companion is
 
 ## Migration status (2026-08-23)
 
-**Do not delete the current instance yet.** The checked-out branch matches its
-GitHub remote at commit `0957af252d6586f59028f36daa060b0c00f6fadd`, but the
-working tree contains uncommitted code, environment changes, and semantic-label
-artifacts. In particular, the full replicate annotation CSV is only local.
+The repository and research artifacts have been split between GitHub and
+Hugging Face. Rebuildable environments, credentials, download caches, model
+weights, bytecode, and one redundant activation ZIP are intentionally excluded.
 
-A repository-wide audit also found 92,840 Git-ignored paths occupying about
-16 GB, versus about 210 MB of tracked files under the principal code/data/output
-directories. These include behavioral-probe records and checkpoints,
-counterfactual tensors, intermediate activation products, derived analysis
-tables, and reports. Apart from the explicitly verified Hugging Face datasets
-below, their presence in another remote store has **not** been established.
-Consequently, neither a clean Git push nor the two known Hugging Face datasets
-alone constitute a complete backup of every experiment on this instance.
-
-Already remote:
+Verified remote state:
 
 - GitHub `origin/feat/counterfactual-patching`: all committed files at the
-  commit above, including the API smoke-test raw JSONL.
+  migration commit, including implementations, the locked environment,
+  semantic raw outputs, API smoke-test raw JSONL, manifests, reports, plans,
+  status files, and artifact pointers.
 - Hugging Face
   [`project-telos/gpt_oss_20b_doorkey_boundary_activations`](https://huggingface.co/datasets/project-telos/gpt_oss_20b_doorkey_boundary_activations),
   revision `67dd0ef403f9dde32d36ef54f746f37226539b5b`: the complete
   1,276-shard, 5.51 GB activation dataset and its checksums/manifests.
 - Hugging Face
   [`project-telos/doorkey-semantic-reasoning-labels`](https://huggingface.co/datasets/project-telos/doorkey-semantic-reasoning-labels),
-  revision `d815b2bc278c9f073718ba8b2c5a7c2bc1652506`: the sentence
-  inventory, original v3 annotation run, taxonomy, audit, and replicate
-  diagnostics. **It does not contain the replicate annotation CSV.**
+  revision `5708370a409afdffec083eaf5d8747d02aa10672`: the sentence
+  inventory, original and replicate v3 annotation runs, manifests/statuses,
+  taxonomy, audit, and replicate diagnostics.
+- Private Hugging Face
+  `project-telos/reveng-experiment-artifacts`, revision
+  `708b1ce4e77351582e364d4581b50485fba61568`: 38,002 files and about
+  2.60 GB of remaining behavioral, counterfactual, activation-pilot,
+  hypothesis-test, reader-facing, figure, log, and evaluation artifacts.
 
-The migration uses the GitHub/Hugging Face split documented in
-[`REMOTE_ARTIFACTS.md`](REMOTE_ARTIFACTS.md). Once its uploads are verified,
-the consolidated private dataset replaces the persistent-volume requirement
-for remaining generated experiment bundles.
-
-Before deletion, preserve and push or copy all current uncommitted files shown
-by `git status --short`. The essential semantic additions are approximately
-18 MB and include:
-
-- `scripts/run_general_semantic_together_multilabel_labeler.py`
-- `scripts/run_local_general_semantic_multilabel_labeler.py`
-- `tests/test_general_semantic_labeling.py`
-- `pyproject.toml` and `uv.lock`
-- `outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/`
-  files containing `multilabel`, `V3_`, `MULTILABEL_TAXONOMY.md`, and the
-  updated `RUNBOOK.md`
-- this guide and `docs/artifact_index.csv`
-
-The final deletion gate is:
-
-1. `git status --short` contains no wanted local-only files.
-2. The intended branch and commit are visible from a fresh clone.
-3. The replicate CSV and its manifest/status have either been committed to an
-   approved private location or uploaded to an approved dataset repository.
-4. Download one remote activation shard and verify it against `SHA256SUMS`.
-5. Save credentials separately; never copy `.env`, `.hf_home`, or API tokens
-   into Git or an artifact archive.
-
-### Commands to preserve the current semantic work in Git
-
-These commands deliberately omit `.vscode/settings.json` and credential/cache
-directories. Review the staged list before committing:
-
-```bash
-git add -- \
-  README.md \
-  docs/REPOSITORY_AND_ARTIFACT_GUIDE.md \
-  docs/artifact_index.csv \
-  pyproject.toml \
-  uv.lock \
-  scripts/run_general_semantic_together_multilabel_labeler.py \
-  scripts/run_local_general_semantic_multilabel_labeler.py \
-  tests/test_general_semantic_labeling.py \
-  outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1
-
-git diff --cached --check
-git diff --cached --stat
-UV_CACHE_DIR=.uv-cache uv run pytest -q tests/test_general_semantic_labeling.py
-git commit -m "Add reproducible v3 semantic labels and migration guide"
-git push origin HEAD:feat/counterfactual-patching
-```
-
-This stages the entire `general_corpus_v1` directory so the full and replicate
-CSVs, manifests, statuses, taxonomy, reports, and few-shot examples travel
-together. No file in that directory currently exceeds normal GitHub's 100 MB
-single-file limit.
-
-### Separate backup for all ignored experiment artifacts
-
-Git deliberately excludes large generated artifacts. Attach a persistent
-volume that survives instance deletion, replace `/mnt/persistent/reveng-backup`
-with its real mount path, and copy the repository while excluding only
-rebuildable environments/caches and credentials:
-
-```bash
-mkdir -p /mnt/persistent/reveng-backup
-rsync -a --info=progress2 \
-  --exclude='/.git/' \
-  --exclude='/.venv/' \
-  --exclude='/.uv-cache/' \
-  --exclude='/.pytest_cache/' \
-  --exclude='/.hf_home/' \
-  --exclude='/.env' \
-  /root/reveng/ /mnt/persistent/reveng-backup/
-```
-
-Verify byte-level equality; a successful final dry run prints no file changes:
-
-```bash
-rsync -a --dry-run --checksum \
-  --exclude='/.git/' \
-  --exclude='/.venv/' \
-  --exclude='/.uv-cache/' \
-  --exclude='/.pytest_cache/' \
-  --exclude='/.hf_home/' \
-  --exclude='/.env' \
-  /root/reveng/ /mnt/persistent/reveng-backup/
-```
-
-Do not use an instance-local directory as the destination. Confirm in the
-cloud-provider console that the destination volume/object store is persistent
-and independently attached before deleting the instance.
+The complete mapping and restore command are in
+[`REMOTE_ARTIFACTS.md`](REMOTE_ARTIFACTS.md). Credentials must still be saved
+separately; never commit `.env`, `.hf_home`, or API tokens.
 
 ## Repository map
 
@@ -151,7 +59,7 @@ record. Use these when provenance matters:
 | Multi-model maze smoke test | `smoke_test/raw_api_calls.jsonl` | Provider response text, reasoning fields, retry/error records, tokens, and per-action provenance. `api_calls.csv` and summaries are derived from it. |
 | GPT-OSS 120-trajectory pilot | `data/gpt_oss_maze_cot_120_pilot/raw_api_calls.jsonl` | Raw API records. `calls.csv`, `trajectories.csv`, `summary.csv`, and `report.md` are derived views. |
 | Semantic judge, original full run | `outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/annotations_gpt_oss_20b_multilabel_v3_full.csv` | Contains target/context, parsed labels, rationale, `raw_response`, errors, and request provenance. |
-| Semantic judge, independent replicate | Same directory, `annotations_gpt_oss_20b_multilabel_v3_full_replicate.csv` | Local-only at the date above. Pair on `annotation_id`. |
+| Semantic judge, independent replicate | Same directory, `annotations_gpt_oss_20b_multilabel_v3_full_replicate.csv` | Stored in Git and Hugging Face. Pair on `annotation_id`. |
 | Semantic source sentences | Same directory, `sentence_inventory.csv` | Prepared from the paths and hashes in `preparation_manifest.json`. |
 | GPT-OSS activations | `outputs/activation_collection/gpt_oss_20b_boundary_v1/shards/*.safetensors` | Derived raw tensors. Join through `activation_index.parquet`; verify through `SHA256SUMS`. Complete remote copy exists. |
 

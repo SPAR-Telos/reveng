@@ -17,4 +17,6 @@ project-telos/reveng-experiment-artifacts,outputs/hypothesis_tests,outputs/hypot
 project-telos/reveng-experiment-artifacts,outputs/maze_replay,outputs/maze_replay,2375,3,maze replay validation output
 project-telos/reveng-experiment-artifacts,outputs/reader_facing,outputs/reader_facing,18663372,48,reader-facing tables reports and figures
 project-telos/reveng-experiment-artifacts,figs,figs,3110786,11,figures not otherwise tracked
+project-telos/reveng-experiment-artifacts,figures/belief_action.pdf,belief_action.pdf,1227929,1,generated belief-action report PDF
+project-telos/reveng-experiment-artifacts,figures/report_branch_behav_probes.pdf,report_branch_behav_probes.pdf,2101901,1,generated behavioral-probe report PDF
 project-telos/reveng-experiment-artifacts,logs,logs,13107,1,non-secret experiment log
