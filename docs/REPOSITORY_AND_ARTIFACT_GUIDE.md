@@ -34,6 +34,11 @@ Already remote:
   inventory, original v3 annotation run, taxonomy, audit, and replicate
   diagnostics. **It does not contain the replicate annotation CSV.**
 
+The migration uses the GitHub/Hugging Face split documented in
+[`REMOTE_ARTIFACTS.md`](REMOTE_ARTIFACTS.md). Once its uploads are verified,
+the consolidated private dataset replaces the persistent-volume requirement
+for remaining generated experiment bundles.
+
 Before deletion, preserve and push or copy all current uncommitted files shown
 by `git status --short`. The essential semantic additions are approximately
 18 MB and include:

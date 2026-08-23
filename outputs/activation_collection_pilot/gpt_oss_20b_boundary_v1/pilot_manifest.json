@@ -1,0 +1,73 @@
+{
+  "activation_dtype": "bfloat16",
+  "attention_benchmarked": true,
+  "compact_attention_benchmark_path": "outputs/activation_collection_pilot/gpt_oss_20b_boundary_v1/compact_attention_benchmark.json",
+  "compact_attention_file_size_bytes": 84952,
+  "compact_attention_total_seconds": 1.4401691140001276,
+  "layers": [
+    8,
+    15,
+    23
+  ],
+  "model_load_peak_rss_bytes": 6101282816,
+  "model_load_seconds": 5.369002743000237,
+  "model_name": "openai/gpt-oss-20b",
+  "model_path": "/root/.cache/huggingface/hub/models--openai--gpt-oss-20b/snapshots/6cee5e81ee83917806bbde320786a8fb61efebee",
+  "model_revision": "6cee5e81ee83917806bbde320786a8fb61efebee",
+  "n_activation_index_rows": 3327,
+  "n_completed_states": 4,
+  "pilot_states": [
+    {
+      "expected_reasoning_tokens": 348,
+      "expected_sentences": 28,
+      "length_class": "short",
+      "step_index": 9,
+      "trajectory_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_59"
+    },
+    {
+      "expected_reasoning_tokens": 1480,
+      "expected_sentences": 110,
+      "length_class": "median",
+      "step_index": 9,
+      "trajectory_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_41"
+    },
+    {
+      "expected_reasoning_tokens": 4952,
+      "expected_sentences": 320,
+      "length_class": "p95",
+      "step_index": 5,
+      "trajectory_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_45"
+    },
+    {
+      "expected_reasoning_tokens": 9733,
+      "expected_sentences": 631,
+      "length_class": "maximum",
+      "step_index": 1,
+      "trajectory_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_36"
+    }
+  ],
+  "prompt_mode": "original_trace_stored_token_ids",
+  "selected_forward_chunk_size": 512,
+  "short_repeat_exact_equal": true,
+  "short_repeat_max_abs_difference": 0.0,
+  "short_repeat_metrics": {
+    "aggregate_seconds": 0.003858205000142334,
+    "forward_chunk_size": 512,
+    "forward_seconds": 0.6155518260002282,
+    "input_tokens": 1137,
+    "peak_cuda_allocated_bytes": 14060186112,
+    "peak_cuda_reserved_bytes": 14461960192,
+    "peak_rss_bytes": 1868640256,
+    "reasoning_tokens": 348,
+    "reasoning_tokens_per_forward_second": 565.3463856345883,
+    "rss_after_bytes": 1868636160,
+    "rss_before_bytes": 1868591104,
+    "sentences": 28,
+    "validation_max_abs_difference": 0.0
+  },
+  "status": "completed",
+  "temporary_full_token_tensors_retained": false,
+  "tokenizer_ids_match_stored_trajectory_tokens": true,
+  "tokenizer_load_seconds": 0.6788790150003479,
+  "vram_limit_gib": 22.0
+}

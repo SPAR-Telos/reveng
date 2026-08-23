@@ -1,0 +1,1252 @@
+[
+  {
+    "pair_id": "pair_goal_move_000",
+    "category": "goal_move",
+    "grid_a_path": "data/cf/pair_goal_move_000/grid_a.txt",
+    "grid_b_path": "data/cf/pair_goal_move_000/grid_b.txt",
+    "goal_a": [
+      3,
+      1
+    ],
+    "goal_b": [
+      1,
+      1
+    ],
+    "goal_orig": [
+      3,
+      1
+    ],
+    "goal_new": [
+      1,
+      1
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_goal_move_000/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_goal_move_000/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_goal_move_000/patched.json"
+  },
+  {
+    "pair_id": "pair_goal_move_001",
+    "category": "goal_move",
+    "grid_a_path": "data/cf/pair_goal_move_001/grid_a.txt",
+    "grid_b_path": "data/cf/pair_goal_move_001/grid_b.txt",
+    "goal_a": [
+      1,
+      1
+    ],
+    "goal_b": [
+      1,
+      3
+    ],
+    "goal_orig": [
+      1,
+      1
+    ],
+    "goal_new": [
+      1,
+      3
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_goal_move_001/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_goal_move_001/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_goal_move_001/patched.json"
+  },
+  {
+    "pair_id": "pair_goal_move_002",
+    "category": "goal_move",
+    "grid_a_path": "data/cf/pair_goal_move_002/grid_a.txt",
+    "grid_b_path": "data/cf/pair_goal_move_002/grid_b.txt",
+    "goal_a": [
+      5,
+      5
+    ],
+    "goal_b": [
+      5,
+      1
+    ],
+    "goal_orig": [
+      5,
+      5
+    ],
+    "goal_new": [
+      5,
+      1
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_goal_move_002/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_goal_move_002/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_goal_move_002/patched.json"
+  },
+  {
+    "pair_id": "pair_goal_move_003",
+    "category": "goal_move",
+    "grid_a_path": "data/cf/pair_goal_move_003/grid_a.txt",
+    "grid_b_path": "data/cf/pair_goal_move_003/grid_b.txt",
+    "goal_a": [
+      1,
+      2
+    ],
+    "goal_b": [
+      4,
+      1
+    ],
+    "goal_orig": [
+      1,
+      2
+    ],
+    "goal_new": [
+      4,
+      1
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_goal_move_003/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_goal_move_003/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_goal_move_003/patched.json"
+  },
+  {
+    "pair_id": "pair_goal_move_004",
+    "category": "goal_move",
+    "grid_a_path": "data/cf/pair_goal_move_004/grid_a.txt",
+    "grid_b_path": "data/cf/pair_goal_move_004/grid_b.txt",
+    "goal_a": [
+      4,
+      1
+    ],
+    "goal_b": [
+      2,
+      1
+    ],
+    "goal_orig": [
+      4,
+      1
+    ],
+    "goal_new": [
+      2,
+      1
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_goal_move_004/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_goal_move_004/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_goal_move_004/patched.json"
+  },
+  {
+    "pair_id": "pair_goal_move_005",
+    "category": "goal_move",
+    "grid_a_path": "data/cf/pair_goal_move_005/grid_a.txt",
+    "grid_b_path": "data/cf/pair_goal_move_005/grid_b.txt",
+    "goal_a": [
+      2,
+      1
+    ],
+    "goal_b": [
+      3,
+      2
+    ],
+    "goal_orig": [
+      2,
+      1
+    ],
+    "goal_new": [
+      3,
+      2
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_goal_move_005/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_goal_move_005/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_goal_move_005/patched.json"
+  },
+  {
+    "pair_id": "pair_goal_move_006",
+    "category": "goal_move",
+    "grid_a_path": "data/cf/pair_goal_move_006/grid_a.txt",
+    "grid_b_path": "data/cf/pair_goal_move_006/grid_b.txt",
+    "goal_a": [
+      4,
+      4
+    ],
+    "goal_b": [
+      5,
+      1
+    ],
+    "goal_orig": [
+      4,
+      4
+    ],
+    "goal_new": [
+      5,
+      1
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_goal_move_006/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_goal_move_006/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_goal_move_006/patched.json"
+  },
+  {
+    "pair_id": "pair_goal_move_007",
+    "category": "goal_move",
+    "grid_a_path": "data/cf/pair_goal_move_007/grid_a.txt",
+    "grid_b_path": "data/cf/pair_goal_move_007/grid_b.txt",
+    "goal_a": [
+      5,
+      4
+    ],
+    "goal_b": [
+      5,
+      2
+    ],
+    "goal_orig": [
+      5,
+      4
+    ],
+    "goal_new": [
+      5,
+      2
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_goal_move_007/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_goal_move_007/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_goal_move_007/patched.json"
+  },
+  {
+    "pair_id": "pair_goal_move_008",
+    "category": "goal_move",
+    "grid_a_path": "data/cf/pair_goal_move_008/grid_a.txt",
+    "grid_b_path": "data/cf/pair_goal_move_008/grid_b.txt",
+    "goal_a": [
+      3,
+      1
+    ],
+    "goal_b": [
+      3,
+      3
+    ],
+    "goal_orig": [
+      3,
+      1
+    ],
+    "goal_new": [
+      3,
+      3
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_goal_move_008/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_goal_move_008/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_goal_move_008/patched.json"
+  },
+  {
+    "pair_id": "pair_goal_move_009",
+    "category": "goal_move",
+    "grid_a_path": "data/cf/pair_goal_move_009/grid_a.txt",
+    "grid_b_path": "data/cf/pair_goal_move_009/grid_b.txt",
+    "goal_a": [
+      1,
+      2
+    ],
+    "goal_b": [
+      5,
+      3
+    ],
+    "goal_orig": [
+      1,
+      2
+    ],
+    "goal_new": [
+      5,
+      3
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_goal_move_009/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_goal_move_009/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_goal_move_009/patched.json"
+  },
+  {
+    "pair_id": "pair_reflect_vertical_000",
+    "category": "reflect_vertical",
+    "grid_a_path": "data/cf/pair_reflect_vertical_000/grid_a.txt",
+    "grid_b_path": "data/cf/pair_reflect_vertical_000/grid_b.txt",
+    "goal_a": [
+      4,
+      5
+    ],
+    "goal_b": [
+      2,
+      5
+    ],
+    "goal_orig": [
+      4,
+      5
+    ],
+    "goal_new": [
+      2,
+      5
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_reflect_vertical_000/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_reflect_vertical_000/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_reflect_vertical_000/patched.json"
+  },
+  {
+    "pair_id": "pair_reflect_vertical_001",
+    "category": "reflect_vertical",
+    "grid_a_path": "data/cf/pair_reflect_vertical_001/grid_a.txt",
+    "grid_b_path": "data/cf/pair_reflect_vertical_001/grid_b.txt",
+    "goal_a": [
+      2,
+      1
+    ],
+    "goal_b": [
+      4,
+      1
+    ],
+    "goal_orig": [
+      2,
+      1
+    ],
+    "goal_new": [
+      4,
+      1
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_reflect_vertical_001/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_reflect_vertical_001/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_reflect_vertical_001/patched.json"
+  },
+  {
+    "pair_id": "pair_reflect_vertical_002",
+    "category": "reflect_vertical",
+    "grid_a_path": "data/cf/pair_reflect_vertical_002/grid_a.txt",
+    "grid_b_path": "data/cf/pair_reflect_vertical_002/grid_b.txt",
+    "goal_a": [
+      3,
+      4
+    ],
+    "goal_b": [
+      3,
+      4
+    ],
+    "goal_orig": [
+      3,
+      4
+    ],
+    "goal_new": [
+      3,
+      4
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_reflect_vertical_002/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_reflect_vertical_002/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_reflect_vertical_002/patched.json"
+  },
+  {
+    "pair_id": "pair_reflect_vertical_003",
+    "category": "reflect_vertical",
+    "grid_a_path": "data/cf/pair_reflect_vertical_003/grid_a.txt",
+    "grid_b_path": "data/cf/pair_reflect_vertical_003/grid_b.txt",
+    "goal_a": [
+      3,
+      4
+    ],
+    "goal_b": [
+      3,
+      4
+    ],
+    "goal_orig": [
+      3,
+      4
+    ],
+    "goal_new": [
+      3,
+      4
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_reflect_vertical_003/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_reflect_vertical_003/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_reflect_vertical_003/patched.json"
+  },
+  {
+    "pair_id": "pair_reflect_vertical_004",
+    "category": "reflect_vertical",
+    "grid_a_path": "data/cf/pair_reflect_vertical_004/grid_a.txt",
+    "grid_b_path": "data/cf/pair_reflect_vertical_004/grid_b.txt",
+    "goal_a": [
+      5,
+      3
+    ],
+    "goal_b": [
+      1,
+      3
+    ],
+    "goal_orig": [
+      5,
+      3
+    ],
+    "goal_new": [
+      1,
+      3
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_reflect_vertical_004/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_reflect_vertical_004/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_reflect_vertical_004/patched.json"
+  },
+  {
+    "pair_id": "pair_reflect_vertical_005",
+    "category": "reflect_vertical",
+    "grid_a_path": "data/cf/pair_reflect_vertical_005/grid_a.txt",
+    "grid_b_path": "data/cf/pair_reflect_vertical_005/grid_b.txt",
+    "goal_a": [
+      1,
+      1
+    ],
+    "goal_b": [
+      5,
+      1
+    ],
+    "goal_orig": [
+      1,
+      1
+    ],
+    "goal_new": [
+      5,
+      1
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_reflect_vertical_005/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_reflect_vertical_005/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_reflect_vertical_005/patched.json"
+  },
+  {
+    "pair_id": "pair_reflect_vertical_006",
+    "category": "reflect_vertical",
+    "grid_a_path": "data/cf/pair_reflect_vertical_006/grid_a.txt",
+    "grid_b_path": "data/cf/pair_reflect_vertical_006/grid_b.txt",
+    "goal_a": [
+      3,
+      1
+    ],
+    "goal_b": [
+      3,
+      1
+    ],
+    "goal_orig": [
+      3,
+      1
+    ],
+    "goal_new": [
+      3,
+      1
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_reflect_vertical_006/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_reflect_vertical_006/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_reflect_vertical_006/patched.json"
+  },
+  {
+    "pair_id": "pair_reflect_vertical_007",
+    "category": "reflect_vertical",
+    "grid_a_path": "data/cf/pair_reflect_vertical_007/grid_a.txt",
+    "grid_b_path": "data/cf/pair_reflect_vertical_007/grid_b.txt",
+    "goal_a": [
+      1,
+      1
+    ],
+    "goal_b": [
+      5,
+      1
+    ],
+    "goal_orig": [
+      1,
+      1
+    ],
+    "goal_new": [
+      5,
+      1
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_reflect_vertical_007/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_reflect_vertical_007/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_reflect_vertical_007/patched.json"
+  },
+  {
+    "pair_id": "pair_reflect_vertical_008",
+    "category": "reflect_vertical",
+    "grid_a_path": "data/cf/pair_reflect_vertical_008/grid_a.txt",
+    "grid_b_path": "data/cf/pair_reflect_vertical_008/grid_b.txt",
+    "goal_a": [
+      5,
+      5
+    ],
+    "goal_b": [
+      1,
+      5
+    ],
+    "goal_orig": [
+      5,
+      5
+    ],
+    "goal_new": [
+      1,
+      5
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_reflect_vertical_008/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_reflect_vertical_008/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_reflect_vertical_008/patched.json"
+  },
+  {
+    "pair_id": "pair_reflect_vertical_009",
+    "category": "reflect_vertical",
+    "grid_a_path": "data/cf/pair_reflect_vertical_009/grid_a.txt",
+    "grid_b_path": "data/cf/pair_reflect_vertical_009/grid_b.txt",
+    "goal_a": [
+      2,
+      2
+    ],
+    "goal_b": [
+      4,
+      2
+    ],
+    "goal_orig": [
+      2,
+      2
+    ],
+    "goal_new": [
+      4,
+      2
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_reflect_vertical_009/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_reflect_vertical_009/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_reflect_vertical_009/patched.json"
+  },
+  {
+    "pair_id": "pair_rotate_90_000",
+    "category": "rotate_90",
+    "grid_a_path": "data/cf/pair_rotate_90_000/grid_a.txt",
+    "grid_b_path": "data/cf/pair_rotate_90_000/grid_b.txt",
+    "goal_a": [
+      1,
+      1
+    ],
+    "goal_b": [
+      1,
+      5
+    ],
+    "goal_orig": [
+      1,
+      1
+    ],
+    "goal_new": [
+      1,
+      5
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_rotate_90_000/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_rotate_90_000/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_rotate_90_000/patched.json"
+  },
+  {
+    "pair_id": "pair_rotate_90_001",
+    "category": "rotate_90",
+    "grid_a_path": "data/cf/pair_rotate_90_001/grid_a.txt",
+    "grid_b_path": "data/cf/pair_rotate_90_001/grid_b.txt",
+    "goal_a": [
+      4,
+      1
+    ],
+    "goal_b": [
+      1,
+      2
+    ],
+    "goal_orig": [
+      4,
+      1
+    ],
+    "goal_new": [
+      1,
+      2
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_rotate_90_001/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_rotate_90_001/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_rotate_90_001/patched.json"
+  },
+  {
+    "pair_id": "pair_rotate_90_002",
+    "category": "rotate_90",
+    "grid_a_path": "data/cf/pair_rotate_90_002/grid_a.txt",
+    "grid_b_path": "data/cf/pair_rotate_90_002/grid_b.txt",
+    "goal_a": [
+      1,
+      1
+    ],
+    "goal_b": [
+      1,
+      5
+    ],
+    "goal_orig": [
+      1,
+      1
+    ],
+    "goal_new": [
+      1,
+      5
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_rotate_90_002/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_rotate_90_002/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_rotate_90_002/patched.json"
+  },
+  {
+    "pair_id": "pair_rotate_90_003",
+    "category": "rotate_90",
+    "grid_a_path": "data/cf/pair_rotate_90_003/grid_a.txt",
+    "grid_b_path": "data/cf/pair_rotate_90_003/grid_b.txt",
+    "goal_a": [
+      1,
+      1
+    ],
+    "goal_b": [
+      1,
+      5
+    ],
+    "goal_orig": [
+      1,
+      1
+    ],
+    "goal_new": [
+      1,
+      5
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_rotate_90_003/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_rotate_90_003/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_rotate_90_003/patched.json"
+  },
+  {
+    "pair_id": "pair_rotate_90_004",
+    "category": "rotate_90",
+    "grid_a_path": "data/cf/pair_rotate_90_004/grid_a.txt",
+    "grid_b_path": "data/cf/pair_rotate_90_004/grid_b.txt",
+    "goal_a": [
+      5,
+      2
+    ],
+    "goal_b": [
+      2,
+      1
+    ],
+    "goal_orig": [
+      5,
+      2
+    ],
+    "goal_new": [
+      2,
+      1
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_rotate_90_004/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_rotate_90_004/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_rotate_90_004/patched.json"
+  },
+  {
+    "pair_id": "pair_rotate_90_005",
+    "category": "rotate_90",
+    "grid_a_path": "data/cf/pair_rotate_90_005/grid_a.txt",
+    "grid_b_path": "data/cf/pair_rotate_90_005/grid_b.txt",
+    "goal_a": [
+      1,
+      1
+    ],
+    "goal_b": [
+      1,
+      5
+    ],
+    "goal_orig": [
+      1,
+      1
+    ],
+    "goal_new": [
+      1,
+      5
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_rotate_90_005/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_rotate_90_005/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_rotate_90_005/patched.json"
+  },
+  {
+    "pair_id": "pair_rotate_90_006",
+    "category": "rotate_90",
+    "grid_a_path": "data/cf/pair_rotate_90_006/grid_a.txt",
+    "grid_b_path": "data/cf/pair_rotate_90_006/grid_b.txt",
+    "goal_a": [
+      4,
+      1
+    ],
+    "goal_b": [
+      1,
+      2
+    ],
+    "goal_orig": [
+      4,
+      1
+    ],
+    "goal_new": [
+      1,
+      2
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_rotate_90_006/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_rotate_90_006/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_rotate_90_006/patched.json"
+  },
+  {
+    "pair_id": "pair_rotate_90_007",
+    "category": "rotate_90",
+    "grid_a_path": "data/cf/pair_rotate_90_007/grid_a.txt",
+    "grid_b_path": "data/cf/pair_rotate_90_007/grid_b.txt",
+    "goal_a": [
+      1,
+      4
+    ],
+    "goal_b": [
+      4,
+      5
+    ],
+    "goal_orig": [
+      1,
+      4
+    ],
+    "goal_new": [
+      4,
+      5
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_rotate_90_007/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_rotate_90_007/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_rotate_90_007/patched.json"
+  },
+  {
+    "pair_id": "pair_rotate_90_008",
+    "category": "rotate_90",
+    "grid_a_path": "data/cf/pair_rotate_90_008/grid_a.txt",
+    "grid_b_path": "data/cf/pair_rotate_90_008/grid_b.txt",
+    "goal_a": [
+      2,
+      3
+    ],
+    "goal_b": [
+      3,
+      4
+    ],
+    "goal_orig": [
+      2,
+      3
+    ],
+    "goal_new": [
+      3,
+      4
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_rotate_90_008/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_rotate_90_008/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_rotate_90_008/patched.json"
+  },
+  {
+    "pair_id": "pair_rotate_90_009",
+    "category": "rotate_90",
+    "grid_a_path": "data/cf/pair_rotate_90_009/grid_a.txt",
+    "grid_b_path": "data/cf/pair_rotate_90_009/grid_b.txt",
+    "goal_a": [
+      1,
+      4
+    ],
+    "goal_b": [
+      4,
+      5
+    ],
+    "goal_orig": [
+      1,
+      4
+    ],
+    "goal_new": [
+      4,
+      5
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_rotate_90_009/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_rotate_90_009/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_rotate_90_009/patched.json"
+  },
+  {
+    "pair_id": "pair_start_goal_swap_000",
+    "category": "start_goal_swap",
+    "grid_a_path": "data/cf/pair_start_goal_swap_000/grid_a.txt",
+    "grid_b_path": "data/cf/pair_start_goal_swap_000/grid_b.txt",
+    "goal_a": [
+      2,
+      2
+    ],
+    "goal_b": [
+      1,
+      2
+    ],
+    "goal_orig": [
+      2,
+      2
+    ],
+    "goal_new": [
+      1,
+      2
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_start_goal_swap_000/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_start_goal_swap_000/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_start_goal_swap_000/patched.json"
+  },
+  {
+    "pair_id": "pair_start_goal_swap_001",
+    "category": "start_goal_swap",
+    "grid_a_path": "data/cf/pair_start_goal_swap_001/grid_a.txt",
+    "grid_b_path": "data/cf/pair_start_goal_swap_001/grid_b.txt",
+    "goal_a": [
+      3,
+      5
+    ],
+    "goal_b": [
+      1,
+      3
+    ],
+    "goal_orig": [
+      3,
+      5
+    ],
+    "goal_new": [
+      1,
+      3
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_start_goal_swap_001/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_start_goal_swap_001/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_start_goal_swap_001/patched.json"
+  },
+  {
+    "pair_id": "pair_start_goal_swap_002",
+    "category": "start_goal_swap",
+    "grid_a_path": "data/cf/pair_start_goal_swap_002/grid_a.txt",
+    "grid_b_path": "data/cf/pair_start_goal_swap_002/grid_b.txt",
+    "goal_a": [
+      3,
+      5
+    ],
+    "goal_b": [
+      1,
+      2
+    ],
+    "goal_orig": [
+      3,
+      5
+    ],
+    "goal_new": [
+      1,
+      2
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_start_goal_swap_002/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_start_goal_swap_002/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_start_goal_swap_002/patched.json"
+  },
+  {
+    "pair_id": "pair_start_goal_swap_003",
+    "category": "start_goal_swap",
+    "grid_a_path": "data/cf/pair_start_goal_swap_003/grid_a.txt",
+    "grid_b_path": "data/cf/pair_start_goal_swap_003/grid_b.txt",
+    "goal_a": [
+      1,
+      3
+    ],
+    "goal_b": [
+      3,
+      4
+    ],
+    "goal_orig": [
+      1,
+      3
+    ],
+    "goal_new": [
+      3,
+      4
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_start_goal_swap_003/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_start_goal_swap_003/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_start_goal_swap_003/patched.json"
+  },
+  {
+    "pair_id": "pair_start_goal_swap_004",
+    "category": "start_goal_swap",
+    "grid_a_path": "data/cf/pair_start_goal_swap_004/grid_a.txt",
+    "grid_b_path": "data/cf/pair_start_goal_swap_004/grid_b.txt",
+    "goal_a": [
+      2,
+      3
+    ],
+    "goal_b": [
+      3,
+      1
+    ],
+    "goal_orig": [
+      2,
+      3
+    ],
+    "goal_new": [
+      3,
+      1
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_start_goal_swap_004/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_start_goal_swap_004/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_start_goal_swap_004/patched.json"
+  },
+  {
+    "pair_id": "pair_start_goal_swap_005",
+    "category": "start_goal_swap",
+    "grid_a_path": "data/cf/pair_start_goal_swap_005/grid_a.txt",
+    "grid_b_path": "data/cf/pair_start_goal_swap_005/grid_b.txt",
+    "goal_a": [
+      3,
+      2
+    ],
+    "goal_b": [
+      3,
+      4
+    ],
+    "goal_orig": [
+      3,
+      2
+    ],
+    "goal_new": [
+      3,
+      4
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_start_goal_swap_005/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_start_goal_swap_005/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_start_goal_swap_005/patched.json"
+  },
+  {
+    "pair_id": "pair_start_goal_swap_006",
+    "category": "start_goal_swap",
+    "grid_a_path": "data/cf/pair_start_goal_swap_006/grid_a.txt",
+    "grid_b_path": "data/cf/pair_start_goal_swap_006/grid_b.txt",
+    "goal_a": [
+      5,
+      1
+    ],
+    "goal_b": [
+      1,
+      4
+    ],
+    "goal_orig": [
+      5,
+      1
+    ],
+    "goal_new": [
+      1,
+      4
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_start_goal_swap_006/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_start_goal_swap_006/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_start_goal_swap_006/patched.json"
+  },
+  {
+    "pair_id": "pair_start_goal_swap_007",
+    "category": "start_goal_swap",
+    "grid_a_path": "data/cf/pair_start_goal_swap_007/grid_a.txt",
+    "grid_b_path": "data/cf/pair_start_goal_swap_007/grid_b.txt",
+    "goal_a": [
+      4,
+      4
+    ],
+    "goal_b": [
+      2,
+      1
+    ],
+    "goal_orig": [
+      4,
+      4
+    ],
+    "goal_new": [
+      2,
+      1
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_start_goal_swap_007/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_start_goal_swap_007/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_start_goal_swap_007/patched.json"
+  },
+  {
+    "pair_id": "pair_start_goal_swap_008",
+    "category": "start_goal_swap",
+    "grid_a_path": "data/cf/pair_start_goal_swap_008/grid_a.txt",
+    "grid_b_path": "data/cf/pair_start_goal_swap_008/grid_b.txt",
+    "goal_a": [
+      3,
+      2
+    ],
+    "goal_b": [
+      5,
+      2
+    ],
+    "goal_orig": [
+      3,
+      2
+    ],
+    "goal_new": [
+      5,
+      2
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_start_goal_swap_008/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_start_goal_swap_008/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_start_goal_swap_008/patched.json"
+  },
+  {
+    "pair_id": "pair_start_goal_swap_009",
+    "category": "start_goal_swap",
+    "grid_a_path": "data/cf/pair_start_goal_swap_009/grid_a.txt",
+    "grid_b_path": "data/cf/pair_start_goal_swap_009/grid_b.txt",
+    "goal_a": [
+      1,
+      1
+    ],
+    "goal_b": [
+      1,
+      4
+    ],
+    "goal_orig": [
+      1,
+      1
+    ],
+    "goal_new": [
+      1,
+      4
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_start_goal_swap_009/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_start_goal_swap_009/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_start_goal_swap_009/patched.json"
+  },
+  {
+    "pair_id": "pair_transpose_000",
+    "category": "transpose",
+    "grid_a_path": "data/cf/pair_transpose_000/grid_a.txt",
+    "grid_b_path": "data/cf/pair_transpose_000/grid_b.txt",
+    "goal_a": [
+      1,
+      1
+    ],
+    "goal_b": [
+      1,
+      1
+    ],
+    "goal_orig": [
+      1,
+      1
+    ],
+    "goal_new": [
+      1,
+      1
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_transpose_000/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_transpose_000/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_transpose_000/patched.json"
+  },
+  {
+    "pair_id": "pair_transpose_001",
+    "category": "transpose",
+    "grid_a_path": "data/cf/pair_transpose_001/grid_a.txt",
+    "grid_b_path": "data/cf/pair_transpose_001/grid_b.txt",
+    "goal_a": [
+      5,
+      2
+    ],
+    "goal_b": [
+      2,
+      5
+    ],
+    "goal_orig": [
+      5,
+      2
+    ],
+    "goal_new": [
+      2,
+      5
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_transpose_001/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_transpose_001/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_transpose_001/patched.json"
+  },
+  {
+    "pair_id": "pair_transpose_002",
+    "category": "transpose",
+    "grid_a_path": "data/cf/pair_transpose_002/grid_a.txt",
+    "grid_b_path": "data/cf/pair_transpose_002/grid_b.txt",
+    "goal_a": [
+      3,
+      1
+    ],
+    "goal_b": [
+      1,
+      3
+    ],
+    "goal_orig": [
+      3,
+      1
+    ],
+    "goal_new": [
+      1,
+      3
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_transpose_002/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_transpose_002/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_transpose_002/patched.json"
+  },
+  {
+    "pair_id": "pair_transpose_003",
+    "category": "transpose",
+    "grid_a_path": "data/cf/pair_transpose_003/grid_a.txt",
+    "grid_b_path": "data/cf/pair_transpose_003/grid_b.txt",
+    "goal_a": [
+      5,
+      3
+    ],
+    "goal_b": [
+      3,
+      5
+    ],
+    "goal_orig": [
+      5,
+      3
+    ],
+    "goal_new": [
+      3,
+      5
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_transpose_003/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_transpose_003/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_transpose_003/patched.json"
+  },
+  {
+    "pair_id": "pair_transpose_004",
+    "category": "transpose",
+    "grid_a_path": "data/cf/pair_transpose_004/grid_a.txt",
+    "grid_b_path": "data/cf/pair_transpose_004/grid_b.txt",
+    "goal_a": [
+      2,
+      2
+    ],
+    "goal_b": [
+      2,
+      2
+    ],
+    "goal_orig": [
+      2,
+      2
+    ],
+    "goal_new": [
+      2,
+      2
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_transpose_004/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_transpose_004/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_transpose_004/patched.json"
+  },
+  {
+    "pair_id": "pair_transpose_005",
+    "category": "transpose",
+    "grid_a_path": "data/cf/pair_transpose_005/grid_a.txt",
+    "grid_b_path": "data/cf/pair_transpose_005/grid_b.txt",
+    "goal_a": [
+      5,
+      4
+    ],
+    "goal_b": [
+      4,
+      5
+    ],
+    "goal_orig": [
+      5,
+      4
+    ],
+    "goal_new": [
+      4,
+      5
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_transpose_005/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_transpose_005/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_transpose_005/patched.json"
+  },
+  {
+    "pair_id": "pair_transpose_006",
+    "category": "transpose",
+    "grid_a_path": "data/cf/pair_transpose_006/grid_a.txt",
+    "grid_b_path": "data/cf/pair_transpose_006/grid_b.txt",
+    "goal_a": [
+      1,
+      5
+    ],
+    "goal_b": [
+      5,
+      1
+    ],
+    "goal_orig": [
+      1,
+      5
+    ],
+    "goal_new": [
+      5,
+      1
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_transpose_006/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_transpose_006/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_transpose_006/patched.json"
+  },
+  {
+    "pair_id": "pair_transpose_007",
+    "category": "transpose",
+    "grid_a_path": "data/cf/pair_transpose_007/grid_a.txt",
+    "grid_b_path": "data/cf/pair_transpose_007/grid_b.txt",
+    "goal_a": [
+      2,
+      1
+    ],
+    "goal_b": [
+      1,
+      2
+    ],
+    "goal_orig": [
+      2,
+      1
+    ],
+    "goal_new": [
+      1,
+      2
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_transpose_007/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_transpose_007/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_transpose_007/patched.json"
+  },
+  {
+    "pair_id": "pair_transpose_008",
+    "category": "transpose",
+    "grid_a_path": "data/cf/pair_transpose_008/grid_a.txt",
+    "grid_b_path": "data/cf/pair_transpose_008/grid_b.txt",
+    "goal_a": [
+      4,
+      5
+    ],
+    "goal_b": [
+      5,
+      4
+    ],
+    "goal_orig": [
+      4,
+      5
+    ],
+    "goal_new": [
+      5,
+      4
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_transpose_008/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_transpose_008/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_transpose_008/patched.json"
+  },
+  {
+    "pair_id": "pair_transpose_009",
+    "category": "transpose",
+    "grid_a_path": "data/cf/pair_transpose_009/grid_a.txt",
+    "grid_b_path": "data/cf/pair_transpose_009/grid_b.txt",
+    "goal_a": [
+      2,
+      5
+    ],
+    "goal_b": [
+      5,
+      2
+    ],
+    "goal_orig": [
+      2,
+      5
+    ],
+    "goal_new": [
+      5,
+      2
+    ],
+    "a_trace_path": "data/cf/layer_10/pair_transpose_009/A.json",
+    "b_trace_path": "data/cf/layer_10/pair_transpose_009/B.json",
+    "patched_trace_path": "data/cf/layer_10/pair_transpose_009/patched.json"
+  }
+]

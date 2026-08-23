@@ -1,0 +1,5 @@
+{
+  "selected_best_layer": 7,
+  "selected_best_action_threshold": 0.7,
+  "selected_best_output_dir": "data/cf/eval_results/expansion/layer_07/thr_0p70"
+}

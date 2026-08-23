@@ -1,0 +1,103 @@
+{
+  "activations_repo_id": "project-telos/activations_test_full",
+  "compatibility": {
+    "coordinate_order": "row_col",
+    "expected_post_token_ids": [
+      143,
+      144,
+      145
+    ],
+    "expected_pre_token_ids": [
+      0,
+      1,
+      2
+    ],
+    "expected_probe_input_dim": 8642,
+    "grid_fits_probe_pad": true,
+    "grid_size": 7,
+    "layer": 15,
+    "model_id": "openai/gpt-oss-20b",
+    "observed_post_token_ids": [
+      143,
+      144,
+      145
+    ],
+    "observed_pre_token_ids": [
+      0,
+      1,
+      2
+    ],
+    "output_n_tokens": 159,
+    "post_activation_dim": 2880,
+    "post_feature_dim_matches_probe": true,
+    "pre_activation_dim": 2880,
+    "pre_feature_dim_matches_probe": true,
+    "probe_input_dim": 8642,
+    "prompt_suffix_n_tokens": 3,
+    "stage_contract_matches_release": true,
+    "step_index": 0,
+    "trajectory_filename": "size7/together_ai_openai_gpt-oss-20b_size7_comp0.0_0.json",
+    "trajectory_stem": "together_ai_openai_gpt-oss-20b_size7_comp0.0_0"
+  },
+  "coordinate_order": "row_col",
+  "disk_check": {
+    "allowed": true,
+    "estimated_download_bytes": 71193734,
+    "free_bytes": 22729953280,
+    "headroom_bytes": 2147483648,
+    "required_bytes": 2218677382,
+    "target_dir": "data/hf/cache"
+  },
+  "inferred_label_mapping": {
+    "0": {
+      "semantic_name": "agent",
+      "symbol": "A"
+    },
+    "1": {
+      "semantic_name": "wall",
+      "symbol": "#"
+    },
+    "2": {
+      "semantic_name": "goal",
+      "symbol": "G"
+    },
+    "3": {
+      "semantic_name": "open",
+      "symbol": "_"
+    },
+    "7": {
+      "semantic_name": "padding",
+      "symbol": "+"
+    }
+  },
+  "probe_repo_id": "project-telos/cognitive_map_probes",
+  "results_repo_id": "project-telos/cognitive_map_probes_results",
+  "status": "completed",
+  "summary_rows": [
+    {
+      "agent_location_exact_rate": 0.0,
+      "goal_location_exact_rate": 0.0,
+      "mean_overall_cell_accuracy": 0.9777777777777777,
+      "mean_wall_cell_accuracy": 0.9583333333333334,
+      "n_examples": 1,
+      "reasoning_stage": "pre_reasoning",
+      "wall_down_accuracy": 1.0,
+      "wall_left_accuracy": 0.0,
+      "wall_right_accuracy": 1.0,
+      "wall_up_accuracy": 1.0
+    },
+    {
+      "agent_location_exact_rate": 0.0,
+      "goal_location_exact_rate": 0.0,
+      "mean_overall_cell_accuracy": 0.9022222222222223,
+      "mean_wall_cell_accuracy": 0.8333333333333334,
+      "n_examples": 1,
+      "reasoning_stage": "post_reasoning",
+      "wall_down_accuracy": 1.0,
+      "wall_left_accuracy": 1.0,
+      "wall_right_accuracy": 1.0,
+      "wall_up_accuracy": 1.0
+    }
+  ],
+  "trajectories_repo_id": "project-telos/trajectories_test_full"
+}

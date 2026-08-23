@@ -1,0 +1,511 @@
+{
+  "activations_repo_id": "project-telos/activations_test_full",
+  "compatibility_reports": [
+    {
+      "coordinate_order": "row_col",
+      "expected_post_token_ids": [
+        143,
+        144,
+        145
+      ],
+      "expected_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "expected_probe_input_dim": 8642,
+      "grid_fits_probe_pad": true,
+      "grid_size": 7,
+      "layer": 15,
+      "model_id": "openai/gpt-oss-20b",
+      "observed_post_token_ids": [
+        143,
+        144,
+        145
+      ],
+      "observed_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "output_n_tokens": 159,
+      "post_activation_dim": 2880,
+      "post_feature_dim_matches_probe": true,
+      "pre_activation_dim": 2880,
+      "pre_feature_dim_matches_probe": true,
+      "probe_input_dim": 8642,
+      "prompt_suffix_n_tokens": 3,
+      "stage_contract_matches_release": true,
+      "step_index": 0,
+      "trajectory_filename": "size7/together_ai_openai_gpt-oss-20b_size7_comp0.0_0.json",
+      "trajectory_stem": "together_ai_openai_gpt-oss-20b_size7_comp0.0_0"
+    },
+    {
+      "coordinate_order": "row_col",
+      "expected_post_token_ids": [
+        105,
+        106,
+        107
+      ],
+      "expected_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "expected_probe_input_dim": 8642,
+      "grid_fits_probe_pad": true,
+      "grid_size": 7,
+      "layer": 15,
+      "model_id": "openai/gpt-oss-20b",
+      "observed_post_token_ids": [
+        105,
+        106,
+        107
+      ],
+      "observed_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "output_n_tokens": 121,
+      "post_activation_dim": 2880,
+      "post_feature_dim_matches_probe": true,
+      "pre_activation_dim": 2880,
+      "pre_feature_dim_matches_probe": true,
+      "probe_input_dim": 8642,
+      "prompt_suffix_n_tokens": 3,
+      "stage_contract_matches_release": true,
+      "step_index": 1,
+      "trajectory_filename": "size7/together_ai_openai_gpt-oss-20b_size7_comp0.0_0.json",
+      "trajectory_stem": "together_ai_openai_gpt-oss-20b_size7_comp0.0_0"
+    },
+    {
+      "coordinate_order": "row_col",
+      "expected_post_token_ids": [
+        48,
+        49,
+        50
+      ],
+      "expected_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "expected_probe_input_dim": 8642,
+      "grid_fits_probe_pad": true,
+      "grid_size": 7,
+      "layer": 15,
+      "model_id": "openai/gpt-oss-20b",
+      "observed_post_token_ids": [
+        48,
+        49,
+        50
+      ],
+      "observed_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "output_n_tokens": 64,
+      "post_activation_dim": 2880,
+      "post_feature_dim_matches_probe": true,
+      "pre_activation_dim": 2880,
+      "pre_feature_dim_matches_probe": true,
+      "probe_input_dim": 8642,
+      "prompt_suffix_n_tokens": 3,
+      "stage_contract_matches_release": true,
+      "step_index": 2,
+      "trajectory_filename": "size7/together_ai_openai_gpt-oss-20b_size7_comp0.0_0.json",
+      "trajectory_stem": "together_ai_openai_gpt-oss-20b_size7_comp0.0_0"
+    },
+    {
+      "coordinate_order": "row_col",
+      "expected_post_token_ids": [
+        89,
+        90,
+        91
+      ],
+      "expected_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "expected_probe_input_dim": 8642,
+      "grid_fits_probe_pad": true,
+      "grid_size": 7,
+      "layer": 15,
+      "model_id": "openai/gpt-oss-20b",
+      "observed_post_token_ids": [
+        89,
+        90,
+        91
+      ],
+      "observed_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "output_n_tokens": 105,
+      "post_activation_dim": 2880,
+      "post_feature_dim_matches_probe": true,
+      "pre_activation_dim": 2880,
+      "pre_feature_dim_matches_probe": true,
+      "probe_input_dim": 8642,
+      "prompt_suffix_n_tokens": 3,
+      "stage_contract_matches_release": true,
+      "step_index": 0,
+      "trajectory_filename": "size7/together_ai_openai_gpt-oss-20b_size7_comp0.0_1.json",
+      "trajectory_stem": "together_ai_openai_gpt-oss-20b_size7_comp0.0_1"
+    },
+    {
+      "coordinate_order": "row_col",
+      "expected_post_token_ids": [
+        110,
+        111,
+        112
+      ],
+      "expected_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "expected_probe_input_dim": 8642,
+      "grid_fits_probe_pad": true,
+      "grid_size": 7,
+      "layer": 15,
+      "model_id": "openai/gpt-oss-20b",
+      "observed_post_token_ids": [
+        110,
+        111,
+        112
+      ],
+      "observed_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "output_n_tokens": 126,
+      "post_activation_dim": 2880,
+      "post_feature_dim_matches_probe": true,
+      "pre_activation_dim": 2880,
+      "pre_feature_dim_matches_probe": true,
+      "probe_input_dim": 8642,
+      "prompt_suffix_n_tokens": 3,
+      "stage_contract_matches_release": true,
+      "step_index": 1,
+      "trajectory_filename": "size7/together_ai_openai_gpt-oss-20b_size7_comp0.0_1.json",
+      "trajectory_stem": "together_ai_openai_gpt-oss-20b_size7_comp0.0_1"
+    },
+    {
+      "coordinate_order": "row_col",
+      "expected_post_token_ids": [
+        53,
+        54,
+        55
+      ],
+      "expected_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "expected_probe_input_dim": 8642,
+      "grid_fits_probe_pad": true,
+      "grid_size": 7,
+      "layer": 15,
+      "model_id": "openai/gpt-oss-20b",
+      "observed_post_token_ids": [
+        53,
+        54,
+        55
+      ],
+      "observed_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "output_n_tokens": 69,
+      "post_activation_dim": 2880,
+      "post_feature_dim_matches_probe": true,
+      "pre_activation_dim": 2880,
+      "pre_feature_dim_matches_probe": true,
+      "probe_input_dim": 8642,
+      "prompt_suffix_n_tokens": 3,
+      "stage_contract_matches_release": true,
+      "step_index": 2,
+      "trajectory_filename": "size7/together_ai_openai_gpt-oss-20b_size7_comp0.0_1.json",
+      "trajectory_stem": "together_ai_openai_gpt-oss-20b_size7_comp0.0_1"
+    },
+    {
+      "coordinate_order": "row_col",
+      "expected_post_token_ids": [
+        91,
+        92,
+        93
+      ],
+      "expected_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "expected_probe_input_dim": 8642,
+      "grid_fits_probe_pad": true,
+      "grid_size": 7,
+      "layer": 15,
+      "model_id": "openai/gpt-oss-20b",
+      "observed_post_token_ids": [
+        91,
+        92,
+        93
+      ],
+      "observed_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "output_n_tokens": 107,
+      "post_activation_dim": 2880,
+      "post_feature_dim_matches_probe": true,
+      "pre_activation_dim": 2880,
+      "pre_feature_dim_matches_probe": true,
+      "probe_input_dim": 8642,
+      "prompt_suffix_n_tokens": 3,
+      "stage_contract_matches_release": true,
+      "step_index": 0,
+      "trajectory_filename": "size7/together_ai_openai_gpt-oss-20b_size7_comp0.0_2.json",
+      "trajectory_stem": "together_ai_openai_gpt-oss-20b_size7_comp0.0_2"
+    },
+    {
+      "coordinate_order": "row_col",
+      "expected_post_token_ids": [
+        30,
+        31,
+        32
+      ],
+      "expected_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "expected_probe_input_dim": 8642,
+      "grid_fits_probe_pad": true,
+      "grid_size": 7,
+      "layer": 15,
+      "model_id": "openai/gpt-oss-20b",
+      "observed_post_token_ids": [
+        30,
+        31,
+        32
+      ],
+      "observed_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "output_n_tokens": 46,
+      "post_activation_dim": 2880,
+      "post_feature_dim_matches_probe": true,
+      "pre_activation_dim": 2880,
+      "pre_feature_dim_matches_probe": true,
+      "probe_input_dim": 8642,
+      "prompt_suffix_n_tokens": 3,
+      "stage_contract_matches_release": true,
+      "step_index": 1,
+      "trajectory_filename": "size7/together_ai_openai_gpt-oss-20b_size7_comp0.0_2.json",
+      "trajectory_stem": "together_ai_openai_gpt-oss-20b_size7_comp0.0_2"
+    },
+    {
+      "coordinate_order": "row_col",
+      "expected_post_token_ids": [
+        38,
+        39,
+        40
+      ],
+      "expected_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "expected_probe_input_dim": 8642,
+      "grid_fits_probe_pad": true,
+      "grid_size": 7,
+      "layer": 15,
+      "model_id": "openai/gpt-oss-20b",
+      "observed_post_token_ids": [
+        38,
+        39,
+        40
+      ],
+      "observed_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "output_n_tokens": 54,
+      "post_activation_dim": 2880,
+      "post_feature_dim_matches_probe": true,
+      "pre_activation_dim": 2880,
+      "pre_feature_dim_matches_probe": true,
+      "probe_input_dim": 8642,
+      "prompt_suffix_n_tokens": 3,
+      "stage_contract_matches_release": true,
+      "step_index": 0,
+      "trajectory_filename": "size7/together_ai_openai_gpt-oss-20b_size7_comp0.0_4.json",
+      "trajectory_stem": "together_ai_openai_gpt-oss-20b_size7_comp0.0_4"
+    },
+    {
+      "coordinate_order": "row_col",
+      "expected_post_token_ids": [
+        136,
+        137,
+        138
+      ],
+      "expected_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "expected_probe_input_dim": 8642,
+      "grid_fits_probe_pad": true,
+      "grid_size": 7,
+      "layer": 15,
+      "model_id": "openai/gpt-oss-20b",
+      "observed_post_token_ids": [
+        136,
+        137,
+        138
+      ],
+      "observed_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "output_n_tokens": 152,
+      "post_activation_dim": 2880,
+      "post_feature_dim_matches_probe": true,
+      "pre_activation_dim": 2880,
+      "pre_feature_dim_matches_probe": true,
+      "probe_input_dim": 8642,
+      "prompt_suffix_n_tokens": 3,
+      "stage_contract_matches_release": true,
+      "step_index": 1,
+      "trajectory_filename": "size7/together_ai_openai_gpt-oss-20b_size7_comp0.0_4.json",
+      "trajectory_stem": "together_ai_openai_gpt-oss-20b_size7_comp0.0_4"
+    },
+    {
+      "coordinate_order": "row_col",
+      "expected_post_token_ids": [
+        62,
+        63,
+        64
+      ],
+      "expected_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "expected_probe_input_dim": 8642,
+      "grid_fits_probe_pad": true,
+      "grid_size": 7,
+      "layer": 15,
+      "model_id": "openai/gpt-oss-20b",
+      "observed_post_token_ids": [
+        62,
+        63,
+        64
+      ],
+      "observed_pre_token_ids": [
+        0,
+        1,
+        2
+      ],
+      "output_n_tokens": 78,
+      "post_activation_dim": 2880,
+      "post_feature_dim_matches_probe": true,
+      "pre_activation_dim": 2880,
+      "pre_feature_dim_matches_probe": true,
+      "probe_input_dim": 8642,
+      "prompt_suffix_n_tokens": 3,
+      "stage_contract_matches_release": true,
+      "step_index": 2,
+      "trajectory_filename": "size7/together_ai_openai_gpt-oss-20b_size7_comp0.0_4.json",
+      "trajectory_stem": "together_ai_openai_gpt-oss-20b_size7_comp0.0_4"
+    }
+  ],
+  "coordinate_order": "row_col",
+  "disk_check": {
+    "allowed": true,
+    "estimated_download_bytes": 72500985,
+    "free_bytes": 23327866880,
+    "headroom_bytes": 2147483648,
+    "required_bytes": 2219984633,
+    "target_dir": "data/hf/cache"
+  },
+  "inferred_label_mapping": {
+    "0": {
+      "semantic_name": "agent",
+      "symbol": "A"
+    },
+    "1": {
+      "semantic_name": "wall",
+      "symbol": "#"
+    },
+    "2": {
+      "semantic_name": "goal",
+      "symbol": "G"
+    },
+    "3": {
+      "semantic_name": "open",
+      "symbol": "_"
+    },
+    "7": {
+      "semantic_name": "padding",
+      "symbol": "+"
+    }
+  },
+  "n_matched_wall_rows": 88,
+  "n_rows": 22,
+  "probe_repo_id": "project-telos/cognitive_map_probes",
+  "results_repo_id": "project-telos/cognitive_map_probes_results",
+  "skipped_missing_activation_states": [
+    {
+      "step_index": 0,
+      "trajectory_filename": "size7/together_ai_openai_gpt-oss-20b_size7_comp0.0_3.json"
+    },
+    {
+      "step_index": 1,
+      "trajectory_filename": "size7/together_ai_openai_gpt-oss-20b_size7_comp0.0_3.json"
+    },
+    {
+      "step_index": 2,
+      "trajectory_filename": "size7/together_ai_openai_gpt-oss-20b_size7_comp0.0_3.json"
+    }
+  ],
+  "status": "completed",
+  "summary_rows": [
+    {
+      "agent_location_exact_rate": 0.09090909090909091,
+      "goal_location_exact_rate": 0.0,
+      "mean_overall_cell_accuracy": 0.9664646464646464,
+      "mean_wall_cell_accuracy": 0.9659090909090909,
+      "n_examples": 11,
+      "reasoning_stage": "pre_reasoning",
+      "wall_down_accuracy": 0.7272727272727273,
+      "wall_left_accuracy": 0.6363636363636364,
+      "wall_right_accuracy": 0.8181818181818182,
+      "wall_up_accuracy": 1.0
+    },
+    {
+      "agent_location_exact_rate": 0.0,
+      "goal_location_exact_rate": 0.0,
+      "mean_overall_cell_accuracy": 0.907070707070707,
+      "mean_wall_cell_accuracy": 0.8143939393939394,
+      "n_examples": 11,
+      "reasoning_stage": "post_reasoning",
+      "wall_down_accuracy": 0.9090909090909091,
+      "wall_left_accuracy": 0.6363636363636364,
+      "wall_right_accuracy": 0.9090909090909091,
+      "wall_up_accuracy": 0.9090909090909091
+    }
+  ],
+  "trajectories_repo_id": "project-telos/trajectories_test_full"
+}

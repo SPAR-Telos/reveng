@@ -5,6 +5,8 @@ for pipeline lineage, raw-output locations, frozen judge/model settings,
 environment reproduction, remote backups, and machine-migration requirements.
 The same lineage is available as
 [`docs/artifact_index.csv`](docs/artifact_index.csv).
+Large and generated outputs are mapped in
+[`docs/REMOTE_ARTIFACTS.md`](docs/REMOTE_ARTIFACTS.md).
 
 ## Setup
 

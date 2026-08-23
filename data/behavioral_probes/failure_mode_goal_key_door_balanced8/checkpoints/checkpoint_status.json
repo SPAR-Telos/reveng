@@ -1,0 +1,78 @@
+{
+  "completed_rows": 396,
+  "total_examples": 33,
+  "total_questions": 12,
+  "current_example_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_81_step_010",
+  "current_question_id": "is_door_down",
+  "usage_summary": {
+    "model_name": "together_ai/openai/gpt-oss-20b",
+    "by_phase": {
+      "logprob_t0": {
+        "requests": 396,
+        "cost_usd": 0.053931600000000024,
+        "prompt_tokens": 150216,
+        "completion_tokens": 29556,
+        "total_tokens": 179772,
+        "reasoning_tokens": 0,
+        "retry_count": 0,
+        "requests_with_retry": 0,
+        "retry_sleep_seconds": 0.0
+      },
+      "logprob_t07": {
+        "requests": 396,
+        "cost_usd": 0.05404019999999999,
+        "prompt_tokens": 150216,
+        "completion_tokens": 29918,
+        "total_tokens": 180134,
+        "reasoning_tokens": 0,
+        "retry_count": 0,
+        "requests_with_retry": 0,
+        "retry_sleep_seconds": 0.0
+      },
+      "logprob_t1": {
+        "requests": 396,
+        "cost_usd": 0.05400600000000002,
+        "prompt_tokens": 150216,
+        "completion_tokens": 29804,
+        "total_tokens": 180020,
+        "reasoning_tokens": 0,
+        "retry_count": 0,
+        "requests_with_retry": 0,
+        "retry_sleep_seconds": 0.0
+      },
+      "greedy_repeated_t0": {
+        "requests": 3564,
+        "cost_usd": 0.4868982000000009,
+        "prompt_tokens": 1351944,
+        "completion_tokens": 271050,
+        "total_tokens": 1622994,
+        "reasoning_tokens": 0,
+        "retry_count": 0,
+        "requests_with_retry": 0,
+        "retry_sleep_seconds": 0.0
+      },
+      "mc": {
+        "requests": 3960,
+        "cost_usd": 0.5412975000000025,
+        "prompt_tokens": 1502160,
+        "completion_tokens": 302165,
+        "total_tokens": 1804325,
+        "reasoning_tokens": 0,
+        "retry_count": 0,
+        "requests_with_retry": 0,
+        "retry_sleep_seconds": 0.0
+      }
+    },
+    "total": {
+      "requests": 8712,
+      "cost_usd": 1.1901735000000084,
+      "prompt_tokens": 3304752,
+      "completion_tokens": 662493,
+      "total_tokens": 3967245,
+      "reasoning_tokens": 0,
+      "retry_count": 0,
+      "requests_with_retry": 0,
+      "retry_sleep_seconds": 0.0
+    }
+  }
+}

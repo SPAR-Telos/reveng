@@ -1,0 +1,91 @@
+{
+  "activation_schema": null,
+  "disk_check": {
+    "allowed": true,
+    "estimated_download_bytes": 561377230,
+    "free_bytes": 24750120960,
+    "headroom_bytes": 2147483648,
+    "required_bytes": 2708860878,
+    "target_dir": "data/hf/cache"
+  },
+  "inspections": [
+    {
+      "compatibility_reason": "Checkpoint exposes 10 learned queries and a 5-way output head over 2880-d features; this looks like a small sequence decoder, not an obvious spatial cognitive-map probe.",
+      "feature_input_dim": 2880,
+      "filename": "decoder_probe_layer15_pre_reasoning.pt",
+      "guessed_artifact_family": "sequence_decoder_candidate",
+      "num_state_dict_keys": 80,
+      "output_class_count": 5,
+      "query_count": 10,
+      "top_level_keys_preview": [
+        "path_queries",
+        "query_position_embeddings",
+        "feature_map.0.weight",
+        "feature_map.0.bias",
+        "feature_map.1.weight",
+        "feature_map.1.bias",
+        "decoder.layers.0.self_attn.in_proj_weight",
+        "decoder.layers.0.self_attn.in_proj_bias",
+        "decoder.layers.0.self_attn.out_proj.weight",
+        "decoder.layers.0.self_attn.out_proj.bias",
+        "decoder.layers.0.multihead_attn.in_proj_weight",
+        "decoder.layers.0.multihead_attn.in_proj_bias",
+        "decoder.layers.0.multihead_attn.out_proj.weight",
+        "decoder.layers.0.multihead_attn.out_proj.bias",
+        "decoder.layers.0.linear1.weight",
+        "decoder.layers.0.linear1.bias",
+        "decoder.layers.0.linear2.weight",
+        "decoder.layers.0.linear2.bias",
+        "decoder.layers.0.norm1.weight",
+        "decoder.layers.0.norm1.bias"
+      ]
+    },
+    {
+      "compatibility_reason": "Checkpoint exposes 10 learned queries and a 5-way output head over 2880-d features; this looks like a small sequence decoder, not an obvious spatial cognitive-map probe.",
+      "feature_input_dim": 2880,
+      "filename": "decoder_probe_layer15_post_reasoning.pt",
+      "guessed_artifact_family": "sequence_decoder_candidate",
+      "num_state_dict_keys": 80,
+      "output_class_count": 5,
+      "query_count": 10,
+      "top_level_keys_preview": [
+        "path_queries",
+        "query_position_embeddings",
+        "feature_map.0.weight",
+        "feature_map.0.bias",
+        "feature_map.1.weight",
+        "feature_map.1.bias",
+        "decoder.layers.0.self_attn.in_proj_weight",
+        "decoder.layers.0.self_attn.in_proj_bias",
+        "decoder.layers.0.self_attn.out_proj.weight",
+        "decoder.layers.0.self_attn.out_proj.bias",
+        "decoder.layers.0.multihead_attn.in_proj_weight",
+        "decoder.layers.0.multihead_attn.in_proj_bias",
+        "decoder.layers.0.multihead_attn.out_proj.weight",
+        "decoder.layers.0.multihead_attn.out_proj.bias",
+        "decoder.layers.0.linear1.weight",
+        "decoder.layers.0.linear1.bias",
+        "decoder.layers.0.linear2.weight",
+        "decoder.layers.0.linear2.bias",
+        "decoder.layers.0.norm1.weight",
+        "decoder.layers.0.norm1.bias"
+      ]
+    }
+  ],
+  "published_files": [
+    {
+      "filename": "decoder_probe_layer15_pre_reasoning.pt",
+      "size_bytes": 280688615
+    },
+    {
+      "filename": "decoder_probe_layer15_post_reasoning.pt",
+      "size_bytes": 280688615
+    }
+  ],
+  "repo_id": "project-telos/decoder_probes",
+  "revision": null,
+  "status": {
+    "reason": "Published checkpoints do not look like a spatial cognitive-map probe. This command therefore stops at download/inspection instead of producing a misleading reasoning-degradation result.",
+    "status": "unsupported_artifact_family_for_cognitive_map_eval"
+  }
+}

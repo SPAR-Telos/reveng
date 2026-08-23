@@ -1,0 +1,4 @@
+{
+  "reason": "Published checkpoints do not look like a spatial cognitive-map probe. This command therefore stops at download/inspection instead of producing a misleading reasoning-degradation result.",
+  "status": "unsupported_artifact_family_for_cognitive_map_eval"
+}

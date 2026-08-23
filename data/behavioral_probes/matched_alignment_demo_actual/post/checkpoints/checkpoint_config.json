@@ -1,0 +1,13 @@
+{
+  "model_name": "together_ai/openai/gpt-oss-20b",
+  "prompt_preset": "cardinal_action_explicit",
+  "logprob_temperatures": [
+    0.0,
+    0.7,
+    1.0
+  ],
+  "mc_temperature": 0.7,
+  "mc_sample_repeats": 1,
+  "greedy_repeats": 1,
+  "top_logprobs": 20
+}

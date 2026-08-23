@@ -1,0 +1,33 @@
+{
+  "activation_dtype": "bfloat16",
+  "attention_extracted": false,
+  "config_fingerprint": "6c9c352679218616a8bf876562789faae95b4a34bfcfc61a96b2f198b6852394",
+  "expected_reasoning_tokens": 2370850,
+  "expected_sentences": 153622,
+  "expected_states": 1276,
+  "format_version": 1,
+  "forward_chunk_size": 512,
+  "layers": [
+    8,
+    15,
+    23
+  ],
+  "model_name": "openai/gpt-oss-20b",
+  "model_revision": "6cee5e81ee83917806bbde320786a8fb61efebee",
+  "model_snapshot": "/root/.cache/huggingface/hub/models--openai--gpt-oss-20b/snapshots/6cee5e81ee83917806bbde320786a8fb61efebee",
+  "prompt_mode": "original_trace_stored_token_ids",
+  "representations": [
+    "sentence_mean",
+    "sentence_final",
+    "reasoning_mean",
+    "reasoning_final",
+    "pre_window",
+    "post_window",
+    "action_token"
+  ],
+  "seed": 42,
+  "sentence_boundaries_path": "/root/reveng/data/behavioral_probes/doorkey_chunking_validation/sentence_token_boundaries_gpt_oss_20b.csv",
+  "sentence_boundaries_sha256": "8873752847dc67e9118f54b58bcfb2aa03db3388b0e8dde025cab090b58f2304",
+  "trajectory_corpus_sha256": "76001fb0e69cf2aa9b7ed1fd517543716208a72284a7563a0f3e8d32e4d8dd4b",
+  "trajectory_files": 95
+}

@@ -1,0 +1,78 @@
+{
+  "completed_rows": 4,
+  "total_examples": 2,
+  "total_questions": 2,
+  "current_example_id": "together_ai_openai_gpt-oss-20b_rooms2_doorkey_52_step_004",
+  "current_question_id": "hit_wall_after_down",
+  "usage_summary": {
+    "model_name": "together_ai/openai/gpt-oss-20b",
+    "by_phase": {
+      "logprob_t0": {
+        "requests": 4,
+        "cost_usd": 0.000498,
+        "prompt_tokens": 1514,
+        "completion_tokens": 146,
+        "total_tokens": 1660,
+        "reasoning_tokens": 0,
+        "retry_count": 0,
+        "requests_with_retry": 0,
+        "retry_sleep_seconds": 0.0
+      },
+      "logprob_t07": {
+        "requests": 4,
+        "cost_usd": 0.0005343,
+        "prompt_tokens": 1514,
+        "completion_tokens": 267,
+        "total_tokens": 1781,
+        "reasoning_tokens": 0,
+        "retry_count": 0,
+        "requests_with_retry": 0,
+        "retry_sleep_seconds": 0.0
+      },
+      "logprob_t1": {
+        "requests": 4,
+        "cost_usd": 0.0005868,
+        "prompt_tokens": 1514,
+        "completion_tokens": 442,
+        "total_tokens": 1956,
+        "reasoning_tokens": 0,
+        "retry_count": 0,
+        "requests_with_retry": 0,
+        "retry_sleep_seconds": 0.0
+      },
+      "greedy_repeated_t0": {
+        "requests": 36,
+        "cost_usd": 0.004666200000000002,
+        "prompt_tokens": 13626,
+        "completion_tokens": 1928,
+        "total_tokens": 15554,
+        "reasoning_tokens": 0,
+        "retry_count": 0,
+        "requests_with_retry": 0,
+        "retry_sleep_seconds": 0.0
+      },
+      "mc": {
+        "requests": 40,
+        "cost_usd": 0.005443500000000001,
+        "prompt_tokens": 15140,
+        "completion_tokens": 3005,
+        "total_tokens": 18145,
+        "reasoning_tokens": 0,
+        "retry_count": 0,
+        "requests_with_retry": 0,
+        "retry_sleep_seconds": 0.0
+      }
+    },
+    "total": {
+      "requests": 88,
+      "cost_usd": 0.011728799999999989,
+      "prompt_tokens": 33308,
+      "completion_tokens": 5788,
+      "total_tokens": 39096,
+      "reasoning_tokens": 0,
+      "retry_count": 0,
+      "requests_with_retry": 0,
+      "retry_sleep_seconds": 0.0
+    }
+  }
+}

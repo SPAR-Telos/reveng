@@ -1,0 +1,20 @@
+remote_repo,remote_path,local_path,bytes,file_count,role
+project-telos/reveng-experiment-artifacts,data/activation_oracle,data/activation_oracle,16802192,33,activation-oracle raw and derived outputs
+project-telos/reveng-experiment-artifacts,data/behavioral_probes,data/behavioral_probes,1453270970,15984,behavioral-probe inputs checkpoints raw records and analyses
+project-telos/reveng-experiment-artifacts,data/cf,data/cf,226670373,1738,counterfactual local artifacts and evaluations
+project-telos/reveng-experiment-artifacts,data/cognitive_map_probe_reasoning_eval_artifact_check,data/cognitive_map_probe_reasoning_eval_artifact_check,5037,3,cognitive-map artifact validation
+project-telos/reveng-experiment-artifacts,data/cognitive_map_probe_reasoning_eval_public_demo,data/cognitive_map_probe_reasoning_eval_public_demo,7303,5,cognitive-map public demonstration
+project-telos/reveng-experiment-artifacts,data/cognitive_map_probe_reasoning_eval_public_slice,data/cognitive_map_probe_reasoning_eval_public_slice,37978,7,cognitive-map evaluation slice
+project-telos/reveng-experiment-artifacts,data/cognitive_map_probe_reasoning_eval_public_slice_large,data/cognitive_map_probe_reasoning_eval_public_slice_large,65804,7,cognitive-map larger evaluation slice
+project-telos/reveng-experiment-artifacts,data/cognitive_map_probe_reasoning_eval_public_slice_repeat10,data/cognitive_map_probe_reasoning_eval_public_slice_repeat10,92767,8,cognitive-map repeated evaluation slice
+project-telos/reveng-experiment-artifacts,data/plan_decoder_reasoning_eval_layout_demo,data/plan_decoder_reasoning_eval_layout_demo,2364,5,plan-decoder layout demonstration
+project-telos/reveng-experiment-artifacts,data/plan_decoder_reasoning_eval_public_slice,data/plan_decoder_reasoning_eval_public_slice,35691,5,plan-decoder evaluation
+project-telos/reveng-experiment-artifacts,data/plan_reasoning_alignment_public_slice,data/plan_reasoning_alignment_public_slice,331950,18,plan-reasoning alignment evaluation
+project-telos/reveng-experiment-artifacts,outputs/activation_collection_pilot,outputs/activation_collection_pilot,38397167,11,activation extraction pilot
+project-telos/reveng-experiment-artifacts,outputs/experiment1_activation_monitor,outputs/experiment1_activation_monitor,657715484,19335,experiment 1 activation monitor outputs
+project-telos/reveng-experiment-artifacts,outputs/experiment2_behavioral_beliefs,outputs/experiment2_behavioral_beliefs,406963697,216,experiment 2 behavioral belief outputs
+project-telos/reveng-experiment-artifacts,outputs/hypothesis_tests,outputs/hypothesis_tests,436070464,560,hypothesis-test raw tables derived results and reports
+project-telos/reveng-experiment-artifacts,outputs/maze_replay,outputs/maze_replay,2375,3,maze replay validation output
+project-telos/reveng-experiment-artifacts,outputs/reader_facing,outputs/reader_facing,18663372,48,reader-facing tables reports and figures
+project-telos/reveng-experiment-artifacts,figs,figs,3110786,11,figures not otherwise tracked
+project-telos/reveng-experiment-artifacts,logs,logs,13107,1,non-secret experiment log
