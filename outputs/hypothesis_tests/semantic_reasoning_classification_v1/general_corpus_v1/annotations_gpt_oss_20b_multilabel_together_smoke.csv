@@ -1,0 +1,331 @@
+annotation_id,sentence_id,environment_id,environment_step,sentence_number,example_id,reasoning_progress,duplicate_of_annotation_id,context_before,target_sentence,target_sentence_characters,semantic_labels,primary_label,annotation_status,explicitly_revises_prior_reasoning,evaluates_prior_route_or_claim,repeats_prior_content,introduces_new_information_or_plan,confidence,rationale,broad_label,judge_model,judge_provider,judge_prompt_version,judge_prompt_sha256,judge_temperature,judge_seed,reasoning_enabled,judge_reasoning_effort,prompt_tokens,completion_tokens,total_tokens,raw_response,attempts,error
+keepdoor_11__step_005__sentence_206,keepdoor_11__step_005__sentence_206,keepdoor_11,5,206,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_005,0.6079881656804734,,"[198] After door opens, we can then move into door cell or go around.
+[199] But we don't need to step onto door cell.
+[200] But we need to go to goal at (6,1).
+[201] From (5,1) adjacent to goal?
+[202] Actually goal at (6,1) is down from (5,1).
+[203] So we can go down to goal directly.
+[204] So we might not need to go onto door cell at all.
+[205] So path to (5,1) adjacent to door, open door, then go down to goal.",That might be shorter.,22,"[""verification"", ""new_inference""]",verification,complete,no,yes,no,yes,high,Derives a shorter path conclusion and evaluates earlier plan.,route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1834,140,1974,"{""semantic_labels"": [""new_inference"", ""verification""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""yes"", ""repeats_prior_content"": ""no"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Derives a shorter path conclusion and evaluates earlier plan.""}",1,
+keepdoor_34__step_006__sentence_010,keepdoor_34__step_006__sentence_010,keepdoor_34,6,10,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_34_step_006,0.0508021390374331,,"[2] Grid size 9x9 indices 0-8 rows and columns.
+[3] Let's map coordinates.
+[4] Grid:
+
+Row 0: all walls
+Row1: col0#, col1 _,2 _,3 _,4#,5_,6_,7_,8#
+Row2: 0#,1_,2_,3 G,4#,5_,6_,7_,8#
+Row3: 0#,1_,2_,3_,4 D,5_,6_,7_,8#
+Row4: 0#,1#,2#,3#,4#,5#,6#,7_,8#
+Row5: 0#,1_,2_,3_,4#,5_,6_,7_,8#
+Row6: 0#,1_,2_,3_,4_,5#,6_,7_,8 A
+Row7: 0#,1_,2_,3_,4_,5_,6_,7 K,8#
+Row8: all walls
+[5] Agent at (6,8).
+[6] Goal at (2,3).
+[7] Door at (3,4).
+[8] Key at (7,7).
+[9] Agent not carrying key.",We need path.,13,"[""state_reconstruction"", ""new_inference""]",state_reconstruction,complete,no,no,no,yes,high,Records known state and infers that a path must be found.,state_readout,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1952,134,2086,"{""semantic_labels"": [""state_reconstruction"", ""new_inference""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""no"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Records known state and infers that a path must be found.""}",1,
+keepdoor_20__step_008__sentence_068,keepdoor_20__step_008__sentence_068,keepdoor_20,8,68,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_008,0.531496062992126,,"[60] Down from (5,5) to (6,5) open.
+[61] From (6,5) left to (6,4)#.
+[62] So can't get to left side from row5.
+[63] Thus need to go up to row3 or 2 and then left then down.
+[64] Let's find path: Starting at (6,7).
+[65] Up to (5,7).
+[66] Up to (4,7)# cannot.
+[67] So maybe from (5,7) left to (5,6) left to (5,5).","Up from (5,5) blocked.",22,"[""state_reconstruction""]",state_reconstruction,complete,no,no,no,yes,high,"Records that the up move from (5,5) is blocked.",state_readout,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1836,176,2012,"{""semantic_labels"": [""state_reconstruction""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""no"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Records that the up move from (5,5) is blocked.""}",1,
+keepdoor_33__step_003__sentence_116,keepdoor_33__step_003__sentence_116,keepdoor_33,3,116,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_003,0.6416666666666667,,"[108] Thus we need to plan: go to key at (3,7), pick it up, then go adjacent to door (4,7) to open it, then go to goal at (5,3).
+[109] But we might open door from other side?
+[110] Actually we need to be adjacent to door; we can be at (4,6) (left of door) or (3,7) (above door) or (5,7) (below door) or (4,8) (right of door).
+[111] Which of those are reachable?
+[112] (3,7) is key location; we will be there after picking up key.
+[113] So we can open door from there.
+[114] That seems easiest.
+[115] After door opens, we can go from (3,7) down to (4,7) (door cell now open), then down to (5,7), then left to (5,6), left to (5,5), left to (5,4) '#', can't.","So left to (5,3) goal?",22,"[""verification""]",verification,complete,no,yes,no,unsure,medium,"Questions the feasibility of moving left to the goal, evaluating the prior plan.",route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1934,196,2130,"{""semantic_labels"": [""verification""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""yes"", ""repeats_prior_content"": ""no"", ""introduces_new_information_or_plan"": ""unsure"", ""confidence"": ""medium"", ""rationale"": ""Questions the feasibility of moving left to the goal, evaluating the prior plan.""}",1,
+keepdoor_10__step_001__sentence_325,keepdoor_10__step_001__sentence_325,keepdoor_10,1,325,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_001,0.8890410958904109,,"[317] Starting at (4,2) we can move up to (3,2) or down to (5,2).
+[318] From (3,2), we can move up to (2,2).
+[319] From (2,2) we can move right to (2,3).
+[320] From (2,3) we can move up to (1,3).
+[321] From (1,3) we can move left to (1,2) etc. But no path to column5 because walls at column4.
+[322] So no.
+
+From (5,2) we can move right to (5,3).
+[323] From there, up to (4,3)#, right to (5,4)#, down to (6,3).
+[324] From (6,3) up to (5,3), down to (7,3).","From (7,3) up to (6,3).",23,"[""state_reconstruction"", ""route_planning""]",state_reconstruction,complete,no,no,yes,yes,high,Records a possible move and proposes it as part of a route.,state_readout,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1903,164,2067,"{""semantic_labels"": [""state_reconstruction"", ""route_planning""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Records a possible move and proposes it as part of a route.""}",1,
+keepdoor_26__step_008__sentence_026,keepdoor_26__step_008__sentence_026,keepdoor_26,8,26,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_26_step_008,0.1103896103896103,,"[18] Let's see obstacles.
+[19] Rows:
+
+Row1: ""# _ _ _ D _ _ _ #""
+Indices: col0 '#', 1 '_',2 '_',3 '_',4 'D',5 '_',6 '_',7 '_',8 '#'
+[20] Row2: ""# _ _ _ # _ _ _ #""
+col0 '#',1 '_',2 '_',3 '_',4 '#',5 '_',6 '_',7 '_',8 '#'
+[21] Row3: ""# _ _ _ # _ _ _ #""
+Row4: ""# _ # # # _ # # #""
+Row5: ""# _ _ _ # _ _ _ #""
+Row6: ""# _ A _ # _ _ _ #""
+Row7: ""# _ _ _ # _ G _ #""
+Row8: ""# # # # # # # # #""
+[22] So walls at row4 columns 2,3,4; row4 col6,7,8.
+[23] Also at row6 col4; row7 col4.
+[24] We need path from (6,2) to (7,6).
+[25] Let's check adjacency.","From (6,2) we can move:",23,"[""state_reconstruction"", ""route_planning""]",state_reconstruction,complete,no,no,no,yes,high,Provides current position and possible moves.,state_readout,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1955,128,2083,"{""semantic_labels"": [""state_reconstruction"", ""route_planning""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""no"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Provides current position and possible moves.""}",1,
+keepdoor_10__step_002__sentence_063,keepdoor_10__step_002__sentence_063,keepdoor_10,2,63,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_10_step_002,0.3787878787878788,,"[55] Let's check if there's any other door?
+[56] Only door at (4,2).
+[57] So maybe goal is unreachable?
+[58] Wait maybe the door is at (4,2) but open after key, and we can go from left side to right side by going around the door?
+[59] Let's examine the map again: maybe the wall column 4 is not a continuous wall; maybe there is an opening at row2?
+[60] But row2 col4 is '#', row3 col4 '#', row4 col4 '#', row5 col4 '#', row6 col4 '#', row7 col4 '#'.
+[61] So yes continuous.
+[62] So no way to cross to the right side of column4.","But the goal is at (2,6), which is to the right of column4.",59,"[""new_inference"", ""restatement""]",new_inference,complete,no,no,yes,yes,high,Reiterates goal location and infers its position relative to column4.,route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1877,160,2037,"{""semantic_labels"": [""restatement"", ""new_inference""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Reiterates goal location and infers its position relative to column4.""}",1,
+keepdoor_57__step_004__sentence_083,keepdoor_57__step_004__sentence_083,keepdoor_57,4,83,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_57_step_004,0.6066176470588235,,"[75] Up to row4 col5 '#', wall.
+[76] So need alternative.
+[77] Maybe go left to col4?
+[78] Row7 col4 '#' wall.
+[79] So cannot.
+[80] Maybe go right from (7,6) to (7,7) '_'?
+[81] row7 col7 '_' yes.
+[82] Up to (6,7) '_' yes.","Up to (5,7) '_' yes.",20,"[""verification"", ""state_reconstruction""]",verification,complete,no,yes,yes,yes,high,Records cell content and verifies it.,route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1797,136,1933,"{""semantic_labels"": [""state_reconstruction"", ""verification""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""yes"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Records cell content and verifies it.""}",1,
+keepdoor_30__step_005__sentence_059,keepdoor_30__step_005__sentence_059,keepdoor_30,5,59,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_30_step_005,0.527027027027027,,"[51] That's 5 steps: down?
+[52] Wait from (1,4) to (1,3) left; then down to (2,3).
+[53] So total steps: 1 up, 1 left, 1 left, 1 left, 1 down =5.
+[54] But we need to consider door opening: when agent is adjacent to door at (1,4) we can open.
+[55] To open door, agent must be adjacent to door.
+[56] When we move into (1,4) door cell?
+[57] Actually door is cell (1,4).
+[58] To open door, agent must be adjacent to door and has key.","Agent can open door automatically when adjacent, not need to step into cell.",76,"[""new_inference""]",new_inference,complete,no,no,no,yes,high,Derives a new rule about door opening.,route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1863,148,2011,"{""semantic_labels"": [""new_inference""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""no"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Derives a new rule about door opening.""}",1,
+keepdoor_83__step_004__sentence_034,keepdoor_83__step_004__sentence_034,keepdoor_83,4,34,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_83_step_004,0.25,,"[26] We need to find shortest path from agent to goal while opening door if necessary.
+[27] The door is at (4,6).
+[28] Path may go around?
+[29] Let's analyze connectivity.
+[30] We can try to go from agent up-left?
+[31] Let's draw approximate coordinates:
+[32] We can consider open area: Outer ring open cells inside walls.
+[33] There's a wall at row4 col2-5 (# # # #).","So door at (4,6) is on right side of that wall line.",52,"[""state_reconstruction"", ""restatement""]",state_reconstruction,complete,no,no,yes,no,high,Repeats door location and records it.,state_readout,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1816,117,1933,"{""semantic_labels"": [""restatement"", ""state_reconstruction""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""no"", ""confidence"": ""high"", ""rationale"":""Repeats door location and records it.""}",1,
+keepdoor_15__step_006__sentence_075,keepdoor_15__step_006__sentence_075,keepdoor_15,6,75,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_15_step_006,0.6834862385321101,,"[67] Up to (3,7) open.
+[68] Up to (2,7) open.
+[69] Up to (1,7) goal.
+[70] That seems a path.
+[71] Let's count steps: from (3,3) to (4,3) (1), (5,3) (2), (6,3) (3), (7,3) (4), (7,4) (5), (7,5) (6), (7,6) (7), (7,7) (8), (6,7) (9), (5,7) (10), (4,7) (11), (3,7) (12), (2,7) (13), (1,7) goal (14).
+[72] So 14 steps.
+[73] Could there be a shorter path?
+[74] Let's see if we can go up earlier.","Maybe go up to row2, then right to col7 then up?",48,"[""route_planning"", ""new_inference""]",route_planning,complete,no,no,no,yes,high,"Suggests a new, potentially shorter route.",route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1914,128,2042,"{""semantic_labels"": [""new_inference"", ""route_planning""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""no"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Suggests a new, potentially shorter route.""}",1,
+keepdoor_31__step_005__sentence_009,keepdoor_31__step_005__sentence_009,keepdoor_31,5,9,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_31_step_005,0.0629629629629629,,"[1] We have a grid 9x9.
+[2] Coordinates: row 0-8, col 0-8.
+[3] Agent at (7,7).
+[4] Goal G at (6,2).
+[5] Door D at (6,4).
+[6] Key K? Not mentioned?
+[7] Agent carrying key True.
+[8] So key already picked.",Need to open door adjacent to door.,35,"[""route_planning"", ""new_inference""]",route_planning,complete,no,no,no,yes,high,Derives a new requirement and proposes a plan step.,route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1792,186,1978,"{""semantic_labels"": [""new_inference"", ""route_planning""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""no"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Derives a new requirement and proposes a plan step.""}",1,
+keepdoor_37__step_003__sentence_138,keepdoor_37__step_003__sentence_138,keepdoor_37,3,138,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_37_step_003,0.6030701754385965,,"[130] But door at (6,4).
+[131] But we have key, so door can open when adjacent.
+[132] But we cannot pass through door cell itself?
+[133] The rule: door automatically opens and removed when agent adjacent and has key.
+[134] That means we can step into door cell after opening?
+[135] The door cell becomes open space.
+[136] So we can move onto (6,4) after opening.
+[137] But we need to be adjacent to door.","So if we are at (6,3) or (6,5) or (5,4) or (7,4).",49,"[""state_reconstruction"", ""new_inference"", ""restatement""]",state_reconstruction,complete,no,no,yes,yes,high,Lists adjacent cells and infers possible positions for opening the door.,state_readout,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1834,167,2001,"{""semantic_labels"": [""state_reconstruction"", ""new_inference"", ""restatement""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Lists adjacent cells and infers possible positions for opening the door.""}",1,
+keepdoor_75__step_002__sentence_024,keepdoor_75__step_002__sentence_024,keepdoor_75,2,24,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_75_step_002,0.3790322580645161,,"[16] Check obstacles: row7 col4 is '#'?
+[17] row7 col4 is '#', according to row7: ""# _ _ G # A _ _ #"" so col0 '#', col1 '_', col2 '_', col3 'G', col4 '#', col5 'A', col6 '_', col7 '_', col8 '#'.
+[18] So there is a wall at (7,4).
+[19] So agent cannot move directly left to goal.
+[20] Need to navigate around.
+[21] We can go up from (7,5) to (6,5) maybe.
+[22] Row6 col5 is '_'?
+[23] Row6: ""# _ _ _ D _ _ _ #"" so col0 '#', col1 '_', col2 '_', col3 '_', col4 'D', col5 '_', col6 '_', col7 '_', col8 '#'.","So (6,5) is open.",17,"[""verification"", ""state_reconstruction""]",verification,complete,no,yes,yes,yes,high,Records cell status and verifies it against earlier analysis.,route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1901,132,2033,"{""semantic_labels"": [""state_reconstruction"", ""verification""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""yes"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Records cell status and verifies it against earlier analysis.""}",1,
+keepdoor_77__step_003__sentence_148,keepdoor_77__step_003__sentence_148,keepdoor_77,3,148,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_77_step_003,0.9703947368421052,,"[140] But we want to reach (5,5) after door open.
+[141] But we can also go to (5,5) after door open.
+[142] But to reach (5,5) from start, maybe go: (1,1)->(1,2)->(1,3)->(2,3)->(3,3)->(3,5)?
+[143] can't because (3,4)#.
+[144] So we need to go via (2,4) etc. So path to (5,5) might be longer than 6 steps to (3,5) + 2 more to (5,5).
+[145] So 8 steps to (5,5) before door open?
+[146] Actually we need to open door first.
+[147] So maybe path: (1,1)->(1,2)->(1,3)->(2,3)->(2,4)->(2,5)->(3,5) open door -> (4,5) -> (5,5).","That's 8 steps to (5,5).",24,"[""verification"", ""new_inference""]",verification,complete,no,yes,yes,yes,high,Derives and confirms the step count.,route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1932,129,2061,"{""semantic_labels"": [""new_inference"", ""verification""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""yes"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Derives and confirms the step count.""}",1,
+keepdoor_12__step_003__sentence_025,keepdoor_12__step_003__sentence_025,keepdoor_12,3,25,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_12_step_003,0.875,,"[17] Key K at (5,2).
+[18] Door D at (2,4).
+[19] Walls block.
+[20] We need to find shortest path.
+[21] Since agent doesn't have key, must pick up key first.
+[22] Key at (5,2) adjacent to agent?
+[23] Agent at (5,1).
+[24] So left? Actually agent at col1, key at col2.",So moving right will pick up key.,33,"[""state_reconstruction"", ""new_inference""]",state_reconstruction,complete,no,no,yes,yes,high,Records known positions and infers that a right move will acquire the key.,state_readout,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1800,188,1988,"{""semantic_labels"": [""state_reconstruction"", ""new_inference""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Records known positions and infers that a right move will acquire the key.""}",1,
+keepdoor_80__step_004__sentence_111,keepdoor_80__step_004__sentence_111,keepdoor_80,4,111,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_80_step_004,0.8435114503816794,,"[103] So the only way to go above row5 is via column 7 maybe?
+[104] Let's see: from agent at (6,1) go right to (6,3), then up to (5,3) but door at (5,4) not relevant.
+[105] But to reach row3, we need to cross row4 somewhere.
+[106] Row4 only open at col7.
+[107] So to get to row3, we need to go to col7 first, then up to row3.
+[108] So path: (6,1)->(6,2)->(6,3)->(5,3)->(5,4?) can't.
+[109] So can't go to col7 via row5.
+[110] Another way: from (6,1) go up to (5,1), right to (5,2), up to (4,2) '#', blocked.","So no.
+
+Thus only reachable cells from agent without passing through door are within the region below door: rows 5-7, columns 1-3,5-6?",134,"[""new_inference"", ""restatement""]",new_inference,complete,no,no,yes,yes,high,Summarizes and infers reachable region.,route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1931,145,2076,"{""semantic_labels"": [""new_inference"", ""restatement""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Summarizes and infers reachable region.""}",1,
+keepdoor_42__step_007__sentence_020,keepdoor_42__step_007__sentence_020,keepdoor_42,7,20,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_42_step_007,0.1335616438356164,,"[12] Maybe key was collected earlier.
+[13] But agent currently carrying key.
+[14] So door can be opened.
+[15] Goal G at (6,1).
+[16] Door D at (4,7).
+[17] Walls: there is a wall at (2,4) and (3,4), (5,4), (7,4).
+[18] Also at row4 columns 0-6 are '#', only open at col7 'D', col8 '#'.
+[19] So door is at (4,7).",That door blocks path maybe?,28,"[""verification"", ""new_inference""]",verification,complete,no,yes,no,yes,medium,Suggests a possible blockage and evaluates earlier door claim.,route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1823,174,1997,"{""semantic_labels"": [""new_inference"", ""verification""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""yes"", ""repeats_prior_content"": ""no"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""medium"", ""rationale"": ""Suggests a possible blockage and evaluates earlier door claim.""}",1,
+keepdoor_0__step_001__sentence_201,keepdoor_0__step_001__sentence_201,keepdoor_0,1,201,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_0_step_001,0.8285123966942148,,"[193] 4. DOWN to (4,5) (door cell now open).
+[194] 5. DOWN to (5,5) open.
+[195] 6. RIGHT to (5,6).
+[196] 7. RIGHT to (5,7) goal.
+[197] But we might have alternative: after picking key, go to (5,5) directly?
+[198] But cannot because door blocks path.
+[199] So must go adjacent to door.
+[200] Could also go to (5,5) after door opens?","Actually door opens automatically when adjacent, but you don't need to stand on door.",85,"[""new_inference""]",new_inference,complete,no,no,no,yes,high,Derives a new rule about door opening behavior.,route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1834,176,2010,"{""semantic_labels"": [""new_inference""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""no"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Derives a new rule about door opening behavior.""}",1,
+keepdoor_16__step_010__sentence_121,keepdoor_16__step_010__sentence_121,keepdoor_16,10,121,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_16_step_010,0.9796747967479674,,"[113] Row5 col7 open, row6 col7 open, row7 col7 G.
+[114] So yes.
+
+Thus minimal steps 9.
+[115] We need to decide next move.
+[116] Starting at (4,1).
+[117] The optimal path is to go DOWN to (5,1).
+[118] So action: DOWN.
+[119] Let's confirm no better path: Could go right first?
+[120] From (4,1) right to (4,2) but row4 col2 is #, cannot.",So must go up or down.,22,"[""verification"", ""new_inference""]",verification,complete,no,yes,yes,yes,high,Derives that only up or down moves are viable and confirms this.,route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1822,171,1993,"{""semantic_labels"": [""new_inference"", ""verification""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""yes"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Derives that only up or down moves are viable and confirms this.""}",1,
+keepdoor_88__step_010__sentence_151,keepdoor_88__step_010__sentence_151,keepdoor_88,10,151,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_88_step_010,0.5492700729927007,,"[143] (4,4) wall, cannot.
+[144] So we cannot go left from column5 except through row4?
+[145] Actually we can go up to row4 col5, then left to row4 col4 wall.
+[146] So no. So basically column5 is a dead end at row5?
+[147] Actually we can go from (5,5) up to (4,5) to (3,5) to (2,5) to (1,5).
+[148] But to get to left side of goal, we must cross column4 or column3.
+[149] But column4 is blocked except row1.
+[150] But row1 col4 open, but we cannot go down from row1 col4 to row2 col4 because wall.",So cannot cross.,16,"[""verification"", ""restatement""]",verification,complete,no,yes,yes,no,high,Affirms earlier deduction that crossing is impossible.,route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1870,143,2013,"{""semantic_labels"": [""verification"", ""restatement""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""yes"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""no"", ""confidence"": ""high"", ""rationale"": ""Affirms earlier deduction that crossing is impossible.""}",1,
+keepdoor_92__step_004__sentence_144,keepdoor_92__step_004__sentence_144,keepdoor_92,4,144,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_92_step_004,0.7756756756756756,,"[136] Right? (7,6) then up (6,6) then left (6,5) then left (6,4) then left (6,3) then up (5,3) that's 6.
+[137] Maybe go up then right?
+[138] (6,5) right (6,6) up (5,6) left (5,5) left (5,4) blocked.
+[139] So no. Up then left?
+[140] (6,5) left (6,4) left (6,3) up (5,3) that's 4 steps?
+[141] Let's check: (7,5)->(6,5) [1], ->(6,4) [2], ->(6,3) [3], ->(5,3) [4].
+[142] Wait but we moved left from 6,5 to 6,4 (open), left to 6,3 (open), up to 5,3 (open).
+[143] That is 4 moves.",Did we miss something?,22,"[""verification""]",verification,complete,no,yes,no,no,high,Questioning the completeness of the earlier route analysis.,route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1930,118,2048,"{""semantic_labels"": [""verification""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""yes"", ""repeats_prior_content"": ""no"", ""introduces_new_information_or_plan"": ""no"", ""confidence"": ""high"", ""rationale"": ""Questioning the completeness of the earlier route analysis.""}",1,
+keepdoor_21__step_009__sentence_069,keepdoor_21__step_009__sentence_069,keepdoor_21,9,69,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_21_step_009,0.5111940298507462,,"[61] (6,5) row6 col5 is _.
+[62] So we can go to (6,5) to open door.
+[63] So we need to reach either (6,3) or (6,5).
+[64] Then door opens.
+[65] Then go to goal at (6,6).
+[66] So from key, we can go to (6,5) maybe easier.
+[67] Let's map coordinates:
+[68] - Starting after key: (1,5).","- We can go down to (2,5), (3,5), (4,5) is # cannot.",52,"[""verification"", ""state_reconstruction"", ""new_inference""]",verification,complete,no,yes,yes,yes,high,"Records cell statuses, verifies blockage, and infers route limitation.",route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1834,158,1992,"{""semantic_labels"": [""state_reconstruction"", ""verification"", ""new_inference""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""yes"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Records cell statuses, verifies blockage, and infers route limitation.""}",1,
+keepdoor_59__step_002__sentence_068,keepdoor_59__step_002__sentence_068,keepdoor_59,2,68,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_59_step_002,0.5152671755725191,,"[60] That's 1+1+3+1 = 6 steps.
+[61] Wait count: Step1: down to key.
+[62] Step2: down to door (now open).
+[63] Step3: down to (5,2).
+[64] Step4: down to (6,2).
+[65] Step5: down to (7,2).
+[66] Step6: right to (7,3).
+[67] Yes 6 steps.",Could there be a shorter path?,30,"[""verification""]",verification,complete,no,yes,no,no,high,Asks to evaluate if the 6-step route is minimal.,route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1808,135,1943,"{""semantic_labels"": [""verification""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""yes"", ""repeats_prior_content"": ""no"", ""introduces_new_information_or_plan"": ""no"", ""confidence"": ""high"", ""rationale"": ""Asks to evaluate if the 6-step route is minimal.""}",1,
+keepdoor_41__step_000__sentence_184,keepdoor_41__step_000__sentence_184,keepdoor_41,0,184,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_41_step_000,0.9607329842931938,,"[176] But that adds 1 step left to (2,1) plus extra steps later.
+[177] So not minimal.
+[178] Thus the best next action is either DOWN or RIGHT.
+[179] We need to choose one.
+[180] But the problem may require deterministic answer.
+[181] Maybe choose DOWN.
+[182] Let's verify if going right leads to any issue: Let's check if there is any blocking after going right to (2,3).
+[183] From there, we need to go down to row7 col3 then right to col4 etc. That path is fine.",So both options are optimal.,28,"[""verification"", ""new_inference"", ""consolidation""]",verification,complete,no,yes,yes,yes,high,"Concludes both actions are optimal, verifying earlier analysis.",route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1830,148,1978,"{""semantic_labels"": [""new_inference"", ""verification"", ""consolidation""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""yes"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Concludes both actions are optimal, verifying earlier analysis.""}",1,
+keepdoor_56__step_007__sentence_032,keepdoor_56__step_007__sentence_032,keepdoor_56,7,32,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_56_step_007,0.2045454545454545,,"[24] Then down to row5?
+[25] But row4 col3 is wall.
+[26] Let's map open cells:
+[27] Row1: (1,2),(1,3) open, (1,5),(1,6),(1,7) open.
+[28] Row2: (2,1),(2,2),(2,3) open, (2,5),(2,6),(2,7) open.
+[29] Row3: (3,1),(3,2),(3,3) open, (3,5),(3,6),(3,7) open.
+[30] Row4: (4,2) open, (4,5) open.
+[31] Row5: (5,1),(5,2),(5,3) open, (5,5),(5,6),(5,7 G) open.","Row6: (6,1),(6,2),(6,3) open, (6,4 D), (6,5),(6,6),(6,7) open.",62,"[""state_reconstruction"", ""restatement""]",state_reconstruction,complete,no,no,yes,yes,high,Records the newly mapped row6 cells.,state_readout,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1926,160,2086,"{""semantic_labels"": [""restatement"", ""state_reconstruction""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Records the newly mapped row6 cells.""}",1,
+keepdoor_50__step_009__sentence_052,keepdoor_50__step_009__sentence_052,keepdoor_50,9,52,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_50_step_009,0.4768518518518518,,"[44] The door at (4,3) blocks crossing between lower half and upper half?
+[45] Let's see connectivity.
+[46] There is a corridor of open cells from row6 to row2 through columns 1-3?
+[47] Let's check:
+[48] From agent at (6,7).
+[49] There is open cells to left: (6,6), (6,5), (6,4)# cannot pass.
+[50] So left path blocked at col4.
+[51] Upwards: (5,7), (4,7)#, (3,7), (2,7), (1,7), (0,7)#.",So going up from agent leads to row4 col7 wall.,47,"[""verification"", ""state_reconstruction"", ""new_inference""]",verification,complete,no,yes,yes,yes,high,"Records agent location, verifies up path, infers wall at (4,7).",route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1855,153,2008,"{""semantic_labels"": [""state_reconstruction"", ""verification"", ""new_inference""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""yes"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Records agent location, verifies up path, infers wall at (4,7).""}",1,
+keepdoor_19__step_002__sentence_011,keepdoor_19__step_002__sentence_011,keepdoor_19,2,11,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_19_step_002,0.1117021276595744,,"[3] Grid coordinates: rows 0-8, cols 0-8.
+[4] Walls '#' at borders and some interior.
+[5] Agent A at row 5, col 3?
+[6] Wait: row 5: ""# _ K A D _ _ _ #"".
+[7] Let's parse: row 5: column indices: 0 '#', 1 '_', 2 'K', 3 'A', 4 'D', 5 '_', 6 '_', 7 '_', 8 '#'.
+[8] So A at (5,3).
+[9] Key K at (5,2).
+[10] Door D at (5,4).",Goal G at row 7 col 7?,22,"[""state_reconstruction""]",state_reconstruction,complete,no,no,no,yes,high,Records the goal location.,state_readout,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1855,166,2021,"{""semantic_labels"": [""state_reconstruction""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""no"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Records the goal location.""}",1,
+keepdoor_36__step_008__sentence_052,keepdoor_36__step_008__sentence_052,keepdoor_36,8,52,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_36_step_008,0.1716666666666666,,"[44] Let's try other route: from (5,1) right to (5,2) -> right to (5,3) -> right to (5,4)# can't.
+[45] So maybe from (5,3) up to (4,3)# no.
+[46] So can't go to (5,5) via that route.
+[47] Alternate: from (5,1) up?
+[48] can't. So maybe from (6,1) go right?
+[49] Row6 col1 '_' -> (6,2) '_' -> (6,3) '_' -> (6,4) '#' (since row6 col4 is '#').
+[50] So can't go to col5 via that row.
+[51] But from (6,3) up to (5,3) open?","yes. Then from (5,3) right to (5,4) blocked.",44,"[""verification"", ""restatement""]",verification,complete,no,yes,yes,no,high,"Reiterates and confirms the blocked status of (5,4).",route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1890,178,2068,"{""semantic_labels"": [""restatement"", ""verification""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""yes"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""no"", ""confidence"": ""high"", ""rationale"": ""Reiterates and confirms the blocked status of (5,4).""}",1,
+keepdoor_13__step_001__sentence_011,keepdoor_13__step_001__sentence_011,keepdoor_13,1,11,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_13_step_001,0.2692307692307692,,"[3] Walls around edges.
+[4] Agent A at (5,2).
+[5] Carrying key: True.
+[6] Goal G at (3,1).
+[7] Door D at (4,1).
+[8] So door is between agent and goal?
+[9] Let's see path: From agent at (5,2) to goal at (3,1).
+[10] Path likely up-left.","But door at (4,1) is just above goal?",37,"[""state_reconstruction"", ""new_inference""]",state_reconstruction,complete,no,no,yes,yes,high,Records door location and infers its relation to the goal.,state_readout,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1802,171,1973,"{""semantic_labels"": [""state_reconstruction"", ""new_inference""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Records door location and infers its relation to the goal.""}",2,
+keepdoor_68__step_007__sentence_100,keepdoor_68__step_007__sentence_100,keepdoor_68,7,100,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_68_step_007,0.5784883720930233,,"[92] Option B: go to (5,5) first: Path from (2,6) to (5,5).
+[93] Let's compute.
+[94] Could go: (2,6) left to (2,5), down to (3,5), down to (4,5) door?
+[95] But cannot step on door until open.
+[96] So cannot go through.
+[97] So need alternate route: from (3,5) left to (3,4), left to (3,3), down to (4,3) # blocked.
+[98] So can't. Instead, maybe go right?
+[99] From (3,5) right to (3,6) open, down to (4,6) # blocked.","So can't go to (5,5) via that route.",36,"[""verification"", ""new_inference""]",verification,complete,no,yes,yes,yes,high,"Confirms route impossibility and infers that (5,5) cannot be reached via that path.",route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1876,161,2037,"{""semantic_labels"": [""verification"", ""new_inference""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""yes"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Confirms route impossibility and infers that (5,5) cannot be reached via that path.""}",1,
+keepdoor_23__step_006__sentence_013,keepdoor_23__step_006__sentence_013,keepdoor_23,6,13,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_23_step_006,0.625,,"[5] Row1: col0 #, col1 _, col2 _, col3 K, col4 #, col5 _, col6 _, col7 _, col8 #
+Row2: col0 #, col1 _, col2 _, col3 A, col4 #, col5 _, col6 _, col7 _, col8 #
+Row3: col0 #, col1 _, col2 _, col3 _, col4 _, col5 _, col6 _, col7 _, col8 #
+Row4: col0 #, col1 #, col2 #, col3 #, col4 #, col5 _, col6 #, col7 #, col8 #
+Row5: col0 #, col1 G, col2 _, col3 _, col4 D, col5 _, col6 _, col7 _, col8 #
+Row6: col0 #, col1 _, col2 _, col3 _, col4 #, col5 _, col6 _, col7 _, col8 #
+Row7: col0 #, col1 _, col2 _, col3 _, col4 #, col5 _, col6 _, col7 _, col8 #
+Row8: all walls.
+[6] Goal G at (5,1).
+[7] Door D at (5,4).
+[8] Key K at (1,3).
+[9] Agent A at (2,3).
+[10] Not carrying key.
+[11] Need to reach key first.
+[12] We need shortest path to key.",Let's compute.,14,"[""procedural_continuation""]",procedural_continuation,complete,no,no,no,no,high,Initiates computation without new content.,other,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,2011,103,2114,"{""semantic_labels"": [""procedural_continuation""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""no"", ""introduces_new_information_or_plan"": ""no"", ""confidence"": ""high"", ""rationale"": ""Initiates computation without new content.""}",1,
+keepdoor_11__step_005__sentence_206__duplicate_001,keepdoor_11__step_005__sentence_206,keepdoor_11,5,206,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_11_step_005,0.6079881656804734,keepdoor_11__step_005__sentence_206,"[198] After door opens, we can then move into door cell or go around.
+[199] But we don't need to step onto door cell.
+[200] But we need to go to goal at (6,1).
+[201] From (5,1) adjacent to goal?
+[202] Actually goal at (6,1) is down from (5,1).
+[203] So we can go down to goal directly.
+[204] So we might not need to go onto door cell at all.
+[205] So path to (5,1) adjacent to door, open door, then go down to goal.",That might be shorter.,22,"[""verification"", ""new_inference"", ""consolidation""]",verification,complete,no,yes,yes,yes,high,Summarizes and evaluates the proposed shorter route.,route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1834,153,1987,"{""semantic_labels"": [""new_inference"", ""verification"", ""consolidation""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""yes"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Summarizes and evaluates the proposed shorter route.""}",1,
+keepdoor_34__step_006__sentence_010__duplicate_002,keepdoor_34__step_006__sentence_010,keepdoor_34,6,10,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_34_step_006,0.0508021390374331,keepdoor_34__step_006__sentence_010,"[2] Grid size 9x9 indices 0-8 rows and columns.
+[3] Let's map coordinates.
+[4] Grid:
+
+Row 0: all walls
+Row1: col0#, col1 _,2 _,3 _,4#,5_,6_,7_,8#
+Row2: 0#,1_,2_,3 G,4#,5_,6_,7_,8#
+Row3: 0#,1_,2_,3_,4 D,5_,6_,7_,8#
+Row4: 0#,1#,2#,3#,4#,5#,6#,7_,8#
+Row5: 0#,1_,2_,3_,4#,5_,6_,7_,8#
+Row6: 0#,1_,2_,3_,4_,5#,6_,7_,8 A
+Row7: 0#,1_,2_,3_,4_,5_,6_,7 K,8#
+Row8: all walls
+[5] Agent at (6,8).
+[6] Goal at (2,3).
+[7] Door at (3,4).
+[8] Key at (7,7).
+[9] Agent not carrying key.",We need path.,13,"[""state_reconstruction"", ""new_inference""]",state_reconstruction,complete,no,no,no,yes,high,Records known state and infers that a path must be found.,state_readout,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1952,134,2086,"{""semantic_labels"": [""state_reconstruction"", ""new_inference""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""no"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Records known state and infers that a path must be found.""}",1,
+keepdoor_20__step_008__sentence_068__duplicate_003,keepdoor_20__step_008__sentence_068,keepdoor_20,8,68,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_20_step_008,0.531496062992126,keepdoor_20__step_008__sentence_068,"[60] Down from (5,5) to (6,5) open.
+[61] From (6,5) left to (6,4)#.
+[62] So can't get to left side from row5.
+[63] Thus need to go up to row3 or 2 and then left then down.
+[64] Let's find path: Starting at (6,7).
+[65] Up to (5,7).
+[66] Up to (4,7)# cannot.
+[67] So maybe from (5,7) left to (5,6) left to (5,5).","Up from (5,5) blocked.",22,"[""state_reconstruction""]",state_reconstruction,complete,no,no,no,yes,high,"Records that moving up from (5,5) is blocked.",state_readout,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1836,153,1989,"{""semantic_labels"": [""state_reconstruction""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""no"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Records that moving up from (5,5) is blocked.""}",1,
+keepdoor_33__step_003__sentence_116__duplicate_004,keepdoor_33__step_003__sentence_116,keepdoor_33,3,116,together_ai_openai_gpt-oss-20b_rooms2_doorkey_keepdoor_33_step_003,0.6416666666666667,keepdoor_33__step_003__sentence_116,"[108] Thus we need to plan: go to key at (3,7), pick it up, then go adjacent to door (4,7) to open it, then go to goal at (5,3).
+[109] But we might open door from other side?
+[110] Actually we need to be adjacent to door; we can be at (4,6) (left of door) or (3,7) (above door) or (5,7) (below door) or (4,8) (right of door).
+[111] Which of those are reachable?
+[112] (3,7) is key location; we will be there after picking up key.
+[113] So we can open door from there.
+[114] That seems easiest.
+[115] After door opens, we can go from (3,7) down to (4,7) (door cell now open), then down to (5,7), then left to (5,6), left to (5,5), left to (5,4) '#', can't.","So left to (5,3) goal?",22,"[""new_inference"", ""restatement""]",new_inference,complete,no,no,yes,yes,high,Repeats goal location and infers it is reachable from current plan.,route_deliberation,openai/gpt-oss-20b,together_ai,general_multilabel_v2,03bec5630c79375785da435bcb5b5f3d46f8c151bc3d8fae5781a651aac54f33,0.0,42,True,low,1934,153,2087,"{""semantic_labels"": [""restatement"", ""new_inference""], ""annotation_status"": ""complete"", ""explicitly_revises_prior_reasoning"": ""no"", ""evaluates_prior_route_or_claim"": ""no"", ""repeats_prior_content"": ""yes"", ""introduces_new_information_or_plan"": ""yes"", ""confidence"": ""high"", ""rationale"": ""Repeats goal location and infers it is reachable from current plan.""}",1,

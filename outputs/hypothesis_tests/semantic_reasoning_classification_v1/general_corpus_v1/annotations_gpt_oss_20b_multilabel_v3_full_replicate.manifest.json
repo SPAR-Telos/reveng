@@ -1,0 +1,21 @@
+{
+  "duplicate_items": 0,
+  "few_shots": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/few_shot_examples_multilabel.json",
+  "few_shots_sha256": "c4936497622ac565c9cdab5c12fb2e44d38b5e6ae5d0c624d2c13cf57365d830",
+  "input": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/sentence_inventory.csv",
+  "input_sha256": "88c4fc661ce376f56b6ac0112b398f59f4dcdede35305d61131a4626792cd093",
+  "limit": null,
+  "max_attempts": 4,
+  "max_tokens": 700,
+  "model": "openai/gpt-oss-20b",
+  "output_schema_sha256": "a454dca0af0a18241d6c654baa965f4f2c245c0358f3314d77774c3a99ec1637",
+  "prompt_sha256": "c800bedc00066021cc443a021fd6c7cf0d82d06e27e3986d66b051f42b429891",
+  "prompt_version": "general_multilabel_v3_human_calibrated",
+  "reasoning": true,
+  "reasoning_effort": "low",
+  "sample_seed": 42,
+  "sample_strategy": "stratified",
+  "seed": 42,
+  "stream": false,
+  "temperature": 0.0
+}

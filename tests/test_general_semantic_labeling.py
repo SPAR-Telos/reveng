@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from types import SimpleNamespace
 
 import pandas as pd
@@ -27,6 +29,17 @@ from scripts.run_general_semantic_labeler import (
 from scripts.run_general_semantic_broad_labeler import (
     normalize_broad_payload,
     recover_truncated_broad_payload,
+)
+from scripts.run_general_semantic_together_multilabel_labeler import (
+    SEMANTIC_LABELS as MULTILABEL_SEMANTIC_LABELS,
+    derive_primary_label as derive_multilabel_primary_label,
+    few_shot_payload as multilabel_few_shot_payload,
+    normalize_payload as normalize_multilabel_payload,
+    prepare_source as prepare_multilabel_source,
+    select_source as select_multilabel_source,
+)
+from scripts.run_local_general_semantic_multilabel_labeler import (
+    build_gpt_oss_prompt as build_multilabel_gpt_oss_prompt,
 )
 
 
@@ -81,7 +94,8 @@ def test_general_sample_is_deterministic_and_covers_trajectories() -> None:
                     "sentence_id": f"t{trajectory}-s{sentence}",
                     "environment_id": f"t{trajectory}",
                     "reasoning_progress": (sentence + 0.5) / 20,
-                    "target_sentence_characters": ((sentence * 7 + trajectory * 3) % 20) + 3,
+                    "target_sentence_characters": ((sentence * 7 + trajectory * 3) % 20)
+                    + 3,
                     "previously_labelled": False,
                 }
             )
@@ -205,20 +219,32 @@ def test_response_parsing_and_few_shot_messages() -> None:
         "confidence": "high",
         "rationale": "It evaluates the route.",
     }
-    parsed = extract_json_object("Answer:\n```json\n" + __import__("json").dumps(payload) + "\n```")
+    parsed = extract_json_object(
+        "Answer:\n```json\n" + __import__("json").dumps(payload) + "\n```"
+    )
     assert normalize_payload(parsed)["primary_label"] == "verification"
     example = {"context_before": "Prior.", "target_sentence": "Check route.", **payload}
-    messages = build_messages(SimpleNamespace(context_before="", target_sentence="Go."), [example])
-    assert [message["role"] for message in messages] == ["system", "user", "assistant", "user"]
+    messages = build_messages(
+        SimpleNamespace(context_before="", target_sentence="Go."), [example]
+    )
+    assert [message["role"] for message in messages] == [
+        "system",
+        "user",
+        "assistant",
+        "user",
+    ]
     with pytest.raises(ValueError):
         normalize_payload({**payload, "primary_label": "made_up"})
-    assert normalize_broad_payload(
-        {
-            "broad_label": "route_deliberation",
-            "confidence": "medium",
-            "rationale": "It checks a proposed route.",
-        }
-    )["broad_label"] == "route_deliberation"
+    assert (
+        normalize_broad_payload(
+            {
+                "broad_label": "route_deliberation",
+                "confidence": "medium",
+                "rationale": "It checks a proposed route.",
+            }
+        )["broad_label"]
+        == "route_deliberation"
+    )
     recovered = recover_truncated_broad_payload(
         '{"broad_label":"route_deliberation","confidence":"high",'
         '"rationale":"It checks a route and was truncated'
@@ -233,6 +259,102 @@ def test_response_parsing_and_few_shot_messages() -> None:
     )
     assert normalized["broad_label"] == "state_readout"
     assert normalized["label_normalization_applied"] == "true"
+
+
+def test_multilabel_few_shots_are_valid_and_cover_taxonomy() -> None:
+    path = Path(
+        "outputs/hypothesis_tests/semantic_reasoning_classification_v1/"
+        "general_corpus_v1/few_shot_examples_multilabel.json"
+    )
+    examples = json.loads(path.read_text())
+    covered: set[str] = set()
+    for example in examples:
+        parsed = normalize_multilabel_payload(multilabel_few_shot_payload(example))
+        covered.update(parsed["semantic_labels"])
+    assert covered == set(MULTILABEL_SEMANTIC_LABELS)
+    assert any(len(example["semantic_labels"]) > 1 for example in examples)
+    assert any(
+        "action_commitment" in example["semantic_labels"]
+        and len(example["semantic_labels"]) > 1
+        for example in examples
+    )
+    assert "state_readout" in covered
+    assert "state_reconstruction" not in covered
+    by_target = {example["target_sentence"]: example for example in examples}
+    assert by_target["12: up to (5,5)."]["semantic_labels"] == [
+        "action_commitment",
+        "state_readout",
+    ]
+    assert by_target["Coordinates: row, column."]["semantic_labels"] == [
+        "procedural_continuation"
+    ]
+    assert by_target[
+        "Row 6 has open cells at (6,1), (6,2), and (6,3)."
+    ]["semantic_labels"] == ["state_readout"]
+
+
+def test_multilabel_normalization_and_primary_precedence() -> None:
+    payload = {
+        "semantic_labels": ["route_planning", "correction", "action_commitment"],
+        "annotation_status": "complete",
+        "explicitly_revises_prior_reasoning": "yes",
+        "evaluates_prior_route_or_claim": "yes",
+        "repeats_prior_content": "yes",
+        "introduces_new_information_or_plan": "yes",
+        "confidence": "high",
+        "rationale": "Replaces an old route and selects a move.",
+    }
+    parsed = normalize_multilabel_payload(payload)
+    assert parsed["semantic_labels"] == [
+        "correction",
+        "action_commitment",
+        "route_planning",
+    ]
+    assert derive_multilabel_primary_label(parsed["semantic_labels"]) == "correction"
+    with pytest.raises(ValueError, match="cannot accompany"):
+        normalize_multilabel_payload(
+            {
+                **payload,
+                "semantic_labels": ["procedural_continuation", "route_planning"],
+            }
+        )
+
+
+def test_multilabel_source_accepts_inventory_and_selects_hidden_duplicates() -> None:
+    source = pd.DataFrame(
+        {
+            "sentence_id": [f"s-{index}" for index in range(12)],
+            "environment_id": [f"t-{index % 3}" for index in range(12)],
+            "reasoning_progress": [(index + 0.5) / 12 for index in range(12)],
+            "context_before": ["Prior."] * 12,
+            "target_sentence": [f"Sentence {index}." for index in range(12)],
+            "target_sentence_characters": [12] * 12,
+        }
+    )
+    prepared = prepare_multilabel_source(source)
+    selected = select_multilabel_source(
+        prepared, limit=6, strategy="stratified", seed=42, duplicate_items=2
+    )
+    assert len(selected) == 8
+    assert selected["annotation_id"].nunique() == 8
+    assert selected["duplicate_of_annotation_id"].ne("").sum() == 2
+
+
+def test_local_multilabel_prompt_contains_valid_demonstrations() -> None:
+    path = Path(
+        "outputs/hypothesis_tests/semantic_reasoning_classification_v1/"
+        "general_corpus_v1/few_shot_examples_multilabel.json"
+    )
+    examples = json.loads(path.read_text())
+    prompt = build_multilabel_gpt_oss_prompt(
+        SimpleNamespace(context_before="Prior.", target_sentence="Choose LEFT."),
+        examples,
+    )
+    assert "semantic_labels" in prompt
+    assert "action_commitment" in prompt
+    assert "state_readout" in prompt
+    assert "state_reconstruction" not in prompt
+    assert "Target sentence:\nChoose LEFT." in prompt
 
 
 def test_gpu_check_never_requires_a_gpu() -> None:

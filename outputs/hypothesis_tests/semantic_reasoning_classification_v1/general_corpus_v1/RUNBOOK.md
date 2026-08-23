@@ -1,6 +1,37 @@
 # General semantic-labelling runbook
 
-Run from the repository root. Both judges are local and require CUDA; neither silently falls back to CPU.
+Run from the repository root. The current pipeline is the v3 multi-label
+taxonomy documented in `MULTILABEL_TAXONOMY.md`. Older single-label commands
+below are retained only as historical reference.
+
+## Current next step: validate, then run a fresh local smoke test
+
+The prompt and few-shot hash changed, so do not resume a v2 output.
+
+```bash
+.venv/bin/python scripts/run_local_general_semantic_multilabel_labeler.py \
+  --validate-only \
+  --limit 40 \
+  --duplicate-items 4
+
+.venv/bin/python scripts/run_local_general_semantic_multilabel_labeler.py \
+  --limit 40 \
+  --duplicate-items 4 \
+  --reasoning-effort low \
+  --output outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/annotations_gpt_oss_20b_multilabel_v3_smoke.csv
+```
+
+After reviewing that smoke test, run the calibrated 400-item pilot:
+
+```bash
+.venv/bin/python scripts/run_local_general_semantic_multilabel_labeler.py \
+  --limit 400 \
+  --duplicate-items 20 \
+  --reasoning-effort low \
+  --output outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/annotations_gpt_oss_20b_multilabel_v3_pilot400.csv
+```
+
+## Historical single-label pipeline
 
 ## 1. Smaller few-shot candidate
 

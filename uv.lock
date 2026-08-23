@@ -1430,16 +1430,16 @@ wheels = [
 
 [[package]]
 name = "kernels"
-version = "0.10.2"
+version = "0.12.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "huggingface-hub" },
     { name = "packaging" },
     { name = "pyyaml" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f6/66/49d1c53a5acd80a4176dbda2a4649dfd662e1b528ff5cf4d06896791f20c/kernels-0.10.2.tar.gz", hash = "sha256:d290d82639aa3da0abc9a5e3bd867a62447971c86a37bb277388d0fdadcb7b6e", size = 45273, upload-time = "2025-09-22T18:15:48.717Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/55/e7/fc300f86fbe8ff869745cc4c4b685f85519806b88c9b5cc80b774f7a21bf/kernels-0.12.0.tar.gz", hash = "sha256:df233e7cda223e40577221fee176e811696c95b803c2ad3714a5021f87266da6", size = 56666, upload-time = "2026-01-24T12:22:56.076Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cc/0c/fd99b94527cf6daaca3eab21eb8dad63c1b86d86efd0eb6f23d1ef1bcf3c/kernels-0.10.2-py3-none-any.whl", hash = "sha256:684efe1d6de19f20fd7eb4452691443664ea796f6af28cbe7fe9f73a5a792fff", size = 38197, upload-time = "2025-09-22T18:15:47.456Z" },
+    { url = "https://files.pythonhosted.org/packages/04/26/c6da76e89bb86996faaf35e5ed67981d0f31d094bd9f3586a0ef6294efee/kernels-0.12.0-py3-none-any.whl", hash = "sha256:c8034d2f8dc707b699c814646650256adfc04451a6b489d49614081d28e7605b", size = 55054, upload-time = "2026-01-24T12:22:54.93Z" },
 ]
 
 [[package]]
@@ -2972,7 +2972,7 @@ requires-dist = [
     { name = "isort", specifier = ">=6.0.1" },
     { name = "jinja2", specifier = ">=3.1.0" },
     { name = "jupyter", specifier = ">=1.1.1" },
-    { name = "kernels", specifier = "==0.10.2" },
+    { name = "kernels", specifier = "==0.12.0" },
     { name = "litellm", specifier = ">=1.77.1" },
     { name = "matplotlib", specifier = ">=3.10.6" },
     { name = "minigrid", specifier = "==3.0.0" },

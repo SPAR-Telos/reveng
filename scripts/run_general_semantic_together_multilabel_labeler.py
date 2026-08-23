@@ -24,9 +24,9 @@ DEFAULT_ROOT = Path(
     "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1"
 )
 DEFAULT_MODEL = "openai/gpt-oss-20b"
-PROMPT_VERSION = "general_multilabel_v2"
+PROMPT_VERSION = "general_multilabel_v3_human_calibrated"
 SEMANTIC_LABELS = (
-    "state_reconstruction",
+    "state_readout",
     "route_planning",
     "verification",
     "correction",
@@ -40,7 +40,7 @@ PRIMARY_PRECEDENCE = (
     "correction",
     "verification",
     "action_commitment",
-    "state_reconstruction",
+    "state_readout",
     "route_planning",
     "new_inference",
     "consolidation",
@@ -61,7 +61,7 @@ MODEL_OUTPUT_FIELDS = (
     "rationale",
 )
 BROAD_LABEL_MAP = {
-    "state_reconstruction": "state_readout",
+    "state_readout": "state_readout",
     "route_planning": "route_deliberation",
     "verification": "route_deliberation",
     "correction": "route_deliberation",
@@ -87,22 +87,33 @@ Do not judge factual correctness, action optimality, task success, change
 points, activations, or later text.
 
 Labels are non-exclusive:
-- state_reconstruction: reads or records visible environment/state information.
-- route_planning: proposes a move, route, subgoal, or action sequence.
+- state_readout: states environment or agent state, including an object/cell
+  observation or the coordinate reached by a definite numbered route step.
+- route_planning: explores or proposes a possible move, route, subgoal, or
+  action sequence that has not yet been selected.
 - verification: checks or evaluates an earlier fact, move, or route.
 - correction: rejects, revises, or reverses earlier reasoning.
 - new_inference: derives a new consequence, constraint, or conclusion.
 - consolidation: combines several earlier findings into a summary or decision.
-- restatement: repeats earlier substantive content without changing it.
-- procedural_continuation: bookkeeping or connective narration with no more
-  specific substantive function.
-- action_commitment: explicitly chooses or recommends the next concrete action.
+- restatement: repeats an earlier substantive proposition without changing it.
+- procedural_continuation: setup, formatting, bookkeeping, or connective
+  narration with no substantive state, plan, evaluation, or conclusion.
+- action_commitment: records an already selected concrete move or explicitly
+  chooses/recommends the next concrete move.
 
 Select every applicable label, normally one to three and never more than four.
-Use procedural_continuation only when no substantive label applies. A sentence
-may both repeat state information and verify it, or correct a route and propose
-a replacement. action_commitment requires an explicit chosen next action, not
-merely discussion of possible moves.
+Use procedural_continuation only when no substantive label applies. Repeated
+format or enumeration alone is procedural_continuation; restatement requires a
+repeated proposition. A sentence may both repeat state information and verify
+it, or correct a route and propose a replacement.
+
+Do not add route_planning to a definite numbered route step merely because it
+contains movement. Use action_commitment for a selected concrete step and
+state_readout as well when the sentence records its resulting coordinate. Use
+route_planning for alternatives, tentative routes, or construction of an
+unselected sequence. A coordinate in a hypothetical proposal is route_planning,
+not state_readout. Do not add restatement simply because the grid or topic was
+mentioned earlier: the same substantive proposition must actually be repeated.
 
 annotation_status is complete unless context is genuinely insufficient or the
 function remains ambiguous; then use unclear while still selecting the most

@@ -37,7 +37,7 @@ dependencies = [
     "transformers==5.5.4",
     "huggingface_hub>=1.5.0,<2.0",
     "bitsandbytes>=0.48.1",
-    "kernels==0.10.2",
+    "kernels==0.12.0",
     "scikit-learn>=1.7.0",
     "rbeast==0.1.25",
 ]

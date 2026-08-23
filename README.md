@@ -1,5 +1,11 @@
 # reveng
 
+Start with [the repository and artifact guide](docs/REPOSITORY_AND_ARTIFACT_GUIDE.md)
+for pipeline lineage, raw-output locations, frozen judge/model settings,
+environment reproduction, remote backups, and machine-migration requirements.
+The same lineage is available as
+[`docs/artifact_index.csv`](docs/artifact_index.csv).
+
 ## Setup
 
 ```bash
