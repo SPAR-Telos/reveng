@@ -1,0 +1,23 @@
+{
+  "analysis": "reasoning_topology_v1",
+  "status": "completed",
+  "uses_pca": false,
+  "uses_clustering": false,
+  "cohort": "data/behavioral_probes/reasoning_belief_action_cohorts/matched_46_candidates.csv",
+  "cohort_sha256": "e1b810b23bd819f0e476a1fb7b731585d097c21641809ce90b6963d327cbf84c",
+  "wrong_turns": "data/behavioral_probes/step_reasoning_drift_matched_46_behavioral/trajectory_wrong_turn_summary.csv",
+  "wrong_turns_sha256": "d660fa2ac95eed8c42c113d68d4d2a16e1c3e2527ed8dafc49e9d941f6a283f9",
+  "activation_root": "outputs/activation_collection/gpt_oss_20b_boundary_v1",
+  "layers": [
+    8,
+    15,
+    23
+  ],
+  "primary_layer": 15,
+  "representation": "sentence_mean",
+  "resampled_points": 32,
+  "seed": 42,
+  "states": 46,
+  "matched_pairs": 23,
+  "validation_groups": 11
+}

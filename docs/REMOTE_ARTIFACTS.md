@@ -61,3 +61,28 @@ compare the local or remote manifests for input hashes, model and revision,
 judge prompt/schema/few-shot hashes, decoding settings, seeds, layer sets, and
 representation definitions. Use a new output directory when any of these
 change.
+
+## New reasoning experiment chain (2026-08-24)
+
+The exact per-file lineage, sizes, and SHA-256 values are in
+[`reasoning_experiment_lineage.csv`](reasoning_experiment_lineage.csv). Files
+at or below 50 MB belong in GitHub. The following oversized row-level output
+belongs at the same repository-relative path in the private consolidated
+dataset:
+
+`outputs/hypothesis_tests/semantic_regime_transition_prediction_v1/prediction_rows.csv`
+
+Upload after authenticating locally (the credential directory is ignored):
+
+```bash
+HF_HOME=.hf_home uv run hf auth login
+HF_HOME=.hf_home uv run hf upload \
+  project-telos/reveng-experiment-artifacts \
+  outputs/hypothesis_tests/semantic_regime_transition_prediction_v1/prediction_rows.csv \
+  outputs/hypothesis_tests/semantic_regime_transition_prediction_v1/prediction_rows.csv \
+  --repo-type dataset \
+  --commit-message "Add semantic regime prediction rows"
+```
+
+Do not declare this instance disposable until that upload and the corresponding
+Git push have both been verified remotely.

@@ -1,0 +1,46 @@
+{
+  "analysis": "reasoning_dynamics_graph_v1",
+  "change_points_sha256": "e72d3613b1f6bfabb47229a4783035a409d8f8336a92b4eb971d0029e825ae72",
+  "cue_columns": [
+    "explicitly_revises_prior_reasoning",
+    "evaluates_prior_route_or_claim",
+    "repeats_prior_content",
+    "introduces_new_information_or_plan"
+  ],
+  "original_sha256": "f17cf93959bb74dbdfc78672ecbad7ba77d873afb9c63b30f58ac830aa773285",
+  "positions_sha256": "5d032735b8a9704fbfd7ea9ff502d0c4e5671b07292efb60197d42b2bf2f1987",
+  "replicate_sha256": "1f4320e9baab8558c842ffaf35af5090adba086006bc276e46ed2b53f13e74a3",
+  "seed": 42,
+  "semantic_labels": [
+    "state_readout",
+    "route_planning",
+    "verification",
+    "correction",
+    "new_inference",
+    "consolidation",
+    "restatement",
+    "procedural_continuation",
+    "action_commitment"
+  ],
+  "sentence_horizons": [
+    1,
+    2,
+    3,
+    5,
+    8,
+    13
+  ],
+  "token_horizons": [
+    32,
+    64,
+    128,
+    256
+  ],
+  "tokenizer": "o200k_harmony",
+  "word_horizons": [
+    32,
+    64,
+    128,
+    256
+  ]
+}

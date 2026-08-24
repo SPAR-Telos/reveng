@@ -4,11 +4,21 @@ This is the entry point for understanding the repository, finding raw outputs,
 and moving work to another machine. The machine-readable companion is
 [`docs/artifact_index.csv`](artifact_index.csv).
 
-## Migration status (2026-08-23)
+For the current topology → regimes → semantic prediction → process graph →
+typed DAG-audit chain, start with
+[`REASONING_EXPERIMENT_GUIDE.md`](REASONING_EXPERIMENT_GUIDE.md). Its
+file-level checksummed companion is
+[`reasoning_experiment_lineage.csv`](reasoning_experiment_lineage.csv).
 
-The repository and research artifacts have been split between GitHub and
-Hugging Face. Rebuildable environments, credentials, download caches, model
-weights, bytecode, and one redundant activation ZIP are intentionally excluded.
+## Migration status (2026-08-24)
+
+The repository and earlier research artifacts have been split between GitHub
+and Hugging Face. The newer reasoning experiment chain must be considered
+migration-complete only when its Git commit is on `origin` and the oversized
+row-level prediction table is present in the private Hugging Face artifact
+repository at the path recorded in `reasoning_experiment_lineage.csv`.
+Rebuildable environments, credentials, download caches, model weights,
+bytecode, and one redundant activation ZIP are intentionally excluded.
 
 Verified remote state:
 
@@ -150,9 +160,10 @@ uv sync --locked
 uv run pytest tests/test_general_semantic_labeling.py
 ```
 
-Do not copy `.venv`; rebuild it. The current dependency change to
-`kernels==0.12.0` and its matching `uv.lock` change are uncommitted and must be
-preserved together. CUDA builds of PyTorch are hardware/driver-specific; for
+Do not copy `.venv`; rebuild it. `pyproject.toml` and `uv.lock` are
+synchronized: `uv lock --check` succeeds, the lock resolves 211 packages, and
+`uv sync --locked --dry-run` reports no changes as of 2026-08-24. CUDA builds
+of PyTorch are hardware/driver-specific; for
 the Gemma/Qwen local preflight use the dedicated requirements and setup in
 `smoke_test/REMOTE_RUNBOOK.md` rather than silently changing the main lock.
 

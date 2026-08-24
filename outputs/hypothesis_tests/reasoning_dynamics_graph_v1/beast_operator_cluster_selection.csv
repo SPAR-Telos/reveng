@@ -1,0 +1,6 @@
+n_clusters,silhouette,minimum_cluster_size,eligible,selected
+2,0.3508069509570751,55,True,False
+3,0.4019968484903732,40,True,False
+4,0.4359223229412292,18,True,False
+5,0.4769843251163007,15,True,True
+6,0.4506935979091288,15,True,False

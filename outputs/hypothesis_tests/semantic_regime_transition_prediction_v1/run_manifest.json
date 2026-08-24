@@ -1,0 +1,44 @@
+{
+  "analysis": "semantic_regime_transition_prediction_v1",
+  "cue_columns": [
+    "explicitly_revises_prior_reasoning",
+    "evaluates_prior_route_or_claim",
+    "repeats_prior_content",
+    "introduces_new_information_or_plan"
+  ],
+  "history_sizes": [
+    1,
+    2,
+    3,
+    5,
+    8
+  ],
+  "original_annotations": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/annotations_gpt_oss_20b_multilabel_v3_full.csv",
+  "original_sha256": "f17cf93959bb74dbdfc78672ecbad7ba77d873afb9c63b30f58ac830aa773285",
+  "replicate_annotations": "outputs/hypothesis_tests/semantic_reasoning_classification_v1/general_corpus_v1/annotations_gpt_oss_20b_multilabel_v3_full_replicate.csv",
+  "replicate_sha256": "1f4320e9baab8558c842ffaf35af5090adba086006bc276e46ed2b53f13e74a3",
+  "seed": 42,
+  "semantic_configs": [
+    "none",
+    "original_all",
+    "replicate_all",
+    "intersection_all",
+    "union_all",
+    "mean_all",
+    "mean_labels",
+    "mean_cues"
+  ],
+  "semantic_labels": [
+    "state_readout",
+    "route_planning",
+    "verification",
+    "correction",
+    "new_inference",
+    "consolidation",
+    "restatement",
+    "procedural_continuation",
+    "action_commitment"
+  ],
+  "transitions": "outputs/hypothesis_tests/reasoning_regime_coarse_graining_v1/transition_rows.csv",
+  "transitions_sha256": "713f96738c4ec22ef5a836fa6153e1dbe553c9bf3b92791fc2e929ef4984d02c"
+}

@@ -1,0 +1,9 @@
+activation_metric,behavioral_metric,n_traces,spearman_rho,uncorrected_p,bh_q
+late_to_early_dispersion_ratio,recurrence_returns,46,0.16573071112219837,0.2710099836482861,0.5808577112240549
+late_to_early_dispersion_ratio,optimality_losses,46,0.17923774787412788,0.23331005597519078,0.5808577112240549
+late_to_early_dispersion_ratio,mean_transition_surprisal_bits,46,0.0923219241443108,0.5417087578345627,0.5808577112240549
+late_to_early_dispersion_ratio,stable_suffix_fraction,46,-0.11538698735738515,0.44509902494124953,0.5808577112240549
+nonlocal_recurrence,recurrence_returns,46,-0.1210413843547609,0.4229566161557865,0.5808577112240549
+nonlocal_recurrence,optimality_losses,46,-0.09271349148843099,0.5399884548351055,0.5808577112240549
+nonlocal_recurrence,mean_transition_surprisal_bits,46,-0.18840579710144925,0.20986775566012622,0.5808577112240549
+nonlocal_recurrence,stable_suffix_fraction,46,0.0835646006783842,0.5808577112240549,0.5808577112240549

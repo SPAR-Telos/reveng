@@ -258,6 +258,10 @@ data/behavioral_probes/**/*.safetensors
 data/behavioral_probes/**/*.npz
 data/behavioral_probes/**/*.pkl
 outputs/**/*.pt
+
+# Oversized row-level output: tracked by checksum and stored in the private
+# project-telos/reveng-experiment-artifacts Hugging Face dataset.
+outputs/hypothesis_tests/semantic_regime_transition_prediction_v1/prediction_rows.csv
 outputs/**/*.bf16
 outputs/**/*.npz
 outputs/**/*.pkl

@@ -1,0 +1,26 @@
+{
+  "analysis": "reasoning_regime_coarse_graining_v1",
+  "counts": {
+    "matched_pairs": 23,
+    "source_trajectories": 31,
+    "states": 46,
+    "strict_final_suboptimal_failures": 8,
+    "transitions": 7038,
+    "validation_groups": 11
+  },
+  "positions": "outputs/hypothesis_tests/action_distribution_change_points_v1/position_distribution_metrics.csv",
+  "positions_sha256": "54edb13ebda0a7a2d62fec6c7a786482f69c74b4c3747373d1876a79239b0d52",
+  "regimes": [
+    "unsettled_optimal",
+    "unsettled_suboptimal",
+    "stable_optimal",
+    "stable_suboptimal"
+  ],
+  "seed": 42,
+  "smoothing_alpha": 0.5,
+  "topology": "outputs/hypothesis_tests/reasoning_topology_v1/trace_metrics.csv",
+  "topology_sha256": "5e5d399bf08a916c11911f101bf44814716980a6b488ab99751c8fb5c1409eec",
+  "unusual_transition_definition": "held-out-control 95th percentile of leave-group-out transition surprisal among non-self edges that do not enter stable selection; applied only to those edges",
+  "uses_clustering": false,
+  "uses_pca": false
+}
