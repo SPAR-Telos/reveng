@@ -19,8 +19,8 @@ datasets under `project-telos`.
 
 Repository: `project-telos/reveng-experiment-artifacts` (private)
 
-Verified revision: `708b1ce4e77351582e364d4581b50485fba61568`
-(38,002 files; approximately 2.60 GB on the Hub).
+Verified revision: `7541dd2dcf0b9b2faec6c4965e85779b84b36753`
+(38,003 files; approximately 2.60 GB on the Hub).
 
 The remote paths preserve their repository-relative layout. The contents and
 local sizes at migration time are listed in

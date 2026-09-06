@@ -1,0 +1,1201 @@
+\documentclass{article}
+
+% if you need to pass options to natbib, use, e.g.:
+\PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2026
+
+% The authors should use one of these tracks.
+% Before accepting by the NeurIPS conference, select one of the options below.
+% 0. "default" for submission
+\usepackage[dblblindworkshop]{neurips_2026}
+% the "default" option is equal to the "main" option, which is used for the Main Track with double-blind reviewing.
+% 1. "main" option is used for the Main Track
+%  \usepackage[main]{neurips_2026}
+% 2. "position" option is used for the Position Paper Track
+%  \usepackage[position]{neurips_2026}
+% 3. "eandd" option is used for the Evaluations & Datasets Track
+ % \usepackage[eandd]{neurips_2026}
+% 4. "creativeai" option is used for the Creative AI Track
+%  \usepackage[creativeai]{neurips_2026}
+% 5. "sglblindworkshop" option is used for the Workshop with single-blind reviewing
+ % \usepackage[sglblindworkshop]{neurips_2026}
+% 6. "dblblindworkshop" option is used for the Workshop with double-blind reviewing
+%  \usepackage[dblblindworkshop]{neurips_2026}
+% 7. "education" option is used for the Education Track
+%  \usepackage[education]{neurips_2026}
+
+
+% After being accepted, the authors should add "final" behind the track to compile a camera-ready version.
+% 1. Main Track
+ % \usepackage[main, final]{neurips_2026}
+% 2. Position Paper Track
+%  \usepackage[position, final]{neurips_2026}
+% 3. Evaluations & Datasets Track
+ % \usepackage[eandd, final]{neurips_2026}
+% 4. Creative AI Track
+%  \usepackage[creativeai, final]{neurips_2026}
+% 5. Workshop with single-blind reviewing
+%  \usepackage[sglblindworkshop, final]{neurips_2026}
+% 6. Workshop with double-blind reviewing
+%  \usepackage[dblblindworkshop, final]{neurips_2026}
+% Note. For the workshop paper template, both \title{} and \workshoptitle{} are required, with the former indicating the paper title shown in the title and the latter indicating the workshop title displayed in the footnote.
+% For workshops (5., 6.), the authors should add the name of the workshop, "\workshoptitle" command is used to set the workshop title.
+% \workshoptitle{WORKSHOP TITLE}
+% 7. Education Track
+% \usepackage[education, final]{neurips_2026}
+
+% "preprint" option is used for arXiv or other preprint submissions
+ % \usepackage[preprint]{neurips_2026}
+
+% to avoid loading the natbib package, add option nonatbib:
+%    \usepackage[nonatbib]{neurips_2026}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{natbib}
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{fancyvrb}
+\usepackage{subcaption}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usetikzlibrary{arrows.meta,calc,positioning}
+
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{4pt}
+\setlength{\belowcaptionskip}{-2pt}
+%\setlist[itemize]{leftmargin=*, topsep=2pt, itemsep=1pt, parsep=0pt}
+
+\input{macros}
+
+% Note. For the workshop paper template, both \title{} and \workshoptitle{} are required, with the former indicating the paper title shown in the title and the latter indicating the workshop title displayed in the footnote. 
+% \workshoptitle{The First Workshop on Interpreting Agent Behavior - NeurIPS 2026}
+\title{How Agents Know but Fail to Act:\\ Belief Action Gap in Language Model Agents}
+
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to break the
+% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
+% authors names on the first line, and the last on the second line, try using
+% \AND instead of \And before the third author name.
+
+
+\author{%
+  David S.~Hippocampus\thanks{Use footnote for providing further information
+    about author (webpage, alternative address)---\emph{not} for acknowledging
+    funding agencies.} \\
+  Department of Computer Science\\
+  Cranberry-Lemon University\\
+  Pittsburgh, PA 15213 \\
+  \texttt{hippo@cs.cranberry-lemon.edu} \\
+  % examples of more authors
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \AND
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+}
+
+
+\begin{document}
+
+
+\maketitle
+
+
+\begin{abstract}
+Language model (LM) agents can fail due to a variety of reasons and distinguishing the failure mode is important because they require different explanations and interventions. We study how state beliefs, action values, and action preferences interact as LM agents reason and commit to decisions in text-rendered grid worlds. We estimate task-relevant beliefs using report-based and representation-based probes and action values using inverse reinforcement learning (IRL). We find that task-relevant state and value information is often represented more reliably than it is reflected in behaviour. Tracking action preferences throughout reasoning further shows that decisions sharpen around a commitment point, belief uncertainty decreases near commitment, and unsuccessful decisions tend to commit later, although individual belief changes do not consistently explain shifts in action preference. Finally, causal interventions show that actions strongly follow patched reasoning trajectories, whereas altering pre-reasoning state representations alone does not reliably change behaviour. Together, our results suggest that some agent failures arise not from missing task-relevant information, but from how available information is translated into and stabilized as an action. Our framework helps to distinguish between belief-related failures from failures of action selection and identify when represented information becomes causally relevant to behaviour.
+
+\end{abstract}
+
+
+\section{Introduction}
+As language models are increasingly used as agents that observe, reason about, and act within external environments, evaluating their alignment between model beliefs and actions, i. e success
+requires assessing whether they represent those environments accurately and how they translate representations into appropriate actions \cite{wang2024survey}.
+Evaluation based on outputs alone cannot answer these questions and therefore often cannot diagnose \emph{why} an agent fails.
+An incorrect action may result from an inaccurate belief about the current environment state, a failure to translate an accurate belief into an appropriate action, or a value function that assigns high value to states that are undesirable for the task. 
+
+These failure modes can produce similar observable behaviour despite having different underlying causes, and distinguishing among them is important, particularly from a safety perspective \cite{amodei2016concrete}. 
+An agent that acts incorrectly because it misperceives its environment presents a fundamentally different failure mode from one that represents the environment accurately but nevertheless selects an incorrect or undesirable action. 
+Without identifying whether a failure originates in the agent's beliefs, its assigned values, or the mechanism that translates them into actions, an intervention may correct the observed behaviour without addressing its underlying cause.
+
+In this work, to analyse these failure modes, we view an agent's behaviour as the result of three interacting components. 
+The first is its belief about the current state of the environment. 
+We use \emph{belief} to refer to any interpretable internal representation of the environment given the information available to the agent. The second component is the agent's value or preference structure, which determines how it ranks possible states, actions, or trajectories.
+The third is its decision mechanism, which defines how these beliefs and values are converted into a selected action. 
+Distinguishing these three components supports a more precise diagnosis of agent failures. 
+For example, an inaccurate state estimate may indicate deficiencies in perception or memory, whereas an inappropriate value ordering suggests a problem with the objective or planning process. 
+A failure that occurs despite accurate state information and appropriate action preferences instead indicates a breakdown in the mechanism through which available information influences behaviour.
+
+Existing work provides complementary methods for studying individual components of this process however they mostly focused on this as seperate objects. 
+White-box methods can test whether model activations encode spatial structure and other task-relevant beliefs \cite{gurnee2024language,arghal2026behavioural}, while behavioural methods such as inverse reinforcement learning (IRL) infer latent values or preferences from observed actions \cite{ziebart2008maximum}. 
+Other studies examining how decisions emerge during generation show that information about future responses can be decoded from model activations before those responses are produced \cite{dong2025emergent}. 
+When available, chain-of-thought reasoning traces provide an additional view of this process, although they are not guaranteed to reflect the actual computations responsible for the final answer \cite{lanham2023measuring}.
+Together, these approaches provide the means to study beliefs, values, and action formation at different levels of analysis. 
+Studying these components jointly is necessary to determine how state representations and action preferences develop during reasoning, when they begin to shape action selection, and where failures arise in the progression from representation to behaviour.
+
+We investigate these questions in a text-rendered grid world, where the possible states and actions can be enumerated and the transition dynamics and optimal policy are known. 
+This setting allows us to measure accurately whether the model has inferred the current state correctly and whether that information leads it to select the appropriate action.
+We estimate task-relevant beliefs from both explicit model reports and internal model activations, and infer the agent's value structure from its behaviour using inverse reinforcement learning. 
+We then track how beliefs and action preferences evolve during reasoning and apply causal interventions to test when and where represented information begins to determine the final action. 
+Our main contributions are as follows:
+\begin{itemize}[
+    leftmargin=1.4em,
+    label=\raisebox{0.35ex}{\rule{0.75ex}{0.75ex}},
+    labelsep=0.5em
+]
+    % OTHER TITLES: Distinguishing belief failures from action failures, Belief–Action Decomposition, Decomposition of Belief and Action Failures, Diagnostic Analysis of Belief and Action
+    \item \textbf{Belief--action diagnostic analysis.} 
+    We distinguish failures caused by inaccurate state beliefs from cases in which task-relevant information is represented but does not lead to the appropriate action.
+    % OTHER TITLES: Tracking when decisions become stable, Dynamics of Beliefs and Action Preferences, Temporal Dynamics of Action Formation, Action Commitment Dynamics
+    \item \textbf{Temporal analysis of decision formation.} 
+    We track beliefs and action preferences throughout reasoning and identify when the final action becomes stable; this allows us to examine how belief accuracy, uncertainty, and decision quality relate to action commitment.
+    % OTHER TITLES: Testing when representations causally mediate behaviour, Causal Analysis of Decision Formation, Causal Analysis of Representation-to-Action Influence, Causal Tracing of Belief-to-Action Influence, Causal Analysis of Action Formation, Causal Intervention Analysis
+    \item \textbf{Causal tracing of decision formation.} 
+    We intervene on reasoning trajectories and internal model activations to determine when represented information causally affects behaviour rather than being merely decodable.
+    % OTHER TITLES: Identifying failures between representation and action,  Empirical Findings on the Belief-Action Gap. Empirical Evidence of Representation-to-Action Failures, Empirical Findings on the Representation–Behaviour Gap
+    \item \textbf{Empirical evidence of the belief--action gap.}
+    We find that task-relevant information is represented more reliably than it is expressed in behaviour, showing that failures can arise in the mechanism that converts represented state information into action.
+\end{itemize}
+
+
+\section{Estimating Beliefs and Values}
+\label{sec:estimating}
+
+We characterise each agent decision using an estimated belief distribution $\hat q_t(s)$ over the current environment state, a fixed transition function $T$, a learned state-value function $g_\theta(s)$ that assigns a scalar value to each state, and the emitted action $a_t$. 
+For diagnostic purposes, without assuming that the language model performs this computation internally, we define the utility of each action from the model's subjective perspective as the expected value of its successor state under the estimated belief distribution, given the transition function:
+\begin{align}
+    U_{\theta,t}(a)
+    &=
+    \mathbb{E}_{s \sim \hat q_t}
+    \left[g_\theta\bigl(T(s,a)\bigr)\right].
+    \label{eq:expected-action-preference}
+\end{align}
+We estimate $\hat q_t$ from model verbal reports and internal activations (\Cref{sec:estimating-beliefs}) and infer $g_\theta$ from state--action pairs using inverse reinforcement learning (\Cref{sec:estimating-values}). 
+We then compare the expected successor-state value of the emitted action with the highest value assigned to any available action. 
+The difference between these quantities is the regret of $a_t$, which we use to define the \emph{belief--action gap}. 
+
+
+% Our initial goal is to determine whether there is a difference between the internal encodings of an agent i.e. beliefs and the actions it took. Finding this requires an estimate of what state the model takes itself to be in, an estimate of which states are preferable under the task, and the action the model ultimately selects. This section defines these quantities and shows how they are combined into the belief action gap.
+
+\subsection{Environment and Data}
+\label{sec:env-data}
+
+We study a language model agent in a fully observable, text-rendered grid world, following the setup of \citet{arghal2026behavioural}. 
+The grid contains walls, open cells, a goal cell, a locked door that blocks the route to the goal, and a key that the agent must collect before passing through the door. 
+The key is collected automatically when the agent enters its cell, after which the door becomes traversable. Transitions are deterministic: a valid movement changes the agent's position by one cell, whereas an action directed towards a wall or locked door leaves the agent in its current position.
+Figure~\ref{fig:environment} shows an example grid.
+
+
+\begin{figure}[htbp]
+\centering
+
+\begin{subfigure}[c]{0.42\textwidth}
+\centering
+\begin{BVerbatim}
+  0 1 2 3 4 5 6
+0 # # # # # # #
+1 # A . . # G #
+2 # . # _ # . #
+3 # . K _ D . #
+4 # . . . # . #
+5 # . . . # # #
+6 # # # # # # #
+\end{BVerbatim}
+
+\caption{}
+\label{fig:grid_text}
+\end{subfigure}
+\hspace{0.02\textwidth}
+\begin{subfigure}[c]{0.42\textwidth}
+\centering
+
+\begin{tikzpicture}[scale=0.45]
+
+% Full grid
+\draw[step=1cm,black,thin] (0,0) grid (7,7);
+
+
+% Row 0
+\fill (0,6) rectangle (1,7);
+\fill (1,6) rectangle (2,7);
+\fill (2,6) rectangle (3,7);
+\fill (3,6) rectangle (4,7);
+\fill (4,6) rectangle (5,7);
+\fill (5,6) rectangle (6,7);
+\fill (6,6) rectangle (7,7);
+
+% Row 1
+\fill (0,5) rectangle (1,6);
+\fill (4,5) rectangle (5,6);
+\fill (6,5) rectangle (7,6);
+
+% Row 2
+\fill (0,4) rectangle (1,5);
+\fill (2,4) rectangle (3,5);
+\fill (4,4) rectangle (5,5);
+\fill (6,4) rectangle (7,5);
+
+% Row 3
+\fill (0,3) rectangle (1,4);
+\fill (6,3) rectangle (7,4);
+
+% Row 4
+\fill (0,2) rectangle (1,3);
+\fill (4,2) rectangle (5,3);
+\fill (6,2) rectangle (7,3);
+
+% Row 5
+\fill (0,1) rectangle (1,2);
+\fill (4,1) rectangle (5,2);
+\fill (5,1) rectangle (6,2);
+\fill (6,1) rectangle (7,2);
+
+% Row 6
+\fill (0,0) rectangle (1,1);
+\fill (1,0) rectangle (2,1);
+\fill (2,0) rectangle (3,1);
+\fill (3,0) rectangle (4,1);
+\fill (4,0) rectangle (5,1);
+\fill (5,0) rectangle (6,1);
+\fill (6,0) rectangle (7,1);
+
+% Objects
+\node at (1.5,5.5) {\textbf{A}};
+\node at (5.5,5.5) {\textbf{G}};
+\node at (2.5,3.5) {\textbf{K}};
+\node at (4.5,3.5) {\textbf{D}};
+
+% Coordinate labels
+\foreach \x in {0,...,6}
+    \node[font=\scriptsize] at (\x+0.5,7.25) {\x};
+
+\foreach \r in {0,...,6}
+    \node[font=\scriptsize] at (-0.25,6.5-\r) {\r};
+
+\end{tikzpicture}
+
+\caption{}
+\label{fig:grid_visual}
+\end{subfigure}
+
+\caption{
+Example DoorKey environment shown in text and spatial form.
+The language model receives the text-rendered grid in \textbf{(a)}, while \textbf{(b)} visualises the same underlying environment used to define states, transitions, and planner-optimal actions.
+$A$ denotes the agent, $K$ the key, $D$ the door, $G$ the goal, and filled cells denote walls. \td{Can we use the same renderings as in the goal-directedness paper?}
+}
+\label{fig:environment}
+\end{figure}
+
+For a fixed grid layout $G$, we represent the environment state at decision step $t$ as
+\begin{align}
+    s_t
+    &=
+    (x_t,y_t,h_t,d_t),
+    \label{eq:task-state}
+\end{align}
+where $(x_t,y_t)$ are the agent's grid coordinates, $h_t \in \{0,1\}$ indicates whether it is carrying the key, and $d_t \in \{0,1\}$ indicates whether the door is open. 
+The layout $G$ specifies the fixed locations of walls, the key, the door, and the goal.
+Given $G$, a state $s$, and an action $a$, the known transition function $T_G(s,a)$ returns the successor state.
+We use A$^{\star}$ search on the augmented state space in Equation~\ref{eq:task-state} (i.e., accounting for whether the key has been collected and whether the door has been opened) to compute the length $D_G^*(s)$ of a shortest valid path from $s$ to the goal \cite{hart1968formal}. 
+The set of optimal actions is
+\begin{align}
+    A_G^*(s)
+    &=
+    \underset{a \in \mathcal A}{\arg\min}\;
+    D_G^*\bigl(T_G(s,a)\bigr),
+    \label{eq:optimal-action-set}
+\end{align}
+which contains every action whose successor state lies on a shortest valid path to the goal.
+
+At each step, the language model agent receives the complete grid, including coordinate labels, produces a sequence of reasoning tokens $R_t =(r_{t,1},\ldots,r_{t,m_t})$, and emits one action from $\mathcal A = \{\textsc{left},\textsc{right},\textsc{up},\textsc{down}\}$. 
+The target agent we study is \texttt{gpt-oss-20b}, a reasoning model.
+\td{Add the complete model configuration and dataset statistics here or in an appendix, including the decoding parameters, number of grids and trajectories, and train/validation/test splits.}
+
+The main belief and value analyses use a fixed $9\times9$ DoorKey layout. The grid contains 39 walkable cells and admits 117 valid task states after accounting for the three reachable key and door phases. The datasets used by the different analyses are summarised in \Cref{tab:data-summary}.
+
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{ll}
+\toprule
+Analysis & Size \\
+\midrule
+IRL  & 100 trajectories, 1822 transitions \\
+PRE--POST GAP  & 200 trajectories, 3194 steps \\
+Probe evaluation  & 80/20 train/test \\
+IRL evaluation & 20\% held-out validation \\
+\bottomrule
+\end{tabular}
+\caption{Datasets and evaluation splits used in the main belief and value analyses.
+Splits are performed by environment state so that all occurrences of a given
+state belong to the same partition.}
+\label{tab:data-summary}
+\end{table}
+
+For representation-based analyses, we use hidden activations from layers 7, 15 and 23. 
+PRE representations are constructed from three adjacent prompt-suffix token activations immediately preceding reasoning, while POST representations use three adjacent output-side activations at the end of reasoning. Concatenating the three $2880$-dimensional token representations gives an $8640$-dimensional feature vector.
+
+Linear belief probes use an 80/20 split by unique full state. All observations
+corresponding to the same state are assigned to the same partition, preventing
+state overlap between training and evaluation. The IRL models use a state-disjoint 20\% held-out validation split. The PRE--POST GAP analysis is reported on all steps, the subset on which all probes are correct, and the
+probe train and test subsets.
+
+For forced-action elicitation, we evaluate both deterministic decoding at temperature $0$ and stochastic decoding at temperature $0.7$. The
+pre-reasoning condition forces an action without allowing an intervening
+chain of thought.
+
+\subsection{Estimating Beliefs}
+\label{sec:estimating-beliefs}
+
+We estimate the model's beliefs about task-relevant state variables using two approaches. 
+Representation-based estimation decodes state variables from the model's activations, whereas report-based estimation measures what the model asserts when directly queried about the environment.
+The two approaches currently overlap on a subset of state features, most directly local wall information. \mg{Why don't we cover the all state features with both approaches?}  
+For these shared features, we compare their predictions at the same environment decision step $t$ %using the corresponding PRE or POST representation, 
+to measure agreement between explicitly reported and internally decoded information. 
+To compute the belief--action gap, we use the representation-based estimates; report-based estimates are analysed separately to test whether the model's actions are consistent with the state information it explicitly reports.
+
+
+\subsubsection{Representation-based Belief Estimation}
+\label{sec:activation-based-estimation}
+
+We obtain representation-based belief estimates by training linear probes on language model activations to predict the components of the task-relevant state \cite{alain2016understanding,gurnee2024language}. Let $p \in \{0,\ldots,m_t\}$ index positions along the reasoning trajectory $R_t$. We focus primarily on two positions. The \emph{PRE} representation is extracted at the final input token immediately before reasoning begins, corresponding to $p=0$. The \emph{POST} representation is extracted at the end of the reasoning trace, immediately before the final action is generated, corresponding to $p=m_t$. For decision step $t$, reasoning position $p$, and model layer $\ell$, let $\mathbf{u}_{t}^{(\ell,p)}$ denote the corresponding activation vector.
+
+We train one probe for each state component in \Cref{eq:task-state}. Position is decoded jointly as a single categorical variable over grid locations, $z_{\mathrm{pos}}=(x,y)$. The other targets are key possession $z_{\mathrm{key}}=h$ and door status $z_{\mathrm{door}}=d$. Let $\mathcal Z_j$ denote the set of possible values for component $j$. The corresponding probe produces the distribution
+
+\begin{align}
+    q_{t,p,j}^{\mathrm{probe}}(z_j)
+    &=
+    \operatorname{softmax}
+    \left(
+        W_j \mathbf{u}_{t}^{(\ell,p)} + \mathbf{b}_j
+    \right)_{z_j},
+    \qquad z_j \in \mathcal Z_j.
+    \label{eq:component-probe}
+\end{align}
+The probes are trained independently because their target variables have different domains and label spaces. \td{Say we focus on $p=0$ and $p=m_t$, i.e., PRE and POST, and say exactly which tokens this corresponds to.}
+
+We combine the three component distributions into a distribution over complete task states.
+Let $\mathcal S_G$ denote the set of valid states for layout $G$.
+For a state $s=(x,y,h,d)$, we first form the factorised distribution
+\begin{align}
+    \widetilde q_{t,p}(s)
+    &=
+    q_{t,p,\mathrm{pos}}^{\mathrm{probe}}(x,y) \ 
+    q_{t,p,\mathrm{key}}^{\mathrm{probe}}(h) \ 
+    q_{t,p,\mathrm{door}}^{\mathrm{probe}}(d),
+    \label{eq:factorised-probe-belief}
+\end{align}
+treating the three state components as conditionally independent given the model activation. 
+We then normalise the distribution over valid states:
+\begin{align}
+    q^{\mathrm{probe}}_{t,p}(s)
+    &=
+    \frac{
+        \mathbbm{1}[s \in \mathcal S_G]\,\widetilde q_{t,p}(s)
+    }{
+        \sum_{s' \in \mathcal S_G} \widetilde q_{t,p}(s')
+    }.
+    \label{eq:joint-probe-belief}
+\end{align}
+We quantify uncertainty in the resulting state estimate using Shannon entropy.
+This allows us to distinguish incorrect but uncertain beliefs from incorrect beliefs held with high confidence and, when applied at multiple reasoning steps, to track changes in uncertainty over the course of reasoning.
+
+We note that successful decoding establishes that information about a state variable is available in the model's activations, but it does not establish that the information influences the selected action \cite{elazar2021amnesic,belinkov2022probing}.
+This distinction between decodability and causal use motivates the interventions in Section~\ref{sec:causal}.
+
+
+\subsubsection{Report-based Belief Estimation}
+\label{sec:report-based-estimation}
+
+We further obtain report-based belief estimates by directly querying the language model about task-relevant features of the current state of the environment. 
+The queries use the same rendered state supplied to the agent (cf.~\Cref{sec:env-data}).\mg{This used to say history-free, but if that's how the state is rendered to the agent, we should write that at the end of 2.1.} 
+A report elicited at reasoning position $p$ is conditioned on the prefix $R_{t,\leq p}=(r_{t,1},\ldots,r_{t,p})$; the prefix is empty when $p=0$.
+The union of report questions used in our experiments comprises (i) whether each immediately adjacent cell is a wall (\texttt{\#}); (ii) whether the agent has the key and whether any door is open; (iii) whether the goal, key, or door is immediately adjacent in each cardinal direction; (iv) the current coordinates of the agent, goal, key, and a door; and (v) for each candidate move, whether the agent would hit a wall, have the key afterwards, or see an open door afterwards, together with its resulting coordinates.
+Individual analyses use prespecified subsets rather than asking all questions at every $p$.
+The reasoning-time panel contains the six current-state categorical questions in (i)--(ii) and the three action-consequence questions for the action read out at that position; earlier small-scale runs also include the four current-coordinate questions, whereas the scaled matched-cohort run defers coordinate queries.
+\Cref{app:report-protocol} gives the exact prompt templates, answer categories, parsing rules, and panels.
+
+For a categorical query, let $j$ index the queried variable and let $\mathcal Z_j=\{\texttt{yes},\texttt{no},\texttt{unknown}\}$ be its semantic answer set.
+Free-text responses that do not parse are recorded separately as \texttt{invalid}; for sample-based runs we therefore take $\widetilde{\mathcal Z}_j=\mathcal Z_j\cup\{\texttt{invalid}\}$, while direct candidate-score runs use $\widetilde{\mathcal Z}_j=\mathcal Z_j$.
+At decision step $t$ and reasoning position $p$, we construct a non-negative response score $w_{t,p,j}(z)$ either from the model's response logits or from repeated samples:
+\begin{align}
+    w_{t,p,j}(z)
+    &=
+    \begin{cases}
+        \exp\bigl(\ell_{t,p,j}(z)\bigr),
+        & \text{when candidate scores $\ell_{t,p,j}(z)$ are available},\\
+        \displaystyle \frac{1}{N}
+        \sum_{n=1}^{N}
+        \mathbbm{1}\!\left[z_{t,p,j}^{(n)}=z\right],
+        & \text{when the response $z_{t,p,j}$ is sampled $N$ times},
+    \end{cases}
+    \label{eq:report-score}\\
+\end{align}
+Here $\ell$ is the temperature-scaled candidate logit, or the returned candidate log-probability, up to a common additive constant.
+We then normalise these scores to obtain a distribution over $\widetilde{\mathcal Z}_j$:
+\begin{align}
+    q_{t,p,j}^{\mathrm{report}}(z)
+    &=
+    \frac{w_{t,p,j}(z)}
+    {\sum_{z' \in \widetilde{\mathcal Z}_j} w_{t,p,j}(z')}.
+    \label{eq:report-belief}
+\end{align}
+For logit-based scores, this is equivalent to the softmax transformation.
+For sample-based scores, $q_{t,p,j}^{\mathrm{report}}$ is the empirical answer distribution.
+
+% For each queried variable, we measure uncertainty using entropy,
+% \begin{align}
+%     H\!\left(q_{t,j}^{\mathrm{report}}\right)
+%     &=
+%     -\sum_{z \in \mathcal Z_j}
+%     q_{t,j}^{\mathrm{report}}(z)
+%     \log q_{t,j}^{\mathrm{report}}(z).
+%     \label{eq:report-entropy}
+% \end{align}
+We evaluate the accuracy of report-based beliefs using the answer with the highest probability and use Shannon entropy to measure uncertainty.
+% This allows us to distinguish incorrect but uncertain reports from confident incorrect beliefs, and when used at multiple steps through reasoning, it lets us follow changes in uncertainty throughout reasoning.
+We also compare individual reports directly with the emitted action.
+For example, reporting either that the cell to the left is a wall or that moving left would hit a wall, and then selecting \textsc{left}, constitutes a direct belief--action contradiction.
+However, because these reports are elicited in separate forward passes and may reveal information that was not used during the original decision, we do not use them in the belief--action gap analysis.
+
+
+\subsection{Estimating Values}
+\label{sec:estimating-values}
+
+Having estimated the model's beliefs, we use inverse reinforcement learning to infer state preferences from state--action pairs.
+For a fixed grid layout $G$, let $g:\mathcal S_G\rightarrow\mathbb R$ denote a state-value function, where higher values indicate more preferred states.
+We estimate this function using a one-step maximum-entropy IRL model \cite{ng2000algorithms,ziebart2008maximum}.
+
+We represent each environment state $s$ by an activation-derived feature vector $\boldsymbol{\phi}_p(s)\in\mathbb R^d$.
+Let $\mathcal I(s)=\{t:s_t=s\}$ denote the decision steps at which $s$ occurs in the dataset. \td{Report the number of distinct states and state occurrences used to construct these representations, either here or in the results section.}
+For reasoning position $p$ and model layer $\ell$, we average the activation vectors from these occurrences to obtain a state representation:
+\begin{align}
+    \boldsymbol{\phi}_p(s)
+    &=
+    \frac{1}{|\mathcal I(s)|}
+    \sum_{t\in\mathcal I(s)}
+    \mathbf{u}_t^{(\ell,p)}
+    \in\mathbb R^d.
+    \label{eq:activation-state-representation}
+\end{align}
+\td{Specify the model layer $\ell$ used to construct the state representations, either here or ideally in the analysis/results section directly}
+We construct and standardise the representations separately for $p=0$ and $p=m_t$, and fit a separate value model at each position.
+The parameterised value model maps activation-derived feature vectors to scalar values, $g_\theta:\mathbb R^d\rightarrow\mathbb R$.
+We use a linear parameterisation for this model,
+\begin{align}
+    g_\theta\bigl(\boldsymbol{\phi}(s)\bigr)
+    &=
+    \theta^\top\boldsymbol{\phi}(s).
+    \label{eq:linear-state-value}
+\end{align}
+
+Because the transitions are deterministic and known, each candidate action $a$ has an exact successor state $T_G(s,a)$, so the action can be evaluated through the value $g_\theta(\boldsymbol{\phi}(T_G(s,a)))$ assigned to this successor.
+We model action selection probability as
+\begin{align}
+    p_\theta(a\mid s,G)
+    &=
+    \frac{
+        \exp\!\left(
+            \beta g_\theta\bigl(\boldsymbol{\phi}(T_G(s,a))\bigr)
+        \right)
+    }{
+        \sum_{a'\in\mathcal A}
+        \exp\!\left(
+            \beta g_\theta\bigl(\boldsymbol{\phi}(T_G(s,a'))\bigr)
+        \right)
+    },
+    \label{eq:irl-policy}
+\end{align}
+where the fixed inverse-temperature parameter $\beta>0$ controls the sharpness of the induced policy.
+Equation~\ref{eq:irl-policy} defines a Boltzmann choice model in which actions leading to more highly valued successor states receive higher probability.
+\td{Clarify whether every candidate successor state occurs in the dataset. If not, explain how $\boldsymbol{\phi}(T_G(s,a))$ is defined when no activation is observed for that state.}
+
+We call this model one-step IRL because it evaluates each action only through its immediate successor state and does not explicitly roll out future trajectories.
+The state-value function may nevertheless encode longer-term desirability, because a successor can receive high value when it lies on a favourable future path. 
+The assumption is that any such information is summarised by $g_\theta(\boldsymbol{\phi}(T_G(s,a)))$. 
+This restriction allows the preference function to be estimated from local state--action comparisons. 
+
+To fit the value models, we construct two datasets of state--action pairs.
+The agent-supervised dataset $\mathcal D^{\mathrm{LM}}$ pairs each state $s_t$ with the action $a_t$ emitted by the LM agent, whereas the planner-supervised dataset $\mathcal D^{*}$ pairs it with a task-optimal action $a_t^{*}\in A_G^{*}(s_t)$ supplied by the environment planner. \td{Only one, or all optimal actions?}
+For either dataset $\mathcal D$, we fit $g_\theta$ by minimising the negative log-likelihood of the corresponding action labels,\begin{align}
+    \mathcal L(\theta)
+    &=
+    -\sum_{(G,s,a)\in\mathcal D}
+    \log p_\theta(a\mid s,G).
+    \label{eq:irl-objective}
+\end{align}
+The two value models therefore use the same state representations, model class, and optimisation procedure, but different supervision signals.
+The agent-supervised model, $g_\theta^{\mathrm{LM}}$, estimates the state preferences most consistent with the LM agent's realised behaviour under the one-step choice model.
+We interpret $g_\theta^{\mathrm{LM}}(\boldsymbol{\phi}(s))$ as an estimate of the agent's subjective value for state $s$.
+The corresponding planner-supervised model is denoted by $g_\theta^{*}$.
+Stronger held-out performance for $g_\theta^{*}$ than for $g_\theta^{\mathrm{LM}}$ would indicate that task-optimal action preferences are more reliably recoverable from the representations than the agent's realised action policy under this model class.
+This would suggest that the representations contain task-optimal action information that is not consistently expressed in the agent's behaviour.
+% The corresponding results are presented in Section~\ref{sec:value-results}.
+
+\subsection{Quantifying the Belief--Action Gap}
+\label{sec:belief-action-gap}
+
+Having estimated beliefs and state values, we combine them to measure whether the emitted action is consistent with the preferences inferred from the agent's behaviour, under its uncertainty about the current environment state.
+
+For a known state $s$, we define the regret of action $a$ under the agent-supervised value function $g_\theta^{\mathrm{LM}}$ as\looseness-1
+\begin{align}
+    \rho_\theta^{\mathrm{LM}}(s,a)
+    &=
+    \max_{a' \in \mathcal A}
+    g_\theta^{\mathrm{LM}}\!\left(T_G(s,a')\right)
+    -
+    g_\theta^{\mathrm{LM}}\!\left(T_G(s,a)\right).
+    \label{eq:state-action-regret}
+\end{align}
+This measures the value lost by taking action $a$ rather than the most highly valued available action.
+It is zero when $a$ leads to a successor state with maximal value under the agent-supervised model and positive when an available alternative leads to a more highly valued successor.
+
+Because the model is uncertain about the current state, we take the expectation of this regret under the representation-based belief distribution $q_{t,p}^{\mathrm{probe}}$.
+For the action $a_t$ emitted at decision step $t$, we define the \emph{belief--action gap} as
+\begin{align}
+    \Delta_{t,p}^{\mathrm{LM}}
+    &=
+    \mathbb{E}_{s \sim q_{t,p}^{\mathrm{probe}}}
+    \left[
+        \rho_\theta^{\mathrm{LM}}(s,a_t)
+    \right] =
+    \sum_{s \in \mathcal S_G}
+    q_{t,p}^{\mathrm{probe}}(s)
+    \rho_\theta^{\mathrm{LM}}(s,a_t).
+    \label{eq:belief-action-gap}
+\end{align}
+We evaluate $\Delta_{t,p}^{\mathrm{LM}}$ at $p=0$, immediately before reasoning begins, and at $p=m_t$, after the final reasoning token and immediately before the action is generated.
+A small gap indicates that the emitted action is consistent with the agent's inferred subjective preferences, given its uncertainty about the current state.
+A large gap indicates that the agent-supervised model assigns higher value to the successors of other available actions.
+
+This formulation distinguishes several possible sources of failure.
+If an action is suboptimal under the true environment state but has a small belief--action gap, inaccurate state information provides a plausible explanation. 
+If the decoded belief is accurate and the gap remains large, the failure lies downstream of state estimation. 
+Comparing the action preferences induced by $g_\theta^{\mathrm{LM}}$ and $g_\theta^{*}$, then helps distinguish whether this inconsistency is better explained by the preference structure inferred from the agent's behaviour or by the mechanism that translates preferences into the emitted action.
+
+\Cref{fig:environment} and \Cref{fig:belief_action_pipeline} summarise the environment and operational decomposition.
+% \td{Revise figure (e.g., $a_t$ should connect to $g_{\theta}$) and fix caption.
+% Also, split the grid example into another figure which also includes the visualisation of the 2d grid.}
+% \begin{figure}[htbp]
+% \centering
+% \begin{tikzpicture}[
+%     node distance=0.45cm and 0.6cm,
+%     every node/.style={font=\footnotesize,align=center},
+%     box/.style={
+%         rounded corners,
+%         draw=black,
+%         thick,
+%         minimum height=0.72cm,
+%         minimum width=1.65cm,
+%         inner sep=2pt
+%     },
+%     arrow/.style={-{Stealth[length=1.5mm]},thick}
+% ]
+% \node[box] (beh) {Behavioral\\belief};
+% \node[box,above=1.5cm of beh] (rep) {Representational\\belief $\hat{q}$};
+
+% \node[box,right=0.75cm of $(rep)!0.5!(beh)$] (cost) {One-step\\value $g_\theta$};
+% \node[box,right=0.75cm of cost] (value) {Regret of action\\$\rho_\theta(s,a)$};
+% \node[box,above right=0.15cm and 0.25cm of value] (act) {Taken\\action $a_t$};
+% \node[box,below right=0.15cm and 0.15cm of value] (gap) {Belief--action\\gap $\Delta_t$};
+
+% \draw[arrow] (rep.east) -- (value.west);
+% \draw[arrow,dashed] (beh.east) -- (value.west);
+% \draw[arrow] (cost) -- (value);
+% \draw[arrow] (value) -- (act.west);
+% \draw[arrow] (value) -- (gap.west);
+% \draw[arrow] (act.south) -- (gap.north);
+% \end{tikzpicture}
+% \caption{Belief--action gap decomposition.}
+% \label{fig:pipeline_panel}
+% \end{figure}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+    every node/.style={font=\footnotesize,align=center},
+    box/.style={
+        rounded corners=3pt,
+        draw=black,
+        thick,
+        minimum height=0.9cm,
+        minimum width=2.35cm,
+        inner sep=4pt
+    },
+    observable/.style={
+        box,
+        fill=black!10
+    },
+    arrow/.style={-{Stealth[length=1.7mm]},thick}
+]
+
+% Observed IRL data
+\node[observable, minimum width=3.0cm] (data) at (4.1,1.3)
+{Agent-supervised IRL dataset\\
+$\mathcal D^{\mathrm{LM}}=\{(s_{t'},a_{t'})\}_{t'}$};
+
+% Main quantities
+\node[box] (belief) at (0,0)
+{Representation-based\\belief $\hat q_{t,p}(s)$};
+
+\node[box] (value) at (4.1,0)
+{One-step value model\\$g_\theta^{\mathrm{LM}}$};
+
+\node[observable] (action) at (8.2,0)
+{Emitted action\\$a_t$};
+
+\node[box] (regret) at (4.1,-2.0)
+{State--action regret\\$\rho_\theta^{\mathrm{LM}}(s,a_t)$};
+
+\node[box] (gap) at (4.1,-3.9)
+{Belief--action gap\\$\Delta_{t,p}^{\mathrm{LM}}$};
+
+% Relations
+\draw[arrow] (data.south) -- (value.north);
+\draw[arrow] (belief.south east) -- (regret.north west);
+\draw[arrow] (value.south) -- (regret.north);
+\draw[arrow] (action.south west) -- (regret.north east);
+\draw[arrow] (regret.south) -- (gap.north);
+
+\end{tikzpicture}
+\caption{
+Operational decomposition of the belief--action gap.
+Grey boxes denote observed quantities.
+Representation-based beliefs, the agent-supervised value model, and the emitted action jointly determine the state--action regret and belief--action gap.
+}
+\label{fig:belief_action_pipeline}
+\end{figure}
+
+
+\section{Beliefs, Values, and Sources of Suboptimal Action}
+\label{sec:analysis1}
+With the belief and value machinery defined in the previous section, we now ask whether suboptimal actions are better explained by inaccurate state beliefs, inappropriate state preferences, or a failure of the action-selection mechanism to translate available beliefs and preferences into action.
+
+\subsection{Belief Results}
+\label{sec:belief-results}
+We evaluate representation-based and report-based beliefs.
+These capture different forms of information availability. 
+Representation-based probes measure what can be decoded from the model's activations during the original decision, whereas report-based estimation measure what the model can explicitly recover when explicitly queried in a separate forward pass.
+
+\paragraph{Representation-based estimation.}
+
+We evaluate the linear state probes from \Cref{sec:activation-based-estimation} at $p=0$, the final input token before reasoning begins, and at $p=m_t$, the final reasoning token immediately before the action is generated. 
+We refer to these conditions as \emph{pre-reasoning} and \emph{post-reasoning}, respectively, throughout the results sections.
+\td{Describe the probe experiments in sufficient detail to reproduce them. Specify the grid size, model layer, the number of activation vectors at each reasoning position, the construction of the training, validation, and test sets, their sizes, the unit on which the data are split (e.g., states, decisions, trajectories, or grids), any class balancing and feature standardisation, the probe regularisation and optimiser, the model-selection procedure, and the number of random seeds. We can move things to the appendix later if space is insufficient.}
+
+As shown in \Cref{tab:rep-beliefs}, key possession and door status are decoded reliably, with perfect accuracy in the pre-reasoning condition and lower accuracy post-reasoning.
+These variables directly recoverable from the rendered environment so their high decodability before reasoning is expected; the lower post-reasoning accuracy may reflect the greater token distance between the environment description and the readout position.
+Exact location is harder to decode, with top-1 accuracy at $34.8\%$ in the pre-reasoning condition and decreasing to $13.1\%$ in the post-reasoning condition.
+\td{Report the chance level for location top-1 accuracy (over all grid cells and/or only valid agent locations).}% Also report the mean or median $L_1$ distance between the top-1 decoded location and the true location.}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Metric} & \textbf{Pre-reasoning} & \textbf{Post-reasoning} \\
+\midrule
+\texttt{has\_key} accuracy & 100.0\% & 89.5\% \\
+\texttt{door\_open} accuracy & 100.0\% & 88.6\% \\
+Location top-1 accuracy & 34.8\% & 13.1\% \\
+Top-1 within Manhattan distance 1 & 95.5\% & 60.8\% \\
+Top-1 within Manhattan distance 2 & 99.0\% & 83.5\% \\
+Mean probability mass within distance 1 & 93.1\% & 59.2\% \\
+Mean probability mass within distance 2 & 97.2\% & 81.5\% \\
+\bottomrule
+\end{tabular}
+\caption{Representation-based state decoding on held-out decision states under the pre-reasoning and post-reasoning conditions. Location top-1 accuracy requires an exact match. ``Top-1 within Manhattan distance $k$'' is the proportion of examples for which the most probable decoded location lies within distance $k$ of the true location. ``Mean probability mass within distance $k$'' is the mean total probability assigned to all grid locations whose Manhattan distance from the true location is at most $k$. \td{Please confirm that the final four rows have been interpreted correctly: the first two use the Manhattan distance between the top-1 decoded location and the true location, while the final two sum the decoded probability mass over all grid locations within Manhattan distance $k$ of the true location.}}
+\label{tab:rep-beliefs}
+\end{table}
+
+Although exact location decoding is limited, the pre-reasoning distribution places most of its probability mass close to the true location (93.1\% within Manhattan distance 1 and 97.2\% within Manhattan distance 2).
+Even under these less stringent distance-based metrics, the same decline is observed in the post-reasoning condition, where the mean probability mass falls to 59.2\% within Manhattan distance 1 and 81.5\% within Manhattan distance 2.
+The lower post-reasoning state decodability is consistent with previous results in the same environment \citep{arghal2026behavioural}.
+
+\paragraph{Report-based estimation.}
+
+We next evaluate whether task-relevant state information can be recovered through explicit reports. Wall, goal, and door questions are generally answered accurately, whereas key-direction judgements are less reliable and more sensitive to the readout method. Wall judgements provide the clearest action-relevant test because they directly constrain which movements are feasible.\td{Replace this qualitative summary with references to the relevant table or figure and report the number of evaluated examples and accuracy for each query type.}
+
+In all three eligible wall-hit failures in the failure-focused slice, the model correctly reports that its chosen direction is blocked and nevertheless selects that movement. Explicitly recoverable state information therefore does not always determine behaviour.
+\td{Say how the failure-focused slice and eligible wall-hit failures are defined, how the three cases were selected, at which reasoning position the reports were elicited, etc. As of now, this is completely unintelligible.}
+
+% TODO FIGURE:
+% Consider reusing the previous paper's behavioural-probe figure showing
+% directional wall, goal, door, and key-question accuracy.
+% Previous paper: Figure 4 in the appendix.
+
+\paragraph{Comparing report-based and representation-based estimates.}
+We also evaluate both estimators on a shared set of decision state in which the cell in each of the four movement directions is blocked.
+On this subset, report-based wall judgements are correct for every evaluated direction, whereas representation-based accuracy is lower and varies by direction.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{Direction} & \textbf{Report-based} & \textbf{Probe (Pre-reasoning)} & \textbf{Probe (Post-reasoning)}\\
+\midrule
+\textsc{left}  & 100.0\% & 73.3\%  & 73.3\% \\
+\textsc{right} & 100.0\% & 86.7\%  & 93.3\% \\
+\textsc{up}    & 100.0\% & 100.0\% & 93.3\% \\
+\textsc{down}  & 100.0\% & 80.0\%  & 93.3\% \\
+\bottomrule
+\end{tabular}
+\caption{Accuracy of report-based and representation-based estimates of whether the adjacent cell in each direction is blocked, evaluated on the same decision steps.}
+\label{tab:matched-wall}
+\end{table}
+
+The fact that representation-based estimates do not recover wall information with perfect accuracy, but the model answers the corresponding questions correctly when explicitly queried indicates that the relevant state information can be retrieved even when it is not decoded perfectly by a linear probe from the activations extracted from the original decision state.
+\td{Consider moving the report-based belief methods and results to the appendix and keeping only the representation-based analysis in the main paper.}
+
+\subsection{Value Results}
+\label{sec:value-results}
+
+Having established that task-relevant state information can be decoded from model activations, we next examine the action preferences recoverable from the same representations. 
+We fit the one-step IRL model described in \Cref{sec:estimating-values} separately under agent and planner supervision.
+
+\paragraph{Predicting agent and optimal actions.}
+\td{Define the training, validation, and test sets used for the value models. Report their sizes and the split unit (whether grids, trajectories, decision steps, or states are held out), explain how repeated occurrences of the same state are handled, how hyperparameters are selected if any, regularisation, etc.}
+The difference between the two supervision signals is large, as shown in \Cref{tab:value-results}. The agent-supervised model predicts the LM agent's emitted actions with approximately 59\% validation accuracy,\mg{Why not the test accuracy?} whereas the planner-supervised model predicts task-optimal actions with almost perfect accuracy using either pre-reasoning or post-reasoning representations.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Value model} & \textbf{Pre-reasoning} & \textbf{Post-reasoning} \\
+\midrule
+Agent-supervised & 58.8\% & 59.0\% \\
+Planner-supervised & 99.7\% & 99.5\% \\
+\bottomrule
+\end{tabular}
+\caption{Validation accuracy of the agent-supervised and planner-supervised one-step value models using pre-reasoning and post-reasoning activation-derived state representations.}
+\label{tab:value-results}
+\end{table}
+
+Task-optimal action structure is therefore much more cleanly recoverable from the activation-derived state representations than the agent's realised policy.
+Under both supervision signals, however, action-prediction accuracy is nearly unchanged between the pre-reasoning and post-reasoning conditions, unlike state decoding accuracy, which decreases after reasoning.
+
+A separate four-room label-control experiment shows the same asymmetry under identical activations and training procedures. Changing only the supervision labels from agent actions to A$^{\star}$-optimal actions increases test accuracy from 45.4\% to 96.0\%, and set-membership accuracy from 36.9\% to 99.2\%. The separation therefore persists when only the supervision signal is changed.
+\td{Consider presenting the four-room control in a footnote or moving it to the appendix. If we keep it in the paper, we need to define what four-room setting is and its relation to the main environment, the dataset and splits, etc.}
+
+\paragraph{Interpreting the learned value structure.}
+The learned value landscapes exhibit structured variation around task-relevant regions of the grid, including the key, door, and goal. We therefore interpret the IRL result comparatively rather than as evidence that the model internally implements the planner's value function. The same activation-derived state representations support a much cleaner task-optimal ordering over available actions than an ordering that reproduces the model's realised behaviour.
+\td{Is this paragraph intended to interpret \Cref{fig:irl_value_app}? If so, clarify how those value landscapes are constructed, what ``structured variation'' means, what you mean by ``cleaner task-optimal'' ordering (e.g., the fact that the top right cell in the left grid is a large negative value). I currently struggle to understand this paragraph but it could be potentially interesting}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/traj196_step5_pre_value_compare.pdf}
+    \caption{Learned $g_\theta(s)$ values across the grid for
+    optimal-action-supervised IRL (left) and agent-action-supervised IRL
+    (right), both using POST representations. Darker cells indicate higher
+    learned value. Both landscapes show structured value variation around the
+    key, door, and goal regions, supporting the interpretation of $g_\theta$ as
+    a global next-state preference function rather than a memorized action
+    classifier.}
+    \label{fig:irl_value_app}
+\end{figure}
+
+
+\subsection{Explaining Outcomes in Terms of Beliefs and Values}
+\label{sec:decomposition}
+
+To distinguish failures attributable to state uncertainty, inappropriate preferences, or action selection, we analyse the belief–action gap $\Delta_{t,p}^{\mathrm{LM}}$ defined in \Cref{sec:belief-action-gap}. 
+This measures the consistency of the emitted action with the agent's inferred subjective preferences under its represented state distribution. 
+We compute the gap separately in the pre-reasoning and post-reasoning conditions using belief and value estimates derived from the corresponding activations.
+% persist despite available state information. If an action is suboptimal under the true state but has a small belief--action gap, it remains compatible with the agent-supervised preference model under the decoded belief. A large gap instead indicates that more highly valued actions remain available even after accounting for uncertainty in the represented state.
+
+\td{Define the evaluation data used in this analysis: the number of grids / trajectories / decision steps, whether these examples come from the value-model train/val/test sets or are something separate.}
+\td{Define all three subsets in \Cref{tab:gap-pre-post}. Why are ``All steps'' (and ``All probes correct'') reported separately from ``Probe test set''? Do the first two subsets include probe training or validation examples?}
+
+As shown in \Cref{gap-pre-post}, the mean belief--action gap across all 3,194 evaluated decision steps decreases from 0.955 in the pre-reasoning condition to 0.583 in the post-reasoning condition.
+The same direction of change appears among the 2,465 steps for which all state probes are correct and on the held-out probe test set. 
+Decoded belief entropy increases in all three subsets.
+In the post-reasoning condition, the emitted action is therefore more consistent with the subjective preference structure inferred from the agent's behaviour, even though the decoded state distribution is less precise.
+% This rules out a simple account in which improved action selection is explained solely by progressively sharper state estimation. % --> We know state estimation becomes LESS sharp
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Subset} & $\boldsymbol{n}$ & $\boldsymbol{\Delta_{\mathrm{Pre}}}$ & $\boldsymbol{\Delta_{\mathrm{Post}}}$
+& $\boldsymbol{\operatorname{H}_{\mathrm{Pre}}}$ & $\boldsymbol{\operatorname{H}_{\mathrm{Post}}}$ \\
+\midrule
+All steps & 3194 & 0.955 & 0.583 & 1.494 & 2.085 \\
+All probes correct & 2465 & 0.908 & 0.558 & 1.106 & 1.811 \\
+Probe test set & 762 & 1.106 & 0.665 & 2.788 & 3.020 \\
+\bottomrule
+\end{tabular}
+\caption{Mean belief--action gap ($\Delta$) and decoded belief entropy ($\operatorname{H}$) pre- and post-reasoning.}
+\label{tab:gap-pre-post}
+\end{table}
+
+The wall-hit failures provide a concrete behavioural instance of the same distinction. In these cases, the model explicitly reports the relevant obstacle but nevertheless selects the blocked action, placing the inconsistency downstream of the availability of that local state information.
+\td{Are these the report-based cases discussed in \Cref{sec:belief-results}? Specify the experiment, table, figure, section this refers to. 
+If the report-based results are moved to the appendix, decide whether this example should remain in the main text.}
+
+Among failures that persist despite accurate state estimates, the two value models provide a further diagnostic. 
+As described in \Cref{sec:belief-action-gap}, disagreement between their induced preferences indicates an inappropriate state-value ordering. 
+If both models prefer the same action but the agent emits a different one, the inconsistency instead lies in action selection.
+\td{Report the result of this analysis; this currently just restates the interpretation rule from section 2.4. Ideally report the number or proportion of failures assigned to state estimation, state valuation, and action selection.}
+We therefore compare the action preferences induced by $g_\theta^{\mathrm{LM}}$ and $g_\theta^{*}$ when the decoded state is accurate...
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/traj192_step5.pdf}
+    \caption{Example belief--action gap under the pre-reasoning and
+    post-reasoning conditions. Cell numbers
+    show the probe-estimated location probabilities, with shading proportional
+    to probability mass. Arrows mark the successor state preferred by the agent-supervised value model and the action actually emitted by the agent. In this
+    example, reasoning increases the  belief entropy
+    ($\operatorname{H}: 0.261 \rightarrow 1.572$) while reducing the belief--action gap
+    ($\mathrm{\Delta}: 2.386 \rightarrow 0.205$).
+    \td{Describe this figure in the text.}
+    }
+    \label{fig:belief_viz_app}
+\end{figure}
+
+Taken together, the results so far clarify how the relationship between represented state information and action changes from before to after reasoning. 
+Task-relevant state information remains decodable but becomes less precise, whereas task-optimal action preferences remain almost equally recoverable from pre-reasoning and post-reasoning representations. 
+At the same time, the belief–action gap decreases, indicating that the emitted action becomes more consistent with the model's beliefs and subjective preferences by the end of reasoning. 
+This endpoint comparison does not reveal when the transition towards greater belief--action consistency occurs, or whether it develops gradually or around a distinct change point.
+
+\MG{Reviewed up to here.}
+
+\section{Beliefs and Actions Throughout Reasoning}
+\label{sec:reasoning}
+
+The PRE-to-POST analysis shows that reasoning changes the relationship between represented state information and the final action, but not when these changes occur. We therefore follow the decision process throughout reasoning. Our dataset contains 95 trajectories, 1,276 decisions, 153,622 sentence-level reasoning units with hidden activations, and 98,310 prefix evaluations in which reasoning is truncated and the model is forced to choose among $\{\textsc{left},\textsc{right},\textsc{up},\textsc{down}\}$.
+Prefix cut points are thinned to at most 80 per decision, so the gap between consecutive evaluated positions has a median of 20 tokens and is coarser in longer reasoning traces.
+
+
+Sentence-level representations characterize recurring reasoning states, while prefix-level action distributions track the model's evolving decision. We align each prefix with its containing sentence, succeeding for \(98.2\%\) of evaluated prefixes, and use this alignment to study changes in beliefs, action preferences, and decision optimality.
+
+\subsection{Belief Trajectories}
+\label{sec:belief-trajectories}
+
+We evaluate task-relevant beliefs and action preferences at intermediate reasoning positions. For report-based beliefs, we track local wall information, key possession, and door status, summarizing uncertainty by the entropy of their answer distributions.
+
+At each prefix, we truncate reasoning, append a fixed answer-forcing suffix, and evaluate the probabilities of the four actions. This avoids treating next-token probabilities inside the reasoning channel as action preferences. The highest-probability action is optimal under the known environment dynamics in \(76.7\%\) of evaluated prefixes.
+
+Recommendation optimality changes relatively rarely. Optimal-to-suboptimal transitions occur in approximately \(1.39\%\) of reasoning sentences, while suboptimal-to-optimal transitions occur in \(1.83\%\). Rather than comparing absolute sentence positions across traces of different lengths, we therefore align analyses around decision events such as action commitment, action changes, and changes in recommendation optimality.
+
+\subsection{Action Preference and Commitment}
+\label{sec:commitment}
+
+For a reasoning prefix \(R_{t,\leq p}\), we force an immediate final answer and normalize the probabilities of the available actions:
+
+\begin{align}
+\pi_{t,p}(a)
+=
+P\!\left(
+a \mid X_t, R_{t,\leq p}
+\right),
+\qquad a \in \mathcal A,
+\label{eq:prefix-action}
+\end{align}
+where \(X_t\) is the environment input at decision step \(t\).
+
+We define \emph{action commitment} as the earliest evaluated position after which the preferred action no longer changes:
+
+\begin{align}
+p_t^{\mathrm{com}}
+=
+\min \left\{
+p
+\,\middle|\,
+\arg\max_a \pi_{t,p'}(a)=a_t
+\quad
+\forall p' \geq p
+\right\}.
+\label{eq:commitment}
+\end{align}
+where \(a_t\) is the action preferred after complete reasoning. We identify commitment for all 1,276 decisions and map \(89.4\%\) of commitment positions directly to a reasoning sentence.
+
+Commitment often occurs well before reasoning ends. We additionally define a settled textual commitment as the first answering sentence that supports the eventual action and is not followed by a contradictory action mention. This can be identified in 753 decisions (\(59.0\%\)). Among these, prefix-level action preference stabilizes before textual commitment in \(99.87\%\) of cases, with a median gap of 523 reasoning tokens and a mean gap of 823 tokens.
+
+We also track commitment continuously through the probability of the eventual action, action entropy, and the margin between the two most likely actions. Different activation clusters correspond to different stages of this process. For example, \(C_{10}\) shows the largest average increase in probability assigned to the eventual action (\(0.0245\)), together with increases in entropy-based commitment (\(0.0400\)) and action margin (\(0.0402\)). \(C_{11}\), in contrast, shows smaller changes but already assigns an average probability of \(0.933\) to the eventual action. Thus, some reasoning states accompany decision formation, while others occur after the decision is already stable.
+
+
+\paragraph{The behavioural belief manifold.}
+The evolving action preferences have a simple global geometry.
+Applying PCA to the centred log-ratio (CLR) transform of all 98,310 prefix-level distributions \(\pi_{t,p}\) yields the two-dimensional map in \Cref{fig:belief-manifold}, capturing \(72.7\%\) of the CLR variance.
+The distributions organise into a four-armed star: the angular coordinate identifies \emph{which} action is preferred, and the radial coordinate \emph{how strongly} --- the radius correlates with the normalised-entropy confidence \(1-H(\pi_{t,p})/\log 4\) at Spearman \(0.78\), and the four action centroids sit at \(0.92\) of the mean cloud radius.
+A decision typically begins near the low-confidence centre, under a strong input-conditional prior (at the empty prefix the forced distribution favours \textsc{right} in \(79.5\%\) of decisions), drifts outward along one arm as reasoning proceeds, hops between arms when the preferred action changes, and ends at an arm tip (\Cref{fig:manifold-trajectories}).
+Because the CLR of a softmax equals the centred action logits, this star is a property of the model's \emph{output} distribution; we use it to visualise decision formation and make no claim that internal activations share this geometry.
+
+\begin{figure}[t]
+\centering
+\begin{subfigure}[t]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/behavior_manifold_star.png}
+    \caption{}
+    \label{fig:manifold-star}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/behavior_manifold_trajectories.png}
+    \caption{}
+    \label{fig:manifold-trajectories}
+\end{subfigure}
+\caption{
+The behavioural belief manifold: PCA of the CLR-transformed prefix-level action distributions \(\pi_{t,p}\) (98,310 prefixes, 1,276 decisions; \(72.7\%\) of variance).
+\textbf{(a)} Coloured by the currently preferred action, the distributions form four arms; angle encodes which action is preferred and radius how strongly.
+\textbf{(b)} Example decisions traced through the same space (grey: all prefixes; circles mark the empty prefix, crosses the final prefix): decisions start near the low-confidence centre, drift outward along an arm, and hop between arms when the preferred action changes.
+}
+\label{fig:belief-manifold}
+\end{figure}
+
+\paragraph{Commitment to the eventual action.}
+We track the evolving preference with two measures: \emph{commitment to the eventual action}, \(\pi_{t,p}(a_t)\), the probability assigned to the action eventually taken, and \emph{entropy commitment}, \(1-H(\pi_{t,p})/\log 4\), the decisiveness of the whole distribution irrespective of which action it favours (the radial coordinate of \Cref{fig:belief-manifold}; \(0\) for a uniform distribution, \(1\) for a deterministic one).
+Both rise monotonically with reasoning progress (\Cref{fig:commitment-measures}, left) --- mean commitment from \(0.35\) over the first tenth of the trace to \(0.92\) over the final quarter, entropy commitment from \(0.34\) to \(0.91\) --- so the entire action distribution sharpens, not merely the probability of the eventual action.
+The prompt alone already induces an action prior: at the empty prefix, mean commitment is \(0.34\) (entropy commitment \(0.30\)) against a uniform baseline of \(0.25\), and generated reasoning adds a further \(0.66\) on top of it, with the largest gains for \textsc{up} and \textsc{down} decisions, whose prompt priors are weakest (\(0.14\) each, versus \(0.66\) for \textsc{right}; \Cref{fig:commitment-measures}, right).
+At the final prefix both measures reach \(1.00\), and the forced action matches the emitted action in \(100.0\%\) of the 1,276 decisions.
+This rise is not an artifact of the model echoing an action it has already written down: restricted to the 31,723 prefixes (\(32.3\%\)) that precede the first action word of the reasoning trace, mean commitment climbs equally steeply (\(0.35 \to 0.92\), entropy commitment \(0.33 \to 0.89\)), and the forced top action already equals the final action in \(54.9\%\) of these pre-verbal prefixes.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/commitment_measures_panel.png}
+\caption{
+Commitment along the chain of thought (95 trajectories, 1,276 decisions, 98,310 prefixes; bands are \(95\%\) trajectory-clustered bootstrap intervals).
+\textbf{Left:} mean commitment to the eventual action and mean entropy commitment against reasoning progress, for all prefixes (solid) and for the strict pre-verbal subset preceding any action word (dashed); open squares at progress \(0\) mark the empty-prefix (prompt-only) baselines, and the dotted line the uniform prior \(0.25\).
+\textbf{Right:} mean commitment by eventual action. \textsc{right} decisions start from a strong prompt prior, whereas \textsc{up} and \textsc{down} start near \(0.14\) and gain the most from reasoning; all converge by the end of the chain.
+}
+\label{fig:commitment-measures}
+\end{figure}
+
+
+
+\subsection{Belief Change and Action Commitment}
+\label{sec:belief-commitment}
+
+We next align report-based beliefs around commitment. Uncertainty aggregated across wall, key, and door beliefs decreases locally around commitment. Wall beliefs remain the most uncertain feature, but also become more certain after commitment.
+
+This relationship does not imply that action changes are generally caused by discrete belief corrections. Belief errors fluctuate around changes in preferred action and recommendation optimality, but we do not observe a consistent pattern in which belief errors disappear immediately before an action changes. Belief refinement and action stabilization are therefore related but distinct processes.
+
+Approximately \(4.59\%\) of reasoning sentences contain at least one change in the preferred action. Relative to a within-decision shuffled-event control, clusters \(C_6\), \(C_{10}\), \(C_9\), and \(C_5\) are enriched at these changes by factors of \(1.65\), \(1.64\), \(1.41\), and \(1.33\), respectively, with all effects remaining significant after false-discovery-rate correction (\(q=0.0024\)) \cite{benjamini1995controlling}.
+
+The same clusters are enriched when recommendation optimality changes. For optimal-to-suboptimal transitions, their enrichment factors are \(2.07\), \(1.48\), \(1.45\), and \(1.26\); for suboptimal-to-optimal transitions, they are \(1.77\), \(1.59\), \(1.44\), and \(1.35\), respectively.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lccc}
+\toprule
+Cluster & Action change & Accuracy drop & Accuracy recovery \\
+\midrule
+\(C_6\)    & \(1.65\times\) & \(2.07\times\) & \(1.77\times\) \\
+\(C_{10}\) & \(1.64\times\) & \(1.48\times\) & \(1.59\times\) \\
+\(C_9\)    & \(1.41\times\) & \(1.45\times\) & \(1.44\times\) \\
+\(C_5\)    & \(1.33\times\) & \(1.26\times\) & \(1.35\times\) \\
+\bottomrule
+\end{tabular}
+\caption{Enrichment of sentence-level activation clusters at action-change and recommendation-optimality events relative to within-decision shuffled-event controls.}
+\label{tab:reasoning-events}
+\end{table}
+
+Because these clusters occur during both losses and recoveries of optimality, they are better interpreted as states of decision revision than as error states. For example, \(C_5\) is enriched \(2.09\times\) immediately before an accuracy drop and \(2.47\times\) before an accuracy recovery.
+
+Together, these results separate belief uncertainty, action preference, and action optimality. Belief uncertainty can decrease around commitment without discrete belief corrections explaining action changes, while similar reasoning states can accompany both improvements and degradations in the current decision.
+
+\paragraph{Attention around commitment.}
+
+We also compare the attention assigned by the final action token to a seven-sentence window centred on commitment with attention to comparable regions elsewhere in the same trace. Attention is elevated around commitment in some settings, but the effect is not consistent across layers and conditions. We therefore treat it as a possible routing signal rather than evidence that commitment-adjacent reasoning causally determines the final action.
+
+\subsection{Reasoning-Step Patterns}
+\label{sec:reasoning-patterns}
+
+We next ask whether reasoning passes through recurring representational states. We cluster sentence-level hidden activations using a random sample of 25,000 of the 153,622 sentences. Sentence representations have dimension 2,880 and are reduced to 100 principal components, retaining \(77.84\%\) of activation variance.
+
+We compare K-means, HDBSCAN, and Gaussian mixture models using sentence-mean and sentence-final representations \cite{campello2013density}. Sentence-mean HDBSCAN achieves the highest silhouette coefficient (\(0.431\)) and lowest intra-cluster dispersion (\(0.225\)), but labels \(77.1\%\) of sentences as noise \cite{rousseeuw1987silhouettes}. Sentence-mean K-means provides complete coverage and the strongest inter-cluster dispersion (\(905.0\)) and Calinski--Harabasz score (\(1509.0\)) \cite{calinski1974dendrite}. We therefore use sentence-mean K-means for the main analysis and HDBSCAN as a secondary method for identifying high-density motifs.
+
+For interpretability, we assign each K-means cluster a short descriptive label based on its representative sentences and semantic-label enrichment, while retaining the numeric cluster IDs throughout the analysis. The clusters broadly correspond to recurring reasoning functions such as path initiation (\(C_0\)), local world-state checking (\(C_1\)), route execution (\(C_2\)), door-mechanics reasoning (\(C_3\)), alternative-route exploration (\(C_4\)), grid-state setup (\(C_5\)), detailed state readout (\(C_6\)), route consolidation (\(C_7\)), blockage verification (\(C_8\)), local route tracing (\(C_9\)), decision-revision or commitment-transition reasoning (\(C_{10}\)), and explicit action conclusion (\(C_{11}\)). These names are descriptive summaries rather than additional labels used in the clustering procedure.
+\begin{figure}[htbp]
+    \centering
+
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/hdbscan_mean.png}
+        \caption{}
+        \label{fig:hdbscan-clusters}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/k_means_mean.png}
+        \caption{}
+        \label{fig:kmeans-clusters}
+    \end{subfigure}
+
+    \caption{
+    Two-dimensional PCA visualisation of sentence-level hidden representations clustered using
+    \textbf{(a)} HDBSCAN and \textbf{(b)} MiniBatch K-means.
+    HDBSCAN identifies a smaller number of dense regions while assigning many points to noise,
+    whereas K-means provides a complete partition of the representation space.
+    }
+    \label{fig:clustering-comparison}
+\end{figure}
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lccccc}
+\toprule
+Method & Silhouette & Inter-disp. & Intra-disp. & CH & Noise \\
+\midrule
+Mean K-means     & 0.138 & 905.0 & 0.600 & 1509.0 & 0.0\% \\
+Mean HDBSCAN     & 0.431 & 263.9 & 0.225 & 1172.9 & 77.1\% \\
+Mean GMM         & 0.075 & 755.6 & 0.666 & 1135.3 & 0.0\% \\
+Final K-means    & 0.128 & 782.6 & 0.655 & 1194.0 & 0.0\% \\
+Final HDBSCAN    & 0.381 & 297.2 & 0.293 & 1014.0 & 64.8\% \\
+Final GMM        & 0.074 & 641.3 & 0.718 & 893.7 & 0.0\% \\
+\bottomrule
+\end{tabular}
+\caption{Clustering quality for sentence-mean and sentence-final hidden representations.}
+\label{tab:reasoning-clustering}
+\end{table}
+The resulting clusters correspond partly to independently assigned semantic reasoning categories. Among 20,366 exactly aligned sentences, \(C_6\), \(C_5\), and \(C_1\) are dominated by world-reading, while \(C_2\), \(C_7\), and \(C_4\) contain mostly solving sentences. \(C_{11}\) contains a larger answering component. K-means reaches normalized mutual information of \(0.131\), indicating that activation clusters capture structure related to, but not identical to, semantic labels.
+
+HDBSCAN produces stronger semantic purity on its non-noise subset, reaching normalized mutual information of \(0.297\) and homogeneity of \(0.473\), but leaves approximately \(80\%\) of downstream sentences unassigned. We therefore interpret its clusters as high-purity motifs rather than a complete partition of reasoning.
+
+A finer multi-label analysis further shows that activation clusters distinguish specific reasoning functions. For example, \(C_2\) is enriched approximately \(9.8\times\) for action commitment, \(C_{10}\) \(10.1\times\) for correction, \(C_8\) \(2.8\times\) for verification, and \(C_0\) \(5.6\times\) for procedural continuation.
+
+Cluster frequencies also change around action commitment. \(C_{11}\), \(C_2\), and \(C_7\) increase after commitment by \(12.8\), \(6.3\), and \(5.6\) percentage points, while \(C_5\), \(C_6\), \(C_0\), and \(C_1\) decrease by \(9.8\), \(7.4\), \(4.4\), and \(2.7\) points. This parallels the semantic transition from world-reading toward solving and answering after commitment.
+
+To separate commitment-specific effects from ordinary position effects, we compare true commitment positions with position-matched shuffled controls. \(C_{10}\) appears in \(14.0\%\) of true commitment sentences but only \(5.9\%\) under the matched control, an excess of \(8.2\) percentage points. \(C_9\) and \(C_2\) show smaller excesses of \(3.2\) and \(2.5\) points.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Cluster & True commitment & Matched placebo & Excess \\
+\midrule
+\(C_{10}\) & 14.0\% & 5.9\% & \(+8.2\) pp \\
+\(C_9\)    & 11.6\% & 8.4\% & \(+3.2\) pp \\
+\(C_2\)    & 9.3\% & 6.8\% & \(+2.5\) pp \\
+\(C_5\)    & 15.1\% & 13.5\% & \(+1.6\) pp \\
+\(C_7\)    & 5.5\% & 4.5\% & \(+1.0\) pp \\
+\bottomrule
+\end{tabular}
+\caption{Frequency of selected K-means activation clusters at true commitment and under a position-matched control.}
+\label{tab:commitment-clusters}
+\end{table}
+
+Recurring transitions between clusters are also enriched near commitment. Examples include \(C_8\!\rightarrow C_{10}\) (\(4.75\times\)), \(C_{10}\!\rightarrow C_{10}\) (\(2.87\times\)), and \(C_7\!\rightarrow C_{10}\) (\(2.71\times\)). Significant three-step sequences include \(C_6\!\rightarrow C_5\!\rightarrow C_5\) (\(3.26\times\)) and \(C_{10}\!\rightarrow C_{10}\!\rightarrow C_{10}\) (\(3.86\times\)). Because the number of possible sequences is large, we treat these results as exploratory.
+
+Overall, the reasoning-time analysis reveals a structured decision process. State uncertainty tends to decrease around commitment, but belief corrections do not generally explain changes in preferred action. Hidden representations pass through recurring states associated with decision revision and stabilization, and the preferred action typically stabilizes hundreds of tokens before reasoning ends. These results suggest a transition from state interpretation and decision revision toward a stable action preference, motivating the causal interventions in the next section.
+
+
+\section{Causal Tests}
+
+\subsection{Intervention Targets}
+Use the trajectory analysis to select reasoning positions associated with belief changes, action commitment, etc.
+
+\subsection{Reasoning-Text Patching}
+\begin{itemize}
+    \item Patch complete or partial reasoning segments between matched trajectories to test whether particular reasoning steps causally change beliefs or actions.
+    \item E.g., compare patches applied before and after the estimated commitment point.
+    \item Report whether patched actions follow the original input state, the patched reasoning, etc.
+\end{itemize}
+
+\subsection{Activation Patching}
+\begin{itemize}
+    \item Patch or steer activations at positions associated with belief changes and action commitment.
+    \item Compare targeted interventions with matched random, irrelevant-feature, and wrong-action controls.
+\end{itemize}
+
+\subsection{Causal Results}
+Some ideas for analysis here:
+\begin{itemize}
+    \item Test whether changing a belief representation before commitment changes the eventual action.
+    \item Test whether the same intervention becomes less effective after the action has been committed.
+    \item Determine whether text and activation interventions identify the same reasoning positions as causally important.
+    \item State which conclusions concern information availability, action commitment, and causal information use.
+\end{itemize}
+
+\section{Discussion}
+\label{sec:discussion}
+
+Our results show that belief, preference, and action selection can fail independently. Task-relevant state information is often recoverable from both explicit reports and hidden representations, yet the final action can still be suboptimal or contradict correctly represented local information. The wall-hit cases illustrate this directly where the model can report that a direction is blocked and still choose it.
+
+The value analysis further shows that the same state representations support planner-optimal action preferences more reliably than they reproduce the agent's realised behaviour. This does not imply that the model implements the planner's value function, but it does show that relevant task structure can be present without being effectively translated into action.
+
+Reasoning-time analysis suggests that this mismatch develops through a distinct decision process. Action preferences change before stabilizing at a commitment point, often well before reasoning ends. Belief uncertainty tends to decrease around commitment, but individual belief corrections do not consistently explain action changes or changes in action optimality. Recurring activation states instead appear to track periods of decision revision and stabilization.
+
+The intervention results support the same distinction between information availability and information use. Changing the reasoning trajectory can redirect the final action, whereas changing pre-reasoning state representations alone does not reliably determine behaviour. Information can therefore be represented or decodable without being causally used in action selection.
+
+These conclusions remain limited by the controlled setting and by the operational nature of our belief and value estimates. The experiments use deterministic grid worlds, local value models, sampled reasoning prefixes, and probe-based measurements rather than direct access to internal beliefs.
+
+Overall, the results suggest that agent failures should not be treated as a single phenomenon. An agent may misrepresent the state, support an inappropriate action preference, or possess relevant information without successfully translating it into behaviour.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+We study how language model agents transform represented state information into actions by jointly analysing beliefs, action preferences, reasoning dynamics, and causal interventions. We find that task-relevant state information can remain available even when the final action is suboptimal, and that the same state representations support planner-optimal action preferences much more reliably than the agent's realised behaviour. Reasoning changes this relationship in a non-trivial way. The mean belief--action gap decreases after reasoning, while decoded belief uncertainty increases, showing that improved action consistency does not simply result from a more precise state estimate. During the reasoning trace, action preferences sharpen around a commitment point, unsuccessful decisions tend to commit later, and individual belief corrections do not consistently explain changes in action preference. Causal interventions further show that final actions follow patched reasoning trajectories more reliably than changes to pre-reasoning state representations alone. Together, these results support a decomposition of agent failures into errors of state estimation, errors in the preference structure supported by the representation, and failures in translating available information into action.
+
+
+% \begin{ack}
+% Use unnumbered first level headings for the acknowledgments. All acknowledgments
+% go at the end of the paper before the list of references. Moreover, you are required to declare
+% funding (financial activities supporting the submitted work) and competing interests (related financial activities outside the submitted work).
+% More information about this disclosure can be found at: \url{https://neurips.cc/Conferences/2026/PaperInformation/FundingDisclosure}.
+
+
+% Do {\bf not} include this section in the anonymized submission, only in the final paper. You can use the \texttt{ack} environment provided in the style file to automatically hide this section in the anonymized submission.
+% \end{ack}
+
+%\section*{References}
+
+\bibliography{ref}
+\bibliographystyle{abbrvnat}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+
+\section{Technical appendices and supplementary material}
+Technical appendices with additional results, figures, graphs, and proofs may be submitted with the paper submission before the full submission deadline (see above). You can upload a ZIP file for videos or code, but do not upload a separate PDF file for the appendix. There is no page limit for the technical appendices. 
+
+Note: Think of the appendix as ``optional reading'' for reviewers. The paper must be able to stand alone without the appendix; for example, adding critical experiments that support the main claims to an appendix is inappropriate. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\input{checklist.tex}
+
+
+\end{document}

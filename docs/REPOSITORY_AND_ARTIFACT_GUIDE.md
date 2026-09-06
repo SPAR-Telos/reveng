@@ -4,13 +4,18 @@ This is the entry point for understanding the repository, finding raw outputs,
 and moving work to another machine. The machine-readable companion is
 [`docs/artifact_index.csv`](artifact_index.csv).
 
+For a deletion checklist, current remote revisions, hardware sizing, and exact
+restore commands, see
+[`MIGRATION_AND_REPRODUCTION.md`](MIGRATION_AND_REPRODUCTION.md).
+
+
 For the current topology → regimes → semantic prediction → process graph →
 typed DAG-audit chain, start with
 [`REASONING_EXPERIMENT_GUIDE.md`](REASONING_EXPERIMENT_GUIDE.md). Its
 file-level checksummed companion is
 [`reasoning_experiment_lineage.csv`](reasoning_experiment_lineage.csv).
 
-## Migration status (2026-08-24)
+## Migration status (2026-09-06)
 
 The repository and earlier research artifacts have been split between GitHub
 and Hugging Face. The newer reasoning experiment chain must be considered

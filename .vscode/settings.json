@@ -32,5 +32,9 @@
         "uvx",
         "ruff"
     ],
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "terminal.integrated.env.linux": {
+        "PYTHONPYCACHEPREFIX": "/tmp/reveng-python-cache",
+        "XDG_CACHE_HOME": "/tmp/reveng-runtime-cache"
+    }
 }

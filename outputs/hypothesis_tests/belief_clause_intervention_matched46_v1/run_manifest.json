@@ -1,0 +1,24 @@
+{
+  "analysis": "belief_clause_intervention_matched46_v1",
+  "cohort_sha256": "82d3c1bf8f12a53c11af5d242e42a71eb3bb20b697d38b8b35d4c163a70d69d5",
+  "completed_readouts": 184,
+  "conditions": [
+    "model_reports",
+    "verified_truth",
+    "counterfactual_wall",
+    "irrelevant_control"
+  ],
+  "free_gib": 23.197998046875,
+  "gpu_index": 0,
+  "gpu_name": "NVIDIA RTX PRO 4000 Blackwell",
+  "minimum_free_gib": 18.0,
+  "model_path": "/tmp/reveng-hf-model-cache/hub/models--openai--gpt-oss-20b/snapshots/6cee5e81ee83917806bbde320786a8fb61efebee",
+  "pending_readouts": 0,
+  "planned_readouts": 184,
+  "reasoning_effort": "low",
+  "scoring": "direct_candidate_token_probabilities",
+  "seed": 42,
+  "status": "completed",
+  "temperature": 0.7,
+  "total_gib": 23.423828125
+}
