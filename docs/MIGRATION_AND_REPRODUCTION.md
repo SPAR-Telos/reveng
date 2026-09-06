@@ -23,9 +23,10 @@ combining it with another run. Filenames alone do not establish compatibility.
 
 ## Current persistence status
 
-The Git branch is `feat/counterfactual-patching`. The last remotely verified
-commit before this handoff was `8e7524a`. The handoff is complete only when
-the current migration commit is pushed and verified.
+The Git branch is `feat/counterfactual-patching`. The migration commit
+containing the current code, raw belief-clause readouts, reports, manuscripts,
+and indexes has been pushed. Verify the branch head again before deleting the
+network volume.
 
 The private Hugging Face repository
 `project-telos/reveng-experiment-artifacts` was verified at revision
@@ -38,6 +39,11 @@ The three local files larger than 50 MB match their remote SHA-256 values:
 | `data/behavioral_probes/reasoning_belief_action_matched_46_behavioral/belief_rows.jsonl` | 448,689,176 | `53530bcf052ccb787df6423872988fe386d0ed7e3d388243d736349d465ac671` |
 | `data/behavioral_probes/reasoning_belief_action_matched_46_behavioral/belief_rows.csv` | 414,601,450 | `0d822a19da707cd78ca7b51fd856071b2abadc94823ed472295efe27406ee2c8` |
 | `data/behavioral_probes/doorkey_chunking_validation/sentence_token_boundaries_gpt_oss_20b.csv` | 53,374,107 | `8873752847dc67e9118f54b58bcfb2aa03db3388b0e8dde025cab090b58f2304` |
+
+A path-level audit found 2,025 meaningful ignored local artifacts in the private
+Hugging Face repository. The only unmatched paths were six rebuildable
+`src/reveng.egg-info/` files and the zero-byte activation index described
+below.
 
 The local activation download under
 `outputs/activation_collection/gpt_oss_20b_boundary_v1/` is incomplete:
